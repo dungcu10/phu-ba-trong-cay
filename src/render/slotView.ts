@@ -45,6 +45,7 @@ export class SlotView extends Container {
   private lastTimer = '';
 
   constructor(
+    readonly floorIndex: number,
     readonly index: number,
     private readonly art: Art,
     private readonly tweens: Tweens,
@@ -75,14 +76,15 @@ export class SlotView extends Container {
     this.cursor = 'pointer';
   }
 
-  setPot(potSprite: string, level: number): void {
-    const key = `${potSprite}/${level}`;
+  /** key identifies pot type + level; look is the picture (possibly a tinted stand-in). */
+  setPot(key: string, look: { texture: Texture; tint: number }): void {
     if (key === this.potKey) return;
-    const upgraded = this.potKey !== '';
+    const changed = this.potKey !== '';
     this.potKey = key;
-    this.pot.texture = this.art.get(key);
+    this.pot.texture = look.texture;
+    this.pot.tint = look.tint;
     this.pot.anchor.copyFrom(this.pot.texture.defaultAnchor ?? { x: 0.5, y: 1 });
-    if (upgraded) this.popPot();
+    if (changed) this.popPot();
   }
 
   /** Updates plant, marker, bug and timer from the current status (null = empty pot). */
@@ -169,13 +171,17 @@ export class SlotView extends Container {
     this.tweens.add(TOKENS.motion.bounce.ms * 3, ease.outElastic, (v) => (this.potPop = 0.8 + 0.2 * v));
   }
 
-  /** Point (in the floor's space) where feedback for this pot should appear. */
+  /** Point in world space (the floor container's parent) where feedback should appear. */
   feedbackPoint(): { x: number; y: number } {
-    return { x: this.x, y: this.y + SLOT_GEOM.soilY - 70 };
+    const fx = this.parent?.x ?? 0;
+    const fy = this.parent?.y ?? 0;
+    return { x: fx + this.x, y: fy + this.y + (SLOT_GEOM.soilY - 70) * this.scale.y };
   }
 
   bugPoint(): { x: number; y: number } {
-    return { x: this.x + this.bug.x, y: this.y + this.bug.y };
+    const fx = this.parent?.x ?? 0;
+    const fy = this.parent?.y ?? 0;
+    return { x: fx + this.x + this.bug.x * this.scale.x, y: fy + this.y + this.bug.y * this.scale.y };
   }
 
   /** Per-frame animation only; no game logic, no allocation. */

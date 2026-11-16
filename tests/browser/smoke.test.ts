@@ -116,3 +116,55 @@ test('offline: sau lần tải đầu, tắt mạng rồi tải lại vẫn vào
   assert.equal((await snap(page)).harvests, 10);
   await ctx.close();
 });
+
+test('nhiều tầng + chậu: vuốt lên, mở tầng mới, mua chậu ở Lò Gốm, đặt chậu vào tầng mới', async () => {
+  const ctx = await browser.newContext({ viewport: { width: 1194, height: 834 }, hasTouch: true });
+  const { page, errors } = await open(ctx);
+  await page.evaluate(() => {
+    const w = window as unknown as { __pbtc: { session: { state: { player: { level: number; coins: number } }; refresh(): void } } };
+    w.__pbtc.session.state.player.level = 5;
+    w.__pbtc.session.state.player.coins = 3000;
+    w.__pbtc.session.refresh();
+  });
+  // Climb: vertical drag on the sky to the right of the floor.
+  await page.mouse.move(1100, 200);
+  await page.mouse.down();
+  for (let y = 200; y <= 760; y += 20) await page.mouse.move(1100, y);
+  await page.mouse.up();
+  await page.waitForTimeout(600);
+  if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/locked-floor.png` });
+  await page.mouse.click(650, 330);
+  await page.waitForSelector('[data-test=floor-panel]');
+  await page.click('[data-test=unlock-floor]');
+  await page.waitForTimeout(1800);
+  if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/floor-opened.png` });
+  const floors = await page.evaluate(() => (window as unknown as { __pbtc: { session: { state: { floors: unknown[]; player: { coins: number } } } } }).__pbtc.session.state.floors.length);
+  assert.equal(floors, 2);
+  await page.click('[data-test=open-shop]');
+  await page.click('[data-test="buy-base:pot.porcelain"]');
+  if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/pot-shop.png` });
+  await page.click('.win .knob.close');
+  await page.waitForTimeout(300);
+  const stock = await page.evaluate(() => (window as unknown as { __pbtc: { session: { state: { potStock: string[] } } } }).__pbtc.session.state.potStock);
+  assert.equal(stock.length, 1);
+  // Tap the first pot of the new floor (now on screen), open the bench, place the bought pot.
+  const pos = await page.evaluate(() => {
+    const v = (window as unknown as { __pbtc: { view: { slotView(f: number, i: number): { getGlobalPosition(): { x: number; y: number } } } } }).__pbtc.view;
+    const g = v.slotView(1, 0).getGlobalPosition();
+    return { x: g.x, y: g.y };
+  });
+  await page.mouse.click(pos.x, pos.y - 20);
+  await page.waitForSelector('[data-test=seed-panel]');
+  await page.click('[data-test=swap-pot]');
+  await page.waitForSelector('[data-test=pot-panel]');
+  await page.click(`[data-test="place-${stock[0]}"]`);
+  const placed = await page.evaluate(() => {
+    const s = (window as unknown as { __pbtc: { session: { state: { floors: { slots: { potInstanceId: string }[] }[]; pots: Record<string, { potId: string }> } } } }).__pbtc.session.state;
+    return s.pots[s.floors[1]!.slots[0]!.potInstanceId]!.potId;
+  });
+  assert.equal(placed, 'base:pot.porcelain');
+  await page.waitForTimeout(400);
+  if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/pot-placed.png` });
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});

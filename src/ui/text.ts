@@ -55,3 +55,18 @@ export function formatClock(ms: number): string {
 export function formatPercent(fraction: number): string {
   return `${Math.round(fraction * 100)}%`;
 }
+
+export const STAT_TEXT: Record<string, string> = {
+  speed: 'Lớn nhanh',
+  yield: 'Sản lượng',
+  xp: 'Kinh nghiệm',
+  attract: 'Thu hút bọ',
+  luck: 'May mắn',
+};
+
+export const FAMILY_TEXT: Record<string, string> = { flower: 'Hoa', fruit: 'Quả', herb: 'Rau Thảo', wonder: 'Kỳ Hoa' };
+
+export const RARITY_TEXT: Record<string, string> = { common: 'Thường', good: 'Tốt', rare: 'Hiếm', epic: 'Sử Thi', legendary: 'Huyền Thoại' };
+
+/** Number of marks shown next to a rarity (DESIGN_SYSTEM 3.3: never colour alone). */
+export const RARITY_MARKS: Record<string, number> = { common: 0, good: 1, rare: 2, epic: 3, legendary: 4 };

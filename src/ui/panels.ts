@@ -7,45 +7,22 @@ import { itemFrame } from '../render/assets.ts';
 import { sellPrice, storageUsed } from '../systems/economy.ts';
 import { cropStatus } from '../systems/growth.ts';
 import { canAfford, nextUpgradeCost, potLevelDef } from '../systems/pots.ts';
+export { Panel } from './panel.ts';
 import { clear, h, icon } from './dom.ts';
 import { formatDuration, formatNumber, formatPercent } from './text.ts';
-import { TOKENS } from './tokens.ts';
+import { Panel } from './panel.ts';
+import { potIcon, favText, statLines, rarityChip, shake } from './potPanels.ts';
 
 export interface PanelActions {
   /** Plants one pot, or every empty pot when slot is null. Returns how many were planted. */
   plant(slot: SlotRef | null, cropId: string): number;
   sell(itemId: string, qty: number): void;
   upgradePot(potInstanceId: string): void;
+  placePot(slot: SlotRef, potInstanceId: string): void;
+  openBench(slot: SlotRef): void;
 }
 
 const coin = (size = 22) => h('span', { class: 'ico-coin', style: `width:${size}px;height:${size}px` });
-
-/** A window: dark wood frame, paper face, ribbon title, round close knob. */
-export abstract class Panel {
-  readonly el: HTMLElement;
-  protected readonly body = h('div', { class: 'win-body scroll' });
-  onClose: (() => void) | null = null;
-  private closed = false;
-
-  constructor(title: string, testId: string, extraClass = '') {
-    const close = h('button', { class: 'knob close', 'aria-label': 'Đóng', onclick: () => this.close() });
-    const win = h('div', { class: `win ${extraClass}`, role: 'dialog', 'aria-label': title, 'data-test': testId }, h('div', { class: 'ribbon' }, h('h2', {}, title)), close, this.body);
-    this.el = h('div', { class: 'veil' }, win);
-    this.el.addEventListener('pointerdown', (e) => {
-      if (e.target === this.el) this.close();
-    });
-  }
-
-  abstract render(): void;
-
-  close(): void {
-    if (this.closed) return;
-    this.closed = true;
-    this.el.classList.add('closing');
-    setTimeout(() => this.el.remove(), TOKENS.motion.windowClose.ms);
-    this.onClose?.();
-  }
-}
 
 /** "Sạp Hạt Giống Bà Mây": seed packets on a wooden shelf; locked ones are under cloth. */
 export class SeedPanel extends Panel {
@@ -88,11 +65,16 @@ export class SeedPanel extends Panel {
       shelf.append(pack);
     }
     this.body.append(shelf);
+    const slot = this.slot;
+    if (slot && state.potStock.length > 0) {
+      this.body.append(h('div', { class: 'candy-wrap' }, h('button', { class: 'candy gold', 'data-test': 'swap-pot', onclick: () => this.actions.openBench(slot) }, `Đổi chậu (${state.potStock.length} trong kho)`)));
+    }
     if (!this.slot) this.body.append(h('p', { class: 'note' }, 'Mẹo: kéo tay qua các chậu trống để gieo lại giống vừa chọn.'));
   }
 }
 
-/** "Bàn Thợ Gốm": current pot on the left, the upgraded pot glowing on the right. */
+/** "Bàn Thợ Gốm": current pot on the left, the upgraded pot glowing on the right; when the pot
+ *  is empty, pots from the stock can be put in its place. */
 export class PotPanel extends Panel {
   constructor(
     private readonly session: GameSession,
@@ -114,45 +96,53 @@ export class PotPanel extends Panel {
     if (status) {
       this.body.append(h('p', { class: 'lead' }, status.ripe ? `${status.crop.name.vi} đã chín — chạm vào chậu để thu hoạch.` : `${status.crop.name.vi} chín sau ${formatDuration(status.remainingMs)}`));
     }
-    const statLines = (l: typeof lv) => h('span', { class: 'stats' }, h('span', {}, `Lớn nhanh +${formatPercent(l.stats.speed)}`), h('span', {}, `Sản lượng +${formatPercent(l.stats.yield)}`));
+    const current = h('div', { class: 'bench-side' }, potIcon(def, pot.level, 110), h('strong', {}, `${def.name.vi} · cấp ${pot.level}`), rarityChip(def.rarity), statLines(lv), favText(def));
     const cost = nextUpgradeCost(content, pot);
-    const current = h('div', { class: 'bench-side' }, icon(`${def.sprite}/${pot.level}`, 120), h('strong', {}, `${def.name.vi} · cấp ${pot.level}`), statLines(lv));
     if (!cost) {
       this.body.append(h('div', { class: 'bench' }, current), h('p', { class: 'note' }, 'Chậu đã đạt cấp cao nhất.'));
-      return;
+    } else {
+      const next = def.levels[pot.level]!;
+      const preview = h('div', { class: 'bench-side preview' }, potIcon(def, pot.level + 1, 110), h('strong', {}, `Cấp ${pot.level + 1}`), statLines(next));
+      this.body.append(h('div', { class: 'bench' }, current, h('span', { class: 'bench-arrow' }), preview));
+      const needs = h('div', { class: 'needs' }, h('span', { class: `need${state.player.coins < cost.coins ? ' short' : ''}` }, coin(), formatNumber(cost.coins)));
+      const missing: string[] = [];
+      if (state.player.coins < cost.coins) missing.push(`${formatNumber(cost.coins - state.player.coins)} xu`);
+      for (const [itemId, qty] of Object.entries(cost.items)) {
+        const have = state.inventory[itemId] ?? 0;
+        needs.append(h('span', { class: `need${have < qty ? ' short' : ''}` }, icon(itemFrame(content, itemId), 30), `${have}/${qty}`));
+        if (have < qty) missing.push(`${qty - have} ${content.items.get(itemId)?.name.vi ?? ''}`);
+      }
+      const ok = canAfford(state, cost);
+      const btn = h('button', { class: `candy ${ok ? 'primary' : 'blocked'}`, 'data-test': 'upgrade-pot', onclick: () => (ok ? this.actions.upgradePot(slotState.potInstanceId) : shake(btn)) }, 'Nâng cấp chậu');
+      this.body.append(needs, h('div', { class: 'candy-wrap' }, btn, h('span', { class: 'reason' }, ok ? '' : `Thiếu ${missing.join(' và ')}`)));
     }
-    const next = def.levels[pot.level]!;
-    const preview = h('div', { class: 'bench-side preview' }, icon(`${def.sprite}/${pot.level + 1}`, 120), h('strong', {}, `Cấp ${pot.level + 1}`), statLines(next));
-    this.body.append(h('div', { class: 'bench' }, current, h('span', { class: 'bench-arrow' }), preview));
+    this.body.append(this.stock(slotState.planting !== null));
+  }
 
-    const needs = h('div', { class: 'needs' }, h('span', { class: `need${state.player.coins < cost.coins ? ' short' : ''}` }, coin(), formatNumber(cost.coins)));
-    const missing: string[] = [];
-    if (state.player.coins < cost.coins) missing.push(`${formatNumber(cost.coins - state.player.coins)} xu`);
-    for (const [itemId, qty] of Object.entries(cost.items)) {
-      const have = state.inventory[itemId] ?? 0;
-      needs.append(h('span', { class: `need${have < qty ? ' short' : ''}` }, icon(itemFrame(content, itemId), 30), `${have}/${qty}`));
-      if (have < qty) missing.push(`${qty - have} ${content.items.get(itemId)?.name.vi ?? ''}`);
+  /** Pots in stock that can replace this one (only when the pot is empty). */
+  private stock(busy: boolean): HTMLElement {
+    const { content, state } = this.session;
+    const box = h('div', {}, h('p', { class: 'lead' }, `Kho chậu (${state.potStock.length})`));
+    if (state.potStock.length === 0) {
+      box.append(h('p', { class: 'note' }, 'Kho chậu trống. Mua chậu mới ở Lò Gốm Bà Mây.'));
+      return box;
     }
-    const ok = canAfford(state, cost);
-    const reason = h('span', { class: 'reason' }, ok ? '' : `Thiếu ${missing.join(' và ')}`);
-    const btn = h(
-      'button',
-      {
-        class: `candy ${ok ? 'primary' : 'blocked'}`,
-        'data-test': 'upgrade-pot',
-        onclick: () => {
-          if (ok) this.actions.upgradePot(slotState.potInstanceId);
-          else {
-            btn.classList.remove('shake');
-            void btn.offsetWidth;
-            btn.classList.add('shake');
-          }
-        },
-      },
-      'Nâng cấp chậu',
-    );
-    this.body.append(needs, h('div', { class: 'candy-wrap' }, btn, reason));
-    if (!ok) this.body.append(h('p', { class: 'note' }, 'Bắt Bọ Mây đậu trên cây để có nguyên liệu nâng cấp. Nâng cấp luôn thành công.'));
+    if (busy) box.append(h('p', { class: 'note' }, 'Thu hoạch xong cây này rồi mới đổi chậu được.'));
+    const list = h('div', { class: 'stock' });
+    for (const id of state.potStock) {
+      const p = state.pots[id]!;
+      const d = content.pots.get(p.potId)!;
+      list.append(
+        h(
+          'button',
+          { class: `seed-pack${busy ? ' locked' : ''}`, 'data-test': `place-${id}`, 'aria-disabled': busy ? 'true' : undefined, onclick: () => (busy ? undefined : this.actions.placePot(this.slot, id)) },
+          potIcon(d, p.level, 56),
+          h('span', { class: 'pack-info' }, `${d.name.vi} · cấp ${p.level}`),
+        ),
+      );
+    }
+    box.append(list);
+    return box;
   }
 }
 

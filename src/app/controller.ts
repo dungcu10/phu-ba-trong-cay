@@ -8,13 +8,15 @@ import type { Art } from '../render/assets.ts';
 import { Hud } from '../ui/hud.ts';
 import { Panel, PotPanel, SeedPanel, StoragePanel, type PanelActions } from '../ui/panels.ts';
 import { SettingsPanel } from '../ui/settings.ts';
+import { FloorPanel, PotShopPanel, type PotShopActions } from '../ui/potPanels.ts';
+import type { FloorDef } from '../core/content.ts';
 import { ERROR_TEXT, formatNumber } from '../ui/text.ts';
 import { Toasts } from '../ui/toast.ts';
 import { hex, TOKENS } from '../ui/tokens.ts';
 import type { GameSession } from './session.ts';
 import type { Sfx } from './sfx.ts';
 
-export class Controller implements PanelActions {
+export class Controller implements PanelActions, PotShopActions {
   readonly toasts = new Toasts();
   readonly hud: Hud;
   private panel: Panel | null = null;
@@ -29,9 +31,9 @@ export class Controller implements PanelActions {
     private readonly overlay: HTMLElement,
     private readonly saveSound: (on: boolean) => void,
   ) {
-    this.hud = new Hud(session, { openSeeds: () => this.openSeeds(), openStorage: () => this.openStorage(), openSettings: () => this.openSettings() });
+    this.hud = new Hud(session, { openSeeds: () => this.openSeeds(), openStorage: () => this.openStorage(), openShop: () => this.openShop(), openSettings: () => this.openSettings() });
     overlay.append(this.hud.el, this.toasts.el);
-    view.handlers = { onTap: (s, t) => this.tap(s, t), onSwipe: (s) => this.swipe(s) };
+    view.handlers = { onTap: (s, t) => this.tap(s, t), onSwipe: (s) => this.swipe(s), onLockedFloor: (f) => this.openFloor(f) };
     session.onChange((events) => this.onEvents(events));
     setInterval(() => this.hud.update(), 1000);
     this.hud.update();
@@ -92,6 +94,41 @@ export class Controller implements PanelActions {
     return planted;
   }
 
+  placePot(slot: SlotRef, potInstanceId: string): void {
+    this.run({ type: 'placePot', potInstanceId, ...slot });
+  }
+
+  openBench(slot: SlotRef): void {
+    this.openPanel(new PotPanel(this.session, slot, this));
+  }
+
+  buyPot(potId: string): void {
+    this.run({ type: 'buyPot', potId });
+  }
+
+  unlockFloor(floorId: string): void {
+    if (this.run({ type: 'unlockFloor', floorId }).ok) this.panel?.close();
+  }
+
+  private findPot(potInstanceId: string): SlotRef | null {
+    const floors = this.session.state.floors;
+    for (let f = 0; f < floors.length; f++) {
+      const i = floors[f]!.slots.findIndex((s) => s.potInstanceId === potInstanceId);
+      if (i >= 0) return { floor: f, slot: i };
+    }
+    return null;
+  }
+
+  openShop(): void {
+    this.sfx.play('tap');
+    this.openPanel(new PotShopPanel(this.session, this));
+  }
+
+  openFloor(def: FloorDef): void {
+    this.sfx.play('tap');
+    this.openPanel(new FloorPanel(this.session, def, this));
+  }
+
   openSeeds(): void {
     this.sfx.play('tap');
     this.openPanel(new SeedPanel(this.session, null, this));
@@ -141,11 +178,11 @@ export class Controller implements PanelActions {
   private feedback(e: GameEvent): void {
     const { content } = this.session;
     const fx = this.view.effects;
-    const at = (ref: SlotRef) => this.view.slotView(ref.slot).feedbackPoint();
+    const at = (ref: SlotRef) => this.view.slotView(ref.floor, ref.slot).feedbackPoint();
     switch (e.type) {
       case 'planted': {
         this.sfx.play('plant');
-        this.view.slotView(e.slot.slot).popPlant(0.3);
+        this.view.slotView(e.slot.floor, e.slot.slot).popPlant(0.3);
         const p = at(e.slot);
         if (e.cost > 0) fx.floatText(`-${formatNumber(e.cost)} xu`, p.x, p.y + 40, hex(TOKENS.color.brand.cream));
         break;
@@ -158,7 +195,7 @@ export class Controller implements PanelActions {
       }
       case 'bugCaught': {
         this.sfx.play('bug');
-        const p = this.view.slotView(e.slot.slot).bugPoint();
+        const p = this.view.slotView(e.slot.floor, e.slot.slot).bugPoint();
         fx.floatText(`+1 ${content.items.get(e.itemId)?.name.vi ?? ''}`, p.x, p.y - 20, hex(TOKENS.color.brand.peach));
         break;
       }
@@ -176,12 +213,28 @@ export class Controller implements PanelActions {
         break;
       case 'potUpgraded': {
         this.sfx.play('upgrade');
-        const index = this.session.state.floors[0]!.slots.findIndex((s) => s.potInstanceId === e.potInstanceId);
-        if (index >= 0) {
-          const p = at({ floor: 0, slot: index });
+        const ref = this.findPot(e.potInstanceId);
+        if (ref) {
+          const p = at(ref);
           fx.burst(this.view.dot, p.x, p.y + 60, 12, { scale: 0.45, tint: hex(TOKENS.color.brand.gold) });
           fx.floatText(`Chậu cấp ${e.level}!`, p.x, p.y, hex(TOKENS.color.brand.gold));
         }
+        break;
+      }
+      case 'floorUnlocked':
+        this.sfx.play('levelUp');
+        this.view.syncFloors();
+        this.view.playFloorOpened(e.index);
+        this.toasts.show(`Đã mở ${content.floors.get(e.floorId)?.name.vi ?? 'tầng mới'}!`, 'level', 3500);
+        break;
+      case 'potBought':
+        this.sfx.play('coin');
+        this.toasts.show(`Đã mua ${content.pots.get(e.potId)?.name.vi ?? 'chậu'} — chạm chậu trống để đặt vào.`, 'success', 3000);
+        break;
+      case 'potPlaced': {
+        this.sfx.play('upgrade');
+        const p = at(e.slot);
+        fx.burst(this.view.dot, p.x, p.y + 60, 10, { scale: 0.45, tint: hex(TOKENS.color.brand.jade) });
         break;
       }
       case 'levelUp': {
@@ -191,7 +244,7 @@ export class Controller implements PanelActions {
         const extra = unlocked.length > 0 ? ` Mở khóa: ${unlocked.join(', ')}.` : '';
         this.toasts.show(`Lên cấp ${e.level}! +${formatNumber(bonus)} xu thưởng.${extra}`, 'level', 4000);
         for (let i = 0; i < 4; i++) {
-          const p = this.view.slotView(i % this.session.state.floors[0]!.slots.length).feedbackPoint();
+          const p = this.view.slotView(0, (i * 3) % this.session.state.floors[0]!.slots.length).feedbackPoint();
           fx.burst(this.view.dot, p.x, p.y - 60, 6, { scale: 0.5, speed: 360, tint: hex(TOKENS.color.brand.gold) });
         }
         break;

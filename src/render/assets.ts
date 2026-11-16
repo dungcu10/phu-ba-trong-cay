@@ -44,11 +44,30 @@ export class Art {
     return t;
   }
 
-  /** Every frame the content pack and scene need that the atlases do not have. */
+  has(name: string): boolean {
+    return name in this.frames;
+  }
+
+  /**
+   * Pot picture for a level. Pots whose own art is not made yet use the terracotta picture of the
+   * same appearance tier, tinted with their rarity colour ("chờ đồ họa").
+   */
+  pot(sprite: string, level: number, rarityColor: string): { texture: Texture; tint: number; placeholder: boolean } {
+    const own = `${sprite}/${level}`;
+    if (this.has(own)) return { texture: this.frames[own]!, tint: 0xffffff, placeholder: false };
+    const tier = level >= 5 ? 5 : level >= 3 ? 3 : 1;
+    return { texture: this.get(`pots/terracotta/${tier}`), tint: lighten(rarityColor, 0.35), placeholder: true };
+  }
+
+  /** Floor picture; floors without their own art reuse the first floor's, tinted ("chờ đồ họa"). */
+  floor(sprite: string, tint: string | undefined, fallback: string): { texture: Texture; tint: number; placeholder: boolean } {
+    if (this.has(sprite)) return { texture: this.frames[sprite]!, tint: 0xffffff, placeholder: false };
+    return { texture: this.get(fallback), tint: tint ? lighten(tint, 0.25) : 0xffffff, placeholder: true };
+  }
+
+  /** Every frame that has no fallback and is missing (the game cannot start without these). */
   missingFor(content: ContentPack): string[] {
-    const need = [...SCENE_FRAMES];
-    for (const f of content.floors.values()) need.push(f.sprite);
-    for (const p of content.pots.values()) for (const lv of p.levels) need.push(`${p.sprite}/${lv.level}`);
+    const need = [...SCENE_FRAMES, content.floors.get(content.config.startFloor)!.sprite, 'pots/terracotta/1', 'pots/terracotta/3', 'pots/terracotta/5'];
     for (const c of content.cropList) for (let s = 0; s < c.stages; s++) need.push(`${c.sprite}/${s}`);
     for (const b of content.bugList) need.push(`${b.sprite}/0`, `${b.sprite}/1`);
     for (const id of content.items.keys()) need.push(itemFrame(content, id));
@@ -61,4 +80,11 @@ export function itemFrame(content: ContentPack, itemId: string): string {
   const crop = content.cropList.find((c) => c.produce.id === itemId);
   const sprite = crop?.sprite ?? content.bugs.get(itemId)?.sprite ?? itemId;
   return `items/${sprite.slice(sprite.lastIndexOf('/') + 1)}`;
+}
+
+/** "#RRGGBB" mixed toward white by `amount` (0..1), as a PixiJS colour number. */
+export function lighten(color: string, amount: number): number {
+  const n = Number.parseInt(color.replace('#', ''), 16);
+  const mix = (c: number) => Math.round(c + (255 - c) * amount);
+  return (mix((n >> 16) & 255) << 16) | (mix((n >> 8) & 255) << 8) | mix(n & 255);
 }

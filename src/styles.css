@@ -209,3 +209,22 @@ html, body {
   .vine { width: 100px; }
   .pouch { font-size: var(--font-size-number); }
 }
+
+/* ---------- pots: rarity chip with marks (DESIGN_SYSTEM 3.3), pot shop, stock ---------- */
+.rarity { display: inline-flex; align-items: center; gap: var(--space-1); padding: 0 var(--space-2); border-radius: var(--radius-ribbon); color: var(--color-ui-textOnDark); background: var(--wood); font-size: var(--font-size-caption); font-weight: 800; }
+.rarity i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; display: inline-block; }
+.rarity.common { background: var(--color-rarity-common); }
+.rarity.good { background: var(--color-rarity-good); }
+.rarity.rare { background: var(--color-rarity-rare); color: var(--color-ui-secondaryText); }
+.rarity.epic { background: var(--color-rarity-epic); }
+.rarity.legendary { background: var(--color-rarity-legendary); color: var(--color-ui-secondaryText); box-shadow: 0 0 10px var(--color-rarity-legendary); }
+.pot-ring { border-radius: var(--radius-slot); padding: var(--space-1); }
+.pot-ring.good { box-shadow: 0 0 0 3px var(--color-rarity-good); }
+.pot-ring.rare { box-shadow: 0 0 0 3px var(--color-rarity-rare); }
+.pot-ring.epic { box-shadow: 0 0 0 3px var(--color-rarity-epic), 0 0 0 6px var(--paper), 0 0 0 8px var(--color-rarity-epic); }
+.pot-ring.legendary { box-shadow: 0 0 0 3px var(--color-rarity-legendary), 0 0 14px var(--color-rarity-legendary); }
+.stat-list { display: flex; flex-direction: column; align-items: center; font-size: var(--font-size-caption); color: var(--muted); }
+.fav { font-size: var(--font-size-caption); color: var(--color-ui-primary); font-weight: 800; }
+.stock { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); margin-top: var(--space-2); }
+.stock .seed-pack { min-height: 0; width: 132px; }
+.trait { margin: var(--space-2) auto; padding: var(--space-2) var(--space-3); border-radius: var(--radius-slot); background: var(--paper-deep); text-align: center; font-weight: 800; }

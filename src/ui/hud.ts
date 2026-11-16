@@ -5,6 +5,7 @@
 import type { GameSession } from '../app/session.ts';
 import { storageUsed, xpToNextLevel } from '../systems/economy.ts';
 import { h, icon } from './dom.ts';
+import { itemFrame } from '../render/assets.ts';
 import { nextHint } from './hint.ts';
 import { formatNumber } from './text.ts';
 
@@ -21,7 +22,7 @@ export class Hud {
 
   constructor(
     private readonly session: GameSession,
-    actions: { openSeeds(): void; openStorage(): void; openSettings(): void },
+    actions: { openSeeds(): void; openStorage(): void; openShop(): void; openSettings(): void },
   ) {
     this.pouch = h('div', { class: 'plaque pouch', 'data-test': 'coins' }, h('span', { class: 'ico-coin', style: 'width:30px;height:30px' }), this.coins);
     const levelBox = h('div', { class: 'plaque' }, this.level, h('span', { class: 'vine' }, this.vineFill, this.xpText));
@@ -36,11 +37,17 @@ export class Hud {
     const storage = h(
       'button',
       { class: 'round-big', 'aria-label': 'Kho', 'data-test': 'open-storage', onclick: () => actions.openStorage() },
-      icon('items/cherry-tomato', 52),
+      icon(itemFrame(session.content, session.content.cropList[1]?.produce.id ?? ''), 52),
       h('span', { class: 'round-label' }, 'Rương Mây'),
       this.storageBadge,
     );
-    this.el = h('div', { class: 'hud' }, h('div', { class: 'hud-top' }, levelBox, this.pouch, gear), this.hint, h('div', { class: 'hud-arc' }, seeds, storage));
+    const shop = h(
+      'button',
+      { class: 'round-big', 'aria-label': 'Lò Gốm', 'data-test': 'open-shop', onclick: () => actions.openShop() },
+      icon('pots/terracotta/5', 58),
+      h('span', { class: 'round-label' }, 'Lò Gốm'),
+    );
+    this.el = h('div', { class: 'hud' }, h('div', { class: 'hud-top' }, levelBox, this.pouch, gear), this.hint, h('div', { class: 'hud-arc' }, seeds, storage, shop));
   }
 
   update(): void {

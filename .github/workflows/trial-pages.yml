@@ -1,11 +1,11 @@
-# Bản thử trên GitHub Pages (PROJECT_RULES 4.4): build từ nhánh feat/app-shell, chạy test lõi,
+# Bản thử trên GitHub Pages (PROJECT_RULES 4.4): build từ nhánh feat/... vừa đẩy, chạy test lõi,
 # hiện "BẢN THỬ" + mã commit trên màn hình, rồi đẩy bản build vào nhánh gh-pages.
 # Không chạm nhánh main. Bật một lần: Settings → Pages → Deploy from a branch → gh-pages / (root).
 name: Bản thử GitHub Pages
 
 on:
   push:
-    branches: [feat/app-shell]
+    branches: ["feat/**"]
   workflow_dispatch:
 
 permissions:

@@ -4,7 +4,7 @@ import { backupFileName, deliverTextFile, pickTextFile } from '../app/backup.ts'
 import type { GameSession } from '../app/session.ts';
 import type { Sfx } from '../app/sfx.ts';
 import { clear, h } from './dom.ts';
-import { Panel } from './panels.ts';
+import { Panel } from './panel.ts';
 import type { Toasts } from './toast.ts';
 
 declare const __APP_VERSION__: string;

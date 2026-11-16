@@ -4,11 +4,12 @@
 import type { ContentPack } from '../core/content.ts';
 import type { GameState } from '../core/state.ts';
 import { cropStatus } from '../systems/growth.ts';
+import { nextFloor } from '../core/game.ts';
 import { storageFree } from '../systems/economy.ts';
 import { canAfford, nextUpgradeCost } from '../systems/pots.ts';
 import { formatDuration } from './text.ts';
 
-export type HintKind = 'harvest' | 'storageFull' | 'bug' | 'water' | 'plant' | 'sell' | 'upgrade' | 'wait' | 'idle';
+export type HintKind = 'harvest' | 'storageFull' | 'bug' | 'water' | 'plant' | 'sell' | 'upgrade' | 'floor' | 'wait' | 'idle';
 
 export interface Hint {
   kind: HintKind;
@@ -48,6 +49,11 @@ export function nextHint(content: ContentPack, state: GameState, now: number): H
     const affordable = content.cropList.some((c) => c.unlockLevel <= state.player.level && c.seedPrice <= state.player.coins);
     if (affordable) return { kind: 'plant', text: 'Chạm vào chậu trống để gieo hạt.' };
     if (hasSellable) return { kind: 'sell', text: 'Bán nông sản trong Kho để có xu mua hạt giống.' };
+  }
+
+  const floor = nextFloor(content, state);
+  if (floor && state.player.level >= floor.unlockLevel && state.player.coins >= floor.unlockCost) {
+    return { kind: 'floor', text: `Đủ điều kiện mở ${floor.name.vi} — vuốt lên dọc cây leo và chạm vào tầng mờ.` };
   }
 
   for (const pot of Object.values(state.pots)) {
