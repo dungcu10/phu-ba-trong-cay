@@ -101,7 +101,7 @@ def signature_jobs(potgen, master_dir, line_file="signature_all.json"):
         lift = stand.get("height", 0.22 if stand["type"] == "stand" else 0.28) if stand else 0.0
         profs = {**cat.get("profiles", {}), **pot.get("profiles", {})}
         g = geometry(profs[body["profile"]], body.get("scale", 1.0), lift)
-        jobs.append((f"pots/sig/{pot['id']:02d}", path, g))
+        jobs.append((f"pots/sig/{pot['id']:02d}/50", path, g))
     return jobs
 
 
