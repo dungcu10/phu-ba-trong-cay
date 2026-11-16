@@ -1,5 +1,5 @@
 // Loads the art atlases: sprites/scene built by tools/process_art.py from the Leonardo AI images,
-// and the Blender pot atlases built by tools/potgen (pots_phoenix, pots_catalog; directive 03).
+// and the Blender pot atlases built by tools/potgen (pots_phoenix, pots_catalog; directive 03; pots_signature; directive 04).
 // Art is referenced by the "sprite" field of each content definition, so adding a crop only
 // needs data plus its frames in the atlas.
 
@@ -14,13 +14,16 @@ import phoenixData from '../../assets/art/pots_phoenix.json';
 import phoenixWebp from '../../assets/art/pots_phoenix.webp?url';
 import catalogData from '../../assets/art/pots_catalog.json';
 import catalogWebp from '../../assets/art/pots_catalog.webp?url';
+import signatureData from '../../assets/art/pots_signature.json';
+import signatureWebp from '../../assets/art/pots_signature.webp?url';
 
-export const atlasUrls = { sprites: spritesPng, scene: scenePng, pots_phoenix: phoenixWebp, pots_catalog: catalogWebp } as const;
+export const atlasUrls = { sprites: spritesPng, scene: scenePng, pots_phoenix: phoenixWebp, pots_catalog: catalogWebp, pots_signature: signatureWebp } as const;
 export const atlasData = {
   sprites: spritesData as unknown as SpritesheetData,
   scene: sceneData as unknown as SpritesheetData,
   pots_phoenix: phoenixData as unknown as SpritesheetData,
   pots_catalog: catalogData as unknown as SpritesheetData,
+  pots_signature: signatureData as unknown as SpritesheetData,
 };
 export type SheetName = keyof typeof atlasData;
 const SHEETS = Object.keys(atlasData) as SheetName[];

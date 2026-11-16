@@ -218,7 +218,7 @@ export class PotCollectionPanel extends Panel {
     const claim = next
       ? h('button', { class: `candy small ${canClaim ? 'gold' : 'blocked'}`, 'data-test': 'claim-book', onclick: () => (canClaim ? this.actions.claimBookReward() : shake(claim)) }, gem(16), `Sưu tầm ${next.lines} dòng: +${next.gems}`)
       : h('span', { class: 'claimed' }, 'Đã nhận hết thưởng');
-    this.body.append(h('div', { class: 'book-head' }, h('strong', {}, `Đã sưu tầm ${owned.length}/${content.potList.length} dòng chậu`), claim));
+    this.body.append(h('div', { class: 'book-head' }, h('strong', {}, `Đã sưu tầm ${owned.length}/${content.potList.filter((d) => !d.retired || state.potBook[d.id]).length} dòng chậu`), claim));
 
     const tabs = h('div', { class: 'tabs' });
     for (const t of GROUP_TABS) tabs.append(h('button', { class: `tab${this.tab === t.id ? ' on' : ''}`, onclick: () => ((this.tab = t.id), this.render()) }, t.label));
@@ -231,6 +231,7 @@ export class PotCollectionPanel extends Panel {
     const grid = h('div', { class: 'book-grid' });
     const q = this.query.trim().toLowerCase();
     const list = content.potList.filter((d) => {
+      if (d.retired && !state.potBook[d.id]) return false; // directive 04: retired lines only if owned
       if (this.tab === 'missions' ? !['daily', 'weekly', 'monthly', 'challenge'].includes(d.group) : this.tab !== 'all' && d.group !== this.tab) return false;
       if (this.rarity && d.rarity !== this.rarity) return false;
       return !q || d.name.vi.toLowerCase().includes(q);

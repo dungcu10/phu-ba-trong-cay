@@ -1,7 +1,7 @@
 // Command processor. Every change to the game goes through dispatch(): the command is validated
 // first, and only applied if valid. The player UI and (later) BOTs use exactly this entry point.
 
-import type { ContentPack } from './content.ts';
+import { isSoldInShop, type ContentPack } from './content.ts';
 import type { GameState, SlotState } from './state.ts';
 import { adjustedOffset, gameTime } from './clock.ts';
 import { stochasticRound } from './rng.ts';
@@ -499,7 +499,7 @@ function unlockFloor(content: ContentPack, state: GameState, floorId: string): R
 function buyPot(content: ContentPack, state: GameState, potId: string): Result {
   const def = content.pots.get(potId);
   if (!def) return fail('unknown_pot');
-  if (def.price === null || def.group !== 'shop') return fail('not_for_sale');
+  if (!isSoldInShop(def)) return fail('not_for_sale');
   if (def.unlockLevel > state.player.level) return fail('locked');
   if (state.player.coins < def.price) return fail('not_enough_coins');
   state.player.coins -= def.price;

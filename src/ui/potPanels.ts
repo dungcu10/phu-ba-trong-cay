@@ -2,7 +2,7 @@
 
 import { svgIcon } from './icons.ts';
 import type { GameSession } from '../app/session.ts';
-import type { FloorDef, PotDef, PotLevelDef } from '../core/content.ts';
+import { isSoldInShop, type FloorDef, type PotDef, type PotLevelDef } from '../core/content.ts';
 import { atlasData, potFrame } from '../render/assets.ts';
 import { clear, h, icon } from './dom.ts';
 import { Panel } from './panel.ts';
@@ -42,7 +42,12 @@ export function favText(def: PotDef): HTMLElement | null {
 }
 
 /** "Lò Gốm Bà Mây": every pot type on a wooden shelf; locked ones under cloth. */
+/** Shop tab for pots that have no theme. */
+const BASIC_THEME = 'Cơ bản';
+
 export class PotShopPanel extends Panel {
+  private theme = BASIC_THEME;
+
   constructor(
     private readonly session: GameSession,
     private readonly actions: PotShopActions,
@@ -56,9 +61,20 @@ export class PotShopPanel extends Panel {
     const { content, state } = this.session;
     const owned = (id: string) => Object.values(state.pots).filter((p) => p.potId === id).length;
     this.body.append(h('div', { class: 'book-head' }, h('span', { class: 'lead' }, `Chậu mua về nằm trong kho chậu (${state.potStock.length}). Chạm vào chậu trống trên tầng để đặt.`), h('button', { class: 'candy small gold', 'data-test': 'open-collection', onclick: () => this.actions.openCollection() }, 'Bộ Sưu Tập Chậu')));
+    // Directive 04: shop groups. Pots without a theme are the classic kiln line ("Cơ bản").
+    const sold = content.potList.filter(isSoldInShop);
+    const themes = [...new Set(sold.map((d) => d.theme ?? BASIC_THEME))];
+    if (!themes.includes(this.theme)) this.theme = themes[0] ?? BASIC_THEME;
+    const tabs = h('div', { class: 'tabs', role: 'tablist' });
+    themes.forEach((t, i) =>
+      tabs.append(
+        h('button', { class: `tab${this.theme === t ? ' on' : ''}`, role: 'tab', 'aria-selected': this.theme === t ? 'true' : 'false', 'data-test': `shop-tab-${i}`, onclick: () => ((this.theme = t), this.render()) }, `${t} (${sold.filter((d) => (d.theme ?? BASIC_THEME) === t).length})`),
+      ),
+    );
+    this.body.append(h('div', { class: 'filters' }, tabs));
     const shelf = h('div', { class: 'shelf' });
-    for (const def of content.potList) {
-      if (def.price === null || def.group !== 'shop') continue;
+    for (const def of sold) {
+      if ((def.theme ?? BASIC_THEME) !== this.theme) continue;
       const locked = def.unlockLevel > state.player.level;
       const poor = def.price > state.player.coins;
       shelf.append(

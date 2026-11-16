@@ -116,7 +116,7 @@ async function boot(): Promise<void> {
       },
       benchScene: () => {
         const w = window as unknown as { __pbtc?: { demo?: (s: string) => boolean } };
-        w.__pbtc?.demo?.('blender');
+        w.__pbtc?.demo?.('signature'); // directive 04: one floor of 10 signature pots
         setTimeout(() => w.__pbtc?.demo?.('floor0'), 1200);
       },
       textureBytes: () => art.textureBytes(),

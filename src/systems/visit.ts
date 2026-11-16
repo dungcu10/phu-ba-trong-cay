@@ -52,7 +52,7 @@ export function botGarden(content: ContentPack, state: GameState, botId: string,
   const day = localDay(content, now);
   const helped = new Set(helpToday(content, bot, now));
   const lv = bot.level;
-  const pots = content.potList.filter((p) => p.unlockLevel <= lv);
+  const pots = content.potList.filter((p) => p.unlockLevel <= lv && !p.retired);
   const crops = content.cropList.filter((c) => c.unlockLevel <= lv);
   const liked = crops.filter((c) => c.family === def.likes);
   const floors = content.floorList.filter((f) => f.unlockLevel <= lv);

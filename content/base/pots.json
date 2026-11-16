@@ -1072,7 +1072,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.02-mam-xanh-co-thu",
@@ -1108,7 +1109,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.03-song-bien-san-ho",
@@ -1144,7 +1146,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.04-dam-may-bong-benh",
@@ -1180,7 +1183,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.05-da-cuoi-suoi-nguon",
@@ -1216,7 +1220,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.06-ong-mat-hoa-cuc",
@@ -1252,7 +1257,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.07-gom-su-thanh-hoa",
@@ -1288,7 +1294,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.08-pha-le-thach-anh",
@@ -1324,7 +1331,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.09-nam-rung-do",
@@ -1360,7 +1368,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.10-tre-truc-thanh-nha",
@@ -1396,7 +1405,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.11-cat-vang-sa-mac",
@@ -1432,7 +1442,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.12-bang-tuyet-vinh-cuu",
@@ -1468,7 +1479,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.13-dung-nham-nui-lua",
@@ -1504,7 +1516,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.14-gio-loc-thao-nguyen",
@@ -1540,7 +1553,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.15-keo-bong-cau-vong",
@@ -1576,7 +1590,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.16-nha-gia-kim-thuat",
@@ -1612,7 +1627,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.17-tho-ren-huyen-thoai",
@@ -1648,7 +1664,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.18-ban-giao-huong-vang",
@@ -1684,7 +1701,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.19-hoa-si-mong-mo",
@@ -1720,7 +1738,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.20-thu-thu-tri-thuc",
@@ -1756,7 +1775,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.21-nha-thien-van-hoc",
@@ -1792,7 +1812,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.22-vua-dau-bep-may",
@@ -1828,7 +1849,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.23-thuong-gia-bac-ty",
@@ -1864,7 +1886,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.24-chien-binh-rong-thieng",
@@ -1900,7 +1923,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.25-nong-dan-cham-chi",
@@ -1936,7 +1960,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.26-nha-tham-hiem-bien-sau",
@@ -1972,7 +1997,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.27-ky-su-co-khi",
@@ -2008,7 +2034,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.28-ve-than-rung-gia",
@@ -2044,7 +2071,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.29-su-gia-hoa-binh",
@@ -2080,7 +2108,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.30-ke-du-hanh-thoi-gian",
@@ -2116,7 +2145,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.31-lan-su-rong-tet-viet",
@@ -2152,7 +2182,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.32-den-long-ca-chep",
@@ -2188,7 +2219,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.33-bi-ngo-phu-thuy",
@@ -2224,7 +2256,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.34-co-xe-tuan-loc",
@@ -2260,7 +2293,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.35-hop-socola-tinh-yeu",
@@ -2296,7 +2330,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.36-neon-tuong-lai",
@@ -2332,7 +2367,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.37-tra-sua-tran-chau",
@@ -2368,7 +2404,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.38-phi-hanh-gia-meo",
@@ -2404,7 +2441,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.39-hoa-anh-dao-mua-xuan",
@@ -2440,7 +2478,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.40-thuy-cung-sua-phat-sang",
@@ -2476,7 +2515,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.41-gau-dau-pastel",
@@ -2512,7 +2552,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.42-hoang-gia-ai-cap-co-dai",
@@ -2548,7 +2589,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.43-tien-nu-ho-diep",
@@ -2584,7 +2626,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.44-dia-bay-nguoi-ngoai-hanh-tinh",
@@ -2620,7 +2663,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.45-banh-kem-sinh-nhat-game",
@@ -2656,7 +2700,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.46-linh-hon-cao-chin-duoi",
@@ -2692,7 +2737,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.47-nhac-hoi-k-pop-lightstick",
@@ -2728,7 +2774,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.48-than-thoai-hy-lap-zeus",
@@ -2764,7 +2811,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.49-the-gioi-keo-ngot-halloween",
@@ -2800,7 +2848,8 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
   },
   {
     "id": "base:pot.50-thanh-vat-khoi-nguyen-vip",
@@ -2836,6 +2885,1807 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "shop",
+    "retired": true
+  },
+  {
+    "id": "base:pot.sig-01-banh-kem-sinh-nhat",
+    "name": {
+      "vi": "Bánh Kem Sinh Nhật"
+    },
+    "sprite": "pots/sig/01",
+    "theme": "Đồ ăn",
+    "rarity": "rare",
+    "price": 5000,
+    "unlockLevel": 12,
+    "favoredFamily": "flower",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "speed": 0.08,
+        "yield": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 400,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/01/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-02-tra-sua-tran-chau",
+    "name": {
+      "vi": "Trà Sữa Trân Châu"
+    },
+    "sprite": "pots/sig/02",
+    "theme": "Đồ ăn",
+    "rarity": "rare",
+    "price": 5000,
+    "unlockLevel": 12,
+    "favoredFamily": "fruit",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "yield": 0.1,
+        "xp": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 400,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/02/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-03-kem-oc-que",
+    "name": {
+      "vi": "Kem Ốc Quế"
+    },
+    "sprite": "pots/sig/03",
+    "theme": "Đồ ăn",
+    "rarity": "rare",
+    "price": 5000,
+    "unlockLevel": 12,
+    "favoredFamily": "herb",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "speed": 0.06,
+        "luck": 0.1
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 400,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/03/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-04-donut-cau-vong",
+    "name": {
+      "vi": "Donut Cầu Vồng"
+    },
+    "sprite": "pots/sig/04",
+    "theme": "Đồ ăn",
+    "rarity": "rare",
+    "price": 5000,
+    "unlockLevel": 12,
+    "favoredFamily": "flower",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "xp": 0.1,
+        "luck": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 400,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/04/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-05-banh-bao",
+    "name": {
+      "vi": "Bánh Bao"
+    },
+    "sprite": "pots/sig/05",
+    "theme": "Đồ ăn",
+    "rarity": "rare",
+    "price": 5000,
+    "unlockLevel": 12,
+    "favoredFamily": "fruit",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "speed": 0.08,
+        "yield": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 400,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/05/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-06-dua-hau",
+    "name": {
+      "vi": "Dưa Hấu"
+    },
+    "sprite": "pots/sig/06",
+    "theme": "Đồ ăn",
+    "rarity": "rare",
+    "price": 5000,
+    "unlockLevel": 12,
+    "favoredFamily": "herb",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "yield": 0.1,
+        "xp": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 400,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/06/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-07-macaron",
+    "name": {
+      "vi": "Macaron"
+    },
+    "sprite": "pots/sig/07",
+    "theme": "Đồ ăn",
+    "rarity": "rare",
+    "price": 5000,
+    "unlockLevel": 12,
+    "favoredFamily": "flower",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "speed": 0.06,
+        "luck": 0.1
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 400,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/07/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-08-banh-flan",
+    "name": {
+      "vi": "Bánh Flan"
+    },
+    "sprite": "pots/sig/08",
+    "theme": "Đồ ăn",
+    "rarity": "rare",
+    "price": 5000,
+    "unlockLevel": 12,
+    "favoredFamily": "fruit",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "xp": 0.1,
+        "luck": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 400,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/08/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-09-sushi-ca-hoi",
+    "name": {
+      "vi": "Sushi Cá Hồi"
+    },
+    "sprite": "pots/sig/09",
+    "theme": "Đồ ăn",
+    "rarity": "rare",
+    "price": 5000,
+    "unlockLevel": 12,
+    "favoredFamily": "herb",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "speed": 0.08,
+        "yield": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 400,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/09/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-10-cupcake",
+    "name": {
+      "vi": "Cupcake"
+    },
+    "sprite": "pots/sig/10",
+    "theme": "Đồ ăn",
+    "rarity": "rare",
+    "price": 5000,
+    "unlockLevel": 12,
+    "favoredFamily": "flower",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "yield": 0.1,
+        "xp": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 400,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/10/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-11-phi-hanh-gia-meo",
+    "name": {
+      "vi": "Phi Hành Gia Mèo"
+    },
+    "sprite": "pots/sig/11",
+    "theme": "Linh vật",
+    "rarity": "rare",
+    "price": 5000,
+    "unlockLevel": 12,
+    "favoredFamily": "fruit",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "speed": 0.06,
+        "luck": 0.1
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 400,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/11/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-12-cao-chin-duoi",
+    "name": {
+      "vi": "Cáo Chín Đuôi"
+    },
+    "sprite": "pots/sig/12",
+    "theme": "Linh vật",
+    "rarity": "rare",
+    "price": 5000,
+    "unlockLevel": 12,
+    "favoredFamily": "herb",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "xp": 0.1,
+        "luck": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 400,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/12/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-13-tho-ngoc",
+    "name": {
+      "vi": "Thỏ Ngọc"
+    },
+    "sprite": "pots/sig/13",
+    "theme": "Linh vật",
+    "rarity": "rare",
+    "price": 5000,
+    "unlockLevel": 12,
+    "favoredFamily": "flower",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "speed": 0.08,
+        "yield": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 400,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/13/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-14-rong-con",
+    "name": {
+      "vi": "Rồng Con"
+    },
+    "sprite": "pots/sig/14",
+    "theme": "Linh vật",
+    "rarity": "rare",
+    "price": 5000,
+    "unlockLevel": 12,
+    "favoredFamily": "fruit",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "yield": 0.1,
+        "xp": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 400,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/14/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-15-ca-koi",
+    "name": {
+      "vi": "Cá Koi"
+    },
+    "sprite": "pots/sig/15",
+    "theme": "Linh vật",
+    "rarity": "rare",
+    "price": 5000,
+    "unlockLevel": 12,
+    "favoredFamily": "herb",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "speed": 0.06,
+        "luck": 0.1
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 400,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/15/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-16-gau-truc",
+    "name": {
+      "vi": "Gấu Trúc"
+    },
+    "sprite": "pots/sig/16",
+    "theme": "Linh vật",
+    "rarity": "epic",
+    "price": 12000,
+    "unlockLevel": 16,
+    "favoredFamily": "flower",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "xp": 0.1,
+        "luck": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 700,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/16/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-17-chim-canh-cut",
+    "name": {
+      "vi": "Chim Cánh Cụt"
+    },
+    "sprite": "pots/sig/17",
+    "theme": "Linh vật",
+    "rarity": "epic",
+    "price": 12000,
+    "unlockLevel": 16,
+    "favoredFamily": "fruit",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "speed": 0.08,
+        "yield": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 700,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/17/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-18-ech-la-sen",
+    "name": {
+      "vi": "Ếch Lá Sen"
+    },
+    "sprite": "pots/sig/18",
+    "theme": "Linh vật",
+    "rarity": "epic",
+    "price": 12000,
+    "unlockLevel": 16,
+    "favoredFamily": "herb",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "yield": 0.1,
+        "xp": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 700,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/18/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-19-cu-meo",
+    "name": {
+      "vi": "Cú Mèo"
+    },
+    "sprite": "pots/sig/19",
+    "theme": "Linh vật",
+    "rarity": "epic",
+    "price": 12000,
+    "unlockLevel": 16,
+    "favoredFamily": "flower",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "speed": 0.06,
+        "luck": 0.1
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 700,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/19/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-20-heo-dat",
+    "name": {
+      "vi": "Heo Đất"
+    },
+    "sprite": "pots/sig/20",
+    "theme": "Linh vật",
+    "rarity": "epic",
+    "price": 12000,
+    "unlockLevel": 16,
+    "favoredFamily": "fruit",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "xp": 0.1,
+        "luck": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 700,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/20/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-21-nam-rung-do",
+    "name": {
+      "vi": "Nấm Rừng Đỏ"
+    },
+    "sprite": "pots/sig/21",
+    "theme": "Thiên nhiên",
+    "rarity": "epic",
+    "price": 12000,
+    "unlockLevel": 16,
+    "favoredFamily": "herb",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "speed": 0.08,
+        "yield": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 700,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/21/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-22-vo-so-ngoc-trai",
+    "name": {
+      "vi": "Vỏ Sò Ngọc Trai"
+    },
+    "sprite": "pots/sig/22",
+    "theme": "Thiên nhiên",
+    "rarity": "epic",
+    "price": 12000,
+    "unlockLevel": 16,
+    "favoredFamily": "flower",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "yield": 0.1,
+        "xp": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 700,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/22/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-23-to-ong",
+    "name": {
+      "vi": "Tổ Ong"
+    },
+    "sprite": "pots/sig/23",
+    "theme": "Thiên nhiên",
+    "rarity": "epic",
+    "price": 12000,
+    "unlockLevel": 16,
+    "favoredFamily": "fruit",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "speed": 0.06,
+        "luck": 0.1
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 700,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/23/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-24-hang-pha-le",
+    "name": {
+      "vi": "Hang Pha Lê"
+    },
+    "sprite": "pots/sig/24",
+    "theme": "Thiên nhiên",
+    "rarity": "epic",
+    "price": 12000,
+    "unlockLevel": 16,
+    "favoredFamily": "herb",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "xp": 0.1,
+        "luck": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 700,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/24/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-25-dam-may-cau-vong",
+    "name": {
+      "vi": "Đám Mây Cầu Vồng"
+    },
+    "sprite": "pots/sig/25",
+    "theme": "Thiên nhiên",
+    "rarity": "epic",
+    "price": 12000,
+    "unlockLevel": 16,
+    "favoredFamily": "flower",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "speed": 0.08,
+        "yield": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 700,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/25/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-26-hoa-sen",
+    "name": {
+      "vi": "Hoa Sen"
+    },
+    "sprite": "pots/sig/26",
+    "theme": "Thiên nhiên",
+    "rarity": "epic",
+    "price": 12000,
+    "unlockLevel": 16,
+    "favoredFamily": "fruit",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "yield": 0.1,
+        "xp": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 700,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/26/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-27-bi-ngo",
+    "name": {
+      "vi": "Bí Ngô"
+    },
+    "sprite": "pots/sig/27",
+    "theme": "Thiên nhiên",
+    "rarity": "epic",
+    "price": 12000,
+    "unlockLevel": 16,
+    "favoredFamily": "herb",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "speed": 0.06,
+        "luck": 0.1
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 700,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/27/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-28-qua-thong",
+    "name": {
+      "vi": "Quả Thông"
+    },
+    "sprite": "pots/sig/28",
+    "theme": "Thiên nhiên",
+    "rarity": "epic",
+    "price": 12000,
+    "unlockLevel": 16,
+    "favoredFamily": "flower",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "xp": 0.1,
+        "luck": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 700,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/28/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-29-bong-bong-xa-phong",
+    "name": {
+      "vi": "Bong Bóng Xà Phòng"
+    },
+    "sprite": "pots/sig/29",
+    "theme": "Thiên nhiên",
+    "rarity": "epic",
+    "price": 12000,
+    "unlockLevel": 16,
+    "favoredFamily": "fruit",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "speed": 0.08,
+        "yield": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 700,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/29/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-30-goc-cay-reu",
+    "name": {
+      "vi": "Gốc Cây Rêu"
+    },
+    "sprite": "pots/sig/30",
+    "theme": "Thiên nhiên",
+    "rarity": "epic",
+    "price": 12000,
+    "unlockLevel": 16,
+    "favoredFamily": "herb",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "yield": 0.1,
+        "xp": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 700,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/30/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-31-gom-su-thanh-hoa",
+    "name": {
+      "vi": "Gốm Sứ Thanh Hoa"
+    },
+    "sprite": "pots/sig/31",
+    "theme": "Gốm Á Đông",
+    "rarity": "legendary",
+    "price": 25000,
+    "unlockLevel": 20,
+    "favoredFamily": "flower",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "speed": 0.06,
+        "luck": 0.1
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 1000,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/31/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-32-son-mai-son-vang",
+    "name": {
+      "vi": "Sơn Mài Son Vàng"
+    },
+    "sprite": "pots/sig/32",
+    "theme": "Gốm Á Đông",
+    "rarity": "legendary",
+    "price": 25000,
+    "unlockLevel": 20,
+    "favoredFamily": "fruit",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "xp": 0.1,
+        "luck": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 1000,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/32/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-33-den-long-hoi-an",
+    "name": {
+      "vi": "Đèn Lồng Hội An"
+    },
+    "sprite": "pots/sig/33",
+    "theme": "Gốm Á Đông",
+    "rarity": "legendary",
+    "price": 25000,
+    "unlockLevel": 20,
+    "favoredFamily": "herb",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "speed": 0.08,
+        "yield": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 1000,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/33/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-34-trong-dong",
+    "name": {
+      "vi": "Trống Đồng"
+    },
+    "sprite": "pots/sig/34",
+    "theme": "Gốm Á Đông",
+    "rarity": "legendary",
+    "price": 25000,
+    "unlockLevel": 20,
+    "favoredFamily": "flower",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "yield": 0.1,
+        "xp": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 1000,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/34/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-35-ro-tre-non-la",
+    "name": {
+      "vi": "Rổ Tre Nón Lá"
+    },
+    "sprite": "pots/sig/35",
+    "theme": "Gốm Á Đông",
+    "rarity": "legendary",
+    "price": 25000,
+    "unlockLevel": 20,
+    "favoredFamily": "fruit",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "speed": 0.06,
+        "luck": 0.1
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 1000,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/35/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-36-am-tu-sa",
+    "name": {
+      "vi": "Ấm Tử Sa"
+    },
+    "sprite": "pots/sig/36",
+    "theme": "Gốm Á Đông",
+    "rarity": "legendary",
+    "price": 25000,
+    "unlockLevel": 20,
+    "favoredFamily": "herb",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "xp": 0.1,
+        "luck": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 1000,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/36/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-37-hu-men-nau",
+    "name": {
+      "vi": "Hũ Men Nâu"
+    },
+    "sprite": "pots/sig/37",
+    "theme": "Gốm Á Đông",
+    "rarity": "legendary",
+    "price": 25000,
+    "unlockLevel": 20,
+    "favoredFamily": "flower",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "speed": 0.08,
+        "yield": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 1000,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/37/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-38-binh-men-ngoc",
+    "name": {
+      "vi": "Bình Men Ngọc"
+    },
+    "sprite": "pots/sig/38",
+    "theme": "Gốm Á Đông",
+    "rarity": "legendary",
+    "price": 25000,
+    "unlockLevel": 20,
+    "favoredFamily": "fruit",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "yield": 0.1,
+        "xp": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 1000,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/38/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-39-bat-trang-men-lam",
+    "name": {
+      "vi": "Bát Tràng Men Lam"
+    },
+    "sprite": "pots/sig/39",
+    "theme": "Gốm Á Đông",
+    "rarity": "legendary",
+    "price": 25000,
+    "unlockLevel": 20,
+    "favoredFamily": "herb",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "speed": 0.06,
+        "luck": 0.1
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 1000,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/39/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-40-binh-ho-lo-do",
+    "name": {
+      "vi": "Bình Hồ Lô Đỏ"
+    },
+    "sprite": "pots/sig/40",
+    "theme": "Gốm Á Đông",
+    "rarity": "legendary",
+    "price": 25000,
+    "unlockLevel": 20,
+    "favoredFamily": "flower",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "xp": 0.1,
+        "luck": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 1000,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/40/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-41-phuong-hoang-lua",
+    "name": {
+      "vi": "Phượng Hoàng Lửa"
+    },
+    "sprite": "pots/sig/41",
+    "theme": "Thần thoại",
+    "rarity": "legendary",
+    "price": 25000,
+    "unlockLevel": 20,
+    "favoredFamily": "fruit",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "speed": 0.08,
+        "yield": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 1000,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/41/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-42-ky-lan",
+    "name": {
+      "vi": "Kỳ Lân"
+    },
+    "sprite": "pots/sig/42",
+    "theme": "Thần thoại",
+    "rarity": "legendary",
+    "price": 25000,
+    "unlockLevel": 20,
+    "favoredFamily": "herb",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "yield": 0.1,
+        "xp": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 1000,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/42/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-43-thien-nga-ngoc",
+    "name": {
+      "vi": "Thiên Nga Ngọc"
+    },
+    "sprite": "pots/sig/43",
+    "theme": "Thần thoại",
+    "rarity": "legendary",
+    "price": 25000,
+    "unlockLevel": 20,
+    "favoredFamily": "flower",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "speed": 0.06,
+        "luck": 0.1
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 1000,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/43/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-44-rong-ngoc",
+    "name": {
+      "vi": "Rồng Ngọc"
+    },
+    "sprite": "pots/sig/44",
+    "theme": "Thần thoại",
+    "rarity": "legendary",
+    "price": 25000,
+    "unlockLevel": 20,
+    "favoredFamily": "fruit",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "xp": 0.1,
+        "luck": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 1000,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/44/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-45-long-cung",
+    "name": {
+      "vi": "Long Cung"
+    },
+    "sprite": "pots/sig/45",
+    "theme": "Thần thoại",
+    "rarity": "legendary",
+    "price": 25000,
+    "unlockLevel": 20,
+    "favoredFamily": "herb",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "speed": 0.08,
+        "yield": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 1000,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/45/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-46-cung-trang",
+    "name": {
+      "vi": "Cung Trăng"
+    },
+    "sprite": "pots/sig/46",
+    "theme": "Thần thoại",
+    "rarity": "legendary",
+    "price": 25000,
+    "unlockLevel": 20,
+    "favoredFamily": "flower",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "yield": 0.1,
+        "xp": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 1000,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/46/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-47-den-than",
+    "name": {
+      "vi": "Đèn Thần"
+    },
+    "sprite": "pots/sig/47",
+    "theme": "Thần thoại",
+    "rarity": "legendary",
+    "price": 25000,
+    "unlockLevel": 20,
+    "favoredFamily": "fruit",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "speed": 0.06,
+        "luck": 0.1
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 1000,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/47/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-48-ngai-vang-thien-gioi",
+    "name": {
+      "vi": "Ngai Vàng Thiên Giới"
+    },
+    "sprite": "pots/sig/48",
+    "theme": "Thần thoại",
+    "rarity": "legendary",
+    "price": 25000,
+    "unlockLevel": 20,
+    "favoredFamily": "herb",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "xp": 0.1,
+        "luck": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 1000,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/48/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-49-thien-than",
+    "name": {
+      "vi": "Thiên Thần"
+    },
+    "sprite": "pots/sig/49",
+    "theme": "Thần thoại",
+    "rarity": "legendary",
+    "price": 25000,
+    "unlockLevel": 20,
+    "favoredFamily": "flower",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "speed": 0.08,
+        "yield": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 1000,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/49/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
+  },
+  {
+    "id": "base:pot.sig-50-ho-diep-tien",
+    "name": {
+      "vi": "Hồ Điệp Tiên"
+    },
+    "sprite": "pots/sig/50",
+    "theme": "Thần thoại",
+    "rarity": "legendary",
+    "price": 25000,
+    "unlockLevel": 20,
+    "favoredFamily": "fruit",
+    "levelRule": {
+      "maxLevel": 50,
+      "base": {
+        "yield": 0.1,
+        "xp": 0.08
+      },
+      "perLevel": 0.02,
+      "coins": {
+        "base": 1000,
+        "growth": 1.12
+      },
+      "items": {
+        "base:bug.ladybird": {
+          "base": 3,
+          "growth": 1.08
+        }
+      }
+    },
+    "set": null,
+    "group": "shop",
+    "art": {
+      "frames": "pots/sig/50/50",
+      "levels": "50 (chỉ có ảnh mốc cấp 50)"
+    }
   }
 ]

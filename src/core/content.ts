@@ -154,12 +154,24 @@ export interface PotDef {
   /** How a non-shop pot is obtained by exchange (mission seals, crafting recipe). */
   exchange?: { items: Record<string, number> };
   levels: PotLevelDef[];
+  /**
+   * Directive 04: replaced by a newer line. Hidden from the shop, the collection list and
+   * neighbours' gardens, never sold, but still loadable so owned pots keep working.
+   */
+  retired?: boolean;
+  /** Shop group shown as a header in the pot shop (e.g. "Đồ ăn"), or absent. */
+  theme?: string;
   /** Highest level that can be reached in this build. */
   openTo: number;
   /** Player level needed to upgrade TO each level (index = level - 1). */
   levelReq: number[];
   looks: PotLook[];
   skills: PotSkill[];
+}
+
+/** Directive 04: sold in the pot shop for coins (retired lines are not). */
+export function isSoldInShop(d: PotDef): d is PotDef & { price: number } {
+  return d.price !== null && d.group === 'shop' && !d.retired;
 }
 
 /** Expands a 50-level growth rule into explicit levels (POT_SYSTEM 3). Costs are rounded. */
@@ -469,6 +481,8 @@ export function buildContentPack(raw: RawContent): ContentPack {
     });
     for (const sk of p.skills as PotSkill[]) if (!(sk.level >= 1 && sk.level <= nLevels)) problems.push(`pots[${i}].skills ${sk.id}: cấp ngoài khoảng`);
     if (p.price !== null && !(isNum(p.price) && p.price >= 0)) problems.push(`pots[${i}].price: phải là số >= 0 hoặc null`);
+    if (p.retired !== undefined && typeof p.retired !== 'boolean') problems.push(`pots[${i}].retired: phải là true/false`);
+    if (p.theme !== undefined && !isStr(p.theme)) problems.push(`pots[${i}].theme: phải là chuỗi`);
     if (p.favoredFamily === undefined) p.favoredFamily = null;
     if (p.set === undefined) p.set = null;
     const levels = asArray(`pots[${i}].levels`, p.levels, problems) as PotLevelDef[];

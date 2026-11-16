@@ -57,6 +57,12 @@ export function makeDemo(session: GameSession, view: GameView, controller: Contr
 
   return (step: string) => {
     if (step !== 'pot-upgrade') closePanels();
+    const tab = /^shop-t(\d+)$/.exec(step); // 'shop-t<N>': pot shop open on tab N (directive 04)
+    if (tab) {
+      controller.openShop();
+      click(`shop-tab-${tab[1]}`);
+      return true;
+    }
     switch (step) {
       case 'garden':
         setup();
@@ -136,6 +142,35 @@ export function makeDemo(session: GameSession, view: GameView, controller: Contr
             const id = content.pots.has(potId) ? potId : 'base:pot.phoenix';
             state.pots[sl.potInstanceId] = { potId: id, level, history: [{ level, at: session.now() }], source: 'old-save' };
             state.potBook[id] = { firstAt: session.now(), bestLevel: level };
+            sl.planting = null;
+            run({ type: 'plant', cropId: crops[(i + fi) % crops.length]!, floor: fi, slot: i });
+          }),
+        );
+        clock.advance(20 * MIN);
+        controller.resync();
+        view.focusFloor(0, 1);
+        return true;
+      }
+      case 'signature': {
+        // Directive 04 screenshot + FPS: floor 1 has 10 signature pots, two from each shop group,
+        // including the stands #38 Bình Men Ngọc, #48 Ngai Vàng and the low #39 Bát Tràng, #47 Đèn Thần;
+        // floor 2 has 10 more, all level 50 and planted.
+        const { state, content } = session;
+        state.player.level = 20;
+        state.player.coins = Math.max(state.player.coins, 500_000);
+        for (const f of content.floorList.slice(1, 2)) if (!state.floors.some((x) => x.floorId === f.id)) run({ type: 'unlockFloor', floorId: f.id });
+        for (let fi = 0; fi < 2; fi++) while (state.floors[fi]!.slots.length < 10) if (!run({ type: 'expandFloor', floor: fi })) break;
+        const sig = (n: number) => content.potList.find((p) => p.sprite === `pots/sig/${String(n).padStart(2, '0')}`)?.id ?? 'base:pot.phoenix';
+        const plans = [
+          [1, 9, 11, 16, 22, 26, 38, 39, 47, 48],
+          [3, 6, 14, 19, 24, 29, 31, 33, 42, 46],
+        ];
+        const crops = ['base:crop.cotton-daisy', 'base:crop.cherry-tomato', 'base:crop.cloud-mint', 'base:crop.sky-carrot', 'base:crop.cloud-strawberry', 'base:crop.golden-gerbera'];
+        state.floors.slice(0, 2).forEach((f, fi) =>
+          f.slots.forEach((sl, i) => {
+            const id = sig(plans[fi]![i % 10]!);
+            state.pots[sl.potInstanceId] = { potId: id, level: 50, history: [{ level: 50, at: session.now() }], source: 'old-save' };
+            state.potBook[id] = { firstAt: session.now(), bestLevel: 50 };
             sl.planting = null;
             run({ type: 'plant', cropId: crops[(i + fi) % crops.length]!, floor: fi, slot: i });
           }),

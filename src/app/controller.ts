@@ -582,7 +582,7 @@ export class Controller implements PanelActions, PotShopActions, WorldActions, G
         const extra = unlocked.length > 0 ? ` Mở khóa: ${unlocked.join(', ')}.` : '';
         const floor = content.floorList.find((f) => f.unlockLevel === e.level);
         const more = floor ? ` Có thể mở ${floor.name.vi}.` : '';
-        const pots = content.potList.filter((p) => p.unlockLevel === e.level && p.price !== null).map((p) => p.name.vi);
+        const pots = content.potList.filter((p) => p.unlockLevel === e.level && p.price !== null && !p.retired).map((p) => p.name.vi);
         const potText = pots.length > 0 ? ` Lò Gốm có ${pots.join(', ')}.` : '';
         this.celebrate(`Lên cấp ${e.level}!`, `+${formatNumber(bonus)} xu thưởng.${extra}${more}${potText}`);
         for (let i = 0; i < 4; i++) {
