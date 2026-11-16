@@ -1,5 +1,6 @@
 // Boot: content → saved game (never overwritten on read errors) → PixiJS view → HTML UI.
 
+import { makeDemo } from './app/demo.ts';
 import '@fontsource/baloo-2/latin-700.css';
 import '@fontsource/baloo-2/latin-ext-700.css';
 import '@fontsource/baloo-2/vietnamese-700.css';
@@ -127,7 +128,8 @@ async function boot(): Promise<void> {
   document.getElementById('loading')?.remove();
   window.addEventListener('beforeunload', () => void session.saveNow());
   // Exposed for the automated browser tests only.
-  (window as unknown as { __pbtc?: unknown }).__pbtc = { session, view, backupFileName };
+  const demo = dev && 'advance' in clock ? makeDemo(session, view, controller, clock as ReturnType<typeof devClock>) : undefined;
+  (window as unknown as { __pbtc?: unknown }).__pbtc = { session, view, backupFileName, demo };
 }
 
 /** WebGPU device loss cannot be recovered in place: save, then reload (no black screen). */

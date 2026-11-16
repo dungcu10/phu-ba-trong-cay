@@ -1,4 +1,5 @@
-// One pot on a cloud floor: pot, plant, status marker, Bọ Mây, growth bar and timer.
+// One pot on a cloud floor: pot, plant, status marker, Bọ Mây, growth bar and timer, plus the
+// pot's appearance tier (REDESIGN_V2 2.2): Tinh = warm glow, Thần = aura and orbiting sparkles.
 // It only displays a CropStatus computed by the simulation; it never decides game rules.
 
 import { Container, Graphics, Rectangle, Sprite, Text, type Texture } from 'pixi.js';
@@ -30,6 +31,11 @@ export class SlotView extends Container {
   private readonly bar: Graphics;
   private readonly timer: Text;
   private readonly phase = Math.random() * Math.PI * 2;
+  private readonly aura: Sprite;
+  private readonly sparkles: Sprite[] = [];
+  private tier: 0 | 1 | 2 = 0;
+  private bloomT = -1;
+  private readonly bloomRing: Graphics;
 
   private plantKey = '';
   private potKey = '';
@@ -49,8 +55,27 @@ export class SlotView extends Container {
     readonly index: number,
     private readonly art: Art,
     private readonly tweens: Tweens,
+    dot: Texture,
+    glow: Texture,
   ) {
     super();
+    this.aura = new Sprite(glow);
+    this.aura.anchor.set(0.5);
+    this.aura.position.set(0, -48);
+    this.aura.blendMode = 'add';
+    this.aura.visible = false;
+    for (let i = 0; i < 4; i++) {
+      const sp = new Sprite(dot);
+      sp.anchor.set(0.5);
+      sp.blendMode = 'add';
+      sp.tint = hex(C.brand.gold);
+      sp.visible = false;
+      this.sparkles.push(sp);
+    }
+    this.bloomRing = new Graphics();
+    this.bloomRing.visible = false;
+    this.sortableChildren = true;
+    this.aura.zIndex = -2;
     this.plant = new Sprite();
     this.plant.y = SLOT_GEOM.soilY;
     this.pot = new Sprite();
@@ -68,7 +93,7 @@ export class SlotView extends Container {
     this.timer.anchor.set(0.5, 0);
     this.timer.y = SLOT_GEOM.barY + 10;
     // Plant in front of the pot: its base sits on the soil line inside the mouth.
-    this.addChild(this.pot, this.plant, this.bug, this.bugCount, this.marker, this.bar, this.timer);
+    this.addChild(this.aura, this.pot, this.plant, ...this.sparkles, this.bloomRing, this.bug, this.bugCount, this.marker, this.bar, this.timer);
 
     const g = SLOT_GEOM.hit;
     this.hitArea = new Rectangle(g.x, g.y, g.w, g.h);
@@ -85,6 +110,21 @@ export class SlotView extends Container {
     this.pot.tint = look.tint;
     this.pot.anchor.copyFrom(this.pot.texture.defaultAnchor ?? { x: 0.5, y: 1 });
     if (changed) this.popPot();
+  }
+
+  /** Appearance tier of the pot (0 Mộc, 1 Tinh, 2 Thần). */
+  setTier(tier: 0 | 1 | 2): void {
+    if (tier === this.tier) return;
+    this.tier = tier;
+    this.aura.visible = tier > 0;
+    this.aura.tint = hex(tier === 2 ? C.brand.gold : C.brand.cream);
+    this.sparkles.forEach((sp, i) => (sp.visible = tier === 2 || (tier === 1 && i < 2)));
+  }
+
+  /** Harvest: a ring of light opens from the plant and the plant springs up. */
+  bloom(): void {
+    this.bloomT = 0;
+    this.bloomRing.visible = true;
   }
 
   /** Updates plant, marker, bug and timer from the current status (null = empty pot). */
@@ -114,7 +154,7 @@ export class SlotView extends Container {
     if (bugs > 0 && this.shownBugs === 0) {
       const sprite = status!.bug!.bug.sprite;
       this.bugTextures = [this.art.get(`${sprite}/0`), this.art.get(`${sprite}/1`)];
-      this.tweens.add(TOKENS.motion.bounce.ms * 2, ease.outBack, (v) => this.bug.scale.set(0.75 * v));
+      this.tweens.add(TOKENS.motion.bounce.ms * 2, ease.outBack, (v) => this.bug.scale.set(0.75 * v), undefined, this);
     }
     this.bug.visible = bugs > 0;
     this.bugCount.visible = bugs > 1;
@@ -199,6 +239,35 @@ export class SlotView extends Container {
     const squash = 1 + Math.sin(t * 2.1 + this.phase) * 0.01;
     this.plant.scale.set(this.plantPop / squash, this.plantPop * squash * hop);
     this.pot.scale.set(this.potPop);
+    if (this.tier > 0) {
+      const pulse = 0.5 + 0.5 * Math.sin(t * 2.2 + this.phase);
+      // Glow texture is 128 pt wide: about 1.9× / 1.5× the pot.
+      this.aura.scale.set((this.tier === 2 ? 1.9 : 1.5) + pulse * 0.12, (this.tier === 2 ? 1.35 : 1.1) + pulse * 0.08);
+      this.aura.alpha = (this.tier === 2 ? 0.75 : 0.5) + pulse * 0.2;
+      this.sparkles.forEach((sp, i) => {
+        if (!sp.visible) return;
+        const a = t * (this.tier === 2 ? 1.4 : 0.9) + (i * Math.PI * 2) / this.sparkles.length + this.phase;
+        sp.position.set(Math.cos(a) * 62, -50 + Math.sin(a) * 22 + Math.sin(t * 3 + i) * 6);
+        sp.scale.set(0.3 + 0.14 * Math.sin(t * 5 + i * 1.7));
+        sp.alpha = 0.6 + 0.4 * Math.sin(t * 4 + i);
+        // Sparkles pass behind the pot on the far half of their orbit.
+        sp.zIndex = Math.sin(a) < 0 ? -1 : 1;
+      });
+    }
+    if (this.bloomT >= 0) {
+      this.bloomT += 1 / 30;
+      const k = this.bloomT;
+      const g = this.bloomRing;
+      g.clear();
+      if (k >= 1) {
+        this.bloomT = -1;
+        g.visible = false;
+      } else {
+        const r = 30 + k * 110;
+        g.circle(0, SLOT_GEOM.soilY - 50, r).stroke({ color: hex(C.brand.gold), width: 10 * (1 - k), alpha: 1 - k });
+        g.circle(0, SLOT_GEOM.soilY - 50, r * 0.6).stroke({ color: hex(C.brand.cream), width: 6 * (1 - k), alpha: (1 - k) * 0.8 });
+      }
+    }
     if (this.marker.visible) {
       this.marker.y = SLOT_GEOM.markerY + Math.sin(t * 3 + this.phase) * 4;
       this.marker.scale.set(this.markerScale);

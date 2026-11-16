@@ -6,6 +6,7 @@ import type { GameSession } from '../app/session.ts';
 import { storageUsed, xpToNextLevel } from '../systems/economy.ts';
 import { canDeliver } from '../systems/orders.ts';
 import { nextMilestone } from '../systems/surprises.ts';
+import { missionsReady } from '../systems/missions.ts';
 import { itemFrame } from '../render/assets.ts';
 import { h, icon } from './dom.ts';
 import { nextHint } from './hint.ts';
@@ -21,6 +22,8 @@ export interface HudActions {
   openNeighbors(): void;
   openJournal(): void;
   openLetters(): void;
+  openMissions(): void;
+  toggleTray(): void;
 }
 
 export class Hud {
@@ -38,6 +41,8 @@ export class Hud {
   private readonly stallBadge = h('span', { class: 'badge hidden' });
   private readonly journalBadge = h('span', { class: 'badge hidden' });
   private readonly letterBadge = h('span', { class: 'badge hidden' });
+  private readonly missionBadge = h('span', { class: 'badge hidden' });
+  private readonly seeds: HTMLElement;
   private last = { coins: -1, gems: -1 };
   /** Screen position of the storage button, where harvested produce flies to. */
   readonly storageButton: HTMLElement;
@@ -53,7 +58,7 @@ export class Hud {
     const letters = h('button', { class: 'knob letter-knob', 'aria-label': 'Thư Mây', 'data-test': 'open-letters', onclick: () => actions.openLetters() }, this.letterBadge);
     const gear = h('button', { class: 'knob gear', 'aria-label': 'Cài đặt', onclick: () => actions.openSettings() });
     const firstCrop = content.cropList[0]!;
-    const seeds = h('button', { class: 'round-big seeds', 'aria-label': 'Hạt giống', 'data-test': 'open-seeds', onclick: () => actions.openSeeds() }, icon(`${firstCrop.sprite}/${firstCrop.stages - 1}`, 56), h('span', { class: 'round-label' }, 'Hạt giống'));
+    const seeds = (this.seeds = h('button', { class: 'round-big seeds', 'aria-label': 'Hạt giống', 'data-test': 'open-seeds', onclick: () => actions.toggleTray() }, icon(`${firstCrop.sprite}/${firstCrop.stages - 1}`, 56), h('span', { class: 'round-label' }, 'Hạt giống')));
     this.storageButton = h(
       'button',
       { class: 'round-big', 'aria-label': 'Rương Mây', 'data-test': 'open-storage', onclick: () => actions.openStorage() },
@@ -67,6 +72,7 @@ export class Hud {
     const services = h(
       'div',
       { class: 'hud-side' },
+      side('Nhiệm vụ', 'open-missions', h('span', { class: 'scroll-mini' }), this.missionBadge, () => actions.openMissions()),
       side('Đơn hàng', 'open-orders', h('span', { class: 'balloon-mini' }), this.orderBadge, () => actions.openOrders()),
       side('Sạp', 'open-stall', icon(itemFrame(content, content.cropList[4]?.produce.id ?? ''), 40), this.stallBadge, () => actions.openStall()),
       side('Phú Bà', 'open-neighbors', h('span', { class: 'crown' }), null, () => actions.openNeighbors()),
@@ -80,6 +86,10 @@ export class Hud {
       services,
       h('div', { class: 'hud-arc' }, seeds, this.storageButton, shop),
     );
+  }
+
+  setTrayOpen(on: boolean): void {
+    this.seeds.classList.toggle('on', on);
   }
 
   private bump(el: HTMLElement): void {
@@ -118,6 +128,7 @@ export class Hud {
     this.badge(this.stallBadge, state.stall.length);
     this.badge(this.journalBadge, content.cropList.filter((c) => nextMilestone(content, state, c.id)).length);
     this.badge(this.letterBadge, state.notices.filter((n) => !n.read).length);
+    this.badge(this.missionBadge, missionsReady(content, state));
     const hint = nextHint(content, state, this.session.now());
     this.hint.textContent = hint.text;
     this.hint.dataset.kind = hint.kind;

@@ -65,6 +65,7 @@ export default defineConfig({
     __COMMIT__: JSON.stringify(commit()),
     __TRIAL__: JSON.stringify(process.env.PBTC_TRIAL !== '0'),
   },
-  build: { target: 'safari16', assetsInlineLimit: 0, chunkSizeWarningLimit: 2000 },
+  build: {
+    sourcemap: process.env.SOURCEMAP === '1', target: 'safari16', assetsInlineLimit: 0, chunkSizeWarningLimit: 2000 },
   plugins: [serviceWorker(version)],
 });

@@ -9,6 +9,7 @@ import { sellPrice } from '../systems/economy.ts';
 import { itemFrame } from '../render/assets.ts';
 import { clear, h, icon } from './dom.ts';
 import { Panel } from './panel.ts';
+import { helpsLeft } from '../systems/visit.ts';
 import { shake } from './potPanels.ts';
 import { formatDuration, formatNumber, FAMILY_TEXT } from './text.ts';
 
@@ -185,7 +186,10 @@ export class StallPanel extends Panel {
 
 /** "Bảng Phú Bà": everyone's wealth, with what each neighbour is up to and why. */
 export class NeighborsPanel extends Panel {
-  constructor(private readonly session: GameSession) {
+  constructor(
+    private readonly session: GameSession,
+    private readonly visit: (botId: string) => void,
+  ) {
     super('Bảng Phú Bà', 'neighbors-panel', 'win-wide');
     this.render();
   }
@@ -193,12 +197,13 @@ export class NeighborsPanel extends Panel {
   render(): void {
     clear(this.body);
     const { content, state } = this.session;
-    type Row = { name: string; level: number; wealth: number; you: boolean; friendship: number; doing: string; likes: string };
-    const rows: Row[] = [{ name: 'Bạn', level: state.player.level, wealth: playerWealth(content, state), you: true, friendship: 0, doing: '', likes: '' }];
+    type Row = { id: string; name: string; level: number; wealth: number; you: boolean; friendship: number; doing: string; likes: string; helps: number };
+    const now = this.session.now();
+    const rows: Row[] = [{ id: '', name: 'Bạn', level: state.player.level, wealth: playerWealth(content, state), you: true, friendship: 0, doing: '', likes: '', helps: 0 }];
     for (const bot of content.bots.values()) {
       const s = state.neighbors[bot.id];
       if (!s) continue;
-      rows.push({ name: bot.name.vi, level: s.level, wealth: botWealth(s), you: false, friendship: s.friendship, doing: s.lastAction?.reason ?? 'Mới dọn đến', likes: FAMILY_TEXT[bot.likes] ?? bot.likes });
+      rows.push({ id: bot.id, name: bot.name.vi, level: s.level, wealth: botWealth(s), you: false, friendship: s.friendship, doing: s.lastAction?.reason ?? 'Mới dọn đến', likes: FAMILY_TEXT[bot.likes] ?? bot.likes, helps: helpsLeft(content, s, now) });
     }
     rows.sort((a, b) => b.wealth - a.wealth);
     const list = h('div', { class: 'rank-list' });
@@ -216,10 +221,11 @@ export class NeighborsPanel extends Panel {
           ),
           !r.you && h('span', { class: 'hearts', title: 'Thân thiết' }, '♥'.repeat(Math.min(5, Math.floor(r.friendship / 2))) || '♡'),
           h('span', { class: 'tag' }, coin(16), formatNumber(r.wealth)),
+          !r.you && h('button', { class: `candy small ${r.helps > 0 ? 'gold' : ''}`, 'data-test': `visit-${r.id}`, onclick: () => this.visit(r.id) }, r.helps > 0 ? `Ghé vườn · ${r.helps}` : 'Ghé vườn'),
         ),
       );
     });
-    this.body.append(h('p', { class: 'lead' }, 'Tài sản = xu + giá trị vườn. Giao đơn và bán sạp cho hàng xóm để thêm thân thiết, họ sẽ ghé tặng quà.'), list);
+    this.body.append(h('p', { class: 'lead' }, 'Tài sản = xu + giá trị vườn. Ghé vườn hàng xóm tưới cây, bắt bọ giúp để nhận xu; giao đơn và bán sạp để thêm thân thiết.'), list);
   }
 }
 

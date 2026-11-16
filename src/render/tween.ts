@@ -15,6 +15,7 @@ export const ease = {
 } satisfies Record<string, Ease>;
 
 interface Tween {
+  owner: { destroyed: boolean } | null;
   elapsed: number;
   duration: number;
   ease: Ease;
@@ -25,21 +26,30 @@ interface Tween {
 export class Tweens {
   private active: Tween[] = [];
 
-  /** Animates v from 0 to 1 over durationMs, calling apply with the eased value. */
-  add(durationMs: number, easeFn: Ease, apply: (v: number) => void, done?: () => void): void {
+  /** Animates v from 0 to 1 over durationMs, calling apply with the eased value. With an owner
+   *  (a display object), the tween stops silently once the owner is destroyed — floors and signs
+   *  are rebuilt when they change, possibly in the middle of an animation. */
+  add(durationMs: number, easeFn: Ease, apply: (v: number) => void, done?: () => void, owner: { destroyed: boolean } | null = null): void {
     apply(0);
-    this.active.push({ elapsed: 0, duration: durationMs, ease: easeFn, apply, done });
+    this.active.push({ owner, elapsed: 0, duration: durationMs, ease: easeFn, apply, done });
   }
 
   update(dtMs: number): void {
     let w = 0;
     for (let i = 0; i < this.active.length; i++) {
       const tw = this.active[i]!;
+      if (tw.owner?.destroyed) continue;
       tw.elapsed += dtMs;
       const t = Math.min(1, tw.elapsed / tw.duration);
-      tw.apply(tw.ease(t));
+      // One broken animation must never stop the render loop (a frozen game is far worse).
+      try {
+        tw.apply(tw.ease(t));
+        if (t >= 1) tw.done?.();
+      } catch (e) {
+        console.warn('Bỏ một hoạt ảnh lỗi', e);
+        continue;
+      }
       if (t < 1) this.active[w++] = tw;
-      else tw.done?.();
     }
     this.active.length = w;
   }

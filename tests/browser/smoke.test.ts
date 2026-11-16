@@ -50,8 +50,24 @@ const snap = (page: Page) =>
     return { coins: s.player.coins, harvests: s.stats.harvests, level: s.player.level, inv: { ...s.inventory } } as Snap;
   });
 
+/** Screen point of a world-space point inside a view object (pots, floor signs, locked floor). */
+const globalPoint = (page: Page, expr: string, x: number, y: number) =>
+  page.evaluate(
+    ([e, px, py]) => {
+      const view = (window as unknown as { __pbtc: { view: Record<string, any> } }).__pbtc.view;
+      const obj = new Function('view', `return ${e}`)(view) as { toGlobal(p: { x: number; y: number }): { x: number; y: number } };
+      const g = obj.toGlobal({ x: px as number, y: py as number });
+      return { x: g.x, y: g.y };
+    },
+    [expr, x, y] as const,
+  );
+
+const EMPTY_POTS = 6;
+
 async function playOneRound(page: Page): Promise<void> {
+  // "Hạt giống" opens the seed tray; "Chi tiết" opens the full seed stall, which plants every empty pot.
   await page.click('[data-test=open-seeds]');
+  await page.click('[data-test=seed-shop]');
   await page.click('[data-test="seed-base:crop.cotton-daisy"]');
   await page.click('text=+1 phút');
   await page.waitForTimeout(400);
@@ -68,8 +84,10 @@ test('vòng chơi: gieo cả tầng → tua 1 phút → kéo tay thu hoạch →
   assert.match((await page.textContent('[data-test=trial-badge]')) ?? '', /BẢN THỬ/);
   await playOneRound(page);
   const s = await snap(page);
-  assert.equal(s.harvests, 10);
-  assert.equal(s.inv['base:item.cotton-daisy'], 20);
+  assert.equal(s.harvests, EMPTY_POTS);
+  // Yield 2 each; a lucky harvest may be a mutated variant (its own item id).
+  const daisies = Object.entries(s.inv).filter(([id]) => id.startsWith('base:item.cotton-daisy')).reduce((n, [, q]) => n + q, 0);
+  assert.equal(daisies, EMPTY_POTS * 2);
   assert.equal(s.level, 2);
   await page.click('[data-test=open-storage]');
   await page.click('[data-test="sell-base:item.cotton-daisy"]');
@@ -113,7 +131,7 @@ test('offline: sau lần tải đầu, tắt mạng rồi tải lại vẫn vào
   await page.reload();
   await page.waitForFunction(() => (window as unknown as { __pbtc?: unknown }).__pbtc, null, { timeout: 30_000 });
   await playOneRound(page);
-  assert.equal((await snap(page)).harvests, 10);
+  assert.equal((await snap(page)).harvests, EMPTY_POTS);
   await ctx.close();
 });
 
@@ -133,7 +151,8 @@ test('nhiều tầng + chậu: vuốt lên, mở tầng mới, mua chậu ở L�
   await page.mouse.up();
   await page.waitForTimeout(600);
   if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/locked-floor.png` });
-  await page.mouse.click(650, 330);
+  const sign = await globalPoint(page, 'view.locked.container', 0, 86);
+  await page.mouse.click(sign.x, sign.y);
   await page.waitForSelector('[data-test=floor-panel]');
   await page.click('[data-test=unlock-floor]');
   await page.waitForTimeout(1800);
@@ -165,6 +184,77 @@ test('nhiều tầng + chậu: vuốt lên, mở tầng mới, mua chậu ở L�
   assert.equal(placed, 'base:pot.porcelain');
   await page.waitForTimeout(400);
   if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/pot-placed.png` });
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
+test('khay hạt: kéo hạt qua các chậu trống thì gieo từng chậu; chạm hạt thì chọn để vuốt gieo', async () => {
+  const ctx = await browser.newContext({ viewport: { width: 1194, height: 834 }, hasTouch: true });
+  const { page, errors } = await open(ctx);
+  await page.click('[data-test=open-seeds]');
+  await page.waitForSelector('[data-test=seed-tray]:not(.hidden)');
+  const chip = (await page.locator('[data-test="tray-base:crop.cotton-daisy"]').boundingBox())!;
+  const first = await globalPoint(page, 'view.slotView(0, 0)', 0, -60);
+  const last = await globalPoint(page, 'view.slotView(0, 5)', 0, -60);
+  await page.mouse.move(chip.x + chip.width / 2, chip.y + chip.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(first.x, first.y, { steps: 10 });
+  for (let x = first.x; x <= last.x; x += 15) await page.mouse.move(x, first.y);
+  await page.mouse.up();
+  const planted = await page.evaluate(() => (window as unknown as { __pbtc: { session: { state: { floors: { slots: { planting: unknown }[] }[] } } } }).__pbtc.session.state.floors[0]!.slots.filter((s) => s.planting).length);
+  assert.equal(planted, EMPTY_POTS);
+  assert.equal(await page.locator('.seed-ghost').count(), 0, 'hạt bay theo tay đã biến mất khi thả');
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
+test('mở rộng tầng (ô +) và nâng sao tầng (biển gỗ); thăm vườn hàng xóm, giúp tưới/bắt bọ, về vườn', async () => {
+  const ctx = await browser.newContext({ viewport: { width: 1194, height: 834 }, hasTouch: true });
+  const { page, errors } = await open(ctx);
+  await page.evaluate(() => {
+    const w = window as unknown as { __pbtc: { session: { state: { player: { level: number; coins: number }; inventory: Record<string, number> }; refresh(): void } } };
+    w.__pbtc.session.state.player.level = 3;
+    w.__pbtc.session.state.player.coins = 5000;
+    w.__pbtc.session.state.inventory['base:item.cotton-daisy'] = 10;
+  });
+  // The "+" spot sits where the 7th pot will go: right of pot 6.
+  const p6 = await globalPoint(page, 'view.slotView(0, 5)', 0, -60);
+  const p5 = await globalPoint(page, 'view.slotView(0, 4)', 0, -60);
+  await page.mouse.click(p6.x + (p6.x - p5.x), p6.y);
+  await page.waitForSelector('[data-test=floor-info]');
+  await page.click('[data-test=expand-floor]');
+  await page.click('[data-test=star-floor]');
+  const st = await page.evaluate(() => {
+    const s = (window as unknown as { __pbtc: { session: { state: { floors: { slots: unknown[]; stars: number }[] } } } }).__pbtc.session.state;
+    return { slots: s.floors[0]!.slots.length, stars: s.floors[0]!.stars };
+  });
+  assert.deepEqual(st, { slots: 7, stars: 1 });
+  await page.click('.win .knob.close');
+  await page.waitForTimeout(400);
+  // Visit the neighbour with the most help needed right now and help until the limit.
+  await page.click('[data-test=open-neighbors]');
+  const bot = await page.evaluate(() => (window as unknown as { __pbtc: { session: { content: { bots: Map<string, unknown> } } } }).__pbtc.session.content.bots.keys().next().value as string);
+  await page.click(`[data-test="visit-${bot}"]`);
+  await page.waitForSelector('[data-test=visit-bar]');
+  await page.waitForTimeout(900);
+  const needs = await page.evaluate(() => {
+    const view = (window as unknown as { __pbtc: { view: Record<string, any> } }).__pbtc.view;
+    const out: { f: number; i: number }[] = [];
+    view.floors.forEach((fv: { slots: { markerKind: string; shownBugs: number }[] }, f: number) => fv.slots.forEach((s, i) => (s.markerKind === 'water' || s.shownBugs > 0) && out.push({ f, i })));
+    return out;
+  });
+  const coins0 = (await snap(page)).coins;
+  let helped = 0;
+  for (const n of needs.filter((n) => n.f === 0).slice(0, 3)) {
+    const pt = await globalPoint(page, `view.slotView(${n.f}, ${n.i})`, 0, -60);
+    await page.mouse.click(pt.x, pt.y);
+    helped++;
+  }
+  if (helped > 0) assert.ok((await snap(page)).coins > coins0, 'giúp hàng xóm được xu');
+  await page.click('[data-test=visit-home]');
+  await page.waitForTimeout(400);
+  assert.equal(await page.locator('[data-test=visit-bar]').count(), 0);
+  assert.equal(await page.evaluate(() => (window as unknown as { __pbtc: { view: { mode: string } } }).__pbtc.view.mode), 'home');
   assert.deepEqual(errors, []);
   await ctx.close();
 });

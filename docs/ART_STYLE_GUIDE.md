@@ -233,6 +233,30 @@ Kết chung: `Isolated on a flat plain solid light grey background, sharp focus 
 
 Tầng mây theo tầng có thể tạm dùng `F1_tang-may.jpg` đổi màu bằng code cho đến khi có ảnh 2–3. Biến Dị có thể tạm dùng ánh sáng phủ màu bằng code cho đến khi có ảnh 12.
 
+### 11.7. Đợt 3 — tái thiết kế v2 (`docs/REDESIGN_V2.md`)
+
+Mục tiêu: chậu là **đồ sưu tầm** và cây có **tính cách**, đủ để bố cục 6 chậu to mỗi tầng trông như game thương mại. Học tinh thần sưu tầm/nhân hoá của thể loại, **không** chép hình chậu linh vật, đầu lân, cá chép hay nhân vật nào của Khu Vườn Trên Mây. Nhìn chính diện, phần phông giữ như §11.1. Ưu tiên theo thứ tự (~16 ảnh/ngày):
+
+| # | Tên file (`assets/art-src/`) | Cỡ | Mô tả riêng |
+|---|---|---|---|
+| 1 | `C1v2_cuc-bong-gon_mat.jpg` | 16:9 | `Five growth stages of a cute anthropomorphic cotton daisy in a row, left to right: a tiny seed sprout with two dot eyes, a small sprout with a sleepy smile, a leafy young plant with rosy cheeks, a bud with a curious face, a full white fluffy daisy whose golden center is a happy smiling face. Each plant stands alone with no pot, base flat at the bottom, same scale.` |
+| 2 | `C2v2_ca-chua-bi_mat.jpg` | 16:9 | `Five growth stages of a cute anthropomorphic cherry tomato vine in a row: seed sprout with dot eyes, small sprout, bushy young plant, plant with green tomatoes that have shy faces, plant heavy with ripe red cherry tomatoes each with a cheeky grin and rosy cheeks. No pot, flat base, same scale.` |
+| 3 | `C3v2_bac-ha-may_mat.jpg` | 16:9 | `Five growth stages of a cute anthropomorphic cloud mint herb: sprout with dot eyes, small sprout, leafy clump, tall clump with tiny lilac flower spikes and a calm smiling face among the leaves, lush full mint bush with a serene face and little cloud puffs floating around. No pot, flat base, same scale.` |
+| 4 | `C4v2_ca-rot-may_mat.jpg` | 16:9 | `Five growth stages of a cute anthropomorphic sky carrot: sprout with dot eyes, feathery sprout, bushy greens, greens with the orange carrot top peeking out with wide curious eyes, a whole plump carrot half out of the ground waving its leafy hair with a proud grin. No pot, flat base, same scale.` |
+| 5 | `C5v2_dau-tay-may_mat.jpg` | 16:9 | `Five growth stages of a cute anthropomorphic cloud strawberry plant: sprout with dot eyes, small sprout, leafy rosette, rosette with white blossoms and green berries with sleepy faces, rosette with big ripe red strawberries each with a sweet smile and sparkle. No pot, flat base, same scale.` |
+| 6 | `C6v2_dong-tien-vang_mat.jpg` | 16:9 | `Five growth stages of a cute anthropomorphic golden gerbera: sprout with dot eyes, small sprout, leafy plant, tall stem with a closed golden bud winking, a radiant golden gerbera whose center is a joyful face with a tiny crown of light. No pot, flat base, same scale.` |
+| 7 | `P10_bo-gom-su_3bac.jpg` | 16:9 | `The same porcelain flower pot shown in three upgrade tiers side by side, same silhouette, empty with dark soil: (1) plain white-and-blue porcelain with cloud pattern, (2) the same pot with gold rim, gold handles and a small jade medallion, (3) the same pot made luxurious with gilded phoenix-tail relief, glowing jade inlays and a soft halo.` |
+| 8 | `P11_sen-ngoc_3bac.jpg` | 16:9 | `The same jade lotus flower pot shown in three upgrade tiers side by side, same silhouette, empty with dark soil: (1) simple green jade lotus pot, (2) with gold-edged petals and pearl beads, (3) with glowing translucent petals, golden stamens and floating light motes.` |
+| 9 | `P12_dinh-dong_3bac.jpg` | 16:9 | `The same bronze tripod cauldron pot in three upgrade tiers side by side, same silhouette, empty with dark soil: (1) bronze with green patina, (2) polished bronze with cloud-scroll engravings and gold feet, (3) gleaming gold-bronze with jade dragon-scale relief and a warm glow.` |
+| 10 | `P13_hong-moc_3bac.jpg` | 16:9 | `The same carved rosewood pot in three upgrade tiers side by side, same silhouette, empty with dark soil: (1) plain carved rosewood, (2) with gold inlay vines and brass corners, (3) with mother-of-pearl flowers, gold filigree and a soft glow.` |
+| 11 | `P14_may-bong-hu-vang.jpg` | 16:9 | `Two pots side by side, each in two tiers (four pots total), empty with dark soil: a fluffy cloud-shaped pot with a pearl rim (plain, then with rainbow trim and floating stars), and a golden treasure pot with jade gems (plain, then overflowing with glowing coins and a jade crest).` |
+| 12 | `D1_den-long-treo.jpg` | 16:9 | `Five hanging decorations side by side, each hanging from a short vine string: a round silk lantern with tassel, a string of paper cranes, a bamboo wind chime, a little birdcage with a sleeping bird, a garland of tiny flowers. Front view.` |
+| 13 | `D2_trang-tri-dung.jpg` | 16:9 | `Four standing garden decorations for the ends of a cloud shelf, side by side: a stone lantern with moss, a small wooden torii-like arch wrapped in flowers (no text), a koi-free lotus water basin, a cozy mushroom house with a round door. Front view, flat base.` |
+| 14 | `D3_may-che-bien.jpg` | 16:9 | `Three cute fairy-tale processing machines side by side, each sits on a small wooden platform: a copper juice press with a fruit funnel, a wooden drying rack with a tiny windmill, a glass perfume still with bubbling flasks. Front view, flat base.` |
+| 15 | `B2_chim-tro-giup.jpg` | 16:9 | `A small plump sky-blue songbird helper in three poses side by side: perched, flying with a tiny ladybug in its beak, hopping happily. Front view.` |
+
+Dùng `tools/process_art.py` như cũ: ảnh 1–6 thay thẳng khung `crops/<id>/<stage>` (mã không đổi); ảnh 7–11 cắt thành `pots/<id>/<bậc>` — khi có ảnh, `Art.pot()` dùng ảnh thật thay hiệu ứng tô; ảnh 12–15 chờ hệ trang trí và máy chế biến (giai đoạn 5).
+
 ## 12. Kiểm duyệt chất lượng
 
 - [ ] Đúng góc isometric 2:1, mặt chính dưới–trái

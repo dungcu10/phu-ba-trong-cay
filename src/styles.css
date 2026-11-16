@@ -341,3 +341,86 @@ html, body {
   .celebrate, .celebrate .ribbon-big { animation: fade var(--motion-windowOpen-ms) ease-out !important; }
 }
 .round-big.bump { animation: bump var(--motion-bounce-ms) var(--motion-bounce-ease); }
+
+/* ======================= REDESIGN_V2: seed tray · floor info · missions · visiting ======================= */
+.hud.hidden, .seed-tray.hidden { display: none; }
+.round-big.on { box-shadow: inset 0 0 0 var(--frame-inner) var(--color-brand-cream), 0 0 0 5px var(--color-brand-gold), var(--frame-shadow); }
+
+/* seed tray: a wooden shelf along the bottom, clear of the right-hand buttons */
+.seed-tray {
+  position: absolute; left: calc(var(--safe-left) + var(--space-4)); right: calc(var(--safe-right) + 330px);
+  bottom: calc(var(--safe-bottom) + var(--space-3)); display: flex; align-items: center; gap: var(--space-2);
+  padding: var(--space-3) var(--space-3) var(--space-2); border-radius: var(--radius-window);
+  background: linear-gradient(180deg, var(--wood-light), var(--wood)); border: var(--frame-outer) solid var(--wood);
+  box-shadow: inset 0 0 0 var(--frame-inner) var(--color-brand-cream), var(--frame-shadow);
+  animation: open var(--motion-windowOpen-ms) var(--motion-windowOpen-ease);
+  z-index: 2;
+}
+.tray-hint { position: absolute; top: -16px; left: var(--space-4); padding: 0 var(--space-3); border-radius: var(--radius-ribbon); background: var(--color-ui-primary); color: var(--color-ui-primaryText); font-family: var(--font-display), sans-serif; font-weight: var(--font-weight-label); font-size: var(--font-size-caption); border: var(--frame-inner) solid var(--wood); }
+.tray-row { flex: 1; display: flex; gap: var(--space-2); overflow-x: auto; touch-action: pan-x; scrollbar-width: none; }
+.tray-row::-webkit-scrollbar { display: none; }
+.seed-chip {
+  flex: none; width: 82px; height: 92px; position: relative; display: grid; justify-items: center; align-content: start; padding-top: var(--space-1);
+  border-radius: var(--radius-slot); border: var(--frame-inner) solid var(--wood); background: radial-gradient(circle at 50% 35%, var(--paper) 0 55%, var(--paper-deep) 100%);
+  cursor: grab; touch-action: none; transition: transform var(--motion-tap-ms) var(--motion-tap-ease);
+}
+.seed-chip:active { transform: scale(0.94); }
+.seed-chip.on { box-shadow: 0 0 0 4px var(--color-brand-gold); }
+.seed-chip.locked { filter: grayscale(0.9) brightness(0.85); cursor: default; }
+.seed-chip.poor .chip-price { color: var(--color-ui-danger); }
+.chip-price { position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); white-space: nowrap; padding: 0 var(--space-1); border-radius: var(--radius-ribbon); background: var(--paper); font-family: var(--font-display), sans-serif; font-weight: var(--font-weight-number); font-size: var(--font-size-caption); color: var(--color-ui-number); }
+.tray-more { flex: none; min-height: var(--touch-min); padding: 0 var(--space-3); border-radius: var(--radius-button); border: var(--frame-inner) solid var(--wood); background: var(--paper); font-family: var(--font-display), sans-serif; font-weight: var(--font-weight-label); color: var(--text); }
+.knob.close.small { width: var(--touch-min); height: var(--touch-min); flex: none; }
+.seed-ghost { position: fixed; left: 0; top: 0; pointer-events: none; z-index: 50; filter: drop-shadow(0 8px 6px var(--color-ui-dropShadow)); animation: bump var(--motion-bounce-ms) var(--motion-bounce-ease); }
+
+/* missions scroll icon (CSS art, chờ đồ họa) */
+.scroll-mini { width: 36px; height: 40px; display: inline-block; position: relative; border-radius: 4px; background: repeating-linear-gradient(180deg, var(--paper) 0 7px, var(--paper-deep) 7px 9px); box-shadow: 0 0 0 2px var(--wood); }
+.scroll-mini::before, .scroll-mini::after { content: ""; position: absolute; left: -4px; right: -4px; height: 7px; border-radius: 4px; background: var(--color-brand-peach); box-shadow: 0 0 0 2px var(--wood); }
+.scroll-mini::before { top: -4px; }
+.scroll-mini::after { bottom: -4px; }
+
+/* floor info: cards, stars, pot sets */
+.cards { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin-bottom: var(--space-3); }
+.card { padding: var(--space-3); border-radius: var(--radius-slot); background: var(--paper-deep); border: var(--frame-inner) solid var(--wood-light); }
+.card h3 { margin: 0 0 var(--space-1); display: flex; align-items: center; justify-content: center; gap: var(--space-2); font-family: var(--font-display), sans-serif; font-weight: var(--font-weight-label); font-size: var(--font-size-label); }
+.stars { display: inline-flex; gap: 4px; }
+.stars i { width: 24px; height: 24px; display: inline-block; background: var(--color-ui-disabled); clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
+.stars i.on { background: var(--color-brand-gold); }
+.set-row { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-2); margin-top: var(--space-2); border-radius: var(--radius-slot); background: var(--paper-deep); opacity: 0.8; }
+.set-row.active { opacity: 1; box-shadow: inset 0 0 0 2px var(--color-brand-jade); }
+.set-pots { display: flex; gap: 2px; flex: none; }
+.set-main { display: flex; flex-direction: column; gap: 2px; }
+.set-tier { font-size: var(--font-size-caption); color: var(--muted); }
+.set-tier.on { color: var(--color-ui-number); font-weight: 800; }
+.set-tier.on::before { content: "✓ "; color: var(--color-brand-jade); }
+
+/* missions */
+.missions { display: flex; flex-direction: column; gap: var(--space-2); }
+.mission { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3); border-radius: var(--radius-slot); background: var(--paper-deep); border: var(--frame-inner) solid var(--wood-light); }
+.mission.done:not(.claimed) { border-color: var(--color-brand-gold); box-shadow: 0 0 12px var(--color-brand-gold); }
+.mission.claimed { opacity: 0.6; }
+.mission.bonus { background: linear-gradient(90deg, var(--paper-deep), var(--color-brand-cream)); }
+.mission-main { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.mission-main .note { text-align: left; margin: 0; }
+.mission .bar { height: 12px; border-radius: 6px; background: var(--paper); border: 2px solid var(--wood-light); overflow: hidden; }
+.mission .bar i { display: block; height: 100%; background: var(--color-ui-progress); transition: width var(--motion-countUp-ms) var(--motion-countUp-ease); }
+.reward { display: flex; gap: var(--space-1); flex-wrap: wrap; }
+.tag.xp { color: var(--text); }
+.claimed { font-weight: 800; color: var(--color-brand-jade); min-width: 90px; text-align: center; }
+
+/* visiting a neighbour */
+.visit-bar {
+  position: absolute; top: calc(var(--safe-top) + var(--space-2)); left: 50%; transform: translateX(-50%);
+  width: min(1000px, calc(100% - 2 * var(--space-4))); display: flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4); border-radius: var(--radius-window);
+  background: var(--paper); border: var(--frame-outer) solid var(--wood); box-shadow: inset 0 0 0 var(--frame-inner) var(--color-brand-cream), var(--frame-shadow);
+  animation: open var(--motion-windowOpen-ms) var(--motion-windowOpen-ease);
+}
+.visit-name { font-family: var(--font-display), sans-serif; font-weight: var(--font-weight-window); font-size: var(--font-size-label); white-space: nowrap; }
+.visit-info { flex: 1; font-size: var(--font-size-caption); color: var(--muted); font-weight: 700; }
+.rank-row .candy.small { margin-left: var(--space-2); }
+
+@media (max-width: 900px) {
+  .seed-tray { right: calc(var(--safe-right) + var(--space-4)); bottom: calc(var(--safe-bottom) + 120px); }
+  .cards { grid-template-columns: 1fr; }
+}
