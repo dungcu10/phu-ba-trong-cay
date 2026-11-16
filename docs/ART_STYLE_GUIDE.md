@@ -110,10 +110,15 @@ Tài nguyên vẽ ở ánh sáng trưa; engine phủ ánh sáng ngày–đêm.
 
 ## 8. Giao diện, chữ, logo
 
-- "Kính mờ và vàng kim"; bo góc 24–32 điểm; nút xanh ngọc/vàng kim; biểu tượng là minh họa nhỏ, không icon phẳng.
-- Bố cục iPad ngang: trên–trái ảnh đại diện + cấp + XP; giữa–trên xu, Ngọc Mây; trên–phải giờ, cài đặt; dưới–phải cụm nút chính; giao diện < 15% màn hình khi không mở bảng.
-- Chữ (OFL, hỗ trợ tiếng Việt, nhúng sẵn): **Baloo 2** cho tiêu đề và số; **Nunito** cho nội dung (cỡ thân ≥ 16 pt theo `QUALITY_STANDARDS.md`).
+Chuẩn giao diện chi tiết nằm ở `docs/DESIGN_SYSTEM.md` (số liệu trong `content/ui/design-tokens.json`); khi mâu thuẫn, `DESIGN_SYSTEM.md` thắng. Mục này chỉ tóm tắt hướng chung để tranh minh họa khớp với giao diện.
+
+- **Phong cách cổ tích**, không phải ứng dụng quản lý: mỗi cửa sổ là một vật thể trong truyện (sạp gỗ, rương mây, bàn thợ gốm, cuộn giấy da), khung gỗ bo tròn, giấy da ấm, ruy băng, dây leo, đinh tán vàng. Không dùng kính mờ, thẻ trắng phẳng, đường kẻ xám.
+- Biểu tượng là tranh minh họa nhỏ cùng phong cách vật phẩm (3/4 từ trên, nắng trên–trái), nhận ra được ở 32 pt; không emoji, không icon nét mảnh.
+- Số liệu gắn với hình (đồng xu, giọt nước, ngôi sao), không để số trần.
+- Bố cục iPad ngang: trên–trái huy hiệu cấp hình bông hoa + thanh XP dây leo; giữa–trên túi xu vải thêu; trên–phải mặt trời/mặt trăng chỉ giờ + bánh răng cài đặt; dưới–phải 3 nút chính xếp vòng cung (Hạt giống, Kho, Cửa hàng); giao diện thường trực < 15% màn hình.
+- Chữ (OFL, hỗ trợ tiếng Việt, nhúng sẵn): **Baloo 2** cho tiêu đề, số, nút; **Nunito** cho nội dung (≥ 16 pt). Cỡ, đậm, màu chữ–nền theo `DESIGN_SYSTEM.md` mục 3–4.
 - Logo: PHÚ BÀ vàng kim viền ngọc (dấu "Ú" là chiếc lá), TRỒNG CÂY xanh lá; đồng xu mầm cây; đám mây; Xu Xu ngồi trên chữ "BÀ". Chữ dựng bằng phông thật; AI chỉ vẽ phần tranh.
+- Phép thử: che hết chữ, nhìn màn hình vẫn biết đây là game cổ tích về vườn trên mây.
 
 ## 9. Quy trình tạo ảnh bằng AI
 
