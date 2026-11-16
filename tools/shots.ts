@@ -37,7 +37,7 @@ if (demo) {
   for (const step of (process.argv[3] ?? 'garden,grown,tray,floor2,floor-info,shop,missions,neighbors,visit,home').split(',')) {
     const ok = await page.evaluate((s) => (window as unknown as { __pbtc: { demo: (s: string) => boolean } }).__pbtc.demo(s), step);
     if (!ok) continue;
-    await page.waitForTimeout(900);
+    await page.waitForTimeout(step === 'blender' ? 3000 : 900);
     await shot(`02-${step}`);
   }
 }

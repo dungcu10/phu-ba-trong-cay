@@ -36,6 +36,10 @@ export class SlotView extends Container {
   private readonly studs = new Graphics();
   private potGrow = 1;
   private dropY = 0;
+  /** Pot layer, added by the scene to the floor's pot layer under all slots. */
+  readonly back = new Container();
+  /** Soil line of the current pot picture (pt, negative = up) and its offset from the default. */
+  private soilY: number = SLOT_GEOM.soilY;
   private readonly sparkles: Sprite[] = [];
   private tier: 0 | 1 | 2 = 0;
   private bloomT = -1;
@@ -104,7 +108,12 @@ export class SlotView extends Container {
     this.timer.anchor.set(0.5, 0);
     this.timer.y = SLOT_GEOM.barY + 10;
     // Plant in front of the pot: its base sits on the soil line inside the mouth.
-    this.addChild(this.shadow, this.aura, this.pot, this.studs, this.plant, ...this.sparkles, this.bloomRing, this.bug, this.bugCount, this.marker, this.bar, this.timer);
+    // The pot and what belongs to it live in `back`, drawn by the floor beneath every plant and
+    // marker, so a wide pot (wings, halo) can spill into the next slot without covering its plant
+    // (directive 03 step 4). Taps still use this slot's own hit box.
+    this.back.sortableChildren = true;
+    this.back.addChild(this.shadow, this.aura, this.pot, this.studs);
+    this.addChild(this.plant, ...this.sparkles, this.bloomRing, this.bug, this.bugCount, this.marker, this.bar, this.timer);
 
     const g = SLOT_GEOM.hit;
     this.hitArea = new Rectangle(g.x, g.y, g.w, g.h);
@@ -115,7 +124,7 @@ export class SlotView extends Container {
   /** key identifies pot type + level; look is the picture (possibly a tinted stand-in); step is
    *  the number of small evolutions past the look's milestone: gold studs around the pot's foot
    *  and a slightly larger pot (POT_SYSTEM 2: every level shows). */
-  setPot(key: string, look: { texture: Texture; tint: number }, step = 0): void {
+  setPot(key: string, look: { texture: Texture; tint: number; soil?: number | null }, step = 0): void {
     if (key === this.potKey) return;
     const changed = this.potKey !== '';
     this.potKey = key;
@@ -123,6 +132,8 @@ export class SlotView extends Container {
     this.pot.tint = look.tint;
     this.pot.anchor.copyFrom(this.pot.texture.defaultAnchor ?? { x: 0.5, y: 1 });
     this.potGrow = 1 + Math.min(step, 4) * 0.015;
+    // Directive 03 step 3: plants stand on the frame's own soil line (atlas px @2x -> pt).
+    this.soilY = look.soil != null ? -look.soil / 2 : SLOT_GEOM.soilY;
     this.drawStuds(step);
     if (changed) this.popPot();
   }
@@ -284,6 +295,11 @@ export class SlotView extends Container {
     this.pot.scale.set(this.potPop * this.potGrow);
     this.pot.y = this.dropY;
     this.studs.y = this.dropY;
+    this.back.position.set(this.x, this.y);
+    this.back.scale.set(this.scale.x, this.scale.y);
+    this.back.visible = this.visible;
+    const lift = this.soilY * this.potGrow - SLOT_GEOM.soilY;
+    this.plant.y = SLOT_GEOM.soilY + lift + this.dropY;
     this.studs.scale.set(this.potPop);
     if (this.tier > 0) {
       const pulse = 0.5 + 0.5 * Math.sin(t * 2.2 + this.phase);
@@ -315,13 +331,13 @@ export class SlotView extends Container {
       }
     }
     if (this.marker.visible) {
-      this.marker.y = SLOT_GEOM.markerY + Math.sin(t * 3 + this.phase) * 4;
+      this.marker.y = SLOT_GEOM.markerY + Math.min(0, lift) + Math.sin(t * 3 + this.phase) * 4;
       this.marker.scale.set(this.markerScale);
     }
     if (this.bug.visible && this.bugTextures) {
       this.bug.texture = this.bugTextures[Math.floor(t * 8) % 2]!;
       this.bug.x = SLOT_GEOM.bugOffset.x + Math.sin(t * 2.3 + this.phase) * 6;
-      this.bug.y = SLOT_GEOM.bugOffset.y + Math.cos(t * 3.1 + this.phase) * 5;
+      this.bug.y = SLOT_GEOM.bugOffset.y + lift + Math.cos(t * 3.1 + this.phase) * 5;
       this.bugCount.position.set(this.bug.x + 16, this.bug.y - 10);
     }
   }

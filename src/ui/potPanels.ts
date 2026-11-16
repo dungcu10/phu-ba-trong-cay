@@ -18,7 +18,7 @@ const coin = (size = 18) => svgIcon('coin', size + 4);
 
 /** Pot picture: its own art when made, otherwise the terracotta of the same tier ("chờ đồ họa"). */
 export function potIcon(def: PotDef, level: number, size: number): HTMLElement {
-  const frame = potFrame(def, level, (f) => Boolean(atlasData.sprites.frames[f]));
+  const frame = potFrame(def, level);
   const img = icon(frame ?? 'pots/terracotta/0', size);
   // Stand-in colour per line until its own picture exists (chờ đồ họa).
   if (!frame) img.classList.add('pot-standin', `tint-${def.rarity}`);

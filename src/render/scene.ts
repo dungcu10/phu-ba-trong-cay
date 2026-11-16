@@ -313,11 +313,15 @@ export class GameView {
     const spacing = positions > 1 ? WORLD.potRowSpan / (positions - 1) : 0;
     const x = (i: number) => -WORLD.potRowSpan / 2 + i * spacing;
     const slots: SlotView[] = [];
+    // Pots of the whole floor sit in one layer under all plants and markers (directive 03 step 4).
+    const potLayer = new Container();
+    container.addChild(potLayer);
     f.pots.forEach((_, i) => {
       const view = new SlotView(fi, i, this.art, this.tweens, this.dot, this.glow);
       view.position.set(x(i), 4);
       view.scale.set(scale);
       slots.push(view);
+      potLayer.addChild(view.back);
       container.addChild(view);
     });
     let ghost: Container | null = null;

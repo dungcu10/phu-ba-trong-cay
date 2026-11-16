@@ -683,3 +683,8 @@ html, body {
 .celebrate-art .pot-ring { border: 0; background: none; box-shadow: none; }
 @media (max-width: 900px) { .book-grid { grid-template-columns: repeat(2, 1fr); } .pot-head { flex-direction: column; } }
 .celebrate { align-content: center; gap: var(--space-3); }
+.win-pot .win-body > * { flex: none; }
+.win-pot .win-body { min-height: 0; flex: 1 1 auto; }
+/* windows never grow past the screen; their body scrolls instead */
+.win { max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 48px); }
+.win-body { min-height: 0; flex: 1 1 auto; }

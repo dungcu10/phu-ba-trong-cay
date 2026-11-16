@@ -116,6 +116,43 @@ export function makeDemo(session: GameSession, view: GameView, controller: Contr
         view.focusFloor(0, 1);
         return true;
       }
+      case 'blender': {
+        // Directive 03 screenshot: Phượng Hoàng at 1, 20, 50 plus catalog pots, all planted, on
+        // two full floors (2 × 10 level-50 pots for the FPS check).
+        const { state, content } = session;
+        state.player.level = 20;
+        state.player.coins = Math.max(state.player.coins, 500_000);
+        for (const f of content.floorList.slice(1, 2)) if (!state.floors.some((x) => x.floorId === f.id)) run({ type: 'unlockFloor', floorId: f.id });
+        for (let fi = 0; fi < 2; fi++) while (state.floors[fi]!.slots.length < 10) if (!run({ type: 'expandFloor', floor: fi })) break;
+        const plan0: Array<[string, number]> = [
+          ['base:pot.phoenix', 1], ['base:pot.phoenix', 20], ['base:pot.phoenix', 35], ['base:pot.phoenix', 50], ['base:pot.01-dat-nung-phuong-hoang', 50],
+          ['base:pot.17-tho-ren-huyen-thoai', 1], ['base:pot.33-bi-ngo-phu-thuy', 50], ['base:pot.terracotta', 1], ['base:pot.02-mam-xanh-co-thu', 50], ['base:pot.50-thanh-vat-khoi-nguyen-vip', 50],
+        ];
+        const cat = content.potList.filter((p) => p.sprite.startsWith('pots/catalog/')).map((p) => p.id);
+        const crops = ['base:crop.cotton-daisy', 'base:crop.cherry-tomato', 'base:crop.cloud-mint', 'base:crop.sky-carrot', 'base:crop.cloud-strawberry', 'base:crop.golden-gerbera'];
+        state.floors.slice(0, 2).forEach((f, fi) =>
+          f.slots.forEach((sl, i) => {
+            const [potId, level] = fi === 0 ? plan0[i]! : [cat[(i * 5 + 3) % cat.length]!, 50];
+            const id = content.pots.has(potId) ? potId : 'base:pot.phoenix';
+            state.pots[sl.potInstanceId] = { potId: id, level, history: [{ level, at: session.now() }], source: 'old-save' };
+            state.potBook[id] = { firstAt: session.now(), bestLevel: level };
+            sl.planting = null;
+            run({ type: 'plant', cropId: crops[(i + fi) % crops.length]!, floor: fi, slot: i });
+          }),
+        );
+        clock.advance(20 * MIN);
+        controller.resync();
+        view.focusFloor(0, 1);
+        return true;
+      }
+      case 'blender-up':
+        document.querySelectorAll('.toast').forEach((t) => t.remove());
+        view.focusFloor(1, 1);
+        return true;
+      case 'floor0':
+        document.querySelectorAll('.toast').forEach((t) => t.remove());
+        view.focusFloor(0, 1);
+        return true;
       case 'pot-panel': {
         const { state, content } = session;
         const sl = state.floors[0]!.slots[3]!;

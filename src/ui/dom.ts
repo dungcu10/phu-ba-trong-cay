@@ -1,7 +1,7 @@
 // Tiny DOM helpers for the HTML overlay (HUD and panels). The overlay is only touched on
 // game events and on a 1-second timer, never from the render loop.
 
-import { atlasData, atlasUrls } from '../render/assets.ts';
+import { atlasData, atlasUrls, sheetOf, type SheetName } from '../render/assets.ts';
 
 type Child = Node | string | null | undefined | false;
 type Attrs = Record<string, string | number | boolean | ((e: Event) => void) | undefined>;
@@ -20,7 +20,8 @@ export function h<K extends keyof HTMLElementTagNameMap>(tag: K, attrs: Attrs = 
 }
 
 /** An icon cut from the world atlas with CSS, so the HTML UI reuses the same image file. */
-export function icon(frame: string, sizePt: number, sheet: keyof typeof atlasData = 'sprites'): HTMLElement {
+export function icon(frame: string, sizePt: number, sheetName?: SheetName): HTMLElement {
+  const sheet = sheetName ?? sheetOf(frame) ?? 'sprites';
   const data = atlasData[sheet];
   const f = data.frames[frame]?.frame;
   const el = h('span', { class: 'icon', 'aria-hidden': 'true' });
