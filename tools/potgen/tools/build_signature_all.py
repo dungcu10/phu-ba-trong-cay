@@ -131,7 +131,10 @@ P.append(pot(10, F, "Cupcake", {"wrap": [[0.38, 0.0], [0.4, 0.03], [0.52, 0.55],
      face(0.42, eye=0.06)]))
 
 # ============================================================== LINH VẬT ===
-P.append(reuse(11, A, 38))
+# Chỉ thị 04 — sửa sau lần render đầu: vành quỹ đạo 1,8 tràn khỏi đáy khung (cắt hình) và xuống dưới mặt đất -> 1,3.
+_cat = reuse(11, A, 38)
+_cat["parts"] = [dict(pt, scale=1.3) if pt["type"] == "orbit" else pt for pt in _cat["parts"]]
+P.append(_cat)
 P.append(reuse(12, A, 46))
 P.append(pot(13, A, "Thỏ Ngọc", {"orb": ORB},
     {"body": G("#EEF0F8", "#FFFFFF", roughness=0.4, subsurface=0.2), "pink": C("#F7A8C4", roughness=0.5), "moon": GLOW("#FFE08A", 3)},
@@ -334,14 +337,17 @@ P.append(pot(34, K, "Trống Đồng", {"drum": [[0.55, 0.0], [0.5, 0.1], [0.48,
      {"type": "filigree", "mat": "dark", "z": 0.7, "amp": 0.025, "waves": 12, "spiral": 0, "depth": 0.009},
      {"type": "handles", "mat": "body", "z": 0.72, "r": 0.08, "rr": 0.022},
      {"type": "rim", "mat": "body", "rr": 0.03}]))
-P.append(pot(35, K, "Rổ Tre Nón Lá", {"basket": [[0.4, 0.0], [0.45, 0.04], [0.6, 0.6], [0.62, 0.62]]},
+# Chỉ thị 04 — sửa sau lần render đầu: hồ sơ 4 điểm có góc gãy làm Solidify (even offset) đẩy thành rổ
+# ra ±1684 đơn vị (tấm ván ngang khung). Thêm điểm trung gian, giữ dáng rổ loe miệng. Nón lá dựng nghiêng
+# tựa sau miệng rổ cho thấy rõ hình nón (trước đó nằm ngang, nhìn như miếng nêm).
+P.append(pot(35, K, "Rổ Tre Nón Lá", {"basket": [[0.4, 0.0], [0.46, 0.06], [0.52, 0.28], [0.57, 0.48], [0.61, 0.6], [0.62, 0.62]]},
     {"body": G("#C49A55", "#E2C48A", roughness=0.7), "weave": C("#A97F3E", roughness=0.7), "nonla": G("#E8D6A8", "#F7EBCB", roughness=0.7),
      "ribbon": C("#E8424E", roughness=0.5)},
     [body("basket"), SOIL,
      {"type": "meridians", "mat": "weave", "count": 18, "twist": 0.7, "radius": 0.013},
      {"type": "meridians", "mat": "weave", "count": 18, "twist": -0.7, "radius": 0.013},
      {"type": "rim", "mat": "weave", "rr": 0.04},
-     {"type": "prop", "items": [{"shape": "cone", "mat": "nonla", "sides": 48, "at": [0.35, 0.3, 0.75], "rot": [0, -28, 0], "scale": [0.55, 0.55, 0.42]}]},
+     {"type": "prop", "items": [{"shape": "cone", "mat": "nonla", "sides": 48, "at": [0.3, 0.42, 1.05], "rot": [62, 0, -20], "scale": [0.5, 0.5, 0.36]}]},
      {"type": "path", "mat": "ribbon", "radius": 0.012, "points": [[0.6, -0.05, 0.55], [0.55, -0.25, 0.4], [0.5, -0.3, 0.25]]}]))
 P.append(pot(36, K, "Ấm Tử Sa", {"teapot": [[0.35, 0.0], [0.45, 0.03], [0.6, 0.3], [0.58, 0.55], [0.45, 0.66]]},
     {"body": G("#7E3F22", "#A85C36", roughness=0.55), "line": C("#5E2C16", roughness=0.6)},
