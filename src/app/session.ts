@@ -46,8 +46,9 @@ export class GameSession {
   }
 
   run(cmd: Command): Result {
+    if (cmd.type !== 'tick') this.run({ type: 'tick' });
     const result = dispatch(this.content, this.state, cmd, this.clock.now());
-    if (result.ok) {
+    if (result.ok && (cmd.type !== 'tick' || result.events.length > 0)) {
       this.markDirty();
       for (const l of this.listeners) l(result.events);
     }

@@ -44,6 +44,21 @@ export const MIGRATIONS: Record<number, Migration> = {
     data.potStock = [];
     return data;
   },
+  // 5 -> 6 (orders, surprises, neighbours): new parts start empty; reconcile() fills the order
+  // board and the neighbours from the content pack, and the starting Ngọc Mây.
+  5: (data) => {
+    const player = data.player as Record<string, unknown>;
+    player.gems = 0;
+    const stats = data.stats as Record<string, unknown>;
+    stats.ordersDone = 0;
+    stats.gifts = 0;
+    data.orders = { slots: [], counter: 0 };
+    data.journal = {};
+    data.neighbors = {};
+    data.stall = [];
+    data.notices = [];
+    return data;
+  },
 };
 
 export function migrate(

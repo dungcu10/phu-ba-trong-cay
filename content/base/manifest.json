@@ -6,6 +6,9 @@
     "floors": "floors.json",
     "pots": "pots.json",
     "crops": "crops.json",
-    "bugs": "bugs.json"
+    "bugs": "bugs.json",
+    "orders": "orders.json",
+    "surprises": "surprises.json",
+    "neighbors": "neighbors.json"
   }
 }

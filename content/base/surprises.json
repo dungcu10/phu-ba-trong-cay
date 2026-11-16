@@ -1,0 +1,58 @@
+{
+  "startingGems": 5,
+  "gifts": [
+    {
+      "kind": "coins",
+      "weight": 5,
+      "perLevel": 15
+    },
+    {
+      "kind": "gems",
+      "weight": 2,
+      "min": 1,
+      "max": 3
+    },
+    {
+      "kind": "bug",
+      "weight": 3,
+      "min": 1,
+      "max": 3
+    }
+  ],
+  "mutations": [
+    {
+      "id": "golden",
+      "name": {
+        "vi": "Vàng"
+      },
+      "chance": 0.012,
+      "priceMultiplier": 3
+    },
+    {
+      "id": "jade",
+      "name": {
+        "vi": "Ngọc"
+      },
+      "chance": 0.003,
+      "priceMultiplier": 6
+    }
+  ],
+  "journal": {
+    "milestones": [
+      1,
+      10,
+      50,
+      200,
+      1000
+    ],
+    "gems": [
+      1,
+      2,
+      5,
+      12,
+      30
+    ]
+  },
+  "giftChancePer10Min": 0.04,
+  "giftChanceMax": 0.5
+}

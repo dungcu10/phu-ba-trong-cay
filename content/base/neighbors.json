@@ -1,0 +1,135 @@
+{
+  "stallSlots": 6,
+  "maxListingQty": 30,
+  "priceRange": [
+    0.5,
+    3.0
+  ],
+  "sessionMinutes": 30,
+  "catchUpDays": 14,
+  "giftChance": 0.06,
+  "visitFriendship": 1,
+  "orderFriendship": 2,
+  "bots": [
+    {
+      "id": "base:bot.ba-tam",
+      "name": {
+        "vi": "Bà Tám Mây"
+      },
+      "portrait": "N1",
+      "traits": {
+        "diligence": 0.8,
+        "trader": 0.6,
+        "collector": 0.3
+      },
+      "likes": "flower",
+      "startLevel": 6,
+      "startCoins": 1800
+    },
+    {
+      "id": "base:bot.be-bap",
+      "name": {
+        "vi": "Bé Bắp Tưới Cây"
+      },
+      "portrait": "N2",
+      "traits": {
+        "diligence": 0.9,
+        "trader": 0.2,
+        "collector": 0.4
+      },
+      "likes": "herb",
+      "startLevel": 3,
+      "startCoins": 400
+    },
+    {
+      "id": "base:bot.co-ngoc",
+      "name": {
+        "vi": "Cô Ngọc Ngà"
+      },
+      "portrait": "N3",
+      "traits": {
+        "diligence": 0.5,
+        "trader": 0.9,
+        "collector": 0.7
+      },
+      "likes": "flower",
+      "startLevel": 12,
+      "startCoins": 9000
+    },
+    {
+      "id": "base:bot.ong-sau",
+      "name": {
+        "vi": "Ông Sáu Rổ Tre"
+      },
+      "portrait": "N4",
+      "traits": {
+        "diligence": 0.7,
+        "trader": 0.4,
+        "collector": 0.2
+      },
+      "likes": "fruit",
+      "startLevel": 9,
+      "startCoins": 3200
+    },
+    {
+      "id": "base:bot.be-na",
+      "name": {
+        "vi": "Bé Na Búi Tóc"
+      },
+      "portrait": "N5",
+      "traits": {
+        "diligence": 0.6,
+        "trader": 0.3,
+        "collector": 0.9
+      },
+      "likes": "flower",
+      "startLevel": 2,
+      "startCoins": 250
+    },
+    {
+      "id": "base:bot.chu-loc",
+      "name": {
+        "vi": "Chú Lộc Bàn Tính"
+      },
+      "portrait": "N6",
+      "traits": {
+        "diligence": 0.6,
+        "trader": 1.0,
+        "collector": 0.3
+      },
+      "likes": "fruit",
+      "startLevel": 14,
+      "startCoins": 15000
+    },
+    {
+      "id": "base:bot.chi-thu",
+      "name": {
+        "vi": "Chị Thư Mọt Sách"
+      },
+      "portrait": "N7",
+      "traits": {
+        "diligence": 0.4,
+        "trader": 0.5,
+        "collector": 0.8
+      },
+      "likes": "herb",
+      "startLevel": 7,
+      "startCoins": 2200
+    },
+    {
+      "id": "base:bot.di-hoa",
+      "name": {
+        "vi": "Dì Hoa Thể Dục"
+      },
+      "portrait": "N8",
+      "traits": {
+        "diligence": 1.0,
+        "trader": 0.5,
+        "collector": 0.2
+      },
+      "likes": "fruit",
+      "startLevel": 5,
+      "startCoins": 1200
+    }
+  ]
+}

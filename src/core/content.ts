@@ -108,12 +108,67 @@ export interface BugDef {
   sprite: string;
 }
 
+export interface OrdersConfig {
+  slots: number;
+  refillSeconds: number;
+  skipSeconds: number;
+  skipNowGems: number;
+  maxLines: number;
+  rewardMultiplier: [number, number];
+  xpPerCoin: number;
+  rareChance: number;
+  rareMultiplier: number;
+  rareGems: number;
+}
+
+export interface MutationDef {
+  id: string;
+  name: LocalizedText;
+  chance: number;
+  priceMultiplier: number;
+}
+
+export interface SurprisesConfig {
+  startingGems: number;
+  /** Chance of a gift per 10 minutes of (unmodified) growing time, like Bọ Mây (R2). */
+  giftChancePer10Min: number;
+  giftChanceMax: number;
+  gifts: Array<{ kind: 'coins' | 'gems' | 'bug'; weight: number; perLevel?: number; min?: number; max?: number }>;
+  mutations: MutationDef[];
+  journal: { milestones: number[]; gems: number[] };
+}
+
+export interface BotDef {
+  id: string;
+  name: LocalizedText;
+  portrait: string;
+  traits: { diligence: number; trader: number; collector: number };
+  likes: string;
+  startLevel: number;
+  startCoins: number;
+}
+
+export interface NeighborsConfig {
+  stallSlots: number;
+  maxListingQty: number;
+  priceRange: [number, number];
+  sessionMinutes: number;
+  catchUpDays: number;
+  giftChance: number;
+  visitFriendship: number;
+  orderFriendship: number;
+  bots: BotDef[];
+}
+
 export interface ItemDef {
   id: string;
   name: LocalizedText;
   kind: 'produce' | 'bug';
   sellPrice: number | null;
   countsTowardStorage: boolean;
+  /** For mutated produce: the mutation and the normal item it is a variant of. */
+  mutation?: string;
+  baseItem?: string;
 }
 
 export interface ContentPack {
@@ -128,6 +183,10 @@ export interface ContentPack {
   /** Floors in the order they unlock (bottom to top). */
   floorList: FloorDef[];
   potList: PotDef[];
+  orders: OrdersConfig;
+  surprises: SurprisesConfig;
+  neighbors: NeighborsConfig;
+  bots: Map<string, BotDef>;
   bugList: BugDef[];
 }
 
@@ -138,6 +197,9 @@ export interface RawContent {
   pots: unknown;
   crops: unknown;
   bugs: unknown;
+  orders: unknown;
+  surprises: unknown;
+  neighbors: unknown;
 }
 
 export class ContentError extends Error {
@@ -153,7 +215,7 @@ type ReadJson = (relativePath: string) => Promise<unknown>;
 export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> {
   const manifest = (await readJson('manifest.json')) as {
     contentVersion: number;
-    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs', string>;
+    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors', string>;
   };
   const raw: RawContent = {
     contentVersion: manifest.contentVersion,
@@ -162,6 +224,9 @@ export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> 
     pots: await readJson(manifest.files.pots),
     crops: await readJson(manifest.files.crops),
     bugs: await readJson(manifest.files.bugs),
+    orders: await readJson(manifest.files.orders),
+    surprises: await readJson(manifest.files.surprises),
+    neighbors: await readJson(manifest.files.neighbors),
   };
   return buildContentPack(raw);
 }
@@ -252,6 +317,27 @@ export function buildContentPack(raw: RawContent): ContentPack {
     addUnique(items, { id: crop.produce.id, name: crop.produce.name, kind: 'produce', sellPrice: crop.sellPrice, countsTowardStorage: true }, `${where}.produce`, problems);
   });
 
+  const orders = raw.orders as OrdersConfig;
+  checkFields('orders', orders, ['slots', 'refillSeconds', 'skipSeconds', 'skipNowGems', 'maxLines', 'xpPerCoin', 'rareChance', 'rareMultiplier', 'rareGems'], [], problems);
+  const surprises = raw.surprises as SurprisesConfig;
+  checkFields('surprises', surprises, ['startingGems', 'giftChancePer10Min', 'giftChanceMax'], [], problems);
+  for (const m of surprises?.mutations ?? []) {
+    for (const crop of crops.values()) {
+      addUnique(
+        items,
+        { id: `${crop.produce.id}~${m.id}`, name: { vi: `${crop.produce.name.vi} ${m.name.vi}` }, kind: 'produce', sellPrice: crop.sellPrice * m.priceMultiplier, countsTowardStorage: true, mutation: m.id, baseItem: crop.produce.id },
+        `biến dị ${m.id}`,
+        problems,
+      );
+    }
+  }
+  const neighbors = raw.neighbors as NeighborsConfig;
+  checkFields('neighbors', neighbors, ['stallSlots', 'maxListingQty', 'sessionMinutes', 'catchUpDays', 'giftChance'], [], problems);
+  const bots = new Map<string, BotDef>();
+  asArray('neighbors.bots', neighbors?.bots, problems).forEach((b, i) => {
+    if (checkFields(`neighbors.bots[${i}]`, b, ['startLevel', 'startCoins'], ['id', 'portrait', 'likes'], problems)) addUnique(bots, b as unknown as BotDef, `neighbors.bots[${i}]`, problems);
+  });
+
   // Anti soft-lock: a brand-new or broke player must always be able to plant something.
   if (isObj(config) && isNum(config.startingLevel) && ![...crops.values()].some((c) => c.unlockLevel <= config.startingLevel && c.seedPrice === 0)) {
     problems.push('crops: cần ít nhất một cây miễn phí (seedPrice = 0) mở từ cấp khởi đầu, để người chơi không bao giờ kẹt');
@@ -286,6 +372,10 @@ export function buildContentPack(raw: RawContent): ContentPack {
     cropList: [...crops.values()],
     floorList: [...floors.values()].sort((a, b) => a.unlockLevel - b.unlockLevel),
     potList: [...pots.values()],
+    orders,
+    surprises,
+    neighbors,
+    bots,
     bugList: [...bugs.values()],
   };
 }

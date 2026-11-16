@@ -32,7 +32,9 @@ const T0 = Date.UTC(2026, 10, 16, 0, 0, 0);
  * Each visit: catch every bug, harvest if ripe, sell everything, water if thirsty, replant if
  * empty. Net coins = sales − seed costs. Averaged over several seeds to smooth randomness.
  */
-export function simulate(content: ContentPack, crop: CropDef, style: PlayStyle, hours = 24, seeds = [1, 2, 3, 4, 5]): CropResult {
+export function simulate(fullContent: ContentPack, crop: CropDef, style: PlayStyle, hours = 24, seeds = [1, 2, 3, 4, 5]): CropResult {
+  // Crops only: surprise gifts and mutations are measured separately, they would blur the comparison.
+  const content: ContentPack = { ...fullContent, surprises: { ...fullContent.surprises, giftChancePer10Min: 0, mutations: [] } };
   let coins = 0;
   let xp = 0;
   let bugs = 0;
@@ -40,6 +42,8 @@ export function simulate(content: ContentPack, crop: CropDef, style: PlayStyle, 
     const s = createNewGame(content, T0, seed);
     s.player.level = content.config.levels.maxLevel;
     s.player.coins = 1_000_000;
+    // Crops only: neighbours' gifts and surprise gifts would blur the comparison.
+    s.neighbors = {};
     const start = s.player.coins;
     const at = { floor: 0, slot: 0 };
     const end = T0 + hours * 3_600_000;

@@ -21,6 +21,13 @@ export const ERROR_TEXT: Record<ErrorCode, string> = {
   not_next_floor: 'Phải mở các tầng bên dưới trước.',
   not_for_sale: 'Chậu này không bán ở cửa hàng.',
   not_in_stock: 'Chậu này không còn trong kho chậu.',
+  no_order: 'Đơn này không còn nữa.',
+  not_waiting: 'Khinh khí cầu đã về rồi.',
+  not_enough_gems: 'Chưa đủ Ngọc Mây.',
+  nothing_to_claim: 'Chưa có phần thưởng để nhận.',
+  stall_full: 'Sạp đã kín chỗ — chờ hàng xóm mua bớt nhé.',
+  bad_price: 'Giá không hợp lệ.',
+  unknown_listing: 'Món này không còn trên sạp.',
 };
 
 const numberFormat = new Intl.NumberFormat('vi-VN');

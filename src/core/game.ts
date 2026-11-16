@@ -10,6 +10,9 @@ import { addItem, addXp, removeItem, sellPrice, storageFree } from '../systems/e
 import { canAfford, nextUpgradeCost } from '../systems/pots.ts';
 import { slotBonus } from '../systems/modifiers.ts';
 import { createFloorState } from './state.ts';
+import { canDeliver, refillOrders } from '../systems/orders.ts';
+import { nextMilestone, recordHarvest, rollGift, rollMutation, type Gift } from '../systems/surprises.ts';
+import { simulateNeighbors, type NeighborEvent } from '../systems/neighbors.ts';
 
 export type SlotRef = { floor: number; slot: number };
 
@@ -22,13 +25,30 @@ export type Command =
   | { type: 'upgradePot'; potInstanceId: string }
   | { type: 'unlockFloor'; floorId: string }
   | { type: 'buyPot'; potId: string }
-  | ({ type: 'placePot'; potInstanceId: string } & SlotRef);
+  | ({ type: 'placePot'; potInstanceId: string } & SlotRef)
+  /** Lets time-driven things happen: balloons bring orders, neighbours act. Sent by the app
+   *  before every player command and every few seconds. */
+  | { type: 'tick' }
+  | { type: 'deliverOrder'; slot: number }
+  | { type: 'skipOrder'; slot: number }
+  | { type: 'rushOrder'; slot: number }
+  | { type: 'claimJournal'; cropId: string }
+  | { type: 'listItem'; itemId: string; qty: number; price: number }
+  | { type: 'cancelListing'; listingId: number };
 
 export type GameEvent =
   | { type: 'planted'; slot: SlotRef; cropId: string; cost: number }
   | { type: 'watered'; slot: SlotRef; savedMs: number }
   | { type: 'bugCaught'; slot: SlotRef; itemId: string }
-  | { type: 'harvested'; slot: SlotRef; itemId: string; qty: number; xp: number; cleared: boolean }
+  | { type: 'harvested'; slot: SlotRef; itemId: string; qty: number; xp: number; cleared: boolean; mutation: string | null }
+  | { type: 'giftFound'; slot: SlotRef; gift: Gift }
+  | { type: 'ordersArrived'; slots: number[] }
+  | { type: 'orderDelivered'; slot: number; coins: number; xp: number; gems: number; customer: string; rare: boolean }
+  | { type: 'orderSkipped'; slot: number }
+  | { type: 'journalClaimed'; cropId: string; gems: number; harvests: number }
+  | { type: 'itemListed'; listingId: number; itemId: string; qty: number; price: number }
+  | { type: 'listingCancelled'; listingId: number }
+  | NeighborEvent
   | { type: 'sold'; itemId: string; qty: number; coins: number }
   | { type: 'potUpgraded'; potInstanceId: string; level: number }
   | { type: 'levelUp'; level: number }
@@ -54,7 +74,14 @@ export type ErrorCode =
   | 'max_level'
   | 'not_next_floor'
   | 'not_for_sale'
-  | 'not_in_stock';
+  | 'not_in_stock'
+  | 'no_order'
+  | 'not_waiting'
+  | 'not_enough_gems'
+  | 'nothing_to_claim'
+  | 'stall_full'
+  | 'bad_price'
+  | 'unknown_listing';
 
 export type Result = { ok: true; events: GameEvent[] } | { ok: false; error: ErrorCode };
 
@@ -77,8 +104,21 @@ export function advanceTime(state: GameState, realNow: number): number {
   return now;
 }
 
+/** Things that happen because time passed: balloons bring new orders, neighbours live. */
+export function updateWorld(content: ContentPack, state: GameState, now: number): GameEvent[] {
+  const events: GameEvent[] = [];
+  const arrived = refillOrders(content, state, now);
+  if (arrived.length > 0) events.push({ type: 'ordersArrived', slots: arrived });
+  events.push(...simulateNeighbors(content, state, now));
+  return events;
+}
+
 export function dispatch(content: ContentPack, state: GameState, cmd: Command, realNow: number): Result {
   const now = advanceTime(state, realNow);
+  return run(content, state, cmd, now);
+}
+
+function run(content: ContentPack, state: GameState, cmd: Command, now: number): Result {
   switch (cmd.type) {
     case 'plant':
       return plant(content, state, cmd, cmd.cropId, now);
@@ -98,6 +138,20 @@ export function dispatch(content: ContentPack, state: GameState, cmd: Command, r
       return buyPot(content, state, cmd.potId);
     case 'placePot':
       return placePot(state, cmd, cmd.potInstanceId);
+    case 'tick':
+      return { ok: true, events: updateWorld(content, state, now) };
+    case 'deliverOrder':
+      return deliverOrder(content, state, cmd.slot, now);
+    case 'skipOrder':
+      return skipOrder(content, state, cmd.slot, now);
+    case 'rushOrder':
+      return rushOrder(content, state, cmd.slot, now);
+    case 'claimJournal':
+      return claimJournal(content, state, cmd.cropId);
+    case 'listItem':
+      return listItem(content, state, cmd.itemId, cmd.qty, cmd.price);
+    case 'cancelListing':
+      return cancelListing(content, state, cmd.listingId);
   }
 }
 
@@ -156,13 +210,25 @@ function harvest(content: ContentPack, state: GameState, ref: SlotRef, now: numb
   if (!status || !planting) return fail('slot_empty');
   if (!status.ripe) return fail('not_ripe');
   const crop = status.crop;
+  const luck = slotBonus(content, state, slot, crop, 'luck');
+  const mutation = rollMutation(content, state, planting, luck);
+  const itemId = mutation ? `${crop.produce.id}~${mutation}` : crop.produce.id;
+  const cycleSeconds = planting.harvestsDone === 0 || crop.regrowSeconds === null ? crop.growSeconds : crop.regrowSeconds;
+  const gift = rollGift(content, state, planting, cycleSeconds, luck);
   const qty = stochasticRound(crop.yield * (1 + slotBonus(content, state, slot, crop, 'yield')), state.seed, 'yield', planting.id, planting.harvestsDone);
   const xp = stochasticRound(crop.xp * (1 + slotBonus(content, state, slot, crop, 'xp')), state.seed, 'xp', planting.id, planting.harvestsDone);
   if (storageFree(content, state) < qty) return fail('storage_full');
 
-  addItem(state, crop.produce.id, qty);
+  addItem(state, itemId, qty);
   state.stats.harvests += 1;
+  recordHarvest(state, crop, mutation);
   const events: GameEvent[] = [];
+  if (gift) {
+    if (gift.kind === 'coins') state.player.coins += gift.amount;
+    else if (gift.kind === 'gems') state.player.gems += gift.amount;
+    else if (gift.itemId) addItem(state, gift.itemId, gift.amount);
+    state.stats.gifts += 1;
+  }
   planting.harvestsDone += 1;
   const cleared = planting.harvestsDone >= crop.harvests;
   if (cleared) {
@@ -173,7 +239,8 @@ function harvest(content: ContentPack, state: GameState, ref: SlotRef, now: numb
     planting.wateredStages = [];
     planting.caughtBugs = {};
   }
-  events.push({ type: 'harvested', slot: ref, itemId: crop.produce.id, qty, xp, cleared });
+  events.push({ type: 'harvested', slot: ref, itemId, qty, xp, cleared, mutation });
+  if (gift) events.push({ type: 'giftFound', slot: ref, gift });
   for (const level of addXp(content, state, xp)) events.push({ type: 'levelUp', level });
   return { ok: true, events };
 }
@@ -244,4 +311,74 @@ function placePot(state: GameState, ref: SlotRef, potInstanceId: string): Result
   state.potStock.splice(i, 1, replaced);
   slot.potInstanceId = potInstanceId;
   return { ok: true, events: [{ type: 'potPlaced', slot: ref, potInstanceId, replaced }] };
+}
+
+function deliverOrder(content: ContentPack, state: GameState, index: number, now: number): Result {
+  const slot = state.orders.slots[index];
+  const order = slot?.order;
+  if (!slot || !order) return fail('no_order');
+  if (!canDeliver(state, order)) return fail('not_enough_items');
+  for (const [id, qty] of Object.entries(order.items)) removeItem(state, id, qty);
+  state.player.coins += order.coins;
+  state.player.gems += order.gems;
+  state.stats.coinsEarned += order.coins;
+  state.stats.ordersDone += 1;
+  const friend = state.neighbors[order.customer];
+  if (friend) friend.friendship += content.neighbors.orderFriendship;
+  slot.order = null;
+  slot.readyAt = now + content.orders.refillSeconds * 1000;
+  const events: GameEvent[] = [{ type: 'orderDelivered', slot: index, coins: order.coins, xp: order.xp, gems: order.gems, customer: order.customer, rare: order.rare }];
+  for (const level of addXp(content, state, order.xp)) events.push({ type: 'levelUp', level });
+  return { ok: true, events };
+}
+
+function skipOrder(content: ContentPack, state: GameState, index: number, now: number): Result {
+  const slot = state.orders.slots[index];
+  if (!slot?.order) return fail('no_order');
+  slot.order = null;
+  slot.readyAt = now + content.orders.skipSeconds * 1000;
+  return { ok: true, events: [{ type: 'orderSkipped', slot: index }] };
+}
+
+/** Pays Ngọc Mây to bring a waiting balloon back at once. */
+function rushOrder(content: ContentPack, state: GameState, index: number, now: number): Result {
+  const slot = state.orders.slots[index];
+  if (!slot || slot.order || slot.readyAt <= now) return fail('not_waiting');
+  if (state.player.gems < content.orders.skipNowGems) return fail('not_enough_gems');
+  state.player.gems -= content.orders.skipNowGems;
+  slot.readyAt = now;
+  const arrived = refillOrders(content, state, now);
+  return { ok: true, events: [{ type: 'ordersArrived', slots: arrived }] };
+}
+
+function claimJournal(content: ContentPack, state: GameState, cropId: string): Result {
+  const m = nextMilestone(content, state, cropId);
+  if (!m) return fail('nothing_to_claim');
+  state.journal[cropId]!.claimed += 1;
+  state.player.gems += m.gems;
+  return { ok: true, events: [{ type: 'journalClaimed', cropId, gems: m.gems, harvests: m.harvests }] };
+}
+
+function listItem(content: ContentPack, state: GameState, itemId: string, qty: number, price: number): Result {
+  const item = content.items.get(itemId);
+  if (!item || item.sellPrice === null) return fail('not_sellable');
+  const cfg = content.neighbors;
+  if (!Number.isInteger(qty) || qty <= 0 || qty > cfg.maxListingQty) return fail('bad_quantity');
+  if (!Number.isInteger(price) || price < Math.max(1, Math.floor(item.sellPrice * cfg.priceRange[0])) || price > Math.ceil(item.sellPrice * cfg.priceRange[1])) return fail('bad_price');
+  if ((state.inventory[itemId] ?? 0) < qty) return fail('not_enough_items');
+  if (state.stall.length >= cfg.stallSlots) return fail('stall_full');
+  removeItem(state, itemId, qty);
+  const listingId = state.nextId++;
+  state.stall.push({ id: listingId, itemId, qty, price });
+  return { ok: true, events: [{ type: 'itemListed', listingId, itemId, qty, price }] };
+}
+
+function cancelListing(content: ContentPack, state: GameState, listingId: number): Result {
+  const i = state.stall.findIndex((l) => l.id === listingId);
+  if (i < 0) return fail('unknown_listing');
+  const l = state.stall[i]!;
+  if (content.items.get(l.itemId)?.countsTowardStorage && storageFree(content, state) < l.qty) return fail('storage_full');
+  state.stall.splice(i, 1);
+  addItem(state, l.itemId, l.qty);
+  return { ok: true, events: [{ type: 'listingCancelled', listingId }] };
 }

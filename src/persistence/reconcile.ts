@@ -8,7 +8,7 @@
 // The result is always a state the simulation can run without throwing.
 
 import type { ContentPack } from '../core/content.ts';
-import type { GameState, Planting, SlotState } from '../core/state.ts';
+import { newNeighbors, type GameState, type Planting, type SlotState } from '../core/state.ts';
 import { SaveFormatError } from './serializer.ts';
 
 export type ReconcileMode = 'import' | 'local';
@@ -47,11 +47,12 @@ export function reconcile(input: GameState, content: ContentPack, mode: Reconcil
   state.seed = c.num('hạt giống', state.seed, { min: 0, int: true, fallback: 1 });
   state.player.level = c.num('cấp người chơi', state.player.level, { min: 1, max: maxLevel, int: true, fallback: 1 });
   state.player.coins = c.num('số xu', state.player.coins, { min: 0, int: true, fallback: 0 });
+  state.player.gems = c.num('Ngọc Mây', state.player.gems, { min: 0, int: true, fallback: 0 });
   state.player.xp = c.num('kinh nghiệm', state.player.xp, { min: 0, int: true, fallback: 0 });
   state.maxSeenAt = c.num('mốc thời gian', state.maxSeenAt, { min: 0, fallback: state.createdAt || 0 });
   state.clockOffsetMs = c.num('độ lệch đồng hồ', state.clockOffsetMs, { fallback: 0 });
   state.nextId = c.num('bộ đếm id', state.nextId, { min: 1, int: true, fallback: 1 });
-  for (const key of ['harvests', 'coinsEarned', 'bugsCaught'] as const) {
+  for (const key of ['harvests', 'coinsEarned', 'bugsCaught', 'ordersDone', 'gifts'] as const) {
     state.stats[key] = c.num(`thống kê ${key}`, state.stats?.[key], { min: 0, int: true, fallback: 0 });
   }
 
@@ -59,6 +60,7 @@ export function reconcile(input: GameState, content: ContentPack, mode: Reconcil
   reconcilePots(state, content, c);
   reconcileFloors(state, content, c);
   reconcileStock(state);
+  reconcileWorld(state, content, c);
 
   // nextId must stay above every planting id so new plantings never reuse random keys.
   for (const f of state.floors) for (const s of f.slots) if (s.planting) state.nextId = Math.max(state.nextId, s.planting.id + 1);
@@ -122,6 +124,37 @@ function reconcileFloors(state: GameState, content: ContentPack, c: Checker): vo
       reconcilePlanting(state, content, slot, `chậu ${i + 1}`, c);
     });
   }
+}
+
+/** Order board, journal, neighbours, stall and letters: match the content pack. */
+function reconcileWorld(state: GameState, content: ContentPack, c: Checker): void {
+  const now = state.maxSeenAt;
+  if (!state.orders || !Array.isArray(state.orders.slots)) state.orders = { slots: [], counter: 0 };
+  state.orders.counter = c.num('bộ đếm đơn hàng', state.orders.counter, { min: 0, int: true, fallback: 0 });
+  state.orders.slots = state.orders.slots.slice(0, content.orders.slots).map((sl) => {
+    const order = sl?.order && Object.keys(sl.order.items ?? {}).every((id) => content.items.has(id)) ? sl.order : null;
+    return { order, readyAt: typeof sl?.readyAt === 'number' ? sl.readyAt : now };
+  });
+  while (state.orders.slots.length < content.orders.slots) state.orders.slots.push({ order: null, readyAt: now });
+
+  const journal: GameState['journal'] = {};
+  for (const [id, e] of Object.entries(state.journal ?? {})) {
+    if (!content.crops.has(id) || !e) continue;
+    journal[id] = { harvests: Math.max(0, Math.floor(e.harvests) || 0), mutations: e.mutations ?? {}, claimed: Math.max(0, Math.floor(e.claimed) || 0) };
+  }
+  state.journal = journal;
+
+  const fresh = newNeighbors(content, now);
+  const neighbors: GameState['neighbors'] = {};
+  for (const id of content.bots.keys()) neighbors[id] = state.neighbors?.[id] ?? fresh[id]!;
+  state.neighbors = neighbors;
+
+  state.stall = (Array.isArray(state.stall) ? state.stall : []).filter((l) => {
+    if (l && content.items.has(l.itemId) && l.qty > 0 && l.price > 0) return true;
+    if (l) c.warnings.push(`Đã gỡ món không còn trong game khỏi Sạp: ${String(l.itemId)}`);
+    return false;
+  });
+  state.notices = Array.isArray(state.notices) ? state.notices.slice(0, 30) : [];
 }
 
 /** Pot stock holds only existing pots that are not placed on a slot, each once. */

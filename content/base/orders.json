@@ -1,0 +1,15 @@
+{
+  "slots": 6,
+  "refillSeconds": 45,
+  "skipSeconds": 300,
+  "skipNowGems": 1,
+  "maxLines": 3,
+  "rewardMultiplier": [
+    1.3,
+    1.7
+  ],
+  "xpPerCoin": 0.35,
+  "rareChance": 0.12,
+  "rareMultiplier": 2.0,
+  "rareGems": 2
+}
