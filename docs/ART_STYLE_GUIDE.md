@@ -61,13 +61,22 @@ Phong cách **3D tô vẽ tay kiểu đồ chơi cao cấp** (stylized painterly
 | Tím Bóng | `#6B5B9A` | Màu bóng |
 | Đỏ Cảnh Báo | `#F2676B` | Xóa, hết hàng |
 
-| Vùng đất | Màu chủ đạo |
-| --- | --- |
-| Đồng Mây Ngọc | `#9FE07A` `#6CC6A0` `#FFE9F0` |
-| Ruộng Bậc Thang Hoàng Kim | `#F5C84C` `#D98E3B` `#8FB34A` |
-| Rừng Nấm Sương Tím | `#7A5CC7` `#3E3A78` `#9EF0E0` |
-| Vịnh Cầu Vồng | `#55C8F0` `#FF9EC4` `#FFE07A` |
-| Chợ Trời | `#E8505B` `#F2B830` `#FFF6E3` |
+Màu chủ đạo của 10 tầng mây (tên theo `docs/GAMEPLAY_DESIGN.md` mục 3):
+
+| Tầng | Tên | Màu chủ đạo |
+| --- | --- | --- |
+| 1 | Đồng Mây Ngọc | `#9FE07A` `#6CC6A0` `#FFE9F0` |
+| 2 | Vườn Trà Sương Sớm | `#7FBF6A` `#CFE8D5` `#F4F1E6` |
+| 3 | Ruộng Bậc Thang Hoàng Kim | `#F5C84C` `#D98E3B` `#8FB34A` |
+| 4 | Hồ Sen Cầu Vồng | `#55C8F0` `#FF9EC4` `#FFE07A` |
+| 5 | Rừng Nấm Sương Tím | `#7A5CC7` `#3E3A78` `#9EF0E0` |
+| 6 | Thung Lũng Hoa Đăng | `#E8505B` `#FFB45C` `#FFF0C8` |
+| 7 | Đảo Băng Kẹo | `#BDE8FF` `#FFC4E1` `#FFFFFF` |
+| 8 | Vườn Thiên Văn | `#2E3A78` `#8C7BE0` `#FFE7A0` |
+| 9 | Cung Trăng Ngọc | `#DDE6FF` `#9FD8C8` `#C9B8F0` |
+| 10 | Đỉnh Phú Quý | `#F2B830` `#2FBF9F` `#FFF6E3` |
+
+Khu vực không phải tầng (giai đoạn sau): Chợ Trời `#E8505B` `#F2B830` `#FFF6E3`.
 
 Tài nguyên vẽ ở ánh sáng trưa; engine phủ ánh sáng ngày–đêm.
 
@@ -108,7 +117,18 @@ Tài nguyên vẽ ở ánh sáng trưa; engine phủ ánh sáng ngày–đêm.
 
 ## 9. Quy trình tạo ảnh bằng AI
 
-Công cụ: ChatGPT (chủ lực, nền trong, ảnh tham chiếu); Midjourney cho vài ảnh nổi bật. Một công cụ, một phiên bản mô hình cho mỗi nhóm. Kiểm tra điều khoản sử dụng ảnh trước khi phát hành; ghi nguồn vào `assets/ASSET_SOURCES.md`.
+Quyết định của chủ dự án (2026-11-16, `PROJECT_RULES.md` 3.3): chỉ dùng công cụ **miễn phí**, không mua tài nguyên. Không dùng Midjourney (không có gói miễn phí).
+
+**Công cụ chủ lực: Leonardo AI, gói miễn phí.** Toàn bộ ảnh của một giai đoạn tạo bằng một công cụ, một mô hình, một câu lệnh phong cách chung (bên dưới).
+
+| Hạng mục | Gói miễn phí (tra cứu 16/11/2026 — kiểm lại trang giá chính thức trước mỗi đợt) |
+| --- | --- |
+| Hạn mức | 150 token mỗi ngày, đặt lại hằng ngày, không cộng dồn; mỗi ảnh tốn vài token tùy mô hình và cỡ |
+| Riêng tư | Ảnh tạo ra là **công khai** trên thư viện cộng đồng của Leonardo |
+| Quyền sử dụng | Quyền sở hữu thuộc Leonardo; người dùng được cấp quyền sử dụng không độc quyền. Gói trả phí mới được sở hữu ảnh |
+| Hệ quả cho dự án | Đủ cho bản chơi thử và bản cá nhân. **Trước khi phát hành thương mại** phải rà lại điều khoản và tạo lại ảnh bằng gói có quyền sở hữu (việc này cần chủ dự án quyết định chi phí) |
+
+Ghi nguồn từng ảnh (công cụ, mô hình, ngày, câu lệnh) vào `assets/ASSET_SOURCES.md`.
 
 Developer không điều khiển được dịch vụ AI bên ngoài và không đưa khóa API vào kho; người làm ảnh dán câu lệnh, đính ảnh mỏ neo, gửi ảnh lại; developer xử lý phần còn lại. Trong lúc chờ, game dùng ảnh tạm trong `assets/_placeholder/`.
 
