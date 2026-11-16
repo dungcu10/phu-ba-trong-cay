@@ -1,0 +1,18 @@
+{
+  "startingCoins": 30,
+  "startingLevel": 1,
+  "storageCapacity": 60,
+  "levels": {
+    "xpBase": 10,
+    "xpExponent": 1.6,
+    "maxLevel": 30,
+    "levelUpCoins": 10
+  },
+  "water": {
+    "remainingTimeReduction": 0.1
+  },
+  "market": {
+    "dailyPriceVariation": 0.05
+  },
+  "startFloor": "base:floor.cloud-meadow"
+}

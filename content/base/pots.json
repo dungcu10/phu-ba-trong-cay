@@ -1,0 +1,15 @@
+[
+  {
+    "id": "base:pot.terracotta",
+    "name": { "vi": "Chậu Đất Nung" },
+    "rarity": "common",
+    "sprite": "pots/terracotta",
+    "levels": [
+      { "level": 1, "stats": { "speed": 0.03, "yield": 0 }, "upgradeCost": null },
+      { "level": 2, "stats": { "speed": 0.06, "yield": 0 }, "upgradeCost": { "coins": 40, "items": { "base:bug.ladybird": 2 } } },
+      { "level": 3, "stats": { "speed": 0.09, "yield": 0.1 }, "upgradeCost": { "coins": 120, "items": { "base:bug.ladybird": 4 } } },
+      { "level": 4, "stats": { "speed": 0.12, "yield": 0.15 }, "upgradeCost": { "coins": 300, "items": { "base:bug.ladybird": 7 } } },
+      { "level": 5, "stats": { "speed": 0.15, "yield": 0.2 }, "upgradeCost": { "coins": 650, "items": { "base:bug.ladybird": 10 } } }
+    ]
+  }
+]

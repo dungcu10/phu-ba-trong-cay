@@ -1,0 +1,11 @@
+{
+  "packId": "base",
+  "contentVersion": 1,
+  "files": {
+    "config": "config.json",
+    "floors": "floors.json",
+    "pots": "pots.json",
+    "crops": "crops.json",
+    "bugs": "bugs.json"
+  }
+}

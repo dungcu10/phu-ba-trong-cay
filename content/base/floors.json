@@ -1,0 +1,11 @@
+[
+  {
+    "id": "base:floor.cloud-meadow",
+    "name": { "vi": "Đồng Mây Ngọc" },
+    "unlockLevel": 1,
+    "unlockCost": 0,
+    "slotCount": 4,
+    "startingPot": "base:pot.terracotta",
+    "sprite": "floors/cloud-meadow"
+  }
+]

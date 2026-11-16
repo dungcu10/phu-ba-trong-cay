@@ -1,0 +1,14 @@
+{
+  "name": "phu-ba-trong-cay",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Phú Bà Trồng Cây — game nông trại trên mây, chạy offline trên iPad (PWA).",
+  "type": "module",
+  "scripts": {
+    "test": "tsx --test tests/*.test.ts",
+    "typecheck": "tsc --noEmit -p .",
+    "validate-content": "tsx tools/validate-content.ts"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}
