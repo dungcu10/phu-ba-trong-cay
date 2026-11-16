@@ -1,0 +1,2869 @@
+{
+ "version": 1,
+ "name": "Danh mục 50 dòng chậu — mẫu cấp 50",
+ "background": "#FDF5E6",
+ "source": "Thông số 50 dòng chậu do chủ dự án cung cấp (2026-11-17)",
+ "profiles": {
+  "royal": [
+   [
+    0.24,
+    0.0
+   ],
+   [
+    0.3,
+    0.04
+   ],
+   [
+    0.52,
+    0.18
+   ],
+   [
+    0.62,
+    0.42
+   ],
+   [
+    0.58,
+    0.64
+   ],
+   [
+    0.44,
+    0.82
+   ],
+   [
+    0.46,
+    0.92
+   ],
+   [
+    0.6,
+    1.04
+   ]
+  ],
+  "urn": [
+   [
+    0.26,
+    0.0
+   ],
+   [
+    0.4,
+    0.05
+   ],
+   [
+    0.55,
+    0.25
+   ],
+   [
+    0.6,
+    0.45
+   ],
+   [
+    0.54,
+    0.68
+   ],
+   [
+    0.42,
+    0.84
+   ],
+   [
+    0.45,
+    0.93
+   ],
+   [
+    0.55,
+    1.0
+   ]
+  ],
+  "vase": [
+   [
+    0.22,
+    0.0
+   ],
+   [
+    0.36,
+    0.06
+   ],
+   [
+    0.55,
+    0.3
+   ],
+   [
+    0.58,
+    0.5
+   ],
+   [
+    0.5,
+    0.72
+   ],
+   [
+    0.38,
+    0.86
+   ],
+   [
+    0.44,
+    0.95
+   ],
+   [
+    0.56,
+    1.02
+   ]
+  ],
+  "drum": [
+   [
+    0.4,
+    0.0
+   ],
+   [
+    0.5,
+    0.04
+   ],
+   [
+    0.56,
+    0.15
+   ],
+   [
+    0.58,
+    0.5
+   ],
+   [
+    0.56,
+    0.85
+   ],
+   [
+    0.54,
+    0.94
+   ],
+   [
+    0.58,
+    1.0
+   ]
+  ],
+  "orb": [
+   [
+    0.2,
+    0.0
+   ],
+   [
+    0.38,
+    0.05
+   ],
+   [
+    0.58,
+    0.22
+   ],
+   [
+    0.64,
+    0.45
+   ],
+   [
+    0.58,
+    0.7
+   ],
+   [
+    0.42,
+    0.88
+   ],
+   [
+    0.4,
+    0.95
+   ],
+   [
+    0.46,
+    1.0
+   ]
+  ],
+  "cauldron": [
+   [
+    0.3,
+    0.0
+   ],
+   [
+    0.5,
+    0.04
+   ],
+   [
+    0.66,
+    0.2
+   ],
+   [
+    0.7,
+    0.42
+   ],
+   [
+    0.64,
+    0.62
+   ],
+   [
+    0.58,
+    0.72
+   ],
+   [
+    0.62,
+    0.78
+   ]
+  ]
+ },
+ "pots": [
+  {
+   "id": 1,
+   "category": "Normal",
+   "name": "Đất Nung Phượng Hoàng",
+   "name_original": "Đất Nung Phượng Hoàng",
+   "brief": {
+    "body_mat": "Glossy White Ceramic + Gold Rim",
+    "gem_color": "#FF4D4D",
+    "wing_shape": "Layered Feathers (#FFA07A)",
+    "halo_shape": "Radiating Sun Feathers + Gold Ring"
+   },
+   "profile": "royal",
+   "body": [
+    "#EFE3D2",
+    "#FFF8EE"
+   ],
+   "body_opts": {
+    "coat": 0.3
+   },
+   "rim": "#F2B830",
+   "rim_style": "crown",
+   "gem": "#FF4D4D",
+   "wing": {
+    "shape": "feather",
+    "colors": [
+     "#E8501E",
+     "#FF9A3C",
+     "#FFD27A"
+    ],
+    "count": 8,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "elements"
+    ],
+    "shape": "feather",
+    "colors": [
+     "#FF8A2A",
+     "#FFE07A"
+    ],
+    "ring": "#F2B830"
+   },
+   "extras": {}
+  },
+  {
+   "id": 2,
+   "category": "Normal",
+   "name": "Mầm Xanh Cổ Thụ",
+   "name_original": "Mầm Xanh Cổ Thụ",
+   "brief": {
+    "body_mat": "Twisted Oak Bark + Moss",
+    "gem_color": "#FFBF00",
+    "wing_shape": "Curved Fern Leaves (#32CD32)",
+    "halo_shape": "Blooming Vine Wreath"
+   },
+   "profile": "drum",
+   "body": [
+    "#4A3020",
+    "#7A5434"
+   ],
+   "body_opts": {
+    "roughness": 0.8
+   },
+   "rim": "#8B6B3E",
+   "rim_style": "smooth",
+   "gem": "#FFBF00",
+   "wing": {
+    "shape": "fern",
+    "colors": [
+     "#1E7A2E",
+     "#32CD32",
+     "#A6F07A"
+    ],
+    "count": 8,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "wreath"
+    ],
+    "shape": "leaf",
+    "colors": [
+     "#2E8B3A",
+     "#9BE07A"
+    ],
+    "ring": "#6B4A2A"
+   },
+   "extras": {
+    "bands": [
+     [
+      "#3E7A2A",
+      0.2
+     ],
+     [
+      "#3E7A2A",
+      0.82
+     ]
+    ],
+    "dots": [
+     "#FF9EC0",
+     10
+    ]
+   }
+  },
+  {
+   "id": 3,
+   "category": "Normal",
+   "name": "Sóng Biển San Hô",
+   "name_original": "Sóng Biển San Hô",
+   "brief": {
+    "body_mat": "Turquoise Ceramic + Pearl Rim",
+    "gem_color": "#FF69B4",
+    "wing_shape": "Mermaid Fin Blades (#40E0D0)",
+    "halo_shape": "Floating Water Bubbles Ring"
+   },
+   "profile": "royal",
+   "body": [
+    "#127A80",
+    "#40E0D0"
+   ],
+   "body_opts": {
+    "coat": 0.5
+   },
+   "rim": "#F5EFE6",
+   "rim_style": "beads",
+   "gem": "#FF69B4",
+   "wing": {
+    "shape": "fin",
+    "colors": [
+     "#1AA6B0",
+     "#40E0D0",
+     "#C8FFF8"
+    ],
+    "count": 7,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "orbs"
+    ],
+    "shape": "orb",
+    "colors": [
+     "#BFF6FF",
+     "#FFFFFF"
+    ],
+    "ring": "#F5EFE6"
+   },
+   "extras": {
+    "orb": {
+     "color": "#CFF6FF",
+     "transmission": 0.7,
+     "roughness": 0.05
+    }
+   }
+  },
+  {
+   "id": 4,
+   "category": "Normal",
+   "name": "Đám Mây Bồng Bềnh",
+   "name_original": "Đám Mây Bồng Bềnh",
+   "brief": {
+    "body_mat": "Fluffy White + Sky Blue Ceramic",
+    "gem_color": "#87CEFA",
+    "wing_shape": "Soft Angel Wings (#FFFFFF)",
+    "halo_shape": "Double Pastel Rainbow Arch"
+   },
+   "profile": "royal",
+   "body": [
+    "#87BFEA",
+    "#FFFFFF"
+   ],
+   "body_opts": {
+    "coat": 0.4
+   },
+   "rim": "#D9DDE3",
+   "rim_style": "smooth",
+   "gem": "#87CEFA",
+   "wing": {
+    "shape": "feather",
+    "colors": [
+     "#DDE8FF",
+     "#FFFFFF"
+    ],
+    "count": 8,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "double"
+    ],
+    "shape": "feather",
+    "colors": [
+     "#FFFFFF",
+     "#FFFFFF"
+    ],
+    "ring": "#FFB3D9"
+   },
+   "extras": {
+    "ring2": "#B3E0FF"
+   }
+  },
+  {
+   "id": 5,
+   "category": "Normal",
+   "name": "Đá Cuội Suối Nguồn",
+   "name_original": "Đá Cuội Suối Nguồn",
+   "brief": {
+    "body_mat": "Smooth Grey Marble",
+    "gem_color": "#00FFFF",
+    "wing_shape": "Splashing Water Ribbons",
+    "halo_shape": "Teardrop Water Crystals"
+   },
+   "profile": "urn",
+   "body": [
+    "#7E8590",
+    "#C9CDD3"
+   ],
+   "body_opts": {
+    "roughness": 0.35
+   },
+   "rim": "#D9DDE3",
+   "rim_style": "smooth",
+   "gem": "#00FFFF",
+   "wing": {
+    "shape": "ribbon",
+    "colors": [
+     "#3FA9F5",
+     "#BFF2FF"
+    ],
+    "count": 7,
+    "glow": 1
+   },
+   "halo": {
+    "styles": [
+     "orbs"
+    ],
+    "shape": "orb",
+    "colors": [
+     "#9FE8FF",
+     "#FFFFFF"
+    ],
+    "ring": "#D9DDE3"
+   },
+   "extras": {
+    "orb": {
+     "color": "#9FE8FF",
+     "transmission": 0.7,
+     "roughness": 0.03
+    }
+   }
+  },
+  {
+   "id": 6,
+   "category": "Normal",
+   "name": "Ong Mật Hoa Cúc",
+   "name_original": "Ong Mật Hoa Cúc",
+   "brief": {
+    "body_mat": "Hexagonal Golden Honeycomb",
+    "gem_color": "#FFA500",
+    "wing_shape": "Translucent Insect Wings",
+    "halo_shape": "White Daisy Petal Ring"
+   },
+   "profile": "royal",
+   "body": [
+    "#C98A10",
+    "#FFC93C"
+   ],
+   "body_opts": {
+    "metallic": 0.3,
+    "roughness": 0.3
+   },
+   "rim": "#F2B830",
+   "rim_style": "crown",
+   "gem": "#FFA500",
+   "wing": {
+    "shape": "membrane",
+    "colors": [
+     "#FFF6D0",
+     "#FFFFFF"
+    ],
+    "count": 6,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "elements"
+    ],
+    "shape": "petal",
+    "colors": [
+     "#FFFFFF",
+     "#FFF4C2"
+    ],
+    "ring": "#F2B830"
+   },
+   "extras": {
+    "wing_trans": 0.5,
+    "dots": [
+     "#FFB020",
+     14
+    ],
+    "halo_count": 20
+   }
+  },
+  {
+   "id": 7,
+   "category": "Normal",
+   "name": "Gốm Sứ Thanh Hoa",
+   "name_original": "Gốm Sứ Thanh Hoa",
+   "brief": {
+    "body_mat": "White Porcelain + Cobalt Blue",
+    "gem_color": "#1E90FF",
+    "wing_shape": "Folded Oriental Fans",
+    "halo_shape": "Carved Bi-Jade Disc"
+   },
+   "profile": "vase",
+   "body": [
+    "#F4F6FA",
+    "#FFFFFF"
+   ],
+   "body_opts": {
+    "coat": 0.5
+   },
+   "rim": "#1E4FA8",
+   "rim_style": "smooth",
+   "gem": "#1E90FF",
+   "wing": {
+    "shape": "petal",
+    "colors": [
+     "#1E4FA8",
+     "#E8F0FF"
+    ],
+    "count": 7,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "disc"
+    ],
+    "shape": "petal",
+    "colors": [
+     "#9ED9B5",
+     "#CFF0DC"
+    ],
+    "ring": "#F2B830"
+   },
+   "extras": {
+    "bands": [
+     [
+      "#1E4FA8",
+      0.25
+     ],
+     [
+      "#1E4FA8",
+      0.55
+     ],
+     [
+      "#1E4FA8",
+      0.8
+     ]
+    ],
+    "disc": {
+     "color": "#9ED9B5",
+     "roughness": 0.25,
+     "subsurface": 0.4
+    }
+   }
+  },
+  {
+   "id": 8,
+   "category": "Normal",
+   "name": "Pha Lê Thạch Anh",
+   "name_original": "Pha Lê Thạch Anh",
+   "brief": {
+    "body_mat": "Faceted Pink & Purple Crystal",
+    "gem_color": "#FF00FF",
+    "wing_shape": "Sharp Hexagonal Crystal Spikes",
+    "halo_shape": "Starry Constellation Ring"
+   },
+   "profile": "royal",
+   "body": [
+    "#C86BE0",
+    "#FFB0E8"
+   ],
+   "body_opts": {
+    "transmission": 0.45,
+    "roughness": 0.06
+   },
+   "rim": "#D9DDE3",
+   "rim_style": "crown",
+   "gem": "#FF00FF",
+   "wing": {
+    "shape": "blade",
+    "colors": [
+     "#B04FE0",
+     "#FFC8F5"
+    ],
+    "count": 7,
+    "glow": 1
+   },
+   "halo": {
+    "styles": [
+     "rays",
+     "orbs"
+    ],
+    "shape": "spike",
+    "colors": [
+     "#E0B0FF",
+     "#FFFFFF"
+    ],
+    "ring": "#D9DDE3"
+   },
+   "extras": {
+    "wing_trans": 0.5,
+    "orb": {
+     "color": "#FFFFFF",
+     "emission": "#FFFFFF",
+     "emission_strength": 3
+    }
+   }
+  },
+  {
+   "id": 9,
+   "category": "Normal",
+   "name": "Nấm Rừng Đỏ",
+   "name_original": "Nấm Rừng Đỏ",
+   "brief": {
+    "body_mat": "Red Mushroom Cap + White Spots",
+    "gem_color": "#ADFF2F",
+    "wing_shape": "Monarch Butterfly Wings",
+    "halo_shape": "Glowing Firefly Orbs"
+   },
+   "profile": "orb",
+   "body": [
+    "#B3121E",
+    "#E8303A"
+   ],
+   "body_opts": {
+    "coat": 0.4
+   },
+   "rim": "#F5EBD8",
+   "rim_style": "smooth",
+   "gem": "#ADFF2F",
+   "wing": {
+    "shape": "membrane",
+    "colors": [
+     "#E8701A",
+     "#FFB43C"
+    ],
+    "count": 5,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "orbs"
+    ],
+    "shape": "orb",
+    "colors": [
+     "#ADFF2F",
+     "#ADFF2F"
+    ],
+    "ring": "#F5EBD8"
+   },
+   "extras": {
+    "dots": [
+     "#FFFFFF",
+     9,
+     [
+      0.05,
+      0.09
+     ]
+    ],
+    "orb": {
+     "color": "#ADFF2F",
+     "emission": "#ADFF2F",
+     "emission_strength": 4
+    }
+   }
+  },
+  {
+   "id": 10,
+   "category": "Normal",
+   "name": "Tre Trúc Thanh Nhã",
+   "name_original": "Tre Trúc Thanh Nhã",
+   "brief": {
+    "body_mat": "Segmented Green Bamboo + Jade",
+    "gem_color": "#00FA9A",
+    "wing_shape": "Sharp Bamboo Leaves",
+    "halo_shape": "Glowing Crescent Moon"
+   },
+   "profile": "drum",
+   "body": [
+    "#5E9A3A",
+    "#A8D468"
+   ],
+   "body_opts": {
+    "roughness": 0.4
+   },
+   "rim": "#3E7A2A",
+   "rim_style": "smooth",
+   "gem": "#00FA9A",
+   "wing": {
+    "shape": "leaf",
+    "colors": [
+     "#3E8E3A",
+     "#9ED96B"
+    ],
+    "count": 8,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "disc"
+    ],
+    "shape": "leaf",
+    "colors": [
+     "#FFF3C4",
+     "#FFF3C4"
+    ],
+    "ring": "#E8D88A"
+   },
+   "extras": {
+    "bands": [
+     [
+      "#3E7A2A",
+      0.33
+     ],
+     [
+      "#3E7A2A",
+      0.66
+     ]
+    ],
+    "disc": {
+     "color": "#FFF3C4",
+     "emission": "#FFF3C4",
+     "emission_strength": 0.6
+    },
+    "wing_width": 0.18
+   }
+  },
+  {
+   "id": 11,
+   "category": "Normal",
+   "name": "Cát Vàng Sa Mạc",
+   "name_original": "Cát Vàng Sa Mạc",
+   "brief": {
+    "body_mat": "Sandstone + Gold Sand Glass",
+    "gem_color": "#00CED1",
+    "wing_shape": "Egyptian Falcon Gold Wings",
+    "halo_shape": "Ra Sun Disc & Scarab"
+   },
+   "profile": "urn",
+   "body": [
+    "#C9A06A",
+    "#E8C890"
+   ],
+   "body_opts": {
+    "roughness": 0.7
+   },
+   "rim": "#F2B830",
+   "rim_style": "crown",
+   "gem": "#00CED1",
+   "wing": {
+    "shape": "feather",
+    "colors": [
+     "#B8862B",
+     "#FFD36B"
+    ],
+    "count": 9,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "disc",
+     "rays"
+    ],
+    "shape": "spike",
+    "colors": [
+     "#FFD36B",
+     "#FFF1B0"
+    ],
+    "ring": "#F2B830"
+   },
+   "extras": {
+    "wing_metal": 1,
+    "disc": {
+     "color": "#F2B830",
+     "metallic": 1,
+     "roughness": 0.2
+    }
+   }
+  },
+  {
+   "id": 12,
+   "category": "Normal",
+   "name": "Băng Tuyết Vĩnh Cửu",
+   "name_original": "Băng Tuyết Vĩnh Cửu",
+   "brief": {
+    "body_mat": "Translucent Carved Ice",
+    "gem_color": "#E0FFFF",
+    "wing_shape": "6-Pointed Snowflake Blades",
+    "halo_shape": "Wavy Aurora Ribbon Ring"
+   },
+   "profile": "royal",
+   "body": [
+    "#A8D8F0",
+    "#F0FAFF"
+   ],
+   "body_opts": {
+    "transmission": 0.55,
+    "roughness": 0.05
+   },
+   "rim": "#D9DDE3",
+   "rim_style": "crown",
+   "gem": "#E0FFFF",
+   "wing": {
+    "shape": "blade",
+    "colors": [
+     "#BFE8FF",
+     "#FFFFFF"
+    ],
+    "count": 8,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "double"
+    ],
+    "shape": "spike",
+    "colors": [
+     "#7CFFCB",
+     "#B58CFF"
+    ],
+    "ring": "#7CFFCB"
+   },
+   "extras": {
+    "wing_trans": 0.5,
+    "ring2": "#B58CFF",
+    "ring_glow": 1
+   }
+  },
+  {
+   "id": 13,
+   "category": "Normal",
+   "name": "Dung Nham Núi Lửa",
+   "name_original": "Dung Nham Núi Lửa",
+   "brief": {
+    "body_mat": "Cracked Black Obsidian + Lava",
+    "gem_color": "#FF4500",
+    "wing_shape": "Jagged Flame Blades",
+    "halo_shape": "Blazing Fire Torus"
+   },
+   "profile": "urn",
+   "body": [
+    "#111114",
+    "#2A1A1A"
+   ],
+   "body_opts": {
+    "roughness": 0.2
+   },
+   "rim": "#C8743C",
+   "rim_style": "crown",
+   "gem": "#FF4500",
+   "wing": {
+    "shape": "flame",
+    "colors": [
+     "#8A0A00",
+     "#FF4500",
+     "#FFB020"
+    ],
+    "count": 8,
+    "glow": 1
+   },
+   "halo": {
+    "styles": [
+     "rays",
+     "double"
+    ],
+    "shape": "flame",
+    "colors": [
+     "#FF4500",
+     "#FFB020"
+    ],
+    "ring": "#FF6A00"
+   },
+   "extras": {
+    "bands": [
+     [
+      "#FF5A00",
+      0.3
+     ],
+     [
+      "#FF5A00",
+      0.6
+     ]
+    ],
+    "band_glow": 1,
+    "ring_glow": 1
+   }
+  },
+  {
+   "id": 14,
+   "category": "Normal",
+   "name": "Gió Lốc Thảo Nguyên",
+   "name_original": "Gió Lốc Thảo Nguyên",
+   "brief": {
+    "body_mat": "Swirling Pale Jade Ceramic",
+    "gem_color": "#98FB98",
+    "wing_shape": "Triple Swept Hawk Wings",
+    "halo_shape": "Spiral Wind Vortex Ring"
+   },
+   "profile": "vase",
+   "body": [
+    "#8FD0B0",
+    "#DFF5E8"
+   ],
+   "body_opts": {
+    "coat": 0.4
+   },
+   "rim": "#D9DDE3",
+   "rim_style": "smooth",
+   "gem": "#98FB98",
+   "wing": {
+    "shape": "feather",
+    "colors": [
+     "#5FA08A",
+     "#E8FFF4"
+    ],
+    "count": 9,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "double"
+    ],
+    "shape": "feather",
+    "colors": [
+     "#BFF0DA",
+     "#FFFFFF"
+    ],
+    "ring": "#98FB98"
+   },
+   "extras": {
+    "ring2": "#DFF5E8"
+   }
+  },
+  {
+   "id": 15,
+   "category": "Normal",
+   "name": "Kẹo Bông Cầu Vồng",
+   "name_original": "Kẹo Bông Cầu Vồng",
+   "brief": {
+    "body_mat": "Pastel Waffle Cone + Icing",
+    "gem_color": "#FF1493",
+    "wing_shape": "Puffy Cotton Candy Clouds",
+    "halo_shape": "Giant Swirl Lollipop"
+   },
+   "profile": "urn",
+   "body": [
+    "#D9A066",
+    "#F2C98A"
+   ],
+   "body_opts": {
+    "roughness": 0.6
+   },
+   "rim": "#FF9ACD",
+   "rim_style": "beads",
+   "gem": "#FF1493",
+   "wing": {
+    "shape": "petal",
+    "colors": [
+     "#FFB6E1",
+     "#B6E3FF"
+    ],
+    "count": 7,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "double"
+    ],
+    "shape": "petal",
+    "colors": [
+     "#FFB6E1",
+     "#FFFFFF"
+    ],
+    "ring": "#FF7FC0"
+   },
+   "extras": {
+    "bands": [
+     [
+      "#FFB6E1",
+      0.85
+     ]
+    ],
+    "ring2": "#FFFFFF"
+   }
+  },
+  {
+   "id": 16,
+   "category": "Quest",
+   "name": "Nhà Giả Kim Thuật",
+   "name_original": "Nhà Giả Kim Thuật",
+   "brief": {
+    "body_mat": "Glass Potion Flask + Brass",
+    "gem_color": "#39FF14",
+    "wing_shape": "Brass Astrolabe Blades",
+    "halo_shape": "Glowing Alchemy Rune Circle"
+   },
+   "profile": "vase",
+   "body": [
+    "#2E8B57",
+    "#9CFFB8"
+   ],
+   "body_opts": {
+    "transmission": 0.55,
+    "roughness": 0.05
+   },
+   "rim": "#C9A13B",
+   "rim_style": "beads",
+   "gem": "#39FF14",
+   "wing": {
+    "shape": "blade",
+    "colors": [
+     "#9A7426",
+     "#E8C870"
+    ],
+    "count": 6,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "double"
+    ],
+    "shape": "spike",
+    "colors": [
+     "#39FF14",
+     "#39FF14"
+    ],
+    "ring": "#C9A13B"
+   },
+   "extras": {
+    "wing_metal": 1,
+    "ring2": "#39FF14",
+    "ring2_glow": 1
+   }
+  },
+  {
+   "id": 17,
+   "category": "Quest",
+   "name": "Thợ Rèn Huyền Thoại",
+   "name_original": "Thợ Rèn Huyền Thoại",
+   "brief": {
+    "body_mat": "Iron Forge + Glowing Coals",
+    "gem_color": "#FF8C00",
+    "wing_shape": "Crossed Hammers & Anvil",
+    "halo_shape": "Radial Electric Sparks"
+   },
+   "profile": "drum",
+   "body": [
+    "#3A3A40",
+    "#5C5C66"
+   ],
+   "body_opts": {
+    "metallic": 0.8,
+    "roughness": 0.4
+   },
+   "rim": "#2A2A30",
+   "rim_style": "smooth",
+   "gem": "#FF8C00",
+   "wing": {
+    "shape": "blade",
+    "colors": [
+     "#6A6A72",
+     "#B0B0B8"
+    ],
+    "count": 6,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "rays"
+    ],
+    "shape": "spike",
+    "colors": [
+     "#FFE14A",
+     "#FFFFFF"
+    ],
+    "ring": "#4A4A52"
+   },
+   "extras": {
+    "wing_metal": 1,
+    "dots": [
+     "#FF7A10",
+     10
+    ],
+    "dots_glow": 1,
+    "halo_glow": 1
+   }
+  },
+  {
+   "id": 18,
+   "category": "Quest",
+   "name": "Bản Giao Hưởng Vàng",
+   "name_original": "Bản Giao Hưởng Vàng",
+   "brief": {
+    "body_mat": "Polished Gold Harp Body",
+    "gem_color": "#FFD700",
+    "wing_shape": "3D Musical Notes & Clefs",
+    "halo_shape": "Curved Golden Staff Ring"
+   },
+   "profile": "vase",
+   "body": [
+    "#C9971E",
+    "#FFD86B"
+   ],
+   "body_opts": {
+    "metallic": 1,
+    "roughness": 0.2
+   },
+   "rim": "#FFD36B",
+   "rim_style": "crown",
+   "gem": "#FFD700",
+   "wing": {
+    "shape": "ribbon",
+    "colors": [
+     "#C9971E",
+     "#FFE7A0"
+    ],
+    "count": 7,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "double"
+    ],
+    "shape": "ribbon",
+    "colors": [
+     "#FFD86B",
+     "#FFF1B0"
+    ],
+    "ring": "#FFD36B"
+   },
+   "extras": {
+    "wing_metal": 1,
+    "ring2": "#F2B830"
+   }
+  },
+  {
+   "id": 19,
+   "category": "Quest",
+   "name": "Họa Sĩ Mộng Mơ",
+   "name_original": "Họa Sĩ Mộng Mơ",
+   "brief": {
+    "body_mat": "White Ceramic + Paint Drips",
+    "gem_color": "#FF007F",
+    "wing_shape": "Wooden Artist Palettes",
+    "halo_shape": "3D Rainbow Paint Swirl"
+   },
+   "profile": "royal",
+   "body": [
+    "#F2F2F2",
+    "#FFFFFF"
+   ],
+   "body_opts": {
+    "coat": 0.4
+   },
+   "rim": "#F2B830",
+   "rim_style": "smooth",
+   "gem": "#FF007F",
+   "wing": {
+    "shape": "petal",
+    "colors": [
+     "#A0703C",
+     "#D8A870"
+    ],
+    "count": 6,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "double"
+    ],
+    "shape": "petal",
+    "colors": [
+     "#FF5A8A",
+     "#5AC8FF"
+    ],
+    "ring": "#FF5A8A"
+   },
+   "extras": {
+    "dots": [
+     "#FF3A7A",
+     8
+    ],
+    "dots2": [
+     "#3AA0FF",
+     8
+    ],
+    "dots3": [
+     "#FFD020",
+     6
+    ],
+    "ring2": "#5AC8FF"
+   }
+  },
+  {
+   "id": 20,
+   "category": "Quest",
+   "name": "Thủ Thư Tri Thức",
+   "name_original": "Thủ Thư Tri Thức",
+   "brief": {
+    "body_mat": "Leather Bound Ancient Books",
+    "gem_color": "#00BFFF",
+    "wing_shape": "Fluttering Paper Pages",
+    "halo_shape": "Floating Mystic Eye Ring"
+   },
+   "profile": "drum",
+   "body": [
+    "#5A2E1A",
+    "#8A4A2A"
+   ],
+   "body_opts": {
+    "roughness": 0.6
+   },
+   "rim": "#F2B830",
+   "rim_style": "smooth",
+   "gem": "#00BFFF",
+   "wing": {
+    "shape": "petal",
+    "colors": [
+     "#F2E8D0",
+     "#FFFDF5"
+    ],
+    "count": 8,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "orbs"
+    ],
+    "shape": "orb",
+    "colors": [
+     "#00BFFF",
+     "#00BFFF"
+    ],
+    "ring": "#F2B830"
+   },
+   "extras": {
+    "orb": {
+     "color": "#00BFFF",
+     "emission": "#00BFFF",
+     "emission_strength": 3
+    },
+    "bands": [
+     [
+      "#F2B830",
+      0.25
+     ],
+     [
+      "#F2B830",
+      0.75
+     ]
+    ]
+   }
+  },
+  {
+   "id": 21,
+   "category": "Quest",
+   "name": "Nhà Thiên Văn Học",
+   "name_original": "Nhà Thiên Văn Học",
+   "brief": {
+    "body_mat": "Engraved Brass Armillary",
+    "gem_color": "#9370DB",
+    "wing_shape": "Brass Telescope Tubes",
+    "halo_shape": "Orbiting Mini Planets"
+   },
+   "profile": "royal",
+   "body": [
+    "#9A7426",
+    "#D6B05A"
+   ],
+   "body_opts": {
+    "metallic": 1,
+    "roughness": 0.25
+   },
+   "rim": "#C9A13B",
+   "rim_style": "beads",
+   "gem": "#9370DB",
+   "wing": {
+    "shape": "blade",
+    "colors": [
+     "#9A7426",
+     "#E8C870"
+    ],
+    "count": 6,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "orbs",
+     "double"
+    ],
+    "shape": "orb",
+    "colors": [
+     "#9370DB",
+     "#9370DB"
+    ],
+    "ring": "#C9A13B"
+   },
+   "extras": {
+    "wing_metal": 1,
+    "orb": {
+     "color": "#9370DB",
+     "roughness": 0.3
+    }
+   }
+  },
+  {
+   "id": 22,
+   "category": "Quest",
+   "name": "Vua Đầu Bếp Mây",
+   "name_original": "Vua Đầu Bếp Mây",
+   "brief": {
+    "body_mat": "Golden Royal Cauldron",
+    "gem_color": "#FF6347",
+    "wing_shape": "Silver Spoons & Forks",
+    "halo_shape": "Glowing Chef Crown"
+   },
+   "profile": "cauldron",
+   "body": [
+    "#B8862B",
+    "#F2C04A"
+   ],
+   "body_opts": {
+    "metallic": 1,
+    "roughness": 0.22
+   },
+   "rim": "#F2B830",
+   "rim_style": "smooth",
+   "gem": "#FF6347",
+   "wing": {
+    "shape": "petal",
+    "colors": [
+     "#C8CCD4",
+     "#F2F4F8"
+    ],
+    "count": 6,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "double"
+    ],
+    "shape": "petal",
+    "colors": [
+     "#FFE07A",
+     "#FFE07A"
+    ],
+    "ring": "#F2B830"
+   },
+   "extras": {
+    "wing_metal": 1
+   }
+  },
+  {
+   "id": 23,
+   "category": "Quest",
+   "name": "Thương Gia Bạc Tỷ",
+   "name_original": "Thương Gia Bạc Tỷ",
+   "brief": {
+    "body_mat": "Red Silk & Gold Money Bag",
+    "gem_color": "#50C878",
+    "wing_shape": "Giant Gold Coins",
+    "halo_shape": "Floating Diamonds & Ingots"
+   },
+   "profile": "urn",
+   "body": [
+    "#9E1020",
+    "#D8283A"
+   ],
+   "body_opts": {
+    "roughness": 0.35,
+    "sheen": 0.6
+   },
+   "rim": "#F2B830",
+   "rim_style": "crown",
+   "gem": "#50C878",
+   "wing": {
+    "shape": "coin",
+    "colors": [
+     "#F2B830",
+     "#FFD86B"
+    ],
+    "count": 6,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "orbs"
+    ],
+    "shape": "coin",
+    "colors": [
+     "#FFD86B",
+     "#FFD86B"
+    ],
+    "ring": "#F2B830"
+   },
+   "extras": {
+    "wing_metal": 1,
+    "orb": {
+     "color": "#FFFFFF",
+     "transmission": 0.6,
+     "roughness": 0.02
+    }
+   }
+  },
+  {
+   "id": 24,
+   "category": "Quest",
+   "name": "Chiến Binh Rồng Thiêng",
+   "name_original": "Chiến Binh Rồng Thiêng",
+   "brief": {
+    "body_mat": "Black & Red Dragon Scales",
+    "gem_color": "#DC143C",
+    "wing_shape": "Membrane Dragon Wings",
+    "halo_shape": "Dragon Fire Ring"
+   },
+   "profile": "royal",
+   "body": [
+    "#1A0A0A",
+    "#7A0F14"
+   ],
+   "body_opts": {
+    "coat": 0.6
+   },
+   "rim": "#F2B830",
+   "rim_style": "crown",
+   "gem": "#DC143C",
+   "wing": {
+    "shape": "membrane",
+    "colors": [
+     "#5A0A10",
+     "#C8202A"
+    ],
+    "count": 6,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "rays",
+     "double"
+    ],
+    "shape": "flame",
+    "colors": [
+     "#FF3A10",
+     "#FFB020"
+    ],
+    "ring": "#FF4A10"
+   },
+   "extras": {
+    "halo_glow": 1,
+    "ring_glow": 1
+   }
+  },
+  {
+   "id": 25,
+   "category": "Quest",
+   "name": "Nông Dân Chăm Chỉ",
+   "name_original": "Nông Dân Chăm Chỉ",
+   "brief": {
+    "body_mat": "Vintage Hammered Copper",
+    "gem_color": "#FFD700",
+    "wing_shape": "Golden Wheat Stalks",
+    "halo_shape": "Warm Sunburst Rays"
+   },
+   "profile": "urn",
+   "body": [
+    "#8A4A22",
+    "#C8743C"
+   ],
+   "body_opts": {
+    "metallic": 0.7,
+    "roughness": 0.3
+   },
+   "rim": "#C8743C",
+   "rim_style": "smooth",
+   "gem": "#FFD700",
+   "wing": {
+    "shape": "leaf",
+    "colors": [
+     "#C9971E",
+     "#F5D77A"
+    ],
+    "count": 9,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "rays"
+    ],
+    "shape": "spike",
+    "colors": [
+     "#FFD36B",
+     "#FFF1B0"
+    ],
+    "ring": "#F2B830"
+   },
+   "extras": {
+    "wing_width": 0.14,
+    "halo_glow": 1
+   }
+  },
+  {
+   "id": 26,
+   "category": "Quest",
+   "name": "Nhà Thám Hiểm Biển Sâu",
+   "name_original": "Nhà Thám Hiểm Biển Sâu",
+   "brief": {
+    "body_mat": "Riveted Brass Diving Helmet",
+    "gem_color": "#00FFFF",
+    "wing_shape": "Wooden Ship Helm Wheels",
+    "halo_shape": "Glowing Nautical Compass"
+   },
+   "profile": "orb",
+   "body": [
+    "#8A6A26",
+    "#C9A13B"
+   ],
+   "body_opts": {
+    "metallic": 1,
+    "roughness": 0.3
+   },
+   "rim": "#C9A13B",
+   "rim_style": "beads",
+   "gem": "#00FFFF",
+   "wing": {
+    "shape": "gear",
+    "colors": [
+     "#9A6A3A",
+     "#C99A5A"
+    ],
+    "count": 5,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "double"
+    ],
+    "shape": "spike",
+    "colors": [
+     "#00FFFF",
+     "#00FFFF"
+    ],
+    "ring": "#C9A13B"
+   },
+   "extras": {
+    "dots": [
+     "#C9A13B",
+     12,
+     [
+      0.025,
+      0.035
+     ]
+    ],
+    "ring2": "#00FFFF",
+    "ring2_glow": 1
+   }
+  },
+  {
+   "id": 27,
+   "category": "Quest",
+   "name": "Kỹ Sư Cơ Khí",
+   "name_original": "Kỹ Sư Cơ Khí",
+   "brief": {
+    "body_mat": "Steampunk Copper & Pipes",
+    "gem_color": "#00FA9A",
+    "wing_shape": "Interlocking Brass Gears",
+    "halo_shape": "Giant Clockwork Ring"
+   },
+   "profile": "drum",
+   "body": [
+    "#7A3E1A",
+    "#C8743C"
+   ],
+   "body_opts": {
+    "metallic": 0.8,
+    "roughness": 0.3
+   },
+   "rim": "#C9A13B",
+   "rim_style": "beads",
+   "gem": "#00FA9A",
+   "wing": {
+    "shape": "gear",
+    "colors": [
+     "#B88A3A",
+     "#E8C870"
+    ],
+    "count": 5,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "elements"
+    ],
+    "shape": "gear",
+    "colors": [
+     "#C9A13B",
+     "#C9A13B"
+    ],
+    "ring": "#C9A13B"
+   },
+   "extras": {
+    "wing_metal": 1,
+    "halo_metal": 1,
+    "halo_count": 12
+   }
+  },
+  {
+   "id": 28,
+   "category": "Quest",
+   "name": "Vệ Thần Rừng Già",
+   "name_original": "Vệ Thần Rừng Già",
+   "brief": {
+    "body_mat": "Carved Jade & Ancient Wood",
+    "gem_color": "#7FFF00",
+    "wing_shape": "Flowering Deer Antlers",
+    "halo_shape": "Celtic Knot Glow Ring"
+   },
+   "profile": "royal",
+   "body": [
+    "#2E8B57",
+    "#7FD8A0"
+   ],
+   "body_opts": {
+    "subsurface": 0.4,
+    "roughness": 0.25
+   },
+   "rim": "#6B4A2A",
+   "rim_style": "smooth",
+   "gem": "#7FFF00",
+   "wing": {
+    "shape": "fern",
+    "colors": [
+     "#6B4A2A",
+     "#C8A070"
+    ],
+    "count": 6,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "wreath"
+    ],
+    "shape": "leaf",
+    "colors": [
+     "#7FFF00",
+     "#C8FF80"
+    ],
+    "ring": "#7FFF00"
+   },
+   "extras": {
+    "halo_glow": 1,
+    "ring_glow": 1
+   }
+  },
+  {
+   "id": 29,
+   "category": "Quest",
+   "name": "Sứ Giả Hòa Bình",
+   "name_original": "Sứ Giả Hòa Bình",
+   "brief": {
+    "body_mat": "Pure White Carrara Marble",
+    "gem_color": "#87CEEB",
+    "wing_shape": "6 White Dove Feather Wings",
+    "halo_shape": "Golden Olive Wreath"
+   },
+   "profile": "vase",
+   "body": [
+    "#E8E8EC",
+    "#FFFFFF"
+   ],
+   "body_opts": {
+    "roughness": 0.3
+   },
+   "rim": "#F2B830",
+   "rim_style": "smooth",
+   "gem": "#87CEEB",
+   "wing": {
+    "shape": "feather",
+    "colors": [
+     "#F2F2F2",
+     "#FFFFFF"
+    ],
+    "count": 10,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "wreath"
+    ],
+    "shape": "leaf",
+    "colors": [
+     "#C9A13B",
+     "#FFE07A"
+    ],
+    "ring": "#F2B830"
+   },
+   "extras": {
+    "halo_metal": 1
+   }
+  },
+  {
+   "id": 30,
+   "category": "Quest",
+   "name": "Kẻ Du Hành Thời Gian",
+   "name_original": "Kẻ Du Hành Thời Gian",
+   "brief": {
+    "body_mat": "Glowing Blue Chronos Crystal",
+    "gem_color": "#00FFFF",
+    "wing_shape": "Ornate Gold Clock Hands",
+    "halo_shape": "Roman Numeral Time Portal"
+   },
+   "profile": "royal",
+   "body": [
+    "#1E5FD8",
+    "#7FE8FF"
+   ],
+   "body_opts": {
+    "transmission": 0.4,
+    "emission": "#3AA0FF",
+    "emission_strength": 0.4
+   },
+   "rim": "#F2B830",
+   "rim_style": "crown",
+   "gem": "#00FFFF",
+   "wing": {
+    "shape": "blade",
+    "colors": [
+     "#C9971E",
+     "#FFE07A"
+    ],
+    "count": 6,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "double",
+     "rays"
+    ],
+    "shape": "spike",
+    "colors": [
+     "#FFD36B",
+     "#FFFFFF"
+    ],
+    "ring": "#F2B830"
+   },
+   "extras": {
+    "wing_metal": 1
+   }
+  },
+  {
+   "id": 31,
+   "category": "Event",
+   "name": "Lân Sư Rồng Tết Việt",
+   "name_original": "Lân Sư Rồng Tết Việt",
+   "brief": {
+    "body_mat": "Red & Gold Lion Dance Fur",
+    "gem_color": "#FFD700",
+    "wing_shape": "Silk Ribbons & Firecrackers",
+    "halo_shape": "Dong Son Bronze Drum"
+   },
+   "profile": "urn",
+   "body": [
+    "#B0101A",
+    "#E83030"
+   ],
+   "body_opts": {
+    "coat": 0.4
+   },
+   "rim": "#F2B830",
+   "rim_style": "crown",
+   "gem": "#FFD700",
+   "wing": {
+    "shape": "ribbon",
+    "colors": [
+     "#C81E2A",
+     "#FFD36B"
+    ],
+    "count": 7,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "disc"
+    ],
+    "shape": "spike",
+    "colors": [
+     "#8A6A3A",
+     "#8A6A3A"
+    ],
+    "ring": "#F2B830"
+   },
+   "extras": {
+    "bands": [
+     [
+      "#F2B830",
+      0.2
+     ],
+     [
+      "#F2B830",
+      0.8
+     ]
+    ],
+    "disc": {
+     "color": "#9A7A4A",
+     "metallic": 0.8,
+     "roughness": 0.35
+    }
+   }
+  },
+  {
+   "id": 32,
+   "category": "Event",
+   "name": "Đèn Lồng Cá Chép",
+   "name_original": "Đèn Lồng Cá Chép",
+   "brief": {
+    "body_mat": "Glowing Stained Glass",
+    "gem_color": "#FF8C00",
+    "wing_shape": "Flowing Koi Fish Fins",
+    "halo_shape": "Full Moon & Clouds"
+   },
+   "profile": "orb",
+   "body": [
+    "#E8501E",
+    "#FFB040"
+   ],
+   "body_opts": {
+    "transmission": 0.3,
+    "emission": "#FF8A30",
+    "emission_strength": 0.5
+   },
+   "rim": "#F2B830",
+   "rim_style": "smooth",
+   "gem": "#FF8C00",
+   "wing": {
+    "shape": "fin",
+    "colors": [
+     "#FF6A1E",
+     "#FFF0E0"
+    ],
+    "count": 6,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "disc"
+    ],
+    "shape": "fin",
+    "colors": [
+     "#FFF3C4",
+     "#FFF3C4"
+    ],
+    "ring": "#FFE7A0"
+   },
+   "extras": {
+    "disc": {
+     "color": "#FFF6D8",
+     "emission": "#FFF3C4",
+     "emission_strength": 0.8
+    }
+   }
+  },
+  {
+   "id": 33,
+   "category": "Event",
+   "name": "Bí Ngô Phù Thủy",
+   "name_original": "Bí Ngô Phù Thủy",
+   "brief": {
+    "body_mat": "Glossy Orange Jack-o-Lantern",
+    "gem_color": "#9400D3",
+    "wing_shape": "Purple Bat Wings",
+    "halo_shape": "Floating Witch Hat & Stars"
+   },
+   "profile": "orb",
+   "body": [
+    "#D85A0A",
+    "#FF9A2A"
+   ],
+   "body_opts": {
+    "coat": 0.5
+   },
+   "rim": "#3A1050",
+   "rim_style": "smooth",
+   "gem": "#9400D3",
+   "wing": {
+    "shape": "membrane",
+    "colors": [
+     "#3A1050",
+     "#8A3AB8"
+    ],
+    "count": 5,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "orbs"
+    ],
+    "shape": "orb",
+    "colors": [
+     "#C08AFF",
+     "#FFFFFF"
+    ],
+    "ring": "#3A1050"
+   },
+   "extras": {
+    "bands": [
+     [
+      "#B84A08",
+      0.35
+     ],
+     [
+      "#B84A08",
+      0.65
+     ]
+    ],
+    "orb": {
+     "color": "#E0C0FF",
+     "emission": "#C08AFF",
+     "emission_strength": 3
+    }
+   }
+  },
+  {
+   "id": 34,
+   "category": "Event",
+   "name": "Cỗ Xe Tuần Lộc",
+   "name_original": "Cỗ Xe Tuần Lộc",
+   "brief": {
+    "body_mat": "Red Velvet Box + Gold Ribbon",
+    "gem_color": "#32CD32",
+    "wing_shape": "Pine Branches & Ornaments",
+    "halo_shape": "Glowing North Star"
+   },
+   "profile": "drum",
+   "body": [
+    "#8A0A14",
+    "#C81E2A"
+   ],
+   "body_opts": {
+    "roughness": 0.5,
+    "sheen": 0.8
+   },
+   "rim": "#F2B830",
+   "rim_style": "smooth",
+   "gem": "#32CD32",
+   "wing": {
+    "shape": "leaf",
+    "colors": [
+     "#0F5A2A",
+     "#2E8B4A"
+    ],
+    "count": 9,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "rays"
+    ],
+    "shape": "spike",
+    "colors": [
+     "#FFE07A",
+     "#FFFFFF"
+    ],
+    "ring": "#F2B830"
+   },
+   "extras": {
+    "wing_width": 0.14,
+    "dots": [
+     "#FFD020",
+     8
+    ],
+    "dots2": [
+     "#FF3A3A",
+     6
+    ],
+    "halo_glow": 1
+   }
+  },
+  {
+   "id": 35,
+   "category": "Event",
+   "name": "Hộp Socola Tình Yêu",
+   "name_original": "Hộp Socola Tình Yêu",
+   "brief": {
+    "body_mat": "Glossy Ruby Heart Ceramic",
+    "gem_color": "#FF69B4",
+    "wing_shape": "White Cupid Wings",
+    "halo_shape": "Golden Arrow & Roses"
+   },
+   "profile": "royal",
+   "body": [
+    "#9E0A2A",
+    "#E8305A"
+   ],
+   "body_opts": {
+    "coat": 0.6
+   },
+   "rim": "#F2B830",
+   "rim_style": "crown",
+   "gem": "#FF69B4",
+   "wing": {
+    "shape": "feather",
+    "colors": [
+     "#FFFFFF",
+     "#FFF0F4"
+    ],
+    "count": 8,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "double",
+     "elements"
+    ],
+    "shape": "petal",
+    "colors": [
+     "#E8305A",
+     "#FF7FA0"
+    ],
+    "ring": "#F2B830"
+   },
+   "extras": {
+    "halo_count": 12
+   }
+  },
+  {
+   "id": 36,
+   "category": "Event",
+   "name": "Neon Tương Lai",
+   "name_original": "Cyberpunk Neon 2077",
+   "brief": {
+    "body_mat": "Matte Black Carbon + Neon LED",
+    "gem_color": "#FF00FF",
+    "wing_shape": "Translucent Holo-Blades",
+    "halo_shape": "Digital Circuit Ring"
+   },
+   "profile": "vase",
+   "body": [
+    "#0E0E14",
+    "#1C1C26"
+   ],
+   "body_opts": {
+    "roughness": 0.6
+   },
+   "rim": "#1C1C26",
+   "rim_style": "smooth",
+   "gem": "#FF00FF",
+   "wing": {
+    "shape": "blade",
+    "colors": [
+     "#00E5FF",
+     "#FF00FF"
+    ],
+    "count": 6,
+    "glow": 1
+   },
+   "halo": {
+    "styles": [
+     "double"
+    ],
+    "shape": "spike",
+    "colors": [
+     "#FF00FF",
+     "#00E5FF"
+    ],
+    "ring": "#FF00FF"
+   },
+   "extras": {
+    "bands": [
+     [
+      "#FF00FF",
+      0.3
+     ],
+     [
+      "#00E5FF",
+      0.7
+     ]
+    ],
+    "band_glow": 1,
+    "ring_glow": 1,
+    "ring2": "#00E5FF",
+    "ring2_glow": 1,
+    "wing_trans": 0.4
+   }
+  },
+  {
+   "id": 37,
+   "category": "Event",
+   "name": "Trà Sữa Trân Châu",
+   "name_original": "Trà Sữa Trân Châu",
+   "brief": {
+    "body_mat": "Translucent Cup + Boba Pearls",
+    "gem_color": "#8B4513",
+    "wing_shape": "Golden Butter Cookies",
+    "halo_shape": "Heart Straw & Cream Swirl"
+   },
+   "profile": "drum",
+   "body": [
+    "#E8D2B0",
+    "#FFF4E4"
+   ],
+   "body_opts": {
+    "transmission": 0.3,
+    "roughness": 0.15
+   },
+   "rim": "#FFFFFF",
+   "rim_style": "smooth",
+   "gem": "#8B4513",
+   "wing": {
+    "shape": "coin",
+    "colors": [
+     "#D9A050",
+     "#E8BC70"
+    ],
+    "count": 5,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "disc"
+    ],
+    "shape": "coin",
+    "colors": [
+     "#FFF4E4",
+     "#FFF4E4"
+    ],
+    "ring": "#FFFFFF"
+   },
+   "extras": {
+    "dots": [
+     "#3A2010",
+     14,
+     [
+      0.04,
+      0.06
+     ]
+    ],
+    "dots_z": [
+     0.08,
+     0.35
+    ],
+    "disc": {
+     "color": "#FFF4E4",
+     "roughness": 0.5
+    }
+   }
+  },
+  {
+   "id": 38,
+   "category": "Event",
+   "name": "Phi Hành Gia Mèo",
+   "name_original": "Phi Hành Gia Mèo",
+   "brief": {
+    "body_mat": "Glossy White Helmet + Cat Ears",
+    "gem_color": "#00BFFF",
+    "wing_shape": "Miniature Rocket Boosters",
+    "halo_shape": "Orbiting Saturn Ring"
+   },
+   "profile": "orb",
+   "body": [
+    "#E8ECF2",
+    "#FFFFFF"
+   ],
+   "body_opts": {
+    "coat": 0.6
+   },
+   "rim": "#D9DDE3",
+   "rim_style": "smooth",
+   "gem": "#00BFFF",
+   "wing": {
+    "shape": "blade",
+    "colors": [
+     "#B8BEC8",
+     "#FFFFFF"
+    ],
+    "count": 5,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "double"
+    ],
+    "shape": "spike",
+    "colors": [
+     "#E8C88A",
+     "#E8C88A"
+    ],
+    "ring": "#E8C88A"
+   },
+   "extras": {
+    "wing_metal": 1,
+    "ring2": "#C8A870"
+   }
+  },
+  {
+   "id": 39,
+   "category": "Event",
+   "name": "Hoa Anh Đào Mùa Xuân",
+   "name_original": "Hoa Anh Đào Mùa Xuân",
+   "brief": {
+    "body_mat": "Black Lacquer + Pink Sakura",
+    "gem_color": "#FFB7C5",
+    "wing_shape": "Pink Japanese Folding Fans",
+    "halo_shape": "Red Torii Gate Arch"
+   },
+   "profile": "vase",
+   "body": [
+    "#0E0A0C",
+    "#2A1A20"
+   ],
+   "body_opts": {
+    "coat": 0.7
+   },
+   "rim": "#F2B830",
+   "rim_style": "smooth",
+   "gem": "#FFB7C5",
+   "wing": {
+    "shape": "petal",
+    "colors": [
+     "#FF9EC0",
+     "#FFE4EE"
+    ],
+    "count": 8,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "double"
+    ],
+    "shape": "petal",
+    "colors": [
+     "#C81E2A",
+     "#C81E2A"
+    ],
+    "ring": "#C81E2A"
+   },
+   "extras": {
+    "dots": [
+     "#FFB7C5",
+     16,
+     [
+      0.03,
+      0.05
+     ]
+    ],
+    "ring2": "#C81E2A"
+   }
+  },
+  {
+   "id": 40,
+   "category": "Event",
+   "name": "Thủy Cung Sứa Phát Sáng",
+   "name_original": "Thủy Cung Sứa Phát Sáng",
+   "brief": {
+    "body_mat": "Bioluminescent Jellyfish Dome",
+    "gem_color": "#00FFFF",
+    "wing_shape": "Glowing Ribbon Tentacles",
+    "halo_shape": "Deep Sea Coral Ring"
+   },
+   "profile": "orb",
+   "body": [
+    "#3A2A9A",
+    "#7FE8FF"
+   ],
+   "body_opts": {
+    "transmission": 0.4,
+    "emission": "#4AC0FF",
+    "emission_strength": 0.5
+   },
+   "rim": "#F5EFE6",
+   "rim_style": "smooth",
+   "gem": "#00FFFF",
+   "wing": {
+    "shape": "ribbon",
+    "colors": [
+     "#00E5FF",
+     "#B0F8FF"
+    ],
+    "count": 7,
+    "glow": 1
+   },
+   "halo": {
+    "styles": [
+     "orbs"
+    ],
+    "shape": "orb",
+    "colors": [
+     "#FF8AB0",
+     "#FF8AB0"
+    ],
+    "ring": "#F5EFE6"
+   },
+   "extras": {
+    "orb": {
+     "color": "#FF8AB0",
+     "roughness": 0.4,
+     "subsurface": 0.4
+    }
+   }
+  },
+  {
+   "id": 41,
+   "category": "Event",
+   "name": "Gấu Dâu Pastel",
+   "name_original": "Gấu Dâu Pastel",
+   "brief": {
+    "body_mat": "Fluffy Pink Plush Texture",
+    "gem_color": "#FF1493",
+    "wing_shape": "Giant Satin Ribbon Bows",
+    "halo_shape": "Gummy Candy Hearts"
+   },
+   "profile": "royal",
+   "body": [
+    "#F7A8C8",
+    "#FFD6E6"
+   ],
+   "body_opts": {
+    "roughness": 0.9,
+    "sheen": 1
+   },
+   "rim": "#FF7FB0",
+   "rim_style": "smooth",
+   "gem": "#FF1493",
+   "wing": {
+    "shape": "petal",
+    "colors": [
+     "#FF7FB0",
+     "#FFD0E4"
+    ],
+    "count": 5,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "orbs"
+    ],
+    "shape": "orb",
+    "colors": [
+     "#FF1493",
+     "#FF1493"
+    ],
+    "ring": "#FF7FB0"
+   },
+   "extras": {
+    "wing_width": 0.42,
+    "orb": {
+     "color": "#FF4AA0",
+     "roughness": 0.2,
+     "coat": 0.6
+    }
+   }
+  },
+  {
+   "id": 42,
+   "category": "Event",
+   "name": "Hoàng Gia Ai Cập Cổ Đại",
+   "name_original": "Hoàng Gia Ai Cập Cổ Đại",
+   "brief": {
+    "body_mat": "Pure Gold + Lapis Lazuli",
+    "gem_color": "#1E90FF",
+    "wing_shape": "Spread Golden Isis Wings",
+    "halo_shape": "Floating Golden Pyramid"
+   },
+   "profile": "urn",
+   "body": [
+    "#C9971E",
+    "#FFD86B"
+   ],
+   "body_opts": {
+    "metallic": 1,
+    "roughness": 0.2
+   },
+   "rim": "#1E3FA0",
+   "rim_style": "crown",
+   "gem": "#1E90FF",
+   "wing": {
+    "shape": "feather",
+    "colors": [
+     "#C9971E",
+     "#FFE07A"
+    ],
+    "count": 10,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "disc"
+    ],
+    "shape": "feather",
+    "colors": [
+     "#F2B830",
+     "#F2B830"
+    ],
+    "ring": "#1E3FA0"
+   },
+   "extras": {
+    "wing_metal": 1,
+    "bands": [
+     [
+      "#1E3FA0",
+      0.3
+     ],
+     [
+      "#1E3FA0",
+      0.6
+     ]
+    ],
+    "disc": {
+     "color": "#F2B830",
+     "metallic": 1,
+     "roughness": 0.18
+    }
+   }
+  },
+  {
+   "id": 43,
+   "category": "Event",
+   "name": "Tiên Nữ Hồ Điệp",
+   "name_original": "Tiên Nữ Hồ Điệp",
+   "brief": {
+    "body_mat": "Emerald Jade Lotus Petals",
+    "gem_color": "#FFD700",
+    "wing_shape": "Iridescent Swallowtail Wings",
+    "halo_shape": "Golden Pollen Dust Ring"
+   },
+   "profile": "royal",
+   "body": [
+    "#0F7A50",
+    "#5FD8A0"
+   ],
+   "body_opts": {
+    "subsurface": 0.3,
+    "coat": 0.5
+   },
+   "rim": "#F2B830",
+   "rim_style": "crown",
+   "gem": "#FFD700",
+   "wing": {
+    "shape": "membrane",
+    "colors": [
+     "#3AB0E0",
+     "#B06AE8"
+    ],
+    "count": 5,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "orbs"
+    ],
+    "shape": "orb",
+    "colors": [
+     "#FFD700",
+     "#FFD700"
+    ],
+    "ring": "#F2B830"
+   },
+   "extras": {
+    "orb": {
+     "color": "#FFE07A",
+     "emission": "#FFD700",
+     "emission_strength": 3
+    }
+   }
+  },
+  {
+   "id": 44,
+   "category": "Event",
+   "name": "Đĩa Bay Người Ngoài Hành Tinh",
+   "name_original": "Đĩa Bay Người Ngoài Hành Tinh",
+   "brief": {
+    "body_mat": "Brushed Chrome UFO Saucer",
+    "gem_color": "#39FF14",
+    "wing_shape": "Sleek Metallic Alien Fins",
+    "halo_shape": "Glowing Ringed Planet"
+   },
+   "profile": "orb",
+   "body": [
+    "#B8BEC8",
+    "#E8ECF2"
+   ],
+   "body_opts": {
+    "metallic": 1,
+    "roughness": 0.15
+   },
+   "rim": "#D9DDE3",
+   "rim_style": "smooth",
+   "gem": "#39FF14",
+   "wing": {
+    "shape": "fin",
+    "colors": [
+     "#B8BEC8",
+     "#E8ECF2"
+    ],
+    "count": 5,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "double"
+    ],
+    "shape": "spike",
+    "colors": [
+     "#39FF14",
+     "#39FF14"
+    ],
+    "ring": "#D9DDE3"
+   },
+   "extras": {
+    "wing_metal": 1,
+    "ring2": "#39FF14",
+    "ring2_glow": 1
+   }
+  },
+  {
+   "id": 45,
+   "category": "Event",
+   "name": "Bánh Kem Sinh Nhật Game",
+   "name_original": "Bánh Kem Sinh Nhật Game",
+   "brief": {
+    "body_mat": "3-Tier Strawberry Cream Cake",
+    "gem_color": "#FF0000",
+    "wing_shape": "Sparkling Birthday Candles",
+    "halo_shape": "Golden Anniversary Crown"
+   },
+   "profile": "drum",
+   "body": [
+    "#FFC0D0",
+    "#FFF4F0"
+   ],
+   "body_opts": {
+    "roughness": 0.5
+   },
+   "rim": "#FFFFFF",
+   "rim_style": "beads",
+   "gem": "#FF0000",
+   "wing": {
+    "shape": "spike",
+    "colors": [
+     "#FFD86B",
+     "#FF8AC0"
+    ],
+    "count": 8,
+    "glow": 1
+   },
+   "halo": {
+    "styles": [
+     "double"
+    ],
+    "shape": "spike",
+    "colors": [
+     "#FFD86B",
+     "#FFD86B"
+    ],
+    "ring": "#F2B830"
+   },
+   "extras": {
+    "bands": [
+     [
+      "#E8203A",
+      0.33
+     ],
+     [
+      "#E8203A",
+      0.66
+     ]
+    ],
+    "dots": [
+     "#E8203A",
+     8
+    ]
+   }
+  },
+  {
+   "id": 46,
+   "category": "Event",
+   "name": "Linh Hồn Cáo Chín Đuôi",
+   "name_original": "Linh Hồn Cáo Chín Đuôi",
+   "brief": {
+    "body_mat": "White Porcelain + Blue Flames",
+    "gem_color": "#00FFFF",
+    "wing_shape": "9 Fluffy White Fox Tails",
+    "halo_shape": "Floating Fox Spirit Orb"
+   },
+   "profile": "vase",
+   "body": [
+    "#F4F6FA",
+    "#FFFFFF"
+   ],
+   "body_opts": {
+    "coat": 0.5
+   },
+   "rim": "#D9DDE3",
+   "rim_style": "smooth",
+   "gem": "#00FFFF",
+   "wing": {
+    "shape": "feather",
+    "colors": [
+     "#FFFFFF",
+     "#E8F4FF"
+    ],
+    "count": 9,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "orbs"
+    ],
+    "shape": "orb",
+    "colors": [
+     "#00FFFF",
+     "#00FFFF"
+    ],
+    "ring": "#9FE8FF"
+   },
+   "extras": {
+    "wing_width": 0.42,
+    "bands": [
+     [
+      "#3AC8FF",
+      0.5
+     ]
+    ],
+    "band_glow": 1,
+    "orb": {
+     "color": "#9FFFFF",
+     "emission": "#00E5FF",
+     "emission_strength": 3
+    }
+   }
+  },
+  {
+   "id": 47,
+   "category": "Event",
+   "name": "Nhạc Hội K-Pop Lightstick",
+   "name_original": "Nhạc Hội K-Pop Lightstick",
+   "brief": {
+    "body_mat": "Iridescent Crystal Dome",
+    "gem_color": "#FF00FF",
+    "wing_shape": "Futuristic Speaker Wings",
+    "halo_shape": "Concert Laser Spotlight"
+   },
+   "profile": "royal",
+   "body": [
+    "#C8A0FF",
+    "#A0E8FF"
+   ],
+   "body_opts": {
+    "transmission": 0.45,
+    "roughness": 0.05
+   },
+   "rim": "#D9DDE3",
+   "rim_style": "crown",
+   "gem": "#FF00FF",
+   "wing": {
+    "shape": "fin",
+    "colors": [
+     "#E0A0FF",
+     "#A0F0FF"
+    ],
+    "count": 5,
+    "glow": 1
+   },
+   "halo": {
+    "styles": [
+     "rays"
+    ],
+    "shape": "spike",
+    "colors": [
+     "#FF00FF",
+     "#FF80FF"
+    ],
+    "ring": "#D9DDE3"
+   },
+   "extras": {
+    "halo_glow": 1,
+    "wing_trans": 0.4
+   }
+  },
+  {
+   "id": 48,
+   "category": "Event",
+   "name": "Thần Thoại Hy Lạp (Zeus)",
+   "name_original": "Thần Thoại Hy Lạp (Zeus)",
+   "brief": {
+    "body_mat": "Fluted White Marble Pillar",
+    "gem_color": "#FFD700",
+    "wing_shape": "Jagged Golden Lightning Bolts",
+    "halo_shape": "Golden Laurel Wreath"
+   },
+   "profile": "drum",
+   "body": [
+    "#ECECEC",
+    "#FFFFFF"
+   ],
+   "body_opts": {
+    "roughness": 0.35
+   },
+   "rim": "#F2B830",
+   "rim_style": "crown",
+   "gem": "#FFD700",
+   "wing": {
+    "shape": "blade",
+    "colors": [
+     "#C9971E",
+     "#FFE07A"
+    ],
+    "count": 6,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "wreath"
+    ],
+    "shape": "leaf",
+    "colors": [
+     "#C9971E",
+     "#FFE07A"
+    ],
+    "ring": "#F2B830"
+   },
+   "extras": {
+    "wing_metal": 1,
+    "halo_metal": 1,
+    "bands": [
+     [
+      "#F2B830",
+      0.15
+     ],
+     [
+      "#F2B830",
+      0.85
+     ]
+    ]
+   }
+  },
+  {
+   "id": 49,
+   "category": "Event",
+   "name": "Thế Giới Kẹo Ngọt Halloween",
+   "name_original": "Thế Giới Kẹo Ngọt Halloween",
+   "brief": {
+    "body_mat": "Pastel Candy Skull Basket",
+    "gem_color": "#9400D3",
+    "wing_shape": "Cute Ghost Gummy Candies",
+    "halo_shape": "Glowing Purple Blood Moon"
+   },
+   "profile": "orb",
+   "body": [
+    "#C8A0E8",
+    "#FFB8E0"
+   ],
+   "body_opts": {
+    "coat": 0.5
+   },
+   "rim": "#9400D3",
+   "rim_style": "smooth",
+   "gem": "#9400D3",
+   "wing": {
+    "shape": "petal",
+    "colors": [
+     "#F4F0FF",
+     "#FFFFFF"
+    ],
+    "count": 6,
+    "glow": 0
+   },
+   "halo": {
+    "styles": [
+     "disc"
+    ],
+    "shape": "petal",
+    "colors": [
+     "#7A2AB0",
+     "#7A2AB0"
+    ],
+    "ring": "#9400D3"
+   },
+   "extras": {
+    "wing_trans": 0.4,
+    "disc": {
+     "color": "#8A3AD0",
+     "emission": "#9400D3",
+     "emission_strength": 0.7
+    }
+   }
+  },
+  {
+   "id": 50,
+   "category": "Event",
+   "name": "Thánh Vật Khởi Nguyên (VIP)",
+   "name_original": "Thánh Vật Khởi Nguyên (VIP)",
+   "brief": {
+    "body_mat": "Cosmic Crystal + 24K Gold",
+    "gem_color": "#FFFFFF",
+    "wing_shape": "6 Majestic Seraphim Wings",
+    "halo_shape": "Dazzling Celestial Sun Cross"
+   },
+   "profile": "royal",
+   "body": [
+    "#2A1A6A",
+    "#8A6AFF"
+   ],
+   "body_opts": {
+    "emission": "#6A4AFF",
+    "emission_strength": 0.35,
+    "coat": 0.6
+   },
+   "rim": "#FFD36B",
+   "rim_style": "crown",
+   "gem": "#FFFFFF",
+   "wing": {
+    "shape": "feather",
+    "colors": [
+     "#FFF4D0",
+     "#FFFFFF"
+    ],
+    "count": 12,
+    "glow": 1
+   },
+   "halo": {
+    "styles": [
+     "rays",
+     "double"
+    ],
+    "shape": "spike",
+    "colors": [
+     "#FFE07A",
+     "#FFFFFF"
+    ],
+    "ring": "#FFD36B"
+   },
+   "extras": {
+    "bands": [
+     [
+      "#FFD36B",
+      0.2
+     ],
+     [
+      "#FFD36B",
+      0.5
+     ],
+     [
+      "#FFD36B",
+      0.8
+     ]
+    ],
+    "halo_glow": 1,
+    "ring_glow": 1,
+    "layers": 3
+   }
+  }
+ ]
+}
