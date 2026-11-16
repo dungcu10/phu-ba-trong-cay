@@ -26,7 +26,18 @@ interface Particle {
   baseScale: number;
 }
 
+interface Flyer {
+  sprite: Sprite;
+  t: number;
+  delay: number;
+  from: { x: number; y: number };
+  to: { x: number; y: number };
+  done: (() => void) | null;
+}
+
 export class Effects extends Container {
+  private flyers: Flyer[] = [];
+  private nextFlyer = 0;
   private floaters: Floater[] = [];
   private particles: Particle[] = [];
   private nextFloater = 0;
@@ -41,6 +52,13 @@ export class Effects extends Container {
       sprite.visible = false;
       this.addChild(sprite);
       this.particles.push({ sprite, life: 0, maxLife: 1, vx: 0, vy: 0, spin: 0, gravity: 0, baseScale: 1 });
+    }
+    for (let i = 0; i < TOKENS.motion.maxFlyingItems; i++) {
+      const sprite = new Sprite(Texture.EMPTY);
+      sprite.anchor.set(0.5);
+      sprite.visible = false;
+      this.addChild(sprite);
+      this.flyers.push({ sprite, t: 0, delay: 0, from: { x: 0, y: 0 }, to: { x: 0, y: 0 }, done: null });
     }
     for (let i = 0; i < FLOAT_POOL; i++) {
       const text = new Text({
@@ -97,8 +115,47 @@ export class Effects extends Container {
     }
   }
 
+  /** Produce flies along an arc into the storage button (DESIGN_SYSTEM 9, max 12 at once). */
+  fly(texture: Texture, from: { x: number; y: number }, to: { x: number; y: number }, delayMs: number, scale: number, done?: () => void): void {
+    const f = this.flyers[this.nextFlyer]!;
+    this.nextFlyer = (this.nextFlyer + 1) % this.flyers.length;
+    f.sprite.texture = texture;
+    f.sprite.scale.set(scale);
+    f.sprite.position.set(from.x, from.y);
+    f.sprite.visible = delayMs <= 0;
+    f.sprite.alpha = 1;
+    f.from = from;
+    f.to = to;
+    f.t = 0;
+    f.delay = delayMs;
+    f.done = done ?? null;
+  }
+
   update(dtMs: number): void {
     const dt = dtMs / 1000;
+    const dur = TOKENS.motion.flyToBag.ms;
+    for (const f of this.flyers) {
+      if (f.t >= 1 && !f.sprite.visible) continue;
+      if (f.delay > 0) {
+        f.delay -= dtMs;
+        if (f.delay > 0) continue;
+        f.sprite.visible = true;
+      }
+      if (!f.sprite.visible) continue;
+      f.t = Math.min(1, f.t + dtMs / dur);
+      const k = f.t;
+      const lift = Math.min(f.from.y, f.to.y) - 160;
+      // Quadratic Bézier arc through a raised midpoint.
+      const mx = (f.from.x + f.to.x) / 2;
+      f.sprite.x = (1 - k) * (1 - k) * f.from.x + 2 * (1 - k) * k * mx + k * k * f.to.x;
+      f.sprite.y = (1 - k) * (1 - k) * f.from.y + 2 * (1 - k) * k * lift + k * k * f.to.y;
+      f.sprite.rotation = k * 2;
+      if (f.t >= 1) {
+        f.sprite.visible = false;
+        f.done?.();
+        f.done = null;
+      }
+    }
     for (const f of this.floaters) {
       if (!f.text.visible) continue;
       f.life -= dtMs;

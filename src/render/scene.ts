@@ -318,6 +318,12 @@ export class GameView {
     this.updateLockedInfo();
   }
 
+  /** Converts a screen point (CSS px) to world coordinates (for effects aimed at HTML buttons). */
+  screenToWorld(x: number, y: number): { x: number; y: number } {
+    const p = this.world.toLocal({ x, y });
+    return { x: p.x, y: p.y };
+  }
+
   slotView(floor: number, i: number): SlotView {
     return this.floors[floor]!.slots[i]!;
   }

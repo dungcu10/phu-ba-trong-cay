@@ -9,6 +9,8 @@ import { Hud } from '../ui/hud.ts';
 import { Panel, PotPanel, SeedPanel, StoragePanel, type PanelActions } from '../ui/panels.ts';
 import { SettingsPanel } from '../ui/settings.ts';
 import { FloorPanel, PotShopPanel, type PotShopActions } from '../ui/potPanels.ts';
+import { JournalPanel, LettersPanel, NeighborsPanel, OrdersPanel, StallPanel, type WorldActions } from '../ui/worldPanels.ts';
+import { h } from '../ui/dom.ts';
 import type { FloorDef } from '../core/content.ts';
 import { ERROR_TEXT, formatNumber } from '../ui/text.ts';
 import { Toasts } from '../ui/toast.ts';
@@ -16,7 +18,10 @@ import { hex, TOKENS } from '../ui/tokens.ts';
 import type { GameSession } from './session.ts';
 import type { Sfx } from './sfx.ts';
 
-export class Controller implements PanelActions, PotShopActions {
+/** How often the world is advanced while the game is open (orders return, neighbours act). */
+const TICK_MS = 5000;
+
+export class Controller implements PanelActions, PotShopActions, WorldActions {
   readonly toasts = new Toasts();
   readonly hud: Hud;
   private panel: Panel | null = null;
@@ -31,12 +36,99 @@ export class Controller implements PanelActions, PotShopActions {
     private readonly overlay: HTMLElement,
     private readonly saveSound: (on: boolean) => void,
   ) {
-    this.hud = new Hud(session, { openSeeds: () => this.openSeeds(), openStorage: () => this.openStorage(), openShop: () => this.openShop(), openSettings: () => this.openSettings() });
+    this.hud = new Hud(session, {
+      openSeeds: () => this.openSeeds(),
+      openStorage: () => this.openStorage(),
+      openShop: () => this.openShop(),
+      openSettings: () => this.openSettings(),
+      openOrders: () => this.open(new OrdersPanel(this.session, this)),
+      openStall: () => this.open(new StallPanel(this.session, this)),
+      openNeighbors: () => this.open(new NeighborsPanel(this.session)),
+      openJournal: () => this.open(new JournalPanel(this.session, this)),
+      openLetters: () => {
+        this.open(new LettersPanel(this.session));
+        this.run({ type: 'readNotices' }, true);
+      },
+    });
     overlay.append(this.hud.el, this.toasts.el);
     view.handlers = { onTap: (s, t) => this.tap(s, t), onSwipe: (s) => this.swipe(s), onLockedFloor: (f) => this.openFloor(f) };
     session.onChange((events) => this.onEvents(events));
-    setInterval(() => this.hud.update(), 1000);
+    this.welcomeBack();
+    setInterval(() => {
+      this.hud.update();
+      // Countdowns on the order board move every second.
+      if (this.panel instanceof OrdersPanel) this.panel.render();
+    }, 1000);
+    setInterval(() => this.session.run({ type: 'tick' }), TICK_MS);
     this.hud.update();
+  }
+
+  /** First tick after opening: catch up on time away and sum it up in one friendly letter. */
+  private welcomeBack(): void {
+    const r = this.session.run({ type: 'tick' });
+    if (!r.ok) return;
+    let sold = 0;
+    let coins = 0;
+    let gifts = 0;
+    for (const e of r.events) {
+      if (e.type === 'stallSold') {
+        sold += e.qty;
+        coins += e.coins;
+      } else if (e.type === 'neighborGift') gifts += 1;
+    }
+    if (sold + gifts === 0) return;
+    const parts: string[] = [];
+    if (sold > 0) parts.push(`hàng xóm mua ${sold} món ở Sạp (+${formatNumber(coins)} xu)`);
+    if (gifts > 0) parts.push(`${gifts} lần ghé tặng quà`);
+    this.toasts.show(`Trong lúc bạn vắng: ${parts.join(', ')}. Xem Thư Mây nhé!`, 'success', 6000);
+  }
+
+  private open(panel: Panel): void {
+    this.sfx.play('tap');
+    this.openPanel(panel);
+  }
+
+  deliverOrder(slot: number): void {
+    this.run({ type: 'deliverOrder', slot });
+  }
+
+  skipOrder(slot: number): void {
+    this.run({ type: 'skipOrder', slot });
+  }
+
+  rushOrder(slot: number): void {
+    this.run({ type: 'rushOrder', slot });
+  }
+
+  listItem(itemId: string, qty: number, price: number): void {
+    this.run({ type: 'listItem', itemId, qty, price });
+  }
+
+  cancelListing(listingId: number): void {
+    this.run({ type: 'cancelListing', listingId });
+  }
+
+  claimJournal(cropId: string): void {
+    this.run({ type: 'claimJournal', cropId });
+  }
+
+  private bumpStorage(): void {
+    const b = this.hud.storageButton;
+    b.classList.remove('bump');
+    void b.offsetWidth;
+    b.classList.add('bump');
+  }
+
+  /** Big ribbon across the screen; tap or wait to dismiss (DESIGN_SYSTEM 6.8). */
+  private celebrate(title: string, sub: string): void {
+    const el = h('div', { class: 'celebrate', 'data-test': 'celebrate' }, h('div', { class: 'ribbon-big' }, h('h2', {}, title), sub && h('p', {}, sub)));
+    const close = () => {
+      el.classList.add('out');
+      setTimeout(() => el.remove(), 300);
+    };
+    el.addEventListener('pointerdown', close);
+    setTimeout(close, TOKENS.motion.celebrate.ms * 2);
+    this.overlay.append(el);
   }
 
   private status(ref: SlotRef) {
@@ -202,9 +294,21 @@ export class Controller implements PanelActions, PotShopActions {
       case 'harvested': {
         this.sfx.play('harvest');
         const p = at(e.slot);
-        fx.burst(this.art.get(itemFrame(content, e.itemId)), p.x, p.y + 20, Math.min(8, e.qty + 3), { scale: 0.32 });
-        fx.floatText(`+${e.qty} ${content.items.get(e.itemId)?.name.vi ?? ''}`, p.x, p.y - 10);
+        const tex = this.art.get(itemFrame(content, content.items.get(e.itemId)?.baseItem ?? e.itemId));
+        // Produce flies in an arc into the Rương Mây button, which bounces when it lands.
+        const r = this.hud.storageButton.getBoundingClientRect();
+        const target = this.view.screenToWorld(r.left + r.width / 2, r.top + r.height / 2);
+        for (let i = 0; i < Math.min(3, e.qty); i++) {
+          fx.fly(tex, { x: p.x + (i - 1) * 18, y: p.y + 40 }, target, i * 70, 0.4, i === 0 ? () => this.bumpStorage() : undefined);
+        }
+        fx.floatText(`+${e.qty} ${content.items.get(e.itemId)?.name.vi ?? ''}`, p.x, p.y - 10, e.mutation ? hex(TOKENS.color.brand.gold) : undefined);
         fx.floatText(`+${e.xp} XP`, p.x, p.y + 30, hex(TOKENS.color.brand.sky));
+        if (e.mutation) {
+          this.sfx.play('levelUp');
+          fx.burst(this.view.dot, p.x, p.y, 16, { scale: 0.55, speed: 380, tint: hex(e.mutation === 'jade' ? TOKENS.color.brand.jade : TOKENS.color.brand.gold) });
+          const name = content.surprises.mutations.find((m) => m.id === e.mutation)?.name.vi ?? '';
+          this.toasts.show(`Biến Dị ${name}! ${content.items.get(e.itemId)?.name.vi ?? ''} bán giá gấp nhiều lần.`, 'level', 3500);
+        }
         break;
       }
       case 'sold':
@@ -237,12 +341,51 @@ export class Controller implements PanelActions, PotShopActions {
         fx.burst(this.view.dot, p.x, p.y + 60, 10, { scale: 0.45, tint: hex(TOKENS.color.brand.jade) });
         break;
       }
+      case 'giftFound': {
+        this.sfx.play('coin');
+        const p = at(e.slot);
+        const g = e.gift;
+        const label = g.kind === 'coins' ? `Quà: +${formatNumber(g.amount)} xu` : g.kind === 'gems' ? `Quà: +${g.amount} Ngọc Mây` : `Quà: +${g.amount} ${content.items.get(g.itemId ?? '')?.name.vi ?? 'Bọ Mây'}`;
+        fx.burst(this.view.dot, p.x, p.y - 30, 12, { scale: 0.5, speed: 300, tint: hex(g.kind === 'gems' ? TOKENS.color.brand.jade : TOKENS.color.brand.gold) });
+        fx.floatText(label, p.x, p.y - 60, hex(TOKENS.color.brand.gold));
+        break;
+      }
+      case 'ordersArrived':
+        if (!this.panel) this.toasts.show(e.slots.length > 1 ? `Khinh khí cầu mang ${e.slots.length} đơn hàng mới tới!` : 'Khinh khí cầu mang đơn hàng mới tới!', 'info', 2200);
+        break;
+      case 'orderDelivered': {
+        this.sfx.play('coin');
+        const who = content.bots.get(e.customer)?.name.vi ?? 'Khách';
+        const gems = e.gems > 0 ? `, +${e.gems} Ngọc Mây` : '';
+        this.toasts.show(`${who} cảm ơn! +${formatNumber(e.coins)} xu, +${e.xp} XP${gems}`, e.rare ? 'level' : 'success', 2600);
+        break;
+      }
+      case 'journalClaimed':
+        this.sfx.play('upgrade');
+        this.toasts.show(`Sổ Tay: ${content.crops.get(e.cropId)?.name.vi ?? ''} đạt ${e.harvests} lần thu — +${e.gems} Ngọc Mây`, 'level', 3000);
+        break;
+      case 'itemListed':
+        this.sfx.play('tap');
+        this.toasts.show('Đã bày lên Sạp Phú Bà. Hàng xóm sẽ ghé mua.', 'info', 2000);
+        break;
+      case 'stallSold':
+        this.sfx.play('coin');
+        this.toasts.show(`${content.bots.get(e.botId)?.name.vi ?? 'Hàng xóm'} mua ${e.qty} ${content.items.get(e.itemId)?.name.vi ?? ''}: +${formatNumber(e.coins)} xu`, 'success', 3000);
+        break;
+      case 'neighborGift':
+        this.sfx.play('bug');
+        this.toasts.show(`${content.bots.get(e.botId)?.name.vi ?? 'Hàng xóm'} ghé vườn tặng ${e.kind === 'coins' ? `${e.amount} xu` : `${e.amount} Bọ Mây`}`, 'info', 3000);
+        break;
       case 'levelUp': {
         this.sfx.play('levelUp');
         const bonus = content.config.levels.levelUpCoins;
         const unlocked = content.cropList.filter((c) => c.unlockLevel === e.level).map((c) => c.name.vi);
         const extra = unlocked.length > 0 ? ` Mở khóa: ${unlocked.join(', ')}.` : '';
-        this.toasts.show(`Lên cấp ${e.level}! +${formatNumber(bonus)} xu thưởng.${extra}`, 'level', 4000);
+        const floor = content.floorList.find((f) => f.unlockLevel === e.level);
+        const more = floor ? ` Có thể mở ${floor.name.vi}.` : '';
+        const pots = content.potList.filter((p) => p.unlockLevel === e.level && p.price !== null).map((p) => p.name.vi);
+        const potText = pots.length > 0 ? ` Lò Gốm có ${pots.join(', ')}.` : '';
+        this.celebrate(`Lên cấp ${e.level}!`, `+${formatNumber(bonus)} xu thưởng.${extra}${more}${potText}`);
         for (let i = 0; i < 4; i++) {
           const p = this.view.slotView(0, (i * 3) % this.session.state.floors[0]!.slots.length).feedbackPoint();
           fx.burst(this.view.dot, p.x, p.y - 60, 6, { scale: 0.5, speed: 360, tint: hex(TOKENS.color.brand.gold) });

@@ -5,11 +5,12 @@ import type { ContentPack } from '../core/content.ts';
 import type { GameState } from '../core/state.ts';
 import { cropStatus } from '../systems/growth.ts';
 import { nextFloor } from '../core/game.ts';
+import { canDeliver } from '../systems/orders.ts';
 import { storageFree } from '../systems/economy.ts';
 import { canAfford, nextUpgradeCost } from '../systems/pots.ts';
 import { formatDuration } from './text.ts';
 
-export type HintKind = 'harvest' | 'storageFull' | 'bug' | 'water' | 'plant' | 'sell' | 'upgrade' | 'floor' | 'wait' | 'idle';
+export type HintKind = 'harvest' | 'storageFull' | 'bug' | 'water' | 'plant' | 'sell' | 'upgrade' | 'floor' | 'order' | 'wait' | 'idle';
 
 export interface Hint {
   kind: HintKind;
@@ -44,6 +45,10 @@ export function nextHint(content: ContentPack, state: GameState, now: number): H
   if (ripe > 0) return { kind: 'harvest', text: 'Cây đã chín! Chạm hoặc kéo tay qua các chậu để thu hoạch.' };
   if (bug) return { kind: 'bug', text: 'Có Bọ Mây đậu trên cây — chạm để bắt, dùng để nâng cấp chậu.' };
   if (thirsty) return { kind: 'water', text: 'Cây đang khát — chạm vào chậu để tưới, cây lớn nhanh hơn.' };
+
+  if (state.orders?.slots.some((s) => s.order && canDeliver(state, s.order))) {
+    return { kind: 'order', text: 'Có đơn khinh khí cầu giao được — mở Đơn hàng để nhận thưởng lớn.' };
+  }
 
   if (empty > 0) {
     const affordable = content.cropList.some((c) => c.unlockLevel <= state.player.level && c.seedPrice <= state.player.coins);

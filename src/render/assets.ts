@@ -77,6 +77,9 @@ export class Art {
 
 /** Inventory icon frame for an item: items/<last part of the crop or bug sprite path>. */
 export function itemFrame(content: ContentPack, itemId: string): string {
+  // Mutated produce uses its normal picture (with a glow in the UI) until it has its own art.
+  const base = content.items.get(itemId)?.baseItem;
+  if (base) return itemFrame(content, base);
   const crop = content.cropList.find((c) => c.produce.id === itemId);
   const sprite = crop?.sprite ?? content.bugs.get(itemId)?.sprite ?? itemId;
   return `items/${sprite.slice(sprite.lastIndexOf('/') + 1)}`;

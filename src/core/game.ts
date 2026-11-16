@@ -34,7 +34,8 @@ export type Command =
   | { type: 'rushOrder'; slot: number }
   | { type: 'claimJournal'; cropId: string }
   | { type: 'listItem'; itemId: string; qty: number; price: number }
-  | { type: 'cancelListing'; listingId: number };
+  | { type: 'cancelListing'; listingId: number }
+  | { type: 'readNotices' };
 
 export type GameEvent =
   | { type: 'planted'; slot: SlotRef; cropId: string; cost: number }
@@ -152,6 +153,9 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
       return listItem(content, state, cmd.itemId, cmd.qty, cmd.price);
     case 'cancelListing':
       return cancelListing(content, state, cmd.listingId);
+    case 'readNotices':
+      for (const n of state.notices) n.read = true;
+      return { ok: true, events: [] };
   }
 }
 
