@@ -83,3 +83,24 @@ test('cây chín không bao giờ héo, dù để rất lâu', () => {
   dispatch(content, s, { type: 'plant', cropId: DAISY, ...at }, T0);
   assert.ok(dispatch(content, s, { type: 'harvest', ...at }, T0 + 400 * HOUR).ok);
 });
+
+test('R3: có bọ → tưới → bọ vẫn còn và bắt được', () => {
+  let checked = 0;
+  for (let entropy = 0; entropy < 20 && checked < 5; entropy++) {
+    const s = newGame(content, { level: 9, coins: 1000 }, entropy);
+    dispatch(content, s, { type: 'plant', cropId: 'base:crop.golden-gerbera', ...at }, T0);
+    const slot = s.floors[0]!.slots[0]!;
+    for (let t = T0; t < T0 + 2 * HOUR; t += 10 * SEC) {
+      const st = cropStatus(content, s, slot, t)!;
+      if (!st.bug || !st.thirsty) continue;
+      const before = st.bug.count;
+      assert.ok(dispatch(content, s, { type: 'water', ...at }, t).ok);
+      const after = cropStatus(content, s, slot, t)!;
+      assert.ok(after.bug && after.bug.count >= before, `hạt giống ${entropy}: tưới làm mất bọ`);
+      assert.ok(dispatch(content, s, { type: 'catchBug', ...at }, t).ok);
+      checked += 1;
+      break;
+    }
+  }
+  assert.ok(checked >= 5, `chỉ tìm được ${checked} tình huống có bọ khi cây khát`);
+});
