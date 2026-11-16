@@ -31,17 +31,21 @@ export function serialize(state: GameState, savedAt: number): string {
   return `{"format":"${SAVE_FORMAT}","saveVersion":${state.saveVersion},"savedAt":${savedAt},"checksum":"${checksumOf(data)}","data":${data}}`;
 }
 
+/** Structure only. Numbers are checked against the content pack by reconcile() (R5). */
 function assertState(value: unknown): asserts value is GameState {
   const s = value as GameState;
+  const isObj = (v: unknown) => typeof v === 'object' && v !== null && !Array.isArray(v);
   const ok =
-    typeof s === 'object' && s !== null &&
-    typeof s.seed === 'number' && typeof s.maxSeenAt === 'number' && typeof s.clockOffsetMs === 'number' &&
-    typeof s.player?.coins === 'number' && typeof s.player?.level === 'number' && typeof s.player?.xp === 'number' &&
-    typeof s.inventory === 'object' && Array.isArray(s.floors) && typeof s.pots === 'object';
+    isObj(s) && isObj(s.player) && isObj(s.inventory) && isObj(s.pots) && isObj(s.stats) &&
+    Array.isArray(s.floors) &&
+    s.floors.every((f) => isObj(f) && typeof f.floorId === 'string' && Array.isArray(f.slots) &&
+      f.slots.every((sl) => isObj(sl) && typeof sl.potInstanceId === 'string' && (sl.planting === null || isObj(sl.planting)))) &&
+    Object.values(s.pots).every((p) => isObj(p) && typeof p.potId === 'string');
   if (!ok) throw new SaveFormatError('Cấu trúc save không hợp lệ');
 }
 
-/** Parses, verifies checksum, migrates to the current version and validates the result. */
+/** Parses, verifies checksum, migrates and checks structure. Numbers and content references are
+ * checked by reconcile(), which SaveManager runs on every load and import. */
 export function deserialize(text: string): { state: GameState; savedAt: number; migratedFrom: number | null } {
   let envelope: SaveEnvelope;
   try {

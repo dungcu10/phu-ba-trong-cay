@@ -96,6 +96,7 @@ function plant(content: ContentPack, state: GameState, ref: SlotRef, cropId: str
   slot.planting = {
     id: state.nextId++,
     cropId,
+    seedCost: crop.seedPrice,
     cycleStartedAt: now,
     harvestsDone: 0,
     bonusMs: 0,

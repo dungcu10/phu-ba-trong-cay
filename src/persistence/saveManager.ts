@@ -2,7 +2,9 @@
 // write interrupted half-way can only damage the older copy. Loading picks the newest valid slot.
 // A read error never results in the player's save being overwritten with a new game.
 
+import type { ContentPack } from '../core/content.ts';
 import type { GameState } from '../core/state.ts';
+import { reconcile } from './reconcile.ts';
 import type { SaveStore } from './store.ts';
 import { deserialize, serialize, SaveFormatError } from './serializer.ts';
 
@@ -11,13 +13,22 @@ type SlotKey = (typeof SLOT_KEYS)[number];
 
 export type LoadResult =
   | { kind: 'empty' }
-  | { kind: 'loaded'; state: GameState; slot: SlotKey; savedAt: number; recoveredFromBackup: boolean; migratedFrom: number | null }
+  | {
+      kind: 'loaded';
+      state: GameState;
+      slot: SlotKey;
+      savedAt: number;
+      recoveredFromBackup: boolean;
+      migratedFrom: number | null;
+      /** What reconcile() repaired or removed to match the current content. */
+      warnings: string[];
+    }
   | { kind: 'unreadable'; errors: string[] };
 
 interface SlotRead {
   slot: SlotKey;
   raw: string | null;
-  parsed: ReturnType<typeof deserialize> | null;
+  parsed: (ReturnType<typeof deserialize> & { warnings: string[] }) | null;
   error: string | null;
 }
 
@@ -25,13 +36,18 @@ export class SaveManager {
   private lastSlot: SlotKey | null = null;
   private lastSavedAt = 0;
 
-  constructor(private readonly store: SaveStore) {}
+  constructor(
+    private readonly store: SaveStore,
+    private readonly content: ContentPack,
+  ) {}
 
   private async readSlot(slot: SlotKey): Promise<SlotRead> {
     const raw = await this.store.get(slot);
     if (raw === null) return { slot, raw, parsed: null, error: null };
     try {
-      return { slot, raw, parsed: deserialize(raw), error: null };
+      const parsed = deserialize(raw);
+      const fixed = reconcile(parsed.state, this.content, 'local');
+      return { slot, raw, parsed: { ...parsed, state: fixed.state, warnings: fixed.warnings }, error: null };
     } catch (e) {
       const msg = e instanceof SaveFormatError ? e.message : String(e);
       return { slot, raw, parsed: null, error: `${slot}: ${msg}` };
@@ -58,6 +74,7 @@ export class SaveManager {
       savedAt: best.parsed!.savedAt,
       recoveredFromBackup,
       migratedFrom: best.parsed!.migratedFrom,
+      warnings: best.parsed!.warnings,
     };
   }
 
@@ -76,8 +93,11 @@ export class SaveManager {
     return serialize(state, now);
   }
 
-  /** Validates a backup file without touching stored saves. Throws SaveFormatError if invalid. */
-  parseImport(text: string): GameState {
-    return deserialize(text).state;
+  /**
+   * Validates a backup file against the format and the current content, without touching
+   * stored saves. Throws SaveFormatError if invalid (impossible numbers are rejected here).
+   */
+  parseImport(text: string): { state: GameState; warnings: string[] } {
+    return reconcile(deserialize(text).state, this.content, 'import');
   }
 }

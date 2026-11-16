@@ -52,7 +52,7 @@ test('migration chạy tuần tự từng bước và báo lỗi khi thiếu bư
 
 test('2 khe xoay vòng: mỗi lần lưu ghi sang khe còn lại', async () => {
   const store = new MemoryStore();
-  const mgr = new SaveManager(store);
+  const mgr = new SaveManager(store, content);
   const s = playedState();
   assert.equal(await mgr.save(s, T0), 'slot-a');
   assert.equal(await mgr.save(s, T0 + 1), 'slot-b');
@@ -61,14 +61,14 @@ test('2 khe xoay vòng: mỗi lần lưu ghi sang khe còn lại', async () => {
 
 test('khe mới nhất bị hỏng thì khôi phục từ khe trước', async () => {
   const store = new MemoryStore();
-  const mgr = new SaveManager(store);
+  const mgr = new SaveManager(store, content);
   const s = playedState();
   await mgr.save(s, T0);
   s.player.coins += 500;
   const newer = await mgr.save(s, T0 + 1000);
   store.data.set(newer, store.data.get(newer)!.slice(0, 50));
 
-  const loaded = await new SaveManager(store).load();
+  const loaded = await new SaveManager(store, content).load();
   assert.equal(loaded.kind, 'loaded');
   if (loaded.kind !== 'loaded') return;
   assert.equal(loaded.recoveredFromBackup, true);
@@ -78,11 +78,11 @@ test('khe mới nhất bị hỏng thì khôi phục từ khe trước', async (
 test('lưu tiếp sau khi khôi phục sẽ ghi đè khe hỏng, không đè khe tốt', async () => {
   const store = new MemoryStore();
   const s = playedState();
-  const first = new SaveManager(store);
+  const first = new SaveManager(store, content);
   const good = await first.save(s, T0);
   const bad = await first.save(s, T0 + 1);
   store.data.set(bad, 'hỏng');
-  const mgr = new SaveManager(store);
+  const mgr = new SaveManager(store, content);
   await mgr.load();
   assert.equal(await mgr.save(s, T0 + 2), bad);
   assert.ok(deserialize(store.data.get(good)!));
@@ -92,31 +92,31 @@ test('cả hai khe hỏng thì báo không đọc được, không tự tạo ga
   const store = new MemoryStore();
   store.data.set('slot-a', 'x');
   store.data.set('slot-b', 'y');
-  const r = await new SaveManager(store).load();
+  const r = await new SaveManager(store, content).load();
   assert.equal(r.kind, 'unreadable');
   assert.equal(store.data.get('slot-a'), 'x');
 });
 
 test('chưa có save thì báo trống', async () => {
-  assert.deepEqual(await new SaveManager(new MemoryStore()).load(), { kind: 'empty' });
+  assert.deepEqual(await new SaveManager(new MemoryStore(), content).load(), { kind: 'empty' });
 });
 
 test('đồng hồ lùi thì savedAt vẫn tăng, bản mới vẫn được chọn khi tải', async () => {
   const store = new MemoryStore();
-  const mgr = new SaveManager(store);
+  const mgr = new SaveManager(store, content);
   const s = playedState();
   await mgr.save(s, T0 + 10_000);
   s.player.coins = 777;
   await mgr.save(s, T0);
-  const r = await new SaveManager(store).load();
+  const r = await new SaveManager(store, content).load();
   assert.ok(r.kind === 'loaded' && r.state.player.coins === 777);
 });
 
 test('xuất và nhập file sao lưu, kiểm tra hợp lệ', () => {
-  const mgr = new SaveManager(new MemoryStore());
+  const mgr = new SaveManager(new MemoryStore(), content);
   const s = playedState();
   const text = mgr.exportText(s, T0);
-  assert.deepEqual(mgr.parseImport(text), s);
+  assert.deepEqual(mgr.parseImport(text).state, s);
   assert.throws(() => mgr.parseImport(text.replace('"seed":', '"seed":1')), SaveFormatError);
 });
 

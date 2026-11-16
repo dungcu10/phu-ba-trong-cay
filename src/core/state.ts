@@ -3,12 +3,14 @@
 import type { ContentPack } from './content.ts';
 import { newSeed } from './rng.ts';
 
-export const SAVE_VERSION = 3;
+export const SAVE_VERSION = 4;
 
 export interface Planting {
   /** Unique per planting, used as a key for deterministic randomness. */
   id: number;
   cropId: string;
+  /** Coins paid for the seed; refunded if this crop is ever removed from the game. */
+  seedCost: number;
   /** Start of the current growth cycle (first growth or a regrow), in ms. */
   cycleStartedAt: number;
   /** Number of harvests already taken from this planting. */

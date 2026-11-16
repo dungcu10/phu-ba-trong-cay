@@ -196,6 +196,8 @@ export function buildContentPack(raw: RawContent): ContentPack {
     if (crop.stages < 3) problems.push(`${where}.stages: cần ít nhất 3 giai đoạn`);
     if (crop.harvests < 1) problems.push(`${where}.harvests: phải >= 1`);
     if (crop.harvests > 1 && !isNum(crop.regrowSeconds)) problems.push(`${where}.regrowSeconds: bắt buộc khi harvests > 1`);
+    // A regrow cycle runs from REGROW_FROM_STAGE (2) to the ripe stage: it needs at least one growing stage between.
+    if (crop.harvests > 1 && crop.stages < 4) problems.push(`${where}.stages: cây thu nhiều lần cần ít nhất 4 giai đoạn`);
     if (crop.growSeconds <= 0) problems.push(`${where}.growSeconds: phải > 0`);
     if (!isObj(crop.produce) || !isStr(crop.produce.id)) {
       problems.push(`${where}.produce.id: thiếu`);
