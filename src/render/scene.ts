@@ -499,7 +499,7 @@ export class GameView {
       f.pots.forEach((p, i) => {
         const view = fv.slots[i];
         if (!view) return;
-        view.setPot(`${p.pot.id}/${p.level}`, this.art.pot(p.pot.sprite, p.level, rarityColors[p.pot.rarity] ?? C.rarity.common));
+        view.setPot(`${p.pot.id}/${p.level}`, this.art.pot(p.pot, p.level, rarityColors[p.pot.rarity] ?? C.rarity.common), p.step);
         view.setTier(p.tier);
         view.setStatus(p.status);
       });

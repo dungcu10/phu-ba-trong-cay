@@ -23,5 +23,7 @@ export function slotBonus(content: ContentPack, state: GameState, slot: SlotStat
   const trait = floor ? content.floors.get(floor.floorId)?.trait : null;
   if (trait && trait.family === crop.family && trait.stat === stat) bonus += trait.value;
   if (floor) bonus += floorBonus(content, state, floor, stat);
-  return bonus;
+  // Every source adds up, then the total is capped (POT_SYSTEM 5: no endless stacking).
+  const cap = content.config.bonusCaps?.[stat];
+  return cap === undefined ? bonus : Math.min(bonus, cap);
 }

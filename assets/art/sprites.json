@@ -122,8 +122,8 @@
   },
   "items/cherry-tomato": {
    "frame": {
-    "x": 1010,
-    "y": 726,
+    "x": 666,
+    "y": 948,
     "w": 105,
     "h": 128
    },
@@ -266,8 +266,8 @@
   },
   "items/cloud-mint": {
    "frame": {
-    "x": 1117,
-    "y": 726,
+    "x": 773,
+    "y": 948,
     "w": 122,
     "h": 128
    },
@@ -410,8 +410,8 @@
   },
   "items/sky-carrot": {
    "frame": {
-    "x": 1241,
-    "y": 726,
+    "x": 897,
+    "y": 948,
     "w": 54,
     "h": 128
    },
@@ -554,8 +554,8 @@
   },
   "items/cloud-strawberry": {
    "frame": {
-    "x": 1297,
-    "y": 726,
+    "x": 953,
+    "y": 948,
     "w": 118,
     "h": 128
    },
@@ -698,8 +698,8 @@
   },
   "items/golden-gerbera": {
    "frame": {
-    "x": 1630,
-    "y": 726,
+    "x": 1286,
+    "y": 948,
     "w": 128,
     "h": 125
    },
@@ -842,8 +842,8 @@
   },
   "items/cotton-daisy": {
    "frame": {
-    "x": 1417,
-    "y": 726,
+    "x": 1073,
+    "y": 948,
     "w": 105,
     "h": 128
    },
@@ -864,24 +864,48 @@
     "y": 0.5
    }
   },
-  "pots/terracotta/1": {
+  "pots/terracotta/0": {
    "frame": {
     "x": 0,
     "y": 726,
-    "w": 200,
-    "h": 180
+    "w": 220,
+    "h": 220
    },
    "rotated": false,
    "trimmed": false,
    "spriteSourceSize": {
     "x": 0,
     "y": 0,
-    "w": 200,
-    "h": 180
+    "w": 220,
+    "h": 220
    },
    "sourceSize": {
-    "w": 200,
-    "h": 180
+    "w": 220,
+    "h": 220
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 1.0
+   }
+  },
+  "pots/terracotta/1": {
+   "frame": {
+    "x": 222,
+    "y": 726,
+    "w": 220,
+    "h": 220
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 220,
+    "h": 220
+   },
+   "sourceSize": {
+    "w": 220,
+    "h": 220
    },
    "anchor": {
     "x": 0.5,
@@ -890,94 +914,238 @@
   },
   "pots/terracotta/2": {
    "frame": {
-    "x": 202,
+    "x": 444,
     "y": 726,
-    "w": 200,
-    "h": 180
+    "w": 220,
+    "h": 220
    },
    "rotated": false,
    "trimmed": false,
    "spriteSourceSize": {
     "x": 0,
     "y": 0,
-    "w": 200,
-    "h": 180
+    "w": 220,
+    "h": 220
    },
    "sourceSize": {
-    "w": 200,
-    "h": 180
+    "w": 220,
+    "h": 220
    },
    "anchor": {
     "x": 0.5,
     "y": 1.0
    }
   },
-  "pots/terracotta/3": {
+  "pots/porcelain/0": {
    "frame": {
-    "x": 404,
+    "x": 666,
     "y": 726,
-    "w": 200,
-    "h": 180
+    "w": 220,
+    "h": 220
    },
    "rotated": false,
    "trimmed": false,
    "spriteSourceSize": {
     "x": 0,
     "y": 0,
-    "w": 200,
-    "h": 180
+    "w": 220,
+    "h": 220
    },
    "sourceSize": {
-    "w": 200,
-    "h": 180
+    "w": 220,
+    "h": 220
    },
    "anchor": {
     "x": 0.5,
     "y": 1.0
    }
   },
-  "pots/terracotta/4": {
+  "pots/porcelain/1": {
    "frame": {
-    "x": 606,
+    "x": 888,
     "y": 726,
-    "w": 200,
-    "h": 180
+    "w": 220,
+    "h": 220
    },
    "rotated": false,
    "trimmed": false,
    "spriteSourceSize": {
     "x": 0,
     "y": 0,
-    "w": 200,
-    "h": 180
+    "w": 220,
+    "h": 220
    },
    "sourceSize": {
-    "w": 200,
-    "h": 180
+    "w": 220,
+    "h": 220
    },
    "anchor": {
     "x": 0.5,
     "y": 1.0
    }
   },
-  "pots/terracotta/5": {
+  "pots/porcelain/2": {
    "frame": {
-    "x": 808,
+    "x": 1110,
     "y": 726,
-    "w": 200,
-    "h": 180
+    "w": 220,
+    "h": 220
    },
    "rotated": false,
    "trimmed": false,
    "spriteSourceSize": {
     "x": 0,
     "y": 0,
-    "w": 200,
-    "h": 180
+    "w": 220,
+    "h": 220
    },
    "sourceSize": {
-    "w": 200,
-    "h": 180
+    "w": 220,
+    "h": 220
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 1.0
+   }
+  },
+  "pots/jade-lotus/0": {
+   "frame": {
+    "x": 1332,
+    "y": 726,
+    "w": 220,
+    "h": 220
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 220,
+    "h": 220
+   },
+   "sourceSize": {
+    "w": 220,
+    "h": 220
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 1.0
+   }
+  },
+  "pots/jade-lotus/1": {
+   "frame": {
+    "x": 1554,
+    "y": 726,
+    "w": 220,
+    "h": 220
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 220,
+    "h": 220
+   },
+   "sourceSize": {
+    "w": 220,
+    "h": 220
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 1.0
+   }
+  },
+  "pots/jade-lotus/2": {
+   "frame": {
+    "x": 1776,
+    "y": 726,
+    "w": 220,
+    "h": 220
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 220,
+    "h": 220
+   },
+   "sourceSize": {
+    "w": 220,
+    "h": 220
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 1.0
+   }
+  },
+  "pots/bronze-tripod/0": {
+   "frame": {
+    "x": 0,
+    "y": 948,
+    "w": 220,
+    "h": 220
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 220,
+    "h": 220
+   },
+   "sourceSize": {
+    "w": 220,
+    "h": 220
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 1.0
+   }
+  },
+  "pots/bronze-tripod/1": {
+   "frame": {
+    "x": 222,
+    "y": 948,
+    "w": 220,
+    "h": 220
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 220,
+    "h": 220
+   },
+   "sourceSize": {
+    "w": 220,
+    "h": 220
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 1.0
+   }
+  },
+  "pots/bronze-tripod/2": {
+   "frame": {
+    "x": 444,
+    "y": 948,
+    "w": 220,
+    "h": 220
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 220,
+    "h": 220
+   },
+   "sourceSize": {
+    "w": 220,
+    "h": 220
    },
    "anchor": {
     "x": 0.5,
@@ -986,8 +1154,8 @@
   },
   "bugs/ladybird/0": {
    "frame": {
-    "x": 1760,
-    "y": 726,
+    "x": 1416,
+    "y": 948,
     "w": 120,
     "h": 100
    },
@@ -1010,8 +1178,8 @@
   },
   "bugs/ladybird/1": {
    "frame": {
-    "x": 1882,
-    "y": 726,
+    "x": 1538,
+    "y": 948,
     "w": 120,
     "h": 100
    },
@@ -1034,8 +1202,8 @@
   },
   "items/ladybird": {
    "frame": {
-    "x": 1524,
-    "y": 726,
+    "x": 1180,
+    "y": 948,
     "w": 104,
     "h": 128
    },
@@ -1062,7 +1230,7 @@
   "format": "RGBA8888",
   "size": {
    "w": 2048,
-   "h": 1024
+   "h": 2048
   },
   "scale": "2"
  }

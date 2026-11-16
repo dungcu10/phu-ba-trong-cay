@@ -7,7 +7,9 @@ import { adjustedOffset, gameTime } from './clock.ts';
 import { stochasticRound } from './rng.ts';
 import { cropStatus } from '../systems/growth.ts';
 import { addItem, addXp, removeItem, sellPrice, storageFree } from '../systems/economy.ts';
-import { canAfford, nextUpgradeCost } from '../systems/pots.ts';
+import { canAfford, doubleYieldChance, grantPot, isMilestone, mutationMultiplier, nextUpgradeCost, noteInBook, upgradeBlock } from '../systems/pots.ts';
+import { randomFor } from './rng.ts';
+import { activeEvents, eventPointsFor } from '../systems/events.ts';
 import { slotBonus } from '../systems/modifiers.ts';
 import { createFloorState } from './state.ts';
 import { canDeliver, refillOrders } from '../systems/orders.ts';
@@ -45,13 +47,17 @@ export type Command =
   | { type: 'claimMission'; index: number }
   | { type: 'claimMissionBonus' }
   /** Helps one pot while visiting a neighbour's garden. */
-  | { type: 'helpNeighbor'; botId: string; floor: number; slot: number; kind: HelpKind };
+  | { type: 'helpNeighbor'; botId: string; floor: number; slot: number; kind: HelpKind }
+  /** Gets a non-shop pot by exchanging items (mission seals). */
+  | { type: 'obtainPot'; potId: string }
+  | { type: 'claimEventMilestone'; eventId: string }
+  | { type: 'claimBookReward' };
 
 export type GameEvent =
   | { type: 'planted'; slot: SlotRef; cropId: string; cost: number }
   | { type: 'watered'; slot: SlotRef; savedMs: number }
   | { type: 'bugCaught'; slot: SlotRef; itemId: string }
-  | { type: 'harvested'; slot: SlotRef; itemId: string; qty: number; xp: number; cleared: boolean; mutation: string | null }
+  | { type: 'harvested'; slot: SlotRef; itemId: string; qty: number; xp: number; cleared: boolean; mutation: string | null; doubled?: boolean }
   | { type: 'giftFound'; slot: SlotRef; gift: Gift }
   | { type: 'ordersArrived'; slots: number[] }
   | { type: 'orderDelivered'; slot: number; coins: number; xp: number; gems: number; customer: string; rare: boolean }
@@ -61,7 +67,7 @@ export type GameEvent =
   | { type: 'listingCancelled'; listingId: number }
   | NeighborEvent
   | { type: 'sold'; itemId: string; qty: number; coins: number }
-  | { type: 'potUpgraded'; potInstanceId: string; level: number }
+  | { type: 'potUpgraded'; potInstanceId: string; level: number; milestone: boolean; skills: string[] }
   | { type: 'levelUp'; level: number }
   | { type: 'floorUnlocked'; floorId: string; index: number; cost: number }
   | { type: 'potBought'; potInstanceId: string; potId: string; cost: number }
@@ -71,7 +77,12 @@ export type GameEvent =
   | { type: 'missionDone'; index: number; missionId: string }
   | { type: 'missionClaimed'; index: number; coins: number; xp: number; gems: number }
   | { type: 'missionBonusClaimed'; coins: number; xp: number; gems: number }
-  | { type: 'neighborHelped'; botId: string; floor: number; slot: number; kind: HelpKind; coins: number; xp: number };
+  | { type: 'neighborHelped'; botId: string; floor: number; slot: number; kind: HelpKind; coins: number; xp: number }
+  | { type: 'materialFound'; slot: SlotRef; itemId: string; qty: number }
+  | { type: 'potObtained'; potInstanceId: string; potId: string; source: 'exchange' | 'event' }
+  | { type: 'eventPoints'; eventId: string; points: number; total: number }
+  | { type: 'eventMilestoneClaimed'; eventId: string; index: number; coins: number; gems: number; items: Record<string, number>; pot: string | null }
+  | { type: 'bookRewardClaimed'; lines: number; gems: number };
 
 export type ErrorCode =
   | 'bad_slot'
@@ -105,7 +116,9 @@ export type ErrorCode =
   | 'already_claimed'
   | 'unknown_neighbor'
   | 'no_help_needed'
-  | 'help_limit';
+  | 'help_limit'
+  | 'level_not_open'
+  | 'not_obtainable';
 
 export type Result = { ok: true; events: GameEvent[] } | { ok: false; error: ErrorCode };
 
@@ -143,6 +156,14 @@ export function dispatch(content: ContentPack, state: GameState, cmd: Command, r
   const result = run(content, state, cmd, now);
   if (result.ok) {
     for (const index of recordMissions(content, state, result.events)) result.events.push({ type: 'missionDone', index, missionId: state.missions.list[index]!.id });
+    // Event points come from what just happened, only while an event runs (POT_SYSTEM 3).
+    for (const ev of activeEvents(content, now)) {
+      const pts = eventPointsFor(ev, result.events);
+      if (pts <= 0) continue;
+      const e = (state.events[ev.id] ??= { points: 0, claimed: 0 });
+      e.points += pts;
+      result.events.push({ type: 'eventPoints', eventId: ev.id, points: pts, total: e.points });
+    }
   }
   return result;
 }
@@ -194,7 +215,54 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
       return claimMissionBonus(content, state);
     case 'helpNeighbor':
       return helpNeighbor(content, state, cmd, now);
+    case 'obtainPot':
+      return obtainPot(content, state, cmd.potId, now);
+    case 'claimEventMilestone':
+      return claimEventMilestone(content, state, cmd.eventId, now);
+    case 'claimBookReward':
+      return claimBookReward(content, state);
   }
+}
+
+function obtainPot(content: ContentPack, state: GameState, potId: string, now: number): Result {
+  const def = content.pots.get(potId);
+  if (!def) return fail('unknown_pot');
+  if (!def.exchange) return fail('not_obtainable');
+  if (!canAfford(state, { coins: 0, items: def.exchange.items })) return fail('not_enough_items');
+  for (const [id, q] of Object.entries(def.exchange.items)) removeItem(state, id, q);
+  const potInstanceId = grantPot(state, potId, 'exchange', now);
+  return { ok: true, events: [{ type: 'potObtained', potInstanceId, potId, source: 'exchange' }] };
+}
+
+function claimEventMilestone(content: ContentPack, state: GameState, eventId: string, now: number): Result {
+  const ev = content.events.find((e) => e.id === eventId);
+  if (!ev) return fail('nothing_to_claim');
+  const prog = state.events[eventId] ?? { points: 0, claimed: 0 };
+  const m = ev.milestones[prog.claimed];
+  // Earned milestones stay claimable after the event ends (nothing earned is lost).
+  if (!m || prog.points < m.points) return fail('nothing_to_claim');
+  prog.claimed += 1;
+  state.events[eventId] = prog;
+  const r = m.reward;
+  state.player.coins += r.coins ?? 0;
+  state.player.gems += r.gems ?? 0;
+  for (const [id, q] of Object.entries(r.items ?? {})) addItem(state, id, q);
+  const events: GameEvent[] = [{ type: 'eventMilestoneClaimed', eventId, index: prog.claimed - 1, coins: r.coins ?? 0, gems: r.gems ?? 0, items: r.items ?? {}, pot: r.pot ?? null }];
+  if (r.pot) {
+    const potInstanceId = grantPot(state, r.pot, 'event', now);
+    events.push({ type: 'potObtained', potInstanceId, potId: r.pot, source: 'event' });
+  }
+  return { ok: true, events };
+}
+
+function claimBookReward(content: ContentPack, state: GameState): Result {
+  const rewards = content.config.collectionRewards ?? [];
+  const next = rewards[state.potBookClaimed];
+  const lines = Object.keys(state.potBook).filter((id) => content.pots.has(id)).length;
+  if (!next || lines < next.lines) return fail('nothing_to_claim');
+  state.potBookClaimed += 1;
+  state.player.gems += next.gems;
+  return { ok: true, events: [{ type: 'bookRewardClaimed', lines: next.lines, gems: next.gems }] };
 }
 
 function expandFloor(content: ContentPack, state: GameState, index: number): Result {
@@ -208,7 +276,7 @@ function expandFloor(content: ContentPack, state: GameState, index: number): Res
   const slot = floor.slots.length;
   let potInstanceId = index === 0 ? `pot-${slot + 1}` : `pot-f${index + 1}-${slot + 1}`;
   while (state.pots[potInstanceId]) potInstanceId += '-n';
-  state.pots[potInstanceId] = { potId: def.startingPot, level: 1 };
+  state.pots[potInstanceId] = { potId: def.startingPot, level: 1, obtainedAt: state.maxSeenAt, source: 'floor', history: [] };
   floor.slots.push({ potInstanceId, planting: null });
   return { ok: true, events: [{ type: 'floorExpanded', floor: index, slot, cost }] };
 }
@@ -228,9 +296,10 @@ function upgradeFloorStar(content: ContentPack, state: GameState, index: number)
   return { ok: true, events: [{ type: 'floorStarred', floor: index, stars: floor.stars }] };
 }
 
-function giveReward(content: ContentPack, state: GameState, r: { coins: number; xp: number; gems: number }, events: GameEvent[]): void {
+function giveReward(content: ContentPack, state: GameState, r: { coins: number; xp: number; gems: number; items?: Record<string, number> }, events: GameEvent[]): void {
   state.player.coins += r.coins;
   state.player.gems += r.gems;
+  for (const [id, q] of Object.entries(r.items ?? {})) addItem(state, id, q);
   state.stats.coinsEarned += r.coins;
   for (const level of addXp(content, state, r.xp)) events.push({ type: 'levelUp', level });
 }
@@ -301,7 +370,9 @@ function water(content: ContentPack, state: GameState, ref: SlotRef, now: number
   const status = cropStatus(content, state, slot, now);
   if (!status || !slot.planting) return fail('slot_empty');
   if (!status.thirsty) return fail('not_thirsty');
-  const savedMs = status.remainingMs * content.config.water.remainingTimeReduction;
+  // Care (POT_SYSTEM 5) makes each watering save more of the remaining time.
+  const care = slotBonus(content, state, slot, status.crop, 'care');
+  const savedMs = status.remainingMs * content.config.water.remainingTimeReduction * (1 + care);
   slot.planting.bonusMs += savedMs;
   slot.planting.wateredStages.push(status.stage);
   return { ok: true, events: [{ type: 'watered', slot: ref, savedMs }] };
@@ -329,11 +400,14 @@ function harvest(content: ContentPack, state: GameState, ref: SlotRef, now: numb
   if (!status.ripe) return fail('not_ripe');
   const crop = status.crop;
   const luck = slotBonus(content, state, slot, crop, 'luck');
-  const mutation = rollMutation(content, state, planting, luck);
+  const potInst = state.pots[slot.potInstanceId]!;
+  const mutation = rollMutation(content, state, planting, luck, mutationMultiplier(content, potInst));
   const itemId = mutation ? `${crop.produce.id}~${mutation}` : crop.produce.id;
   const cycleSeconds = planting.harvestsDone === 0 || crop.regrowSeconds === null ? crop.growSeconds : crop.regrowSeconds;
   const gift = rollGift(content, state, planting, cycleSeconds, luck);
-  const qty = stochasticRound(crop.yield * (1 + slotBonus(content, state, slot, crop, 'yield')), state.seed, 'yield', planting.id, planting.harvestsDone);
+  const baseQty = stochasticRound(crop.yield * (1 + slotBonus(content, state, slot, crop, 'yield')), state.seed, 'yield', planting.id, planting.harvestsDone);
+  const doubled = randomFor(state.seed, 'double', planting.id, planting.harvestsDone) < doubleYieldChance(content, potInst);
+  const qty = doubled ? baseQty * 2 : baseQty;
   const xp = stochasticRound(crop.xp * (1 + slotBonus(content, state, slot, crop, 'xp')), state.seed, 'xp', planting.id, planting.harvestsDone);
   if (storageFree(content, state) < qty) return fail('storage_full');
 
@@ -341,6 +415,13 @@ function harvest(content: ContentPack, state: GameState, ref: SlotRef, now: numb
   state.stats.harvests += 1;
   recordHarvest(state, crop, mutation);
   const events: GameEvent[] = [];
+  // Materials: the line's own shard, and the common clay (POT_SYSTEM 4). Not counted in storage.
+  const found: Array<{ itemId: string; qty: number }> = [];
+  const potDef = content.pots.get(potInst.potId);
+  if (potDef?.shard && randomFor(state.seed, 'shard', planting.id, planting.harvestsDone) < potDef.shard.chance * (1 + luck)) found.push({ itemId: potDef.shard.item, qty: 1 });
+  const hm = content.config.harvestMaterial;
+  if (hm && randomFor(state.seed, 'clay', planting.id, planting.harvestsDone) < hm.chance * (1 + luck)) found.push({ itemId: hm.item, qty: 1 });
+  for (const f of found) addItem(state, f.itemId, f.qty);
   if (gift) {
     if (gift.kind === 'coins') state.player.coins += gift.amount;
     else if (gift.kind === 'gems') state.player.gems += gift.amount;
@@ -357,8 +438,9 @@ function harvest(content: ContentPack, state: GameState, ref: SlotRef, now: numb
     planting.wateredStages = [];
     planting.caughtBugs = {};
   }
-  events.push({ type: 'harvested', slot: ref, itemId, qty, xp, cleared, mutation });
+  events.push({ type: 'harvested', slot: ref, itemId, qty, xp, cleared, mutation, doubled });
   if (gift) events.push({ type: 'giftFound', slot: ref, gift });
+  for (const f of found) events.push({ type: 'materialFound', slot: ref, ...f });
   for (const level of addXp(content, state, xp)) events.push({ type: 'levelUp', level });
   return { ok: true, events };
 }
@@ -378,14 +460,23 @@ function sell(content: ContentPack, state: GameState, itemId: string, qty: numbe
 function upgradePot(content: ContentPack, state: GameState, potInstanceId: string): Result {
   const pot = state.pots[potInstanceId];
   if (!pot) return fail('unknown_pot');
+  const block = upgradeBlock(content, state, pot);
+  if (block) return fail(block);
   const cost = nextUpgradeCost(content, pot);
   if (!cost) return fail('max_level');
   if (state.player.coins < cost.coins) return fail('not_enough_coins');
   if (!canAfford(state, cost)) return fail('not_enough_items');
+  // Upgrades never fail and never lose the pot (POT_SYSTEM 4).
   state.player.coins -= cost.coins;
   for (const [id, qty] of Object.entries(cost.items)) removeItem(state, id, qty);
   pot.level += 1;
-  return { ok: true, events: [{ type: 'potUpgraded', potInstanceId, level: pot.level }] };
+  const at = state.maxSeenAt;
+  (pot.history ??= []).push({ level: pot.level, at });
+  if (pot.history.length > 60) pot.history.splice(0, pot.history.length - 60);
+  noteInBook(state, pot.potId, pot.level, at);
+  const def = content.pots.get(pot.potId)!;
+  const skills = def.skills.filter((s) => s.level === pot.level).map((s) => s.id);
+  return { ok: true, events: [{ type: 'potUpgraded', potInstanceId, level: pot.level, milestone: isMilestone(def, pot.level), skills }] };
 }
 
 /** The next floor that can be unlocked (floors open bottom to top, in content order). */
@@ -408,13 +499,11 @@ function unlockFloor(content: ContentPack, state: GameState, floorId: string): R
 function buyPot(content: ContentPack, state: GameState, potId: string): Result {
   const def = content.pots.get(potId);
   if (!def) return fail('unknown_pot');
-  if (def.price === null) return fail('not_for_sale');
+  if (def.price === null || def.group !== 'shop') return fail('not_for_sale');
   if (def.unlockLevel > state.player.level) return fail('locked');
   if (state.player.coins < def.price) return fail('not_enough_coins');
   state.player.coins -= def.price;
-  const potInstanceId = `pot-b${state.nextId++}`;
-  state.pots[potInstanceId] = { potId, level: 1 };
-  state.potStock.push(potInstanceId);
+  const potInstanceId = grantPot(state, potId, 'shop', state.maxSeenAt);
   return { ok: true, events: [{ type: 'potBought', potInstanceId, potId, cost: def.price }] };
 }
 

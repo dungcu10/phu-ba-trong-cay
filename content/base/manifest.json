@@ -11,6 +11,8 @@
     "surprises": "surprises.json",
     "neighbors": "neighbors.json",
     "potsets": "potsets.json",
-    "missions": "missions.json"
+    "missions": "missions.json",
+    "materials": "materials.json",
+    "events": "events.json"
   }
 }

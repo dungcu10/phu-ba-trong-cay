@@ -67,6 +67,22 @@ export const MIGRATIONS: Record<number, Migration> = {
     data.missions = { day: -1, list: [], bonusClaimed: false };
     return data;
   },
+  // 7 -> 8 (POT_SYSTEM): pot ownership records, collection book, event progress. Levels kept.
+  7: (data) => {
+    const at = typeof data.createdAt === 'number' ? data.createdAt : 0;
+    const book: Record<string, { firstAt: number; bestLevel: number }> = {};
+    for (const p of Object.values((data.pots as Record<string, Record<string, unknown>> | undefined) ?? {})) {
+      p.obtainedAt = at;
+      p.source = 'old-save';
+      p.history = [];
+      const id = String(p.potId);
+      book[id] = { firstAt: at, bestLevel: Math.max(book[id]?.bestLevel ?? 1, Number(p.level) || 1) };
+    }
+    data.potBook = book;
+    data.potBookClaimed = 0;
+    data.events = {};
+    return data;
+  },
 };
 
 export function migrate(

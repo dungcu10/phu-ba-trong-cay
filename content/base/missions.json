@@ -4,7 +4,11 @@
   "allDone": {
     "coins": 0,
     "xp": 0,
-    "gems": 2
+    "gems": 1,
+    "items": {
+      "base:mat.merit-seal": 1,
+      "base:mat.cloud-clay": 1
+    }
   },
   "pool": [
     {
@@ -32,7 +36,10 @@
       "reward": {
         "coins": 150,
         "xp": 30,
-        "gems": 1
+        "gems": 1,
+        "items": {
+          "base:mat.cloud-clay": 1
+        }
       }
     },
     {
@@ -74,7 +81,10 @@
       "reward": {
         "coins": 50,
         "xp": 12,
-        "gems": 0
+        "gems": 0,
+        "items": {
+          "base:mat.cloud-clay": 1
+        }
       }
     },
     {
@@ -88,7 +98,10 @@
       "reward": {
         "coins": 80,
         "xp": 20,
-        "gems": 1
+        "gems": 1,
+        "items": {
+          "base:mat.cloud-clay": 1
+        }
       }
     },
     {

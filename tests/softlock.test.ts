@@ -82,8 +82,9 @@ test('10.000 lệnh hợp lệ ngẫu nhiên trên nhiều hạt giống: luôn 
 });
 
 test('tái hiện R1: nâng chậu hết sạch xu vẫn gieo được cây miễn phí', () => {
-  const s = newGame(content, { coins: 40 });
-  s.inventory[BUG] = 2;
+  const cost = content.pots.get('base:pot.terracotta')!.levels[1]!.upgradeCost!;
+  const s = newGame(content, { coins: cost.coins });
+  for (const [id, q] of Object.entries(cost.items)) s.inventory[id] = q;
   assert.ok(dispatch(content, s, { type: 'upgradePot', potInstanceId: 'pot-1' }, T0).ok);
   assert.equal(s.player.coins, 0);
   assert.ok(dispatch(content, s, { type: 'plant', cropId: DAISY, floor: 0, slot: 0 }, T0).ok);

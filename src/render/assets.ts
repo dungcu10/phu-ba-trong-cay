@@ -3,7 +3,7 @@
 // needs data plus its frames in the atlas.
 
 import { Assets, Spritesheet, type SpritesheetData, type Texture } from 'pixi.js';
-import type { ContentPack } from '../core/content.ts';
+import type { ContentPack, PotDef } from '../core/content.ts';
 import spritesData from '../../assets/art/sprites.json';
 import spritesPng from '../../assets/art/sprites.png?url';
 import sceneData from '../../assets/art/scene.json';
@@ -49,14 +49,14 @@ export class Art {
   }
 
   /**
-   * Pot picture for a level. Pots whose own art is not made yet use the terracotta picture of the
-   * same appearance tier, tinted with their rarity colour ("chờ đồ họa").
+   * Pot picture for a level (POT_SYSTEM 7): the line's look for that level; if that look's art is
+   * not made yet, the nearest earlier look that has art; lines with no art at all use the
+   * terracotta picture tinted with their rarity colour ("chờ đồ họa").
    */
-  pot(sprite: string, level: number, rarityColor: string): { texture: Texture; tint: number; placeholder: boolean } {
-    const own = `${sprite}/${level}`;
-    if (this.has(own)) return { texture: this.frames[own]!, tint: 0xffffff, placeholder: false };
-    const tier = level >= 5 ? 5 : level >= 3 ? 3 : 1;
-    return { texture: this.get(`pots/terracotta/${tier}`), tint: lighten(rarityColor, 0.35), placeholder: true };
+  pot(def: PotDef, level: number, rarityColor: string): { texture: Texture; tint: number; placeholder: boolean } {
+    const frame = potFrame(def, level, (f) => this.has(f));
+    if (frame) return { texture: this.frames[frame]!, tint: 0xffffff, placeholder: false };
+    return { texture: this.get('pots/terracotta/0'), tint: lighten(rarityColor, 0.35), placeholder: true };
   }
 
   /** Floor picture; floors without their own art reuse the first floor's, tinted ("chờ đồ họa"). */
@@ -67,12 +67,21 @@ export class Art {
 
   /** Every frame that has no fallback and is missing (the game cannot start without these). */
   missingFor(content: ContentPack): string[] {
-    const need = [...SCENE_FRAMES, content.floors.get(content.config.startFloor)!.sprite, 'pots/terracotta/1', 'pots/terracotta/3', 'pots/terracotta/5'];
+    const need = [...SCENE_FRAMES, content.floors.get(content.config.startFloor)!.sprite, 'pots/terracotta/0'];
     for (const c of content.cropList) for (let s = 0; s < c.stages; s++) need.push(`${c.sprite}/${s}`);
     for (const b of content.bugList) need.push(`${b.sprite}/0`, `${b.sprite}/1`);
-    for (const id of content.items.keys()) need.push(itemFrame(content, id));
+    for (const id of content.items.keys()) if (!content.materials.has(id)) need.push(itemFrame(content, id));
     return need.filter((n) => !this.frames[n]);
   }
+}
+
+/** Best existing art frame for a pot at a level, or null when the line has none yet. */
+export function potFrame(def: PotDef, level: number, has: (frame: string) => boolean): string | null {
+  for (let i = def.looks.length - 1; i >= 0; i--) {
+    const l = def.looks[i]!;
+    if (l.from <= level && has(l.frame)) return l.frame;
+  }
+  return null;
 }
 
 /** Inventory icon frame for an item: items/<last part of the crop or bug sprite path>. */

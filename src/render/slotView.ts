@@ -33,6 +33,9 @@ export class SlotView extends Container {
   private readonly phase = Math.random() * Math.PI * 2;
   private readonly aura: Sprite;
   private readonly shadow: Sprite;
+  private readonly studs = new Graphics();
+  private potGrow = 1;
+  private dropY = 0;
   private readonly sparkles: Sprite[] = [];
   private tier: 0 | 1 | 2 = 0;
   private bloomT = -1;
@@ -101,7 +104,7 @@ export class SlotView extends Container {
     this.timer.anchor.set(0.5, 0);
     this.timer.y = SLOT_GEOM.barY + 10;
     // Plant in front of the pot: its base sits on the soil line inside the mouth.
-    this.addChild(this.shadow, this.aura, this.pot, this.plant, ...this.sparkles, this.bloomRing, this.bug, this.bugCount, this.marker, this.bar, this.timer);
+    this.addChild(this.shadow, this.aura, this.pot, this.studs, this.plant, ...this.sparkles, this.bloomRing, this.bug, this.bugCount, this.marker, this.bar, this.timer);
 
     const g = SLOT_GEOM.hit;
     this.hitArea = new Rectangle(g.x, g.y, g.w, g.h);
@@ -109,15 +112,33 @@ export class SlotView extends Container {
     this.cursor = 'pointer';
   }
 
-  /** key identifies pot type + level; look is the picture (possibly a tinted stand-in). */
-  setPot(key: string, look: { texture: Texture; tint: number }): void {
+  /** key identifies pot type + level; look is the picture (possibly a tinted stand-in); step is
+   *  the number of small evolutions past the look's milestone: gold studs around the pot's foot
+   *  and a slightly larger pot (POT_SYSTEM 2: every level shows). */
+  setPot(key: string, look: { texture: Texture; tint: number }, step = 0): void {
     if (key === this.potKey) return;
     const changed = this.potKey !== '';
     this.potKey = key;
     this.pot.texture = look.texture;
     this.pot.tint = look.tint;
     this.pot.anchor.copyFrom(this.pot.texture.defaultAnchor ?? { x: 0.5, y: 1 });
+    this.potGrow = 1 + Math.min(step, 4) * 0.015;
+    this.drawStuds(step);
     if (changed) this.popPot();
+  }
+
+  private drawStuds(step: number): void {
+    const g = this.studs;
+    g.clear();
+    const n = Math.min(step, 4);
+    for (let i = 0; i < n; i++) {
+      // Studs sit on an arc just above the pot's foot, centred.
+      const x = (i - (n - 1) / 2) * 16;
+      const y = -10 - Math.abs(x) * 0.12;
+      g.circle(x, y, 5.5).fill(hex(C.ui.wood));
+      g.circle(x, y, 4).fill(hex(C.brand.gold));
+      g.circle(x - 1.2, y - 1.4, 1.4).fill({ color: 0xffffff, alpha: 0.85 });
+    }
   }
 
   /** Appearance tier of the pot (0 Mộc, 1 Tinh, 2 Thần). */
@@ -224,6 +245,11 @@ export class SlotView extends Container {
     this.tweens.add(TOKENS.motion.bounce.ms * 2.5, ease.outElastic, (v) => (this.plantPop = from + (1 - from) * v));
   }
 
+  /** A pot just placed: falls in from above and settles with a bounce. */
+  dropIn(): void {
+    this.tweens.add(TOKENS.motion.bounce.ms * 4, ease.outBounce, (v) => (this.dropY = -160 * (1 - v)));
+  }
+
   popPot(): void {
     this.tweens.add(TOKENS.motion.bounce.ms * 3, ease.outElastic, (v) => (this.potPop = 0.8 + 0.2 * v));
   }
@@ -255,7 +281,10 @@ export class SlotView extends Container {
     }
     const squash = 1 + Math.sin(t * 2.1 + this.phase) * 0.01;
     this.plant.scale.set(this.plantPop / squash, this.plantPop * squash * hop);
-    this.pot.scale.set(this.potPop);
+    this.pot.scale.set(this.potPop * this.potGrow);
+    this.pot.y = this.dropY;
+    this.studs.y = this.dropY;
+    this.studs.scale.set(this.potPop);
     if (this.tier > 0) {
       const pulse = 0.5 + 0.5 * Math.sin(t * 2.2 + this.phase);
       // Glow texture is 128 pt wide: about 1.9× / 1.5× the pot.

@@ -9,69 +9,277 @@
     "price": 25,
     "unlockLevel": 1,
     "favoredFamily": null,
-    "levels": [
-      {
-        "level": 1,
-        "stats": {
-          "speed": 0.03,
-          "yield": 0
-        },
-        "upgradeCost": null
+    "set": null,
+    "description": {
+      "vi": "Chậu gốm đỏ nung bằng lửa rơm của làng mây. Bền bỉ, dễ kiếm, càng nâng càng giữ ẩm tốt, giúp cây lớn nhanh."
+    },
+    "group": "shop",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "focus": "speed",
+    "shard": {
+      "item": "base:mat.terracotta-shard",
+      "chance": 0.12
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "speed": [
+          0.03,
+          0.3
+        ],
+        "yield": [
+          0,
+          0.1
+        ],
+        "xp": [
+          0,
+          0.06
+        ],
+        "care": [
+          0,
+          0.3
+        ]
       },
-      {
-        "level": 2,
-        "stats": {
-          "speed": 0.06,
-          "yield": 0
+      "coins": {
+        "base": 30,
+        "growth": 1.17
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
         },
-        "upgradeCost": {
-          "coins": 40,
-          "items": {
-            "base:bug.ladybird": 2
-          }
+        {
+          "item": "base:mat.terracotta-shard",
+          "from": 3,
+          "base": 1,
+          "growth": 1.07
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 2
+        },
+        "10": {
+          "base:mat.cloud-clay": 4,
+          "base:mat.terracotta-shard": 3
+        },
+        "15": {
+          "base:mat.cloud-clay": 6
+        },
+        "20": {
+          "base:mat.cloud-clay": 8
+        },
+        "25": {
+          "base:mat.cloud-clay": 10
+        },
+        "30": {
+          "base:mat.cloud-clay": 12
+        },
+        "35": {
+          "base:mat.cloud-clay": 15
+        },
+        "40": {
+          "base:mat.cloud-clay": 18
+        },
+        "45": {
+          "base:mat.cloud-clay": 22
+        },
+        "50": {
+          "base:mat.cloud-clay": 30
         }
       },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "looks": [
       {
-        "level": 3,
-        "stats": {
-          "speed": 0.09,
-          "yield": 0.1
+        "from": 1,
+        "frame": "pots/terracotta/0",
+        "name": {
+          "vi": "Đất Mộc"
         },
-        "upgradeCost": {
-          "coins": 120,
-          "items": {
-            "base:bug.ladybird": 4
-          }
-        }
+        "aura": 0
       },
       {
-        "level": 4,
-        "stats": {
-          "speed": 0.12,
-          "yield": 0.15
+        "from": 5,
+        "frame": "pots/terracotta/1",
+        "name": {
+          "vi": "Đất Hoa Văn"
         },
-        "upgradeCost": {
-          "coins": 300,
-          "items": {
-            "base:bug.ladybird": 7
-          }
-        }
+        "aura": 1
       },
       {
-        "level": 5,
-        "stats": {
-          "speed": 0.15,
-          "yield": 0.2
+        "from": 10,
+        "frame": "pots/terracotta/2",
+        "name": {
+          "vi": "Đất Ngọc Bích"
         },
-        "upgradeCost": {
-          "coins": 650,
-          "items": {
-            "base:bug.ladybird": 10
-          }
-        }
+        "aura": 2
+      },
+      {
+        "from": 15,
+        "frame": "pots/terracotta/3",
+        "name": {
+          "vi": "Gốm Men Hổ Phách"
+        },
+        "aura": 2
+      },
+      {
+        "from": 20,
+        "frame": "pots/terracotta/4",
+        "name": {
+          "vi": "Gốm Chạm Lửa"
+        },
+        "aura": 2
+      },
+      {
+        "from": 25,
+        "frame": "pots/terracotta/5",
+        "name": {
+          "vi": "Gốm Lò Rồng"
+        },
+        "aura": 2
+      },
+      {
+        "from": 30,
+        "frame": "pots/terracotta/6",
+        "name": {
+          "vi": "Gốm Sen Đất"
+        },
+        "aura": 2
+      },
+      {
+        "from": 35,
+        "frame": "pots/terracotta/7",
+        "name": {
+          "vi": "Gốm Hồng Ngọc"
+        },
+        "aura": 2
+      },
+      {
+        "from": 40,
+        "frame": "pots/terracotta/8",
+        "name": {
+          "vi": "Gốm Thần Lò"
+        },
+        "aura": 2
+      },
+      {
+        "from": 45,
+        "frame": "pots/terracotta/9",
+        "name": {
+          "vi": "Gốm Thượng Cổ"
+        },
+        "aura": 2
+      },
+      {
+        "from": 50,
+        "frame": "pots/terracotta/10",
+        "name": {
+          "vi": "Gốm Vĩnh Cửu Tối Thượng"
+        },
+        "aura": 2
       }
     ],
-    "set": null
+    "skills": [
+      {
+        "id": "keep-moist",
+        "level": 10,
+        "name": {
+          "vi": "Giữ Ẩm"
+        },
+        "desc": {
+          "vi": "Đất nung ngậm nước: mỗi lần tưới rút ngắn thêm thời gian lớn (+50% hiệu quả chăm sóc)."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "care",
+          "value": 0.5
+        }
+      },
+      {
+        "id": "warm-earth",
+        "level": 20,
+        "name": {
+          "vi": "Đất Ấm"
+        },
+        "desc": {
+          "vi": "Cây trong chậu lớn nhanh thêm 3%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "speed",
+          "value": 0.03
+        }
+      },
+      {
+        "id": "kiln-harvest",
+        "level": 30,
+        "name": {
+          "vi": "Lửa Lò Bội Thu"
+        },
+        "desc": {
+          "vi": "5% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.05
+        }
+      },
+      {
+        "id": "village-pride",
+        "level": 40,
+        "name": {
+          "vi": "Niềm Tự Hào Làng Gốm"
+        },
+        "desc": {
+          "vi": "Kinh nghiệm thu hoạch +5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "xp",
+          "value": 0.05
+        }
+      },
+      {
+        "id": "eternal-clay",
+        "level": 50,
+        "name": {
+          "vi": "Gốm Vĩnh Cửu"
+        },
+        "desc": {
+          "vi": "Cây trong chậu lớn nhanh thêm 4%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "speed",
+          "value": 0.04
+        }
+      }
+    ]
   },
   {
     "id": "base:pot.porcelain",
@@ -101,67 +309,603 @@
         }
       }
     },
-    "set": "base:set.palace-ceramic"
+    "set": "base:set.palace-ceramic",
+    "group": "shop",
+    "looks": [
+      {
+        "from": 1,
+        "frame": "pots/porcelain/0",
+        "name": {
+          "vi": "Sứ Mây Xanh"
+        },
+        "aura": 0
+      },
+      {
+        "from": 4,
+        "frame": "pots/porcelain/1",
+        "name": {
+          "vi": "Sứ Viền Vàng"
+        },
+        "aura": 1
+      },
+      {
+        "from": 7,
+        "frame": "pots/porcelain/2",
+        "name": {
+          "vi": "Sứ Phượng Vàng"
+        },
+        "aura": 2
+      }
+    ]
   },
   {
     "id": "base:pot.bronze-tripod",
     "name": {
-      "vi": "Chậu Đồng Ba Chân"
+      "vi": "Đỉnh Đồng Công Trạng"
     },
-    "rarity": "good",
+    "rarity": "rare",
     "sprite": "pots/bronze-tripod",
-    "price": 400,
-    "unlockLevel": 5,
+    "price": null,
+    "unlockLevel": 1,
     "favoredFamily": "fruit",
-    "levelRule": {
-      "maxLevel": 8,
-      "base": {
-        "yield": 0.06,
-        "attract": 0.06
-      },
-      "perLevel": 0.08,
-      "coins": {
-        "base": 150,
-        "growth": 1.55
-      },
+    "set": "base:set.ancient-craft",
+    "description": {
+      "vi": "Đỉnh đồng ba chân trao cho người làm vườn chăm chỉ nhất làng mây. Không bán ở đâu cả: chỉ đổi bằng Ấn Công Trạng từ nhiệm vụ ngày."
+    },
+    "group": "daily",
+    "source": {
+      "vi": "Nhiệm vụ ngày: đổi 5 Ấn Công Trạng (xong đủ 3 nhiệm vụ trong ngày được 1 ấn)"
+    },
+    "focus": "yield",
+    "shard": {
+      "item": "base:mat.bronze-shard",
+      "chance": 0.12
+    },
+    "exchange": {
       "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.35
-        }
+        "base:mat.merit-seal": 5
       }
     },
-    "set": "base:set.ancient-craft"
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "yield": [
+          0.06,
+          0.36
+        ],
+        "xp": [
+          0.06,
+          0.28
+        ],
+        "speed": [
+          0.02,
+          0.08
+        ],
+        "luck": [
+          0,
+          0.05
+        ]
+      },
+      "coins": {
+        "base": 60,
+        "growth": 1.17
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.bronze-shard",
+          "from": 2,
+          "base": 1,
+          "growth": 1.07
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.merit-seal": 1,
+          "base:mat.cloud-clay": 2
+        },
+        "10": {
+          "base:mat.merit-seal": 2,
+          "base:mat.cloud-clay": 4
+        },
+        "15": {
+          "base:mat.merit-seal": 3
+        },
+        "20": {
+          "base:mat.merit-seal": 3
+        },
+        "25": {
+          "base:mat.merit-seal": 4
+        },
+        "30": {
+          "base:mat.merit-seal": 4
+        },
+        "35": {
+          "base:mat.merit-seal": 5
+        },
+        "40": {
+          "base:mat.merit-seal": 5
+        },
+        "45": {
+          "base:mat.merit-seal": 6
+        },
+        "50": {
+          "base:mat.merit-seal": 8
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "looks": [
+      {
+        "from": 1,
+        "frame": "pots/bronze-tripod/0",
+        "name": {
+          "vi": "Đồng Rêu Cổ"
+        },
+        "aura": 0
+      },
+      {
+        "from": 5,
+        "frame": "pots/bronze-tripod/1",
+        "name": {
+          "vi": "Đồng Vân Mây"
+        },
+        "aura": 1
+      },
+      {
+        "from": 10,
+        "frame": "pots/bronze-tripod/2",
+        "name": {
+          "vi": "Đồng Vảy Rồng"
+        },
+        "aura": 2
+      },
+      {
+        "from": 15,
+        "frame": "pots/bronze-tripod/3",
+        "name": {
+          "vi": "Đồng Khảm Bạc"
+        },
+        "aura": 2
+      },
+      {
+        "from": 20,
+        "frame": "pots/bronze-tripod/4",
+        "name": {
+          "vi": "Đồng Chuông Gió"
+        },
+        "aura": 2
+      },
+      {
+        "from": 25,
+        "frame": "pots/bronze-tripod/5",
+        "name": {
+          "vi": "Đồng Ấn Vàng"
+        },
+        "aura": 2
+      },
+      {
+        "from": 30,
+        "frame": "pots/bronze-tripod/6",
+        "name": {
+          "vi": "Đồng Tam Sơn"
+        },
+        "aura": 2
+      },
+      {
+        "from": 35,
+        "frame": "pots/bronze-tripod/7",
+        "name": {
+          "vi": "Đồng Long Hổ"
+        },
+        "aura": 2
+      },
+      {
+        "from": 40,
+        "frame": "pots/bronze-tripod/8",
+        "name": {
+          "vi": "Đồng Thái Bình"
+        },
+        "aura": 2
+      },
+      {
+        "from": 45,
+        "frame": "pots/bronze-tripod/9",
+        "name": {
+          "vi": "Đồng Trấn Mùa Thượng Cổ"
+        },
+        "aura": 2
+      },
+      {
+        "from": 50,
+        "frame": "pots/bronze-tripod/10",
+        "name": {
+          "vi": "Đồng Trấn Mùa Tối Thượng"
+        },
+        "aura": 2
+      }
+    ],
+    "skills": [
+      {
+        "id": "bumper-crop",
+        "level": 10,
+        "name": {
+          "vi": "Mùa Bội Thu"
+        },
+        "desc": {
+          "vi": "12% cơ hội thu hoạch gấp đôi sản lượng."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.12
+        }
+      },
+      {
+        "id": "merit-glow",
+        "level": 20,
+        "name": {
+          "vi": "Ánh Công Trạng"
+        },
+        "desc": {
+          "vi": "Kinh nghiệm +6%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "xp",
+          "value": 0.06
+        }
+      },
+      {
+        "id": "bronze-ring",
+        "level": 30,
+        "name": {
+          "vi": "Chuông Đồng Gọi Mùa"
+        },
+        "desc": {
+          "vi": "Cơ hội gấp đôi lên thêm 6%."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.06
+        }
+      },
+      {
+        "id": "elder-respect",
+        "level": 40,
+        "name": {
+          "vi": "Trưởng Làng Nể Trọng"
+        },
+        "desc": {
+          "vi": "Sản lượng +6%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "yield",
+          "value": 0.06
+        }
+      },
+      {
+        "id": "dragon-scale",
+        "level": 50,
+        "name": {
+          "vi": "Vảy Rồng Hộ Mùa"
+        },
+        "desc": {
+          "vi": "May mắn +8%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "luck",
+          "value": 0.08
+        }
+      }
+    ]
   },
   {
     "id": "base:pot.jade-lotus",
     "name": {
-      "vi": "Chậu Ngọc Sen"
+      "vi": "Sen Ngọc Trăng Rằm"
     },
-    "rarity": "rare",
+    "rarity": "epic",
     "sprite": "pots/jade-lotus",
-    "price": 1500,
-    "unlockLevel": 8,
+    "price": null,
+    "unlockLevel": 1,
     "favoredFamily": "flower",
-    "levelRule": {
-      "maxLevel": 10,
-      "base": {
-        "speed": 0.1,
-        "yield": 0.1
+    "set": "base:set.palace-ceramic",
+    "description": {
+      "vi": "Chậu sen ngọc chỉ nở trong Lễ Hội Trăng Mây. Hút ánh trăng: cây trong chậu dễ ra quả Biến Dị và hút Bọ Mây. Giữ mãi mãi và vẫn nâng cấp sau lễ hội."
+    },
+    "group": "event",
+    "source": {
+      "vi": "Sự kiện Lễ Hội Trăng Mây: mốc 100 điểm Trăng"
+    },
+    "focus": "luck",
+    "shard": {
+      "item": "base:mat.moon-seed",
+      "chance": 0.12
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "luck": [
+          0.08,
+          0.4
+        ],
+        "speed": [
+          0.05,
+          0.22
+        ],
+        "attract": [
+          0.05,
+          0.25
+        ],
+        "yield": [
+          0,
+          0.08
+        ]
       },
-      "perLevel": 0.08,
       "coins": {
-        "base": 400,
-        "growth": 1.55
+        "base": 60,
+        "growth": 1.17
       },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 4,
-          "growth": 1.35
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.moon-seed",
+          "from": 2,
+          "base": 1,
+          "growth": 1.07
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.moon-seed": 3,
+          "base:mat.cloud-clay": 2
+        },
+        "10": {
+          "base:mat.moon-seed": 5,
+          "base:mat.cloud-clay": 4
+        },
+        "15": {
+          "base:mat.moon-seed": 6
+        },
+        "20": {
+          "base:mat.moon-seed": 8
+        },
+        "25": {
+          "base:mat.moon-seed": 10
+        },
+        "30": {
+          "base:mat.moon-seed": 12
+        },
+        "35": {
+          "base:mat.moon-seed": 14
+        },
+        "40": {
+          "base:mat.moon-seed": 16
+        },
+        "45": {
+          "base:mat.moon-seed": 18
+        },
+        "50": {
+          "base:mat.moon-seed": 24
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "looks": [
+      {
+        "from": 1,
+        "frame": "pots/jade-lotus/0",
+        "name": {
+          "vi": "Sen Ngọc Búp"
+        },
+        "aura": 1
+      },
+      {
+        "from": 5,
+        "frame": "pots/jade-lotus/1",
+        "name": {
+          "vi": "Sen Viền Vàng"
+        },
+        "aura": 1
+      },
+      {
+        "from": 10,
+        "frame": "pots/jade-lotus/2",
+        "name": {
+          "vi": "Sen Trăng Nở"
+        },
+        "aura": 2
+      },
+      {
+        "from": 15,
+        "frame": "pots/jade-lotus/3",
+        "name": {
+          "vi": "Sen Sương Bạc"
+        },
+        "aura": 2
+      },
+      {
+        "from": 20,
+        "frame": "pots/jade-lotus/4",
+        "name": {
+          "vi": "Sen Đèn Lồng"
+        },
+        "aura": 2
+      },
+      {
+        "from": 25,
+        "frame": "pots/jade-lotus/5",
+        "name": {
+          "vi": "Sen Thủy Tinh"
+        },
+        "aura": 2
+      },
+      {
+        "from": 30,
+        "frame": "pots/jade-lotus/6",
+        "name": {
+          "vi": "Sen Ngân Hà"
+        },
+        "aura": 2
+      },
+      {
+        "from": 35,
+        "frame": "pots/jade-lotus/7",
+        "name": {
+          "vi": "Sen Nguyệt Quế"
+        },
+        "aura": 2
+      },
+      {
+        "from": 40,
+        "frame": "pots/jade-lotus/8",
+        "name": {
+          "vi": "Sen Hằng Nga"
+        },
+        "aura": 2
+      },
+      {
+        "from": 45,
+        "frame": "pots/jade-lotus/9",
+        "name": {
+          "vi": "Sen Trăng Thượng Cổ"
+        },
+        "aura": 2
+      },
+      {
+        "from": 50,
+        "frame": "pots/jade-lotus/10",
+        "name": {
+          "vi": "Sen Trăng Vĩnh Cửu Tối Thượng"
+        },
+        "aura": 2
+      }
+    ],
+    "skills": [
+      {
+        "id": "moonlight",
+        "level": 10,
+        "name": {
+          "vi": "Ánh Trăng Rằm"
+        },
+        "desc": {
+          "vi": "Cơ hội ra quả Biến Dị trong chậu gấp đôi."
+        },
+        "effect": {
+          "kind": "mutationBoost",
+          "multiplier": 2
+        }
+      },
+      {
+        "id": "lotus-call",
+        "level": 20,
+        "name": {
+          "vi": "Sen Gọi Bọ"
+        },
+        "desc": {
+          "vi": "Thu hút Bọ Mây +8%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "attract",
+          "value": 0.08
+        }
+      },
+      {
+        "id": "full-moon",
+        "level": 30,
+        "name": {
+          "vi": "Trăng Tròn"
+        },
+        "desc": {
+          "vi": "Biến Dị ×1,5 nữa."
+        },
+        "effect": {
+          "kind": "mutationBoost",
+          "multiplier": 1.5
+        }
+      },
+      {
+        "id": "silver-tide",
+        "level": 40,
+        "name": {
+          "vi": "Triều Bạc"
+        },
+        "desc": {
+          "vi": "May mắn +8%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "luck",
+          "value": 0.08
+        }
+      },
+      {
+        "id": "moon-goddess",
+        "level": 50,
+        "name": {
+          "vi": "Hằng Nga Ban Phúc"
+        },
+        "desc": {
+          "vi": "Lớn nhanh +6%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "speed",
+          "value": 0.06
         }
       }
-    },
-    "set": "base:set.palace-ceramic"
+    ]
   },
   {
     "id": "base:pot.rosewood",
@@ -191,7 +935,8 @@
         }
       }
     },
-    "set": "base:set.ancient-craft"
+    "set": "base:set.ancient-craft",
+    "group": "shop"
   },
   {
     "id": "base:pot.cloud-puff",
@@ -222,7 +967,8 @@
         }
       }
     },
-    "set": "base:set.sky-treasure"
+    "set": "base:set.sky-treasure",
+    "group": "shop"
   },
   {
     "id": "base:pot.golden-treasure",
@@ -253,6 +999,7 @@
         }
       }
     },
-    "set": "base:set.sky-treasure"
+    "set": "base:set.sky-treasure",
+    "group": "shop"
   }
 ]

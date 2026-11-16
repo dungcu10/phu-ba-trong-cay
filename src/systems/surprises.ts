@@ -9,10 +9,10 @@ import { randomFor } from '../core/rng.ts';
 export type Gift = { kind: 'coins' | 'gems' | 'bug'; amount: number; itemId?: string };
 
 /** The mutation of this harvest, if any. Luck multiplies every chance. Rarest is checked first. */
-export function rollMutation(content: ContentPack, state: GameState, planting: Planting, luck: number): string | null {
+export function rollMutation(content: ContentPack, state: GameState, planting: Planting, luck: number, multiplier = 1): string | null {
   const muts = [...content.surprises.mutations].sort((a, b) => a.chance - b.chance);
   for (const m of muts) {
-    if (randomFor(state.seed, 'mutation', m.id, planting.id, planting.harvestsDone) < m.chance * (1 + luck)) return m.id;
+    if (randomFor(state.seed, 'mutation', m.id, planting.id, planting.harvestsDone) < m.chance * (1 + luck) * multiplier) return m.id;
   }
   return null;
 }

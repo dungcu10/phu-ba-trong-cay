@@ -1,0 +1,52 @@
+[
+  {
+    "id": "base:mat.cloud-clay",
+    "name": {
+      "vi": "Đất Sét Mây"
+    },
+    "desc": {
+      "vi": "Đất sét mịn rơi từ mây. Nguyên liệu chung để chậu vượt mốc tiến hóa. Có khi thu hoạch và từ nhiệm vụ ngày."
+    },
+    "icon": "svg:clay"
+  },
+  {
+    "id": "base:mat.terracotta-shard",
+    "name": {
+      "vi": "Mảnh Gốm Đỏ"
+    },
+    "desc": {
+      "vi": "Mảnh gốm riêng của dòng Chậu Đất Nung. Rơi khi thu hoạch cây trồng trong Chậu Đất Nung."
+    },
+    "icon": "svg:shard-red"
+  },
+  {
+    "id": "base:mat.merit-seal",
+    "name": {
+      "vi": "Ấn Công Trạng"
+    },
+    "desc": {
+      "vi": "Con dấu đồng ghi công người chăm chỉ. Nhận khi xong đủ 3 nhiệm vụ trong ngày. Đổi 5 ấn lấy Đỉnh Đồng Công Trạng."
+    },
+    "icon": "svg:seal"
+  },
+  {
+    "id": "base:mat.bronze-shard",
+    "name": {
+      "vi": "Mảnh Đồng Cổ"
+    },
+    "desc": {
+      "vi": "Mảnh đồng riêng của dòng Đỉnh Đồng Công Trạng. Rơi khi thu hoạch trong chậu đó."
+    },
+    "icon": "svg:shard-bronze"
+  },
+  {
+    "id": "base:mat.moon-seed",
+    "name": {
+      "vi": "Hạt Sen Trăng"
+    },
+    "desc": {
+      "vi": "Hạt sen sáng như trăng rằm. Nhận ở Lễ Hội Trăng Mây; sau lễ hội vẫn rơi khi thu hoạch trong Sen Ngọc Trăng Rằm."
+    },
+    "icon": "svg:moon-seed"
+  }
+]

@@ -1,6 +1,7 @@
 // REDESIGN_V2 windows and bars: floor sign (stars, expansion, pot sets), daily missions,
 // the seed tray at the bottom (drag a seed onto pots), and the bar shown while visiting.
 
+import { itemIcon } from './icons.ts';
 import type { GameSession } from '../app/session.ts';
 import type { MissionDef } from '../core/content.ts';
 import { itemFrame } from '../render/assets.ts';
@@ -9,6 +10,7 @@ import { allMissionsClaimed, dayEndsAt, missionDef } from '../systems/missions.t
 import { helpReward, helpsLeft } from '../systems/visit.ts';
 import { clear, h, icon } from './dom.ts';
 import { Panel } from './panel.ts';
+import { missionPotBox, type PotSystemActions } from './potSystemPanels.ts';
 import { potIcon, shake } from './potPanels.ts';
 import { FAMILY_TEXT, formatClock, formatNumber, formatPercent, STAT_TEXT } from './text.ts';
 import { coin, gem } from './worldPanels.ts';
@@ -76,7 +78,7 @@ export class FloorInfoPanel extends Panel {
       if (p.coins < next.coins) missing.push(`${formatNumber(next.coins - p.coins)} xu`);
       for (const [id, q] of Object.entries(next.items)) {
         const have = state.inventory[id] ?? 0;
-        needs.append(h('span', { class: `need${have < q ? ' short' : ''}` }, icon(itemFrame(content, id), 30), `${have}/${q}`));
+        needs.append(h('span', { class: `need${have < q ? ' short' : ''}` }, itemIcon(content, id, 30), `${have}/${q}`));
         if (have < q) missing.push(`${q - have} ${content.items.get(id)?.name.vi ?? ''}`);
       }
       const ok = missing.length === 0;
@@ -104,13 +106,15 @@ export class MissionsPanel extends Panel {
   constructor(
     private readonly session: GameSession,
     private readonly actions: GardenActions,
+    private readonly potActions: PotSystemActions,
   ) {
     super('Nhiệm Vụ Hôm Nay', 'missions-panel', 'win-wide');
     this.render();
   }
 
   private reward(r: MissionDef['reward']): HTMLElement {
-    return h('span', { class: 'reward' }, r.coins > 0 && h('span', { class: 'tag' }, coin(16), formatNumber(r.coins)), r.xp > 0 && h('span', { class: 'tag xp' }, `${r.xp} XP`), r.gems > 0 && h('span', { class: 'tag' }, gem(16), String(r.gems)));
+    const items = Object.entries(r.items ?? {}).map(([id, q]) => h('span', { class: 'tag', title: this.session.content.items.get(id)?.name.vi ?? '' }, itemIcon(this.session.content, id, 20), String(q)));
+    return h('span', { class: 'reward' }, r.coins > 0 && h('span', { class: 'tag' }, coin(16), formatNumber(r.coins)), r.xp > 0 && h('span', { class: 'tag xp' }, `${r.xp} XP`), r.gems > 0 && h('span', { class: 'tag' }, gem(16), String(r.gems)), ...items);
   }
 
   render(): void {
@@ -144,6 +148,8 @@ export class MissionsPanel extends Panel {
       : h('button', { class: `candy ${all ? 'primary' : 'blocked'}`, 'data-test': 'claim-mission-bonus', onclick: () => (all ? this.actions.claimMissionBonus() : shake(bonusBtn)) }, 'Nhận quà');
     list.append(h('div', { class: 'mission bonus' }, h('span', { class: 'mission-main' }, h('strong', {}, 'Xong cả 3 nhiệm vụ'), h('span', { class: 'note' }, 'Quà thêm cho người chăm chỉ')), this.reward(bonus), bonusBtn));
     this.body.append(list);
+    const pots = missionPotBox(this.session, this.potActions);
+    if (pots) this.body.append(pots);
   }
 }
 

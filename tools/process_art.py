@@ -140,7 +140,17 @@ CROPS = {
     "golden-gerbera": ("C6_hoa-dong-tien-vang.jpg", [0, 1, 2, 3, 4], ()),
     "cotton-daisy": ("C1_cuc-bong-gon.jpg", [0, 1, 2, 4, 5], (790,)),
 }
-CROP_FRAME = (192, 240)  # @2x frame, anchor at bottom centre (plant base)
+CROP_FRAME = (192, 240)
+
+# Background-cut thresholds per sheet: pale pots (porcelain, jade) sit close to the grey backdrop.
+POT_CUT = {"porcelain": (7, 15), "jade-lotus": (7, 15), "bronze-tripod": (16, 32)}
+
+POT_SHEETS = {
+    "terracotta": "P15_dat-nung_3bac.jpg",
+    "porcelain": "P10_bo-gom-su_3bac.jpg",
+    "jade-lotus": "P11_sen-ngoc_3bac.jpg",
+    "bronze-tripod": "P12_dinh-dong_3bac.jpg",
+}  # @2x frame, anchor at bottom centre (plant base)
 
 
 def crop_frames(previews: list[tuple[str, Image.Image]]) -> dict[str, tuple[Image.Image, tuple[float, float]]]:
@@ -166,15 +176,21 @@ def crop_frames(previews: list[tuple[str, Image.Image]]) -> dict[str, tuple[Imag
 
 def world_frames(previews: list[tuple[str, Image.Image]]) -> dict[str, tuple[Image.Image, tuple[float, float]]]:
     frames = {}
-    pots = cutout(Image.open(SRC / "P1-P3_chau-dat-nung.jpg"), shadow_weight=0.0, t0=20, t1=40)
-    previews.append(("pots", pots))
-    segs = segments(pots)
-    assert len(segs) == 3, f"chậu: {len(segs)} hình"
-    pot_parts = [crop_x(pots, *s) for s in segs]
-    pscale = 200 / max(p.width for p in pot_parts)
-    # Level → appearance tier (DESIGN_SYSTEM 7): 1–2 tier 1, 3–4 tier 2, 5 tier 3.
-    for level, tier in {1: 0, 2: 0, 3: 1, 4: 1, 5: 2}.items():
-        frames[f"pots/terracotta/{level}"] = (bottom_canvas(pot_parts[tier], 200, 180, pscale), (0.5, 1.0))
+    # Pot lines (docs/POT_SYSTEM.md): each sheet holds one line's evolution looks, left to right,
+    # cut into pots/<line>/<look index>. All looks of a line share one scale so they read as one pot.
+    for line, fname in POT_SHEETS.items():
+        path = SRC / fname
+        if not path.exists():
+            print(f"  ! thiếu ảnh gốc {fname} — bỏ qua {line}")
+            continue
+        sheet = cutout(Image.open(path), shadow_weight=0.0, t0=POT_CUT.get(line, (20, 40))[0], t1=POT_CUT.get(line, (20, 40))[1], fill_solid=True)
+        previews.append((f"pot-{line}", sheet))
+        segs = segments(sheet, min_gap=10, min_width=120)
+        assert len(segs) == 3, f"{fname}: {len(segs)} hình"
+        parts = [crop_x(sheet, *s) for s in segs]
+        pscale = 200 / max(p.width for p in parts)
+        for i, part in enumerate(parts):
+            frames[f"pots/{line}/{i}"] = (bottom_canvas(part, 220, 220, pscale), (0.5, 1.0))
 
     bug = cutout(Image.open(SRC / "B1_bo-rua-may.jpg"))
     previews.append(("bug", bug))

@@ -3,7 +3,7 @@
 import { svgIcon } from './icons.ts';
 import type { GameSession } from '../app/session.ts';
 import type { FloorDef, PotDef, PotLevelDef } from '../core/content.ts';
-import { atlasData } from '../render/assets.ts';
+import { atlasData, potFrame } from '../render/assets.ts';
 import { clear, h, icon } from './dom.ts';
 import { Panel } from './panel.ts';
 import { FAMILY_TEXT, formatNumber, formatPercent, RARITY_MARKS, RARITY_TEXT, STAT_TEXT } from './text.ts';
@@ -11,19 +11,17 @@ import { FAMILY_TEXT, formatNumber, formatPercent, RARITY_MARKS, RARITY_TEXT, ST
 export interface PotShopActions {
   buyPot(potId: string): void;
   unlockFloor(floorId: string): void;
+  openCollection(): void;
 }
 
 const coin = (size = 18) => svgIcon('coin', size + 4);
 
 /** Pot picture: its own art when made, otherwise the terracotta of the same tier ("chờ đồ họa"). */
 export function potIcon(def: PotDef, level: number, size: number): HTMLElement {
-  const own = `${def.sprite}/${level}`;
-  const tier = level >= 5 ? 5 : level >= 3 ? 3 : 1;
-  const hasOwn = Boolean(atlasData.sprites.frames[own]);
-  const frame = hasOwn ? own : `pots/terracotta/${tier}`;
-  const img = icon(frame, size);
-  // Stand-in colour per pot type until its own picture exists (chờ đồ họa §11.7).
-  if (!hasOwn && def.sprite !== 'pots/terracotta') img.classList.add('pot-standin', `tint-${def.rarity}`);
+  const frame = potFrame(def, level, (f) => Boolean(atlasData.sprites.frames[f]));
+  const img = icon(frame ?? 'pots/terracotta/0', size);
+  // Stand-in colour per line until its own picture exists (chờ đồ họa).
+  if (!frame) img.classList.add('pot-standin', `tint-${def.rarity}`);
   return h('span', { class: `pot-ring ${def.rarity}` }, img);
 }
 
@@ -57,10 +55,10 @@ export class PotShopPanel extends Panel {
     clear(this.body);
     const { content, state } = this.session;
     const owned = (id: string) => Object.values(state.pots).filter((p) => p.potId === id).length;
-    this.body.append(h('p', { class: 'lead' }, `Chậu mua về nằm trong kho chậu (${state.potStock.length}). Chạm vào chậu trống trên tầng để đặt.`));
+    this.body.append(h('div', { class: 'book-head' }, h('span', { class: 'lead' }, `Chậu mua về nằm trong kho chậu (${state.potStock.length}). Chạm vào chậu trống trên tầng để đặt.`), h('button', { class: 'candy small gold', 'data-test': 'open-collection', onclick: () => this.actions.openCollection() }, 'Bộ Sưu Tập Chậu')));
     const shelf = h('div', { class: 'shelf' });
     for (const def of content.potList) {
-      if (def.price === null) continue;
+      if (def.price === null || def.group !== 'shop') continue;
       const locked = def.unlockLevel > state.player.level;
       const poor = def.price > state.player.coins;
       shelf.append(
@@ -78,7 +76,7 @@ export class PotShopPanel extends Panel {
           h('span', { class: 'pack-name' }, def.name.vi),
           rarityChip(def.rarity),
           statLines(def.levels[0]!),
-          h('span', { class: 'pack-info' }, `Tối đa cấp ${def.levels.length} · đang có ${owned(def.id)}`),
+          h('span', { class: 'pack-info' }, `${def.openTo < def.levels.length ? `Mở tới cấp ${def.openTo}/${def.levels.length}` : `Tối đa cấp ${def.levels.length}`} · đang có ${owned(def.id)}`),
           h('span', { class: 'tag' }, coin(), formatNumber(def.price)),
           locked && h('span', { class: 'cloth' }, `Mở ở cấp ${def.unlockLevel}`),
         ),

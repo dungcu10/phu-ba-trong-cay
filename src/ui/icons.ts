@@ -3,6 +3,9 @@
 // Colours come from the design tokens. Each call returns a fresh <svg> with unique gradient ids.
 
 import { TOKENS } from './tokens.ts';
+import type { ContentPack } from '../core/content.ts';
+import { itemFrame } from '../render/assets.ts';
+import { icon } from './dom.ts';
 
 const C = TOKENS.color;
 const OUT = C.ui.wood;
@@ -117,10 +120,48 @@ export const ICONS = {
        <path d="M6 24h52M16 10l8 14 8-14 8 14 8-14M24 24l8 32 8-32" fill="none" stroke="${shade(C.brand.jade, -0.55)}" stroke-width="2"/>
        <path d="M24 24h16l-8 32z" fill="${f('d')}" stroke="none" opacity="0.6"/>
        ${shine(20, 16, 5, 2.4)}`),
+  moon: (s: number) =>
+    svg(s, { m: g(C.brand.gold), l: g(C.brand.jade), c: g(C.ui.paper) }, (f) =>
+      `<path d="M38 6a26 26 0 1 0 20 38A22 22 0 1 1 38 6z" fill="${f('m')}"/>
+       <path d="M14 52c4-6 10-8 16-6-2 6-10 9-16 6zM30 46c2-6 8-9 14-8-2 6-8 9-14 8z" fill="${f('l')}" stroke-width="2.5"/>
+       <circle cx="50" cy="14" r="3" fill="${f('c')}" stroke-width="2"/><circle cx="56" cy="26" r="2" fill="${f('c')}" stroke-width="1.5"/>
+       ${shine(24, 20, 4, 8, 20)}`),
+  clay: (s: number) =>
+    svg(s, { c: g('#C98A5E'), d: g('#A8693F') }, (f) =>
+      `<path d="M10 44c0-12 10-22 22-22s22 10 22 22c0 6-10 10-22 10S10 50 10 44z" fill="${f('c')}"/>
+       <path d="M18 40c4-6 10-9 14-9M30 46c6 0 12-2 15-6" fill="none" stroke="${shade('#C98A5E', -0.35)}" stroke-width="2.5"/>
+       <path d="M40 18c4-4 10-4 12 0-3 2-8 3-12 0zM12 22c3-3 8-3 10 0-3 2-7 2-10 0z" fill="#fff" stroke-width="2" opacity="0.9"/>
+       ${shine(24, 30, 6, 2.5)}`),
+  'shard-red': (s: number) =>
+    svg(s, { a: g('#E0704C'), b: g('#C2532F') }, (f) =>
+      `<path d="M14 40 26 10l12 8-6 30z" fill="${f('a')}"/><path d="M34 52l6-24 14 6-4 22z" fill="${f('b')}"/>
+       <path d="M20 30c3-2 6-2 9 0" fill="none" stroke="${C.brand.gold}" stroke-width="2.5"/>${shine(24, 18, 3, 6, 20)}`),
+  'shard-bronze': (s: number) =>
+    svg(s, { a: g('#C8933F'), b: g('#8E6A2C') }, (f) =>
+      `<path d="M12 42 24 12l14 6-6 32z" fill="${f('a')}"/><path d="M34 52l8-26 12 8-6 20z" fill="${f('b')}"/>
+       <path d="M18 32c4-3 8-3 12 0" fill="none" stroke="${C.brand.jade}" stroke-width="2.5"/>${shine(22, 20, 3, 6, 20)}`),
+  seal: (s: number) =>
+    svg(s, { b: g('#C8933F'), r: g(C.ui.danger), gold: g(C.brand.gold) }, (f) =>
+      `<rect x="22" y="6" width="20" height="22" rx="6" fill="${f('b')}"/>
+       <rect x="12" y="26" width="40" height="28" rx="6" fill="${f('gold')}"/>
+       <rect x="18" y="32" width="28" height="16" rx="3" fill="${f('r')}" stroke-width="2.5"/>
+       <path d="M24 40h16M32 35v10" stroke="#fff" stroke-width="2.5"/>${shine(28, 10, 4, 2, 0)}`),
+  'moon-seed': (s: number) =>
+    svg(s, { s: g('#F4EEDC'), m: g(C.brand.gold), l: g(C.brand.jade) }, (f) =>
+      `<path d="M32 8c10 0 18 10 18 24S42 56 32 56 14 46 14 32 22 8 32 8z" fill="${f('s')}"/>
+       <path d="M36 18a12 12 0 1 0 6 22 10 10 0 1 1-6-22z" fill="${f('m')}" stroke-width="2.5"/>
+       <path d="M32 8c-2-4 2-6 6-4-1 3-3 4-6 4z" fill="${f('l')}" stroke-width="2"/>${shine(24, 20, 4, 7, 15)}`),
 };
 
 export type IconName = keyof typeof ICONS;
 
 export function svgIcon(name: IconName, size: number): SVGSVGElement {
   return ICONS[name](size);
+}
+
+/** Icon of any item: vector art for materials ("svg:<name>"), atlas art for produce and bugs. */
+export function itemIcon(content: ContentPack, itemId: string, size: number): Element {
+  const mat = content.materials.get(itemId);
+  if (mat?.icon.startsWith('svg:') && mat.icon.slice(4) in ICONS) return svgIcon(mat.icon.slice(4) as IconName, size);
+  return icon(itemFrame(content, itemId), size);
 }

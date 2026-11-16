@@ -19,5 +19,39 @@
   "floorStarBonus": {
     "speed": 0.05,
     "xp": 0.05
-  }
+  },
+  "bonusCaps": {
+    "speed": 0.6,
+    "yield": 1.0,
+    "xp": 1.0,
+    "luck": 1.0,
+    "attract": 1.0,
+    "care": 1.5
+  },
+  "harvestMaterial": {
+    "item": "base:mat.cloud-clay",
+    "chance": 0.04
+  },
+  "collectionRewards": [
+    {
+      "lines": 2,
+      "gems": 2
+    },
+    {
+      "lines": 3,
+      "gems": 3
+    },
+    {
+      "lines": 4,
+      "gems": 4
+    },
+    {
+      "lines": 5,
+      "gems": 6
+    },
+    {
+      "lines": 7,
+      "gems": 10
+    }
+  ]
 }

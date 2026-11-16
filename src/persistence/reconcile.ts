@@ -162,6 +162,22 @@ function reconcileWorld(state: GameState, content: ContentPack, c: Checker): voi
   }
   state.neighbors = neighbors;
 
+  // Pot collection and event progress (POT_SYSTEM 8).
+  if (!state.potBook || typeof state.potBook !== 'object') state.potBook = {};
+  for (const p of Object.values(state.pots)) {
+    if (!Array.isArray(p.history)) p.history = [];
+    const e = state.potBook[p.potId];
+    if (!e) state.potBook[p.potId] = { firstAt: p.obtainedAt ?? state.createdAt, bestLevel: p.level };
+    else e.bestLevel = Math.max(e.bestLevel || 1, p.level);
+  }
+  state.potBookClaimed = c.num('thưởng bộ sưu tập', state.potBookClaimed, { min: 0, max: content.config.collectionRewards?.length ?? 0, int: true, fallback: 0 });
+  const events: GameState['events'] = {};
+  for (const ev of content.events) {
+    const e = state.events?.[ev.id];
+    if (e) events[ev.id] = { points: Math.max(0, Math.floor(Number(e.points)) || 0), claimed: Math.max(0, Math.min(ev.milestones.length, Math.floor(Number(e.claimed)) || 0)) };
+  }
+  state.events = events;
+
   const m = state.missions;
   const valid = m && typeof m.day === 'number' && Array.isArray(m.list) && m.list.every((x) => x && content.missions.pool.some((d) => d.id === x.id));
   if (!valid) state.missions = { day: -1, list: [], bonusClaimed: false };

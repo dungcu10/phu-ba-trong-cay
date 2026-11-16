@@ -16,7 +16,7 @@ export function makeDemo(session: GameSession, view: GameView, controller: Contr
     return r.ok;
   };
   const click = (test: string) => (document.querySelector(`[data-test="${test}"]`) as HTMLElement | null)?.click();
-  const closePanels = () => document.querySelectorAll<HTMLElement>('.veil .knob.close').forEach((b) => b.click());
+  const closePanels = () => document.querySelectorAll<HTMLElement>('.veil .knob.close, .celebrate').forEach((b) => (b.classList.contains('celebrate') ? b.dispatchEvent(new Event('pointerdown')) : b.click()));
 
   const setup = () => {
     const { content, state } = session;
@@ -56,7 +56,7 @@ export function makeDemo(session: GameSession, view: GameView, controller: Contr
   };
 
   return (step: string) => {
-    closePanels();
+    if (step !== 'pot-upgrade') closePanels();
     switch (step) {
       case 'garden':
         setup();
@@ -95,6 +95,52 @@ export function makeDemo(session: GameSession, view: GameView, controller: Contr
       }
       case 'home':
         controller.goHome();
+        return true;
+      case 'pots': {
+        // Pot line review: terracotta at 1, 3, 5, 7, 10 and the mission and event pots at 1/5/10.
+        const { state } = session;
+        state.player.level = 14;
+        const f = state.floors[0]!;
+        while (f.slots.length < 10) run({ type: 'expandFloor', floor: 0 });
+        const plan: Array<[string, number]> = [
+          ['base:pot.terracotta', 1], ['base:pot.terracotta', 3], ['base:pot.terracotta', 5], ['base:pot.terracotta', 7], ['base:pot.terracotta', 10],
+          ['base:pot.bronze-tripod', 1], ['base:pot.bronze-tripod', 5], ['base:pot.bronze-tripod', 10], ['base:pot.jade-lotus', 5], ['base:pot.jade-lotus', 10],
+        ];
+        f.slots.forEach((sl, i) => {
+          sl.planting = null;
+          const [potId, level] = plan[i]!;
+          state.pots[sl.potInstanceId] = { potId, level, history: [{ level, at: session.now() }], source: 'old-save' };
+          state.potBook[potId] = { firstAt: session.now(), bestLevel: Math.max(level, state.potBook[potId]?.bestLevel ?? 1) };
+        });
+        controller.resync();
+        view.focusFloor(0, 1);
+        return true;
+      }
+      case 'pot-panel': {
+        const { state, content } = session;
+        const sl = state.floors[0]!.slots[3]!;
+        const pot = state.pots[sl.potInstanceId]!;
+        pot.level = 9;
+        const cost = content.pots.get(pot.potId)!.levels[9]!.upgradeCost!;
+        state.player.coins += cost.coins;
+        for (const [id, q] of Object.entries(cost.items)) state.inventory[id] = (state.inventory[id] ?? 0) + q;
+        controller.resync();
+        controller.openBench({ floor: 0, slot: 3 });
+        return true;
+      }
+      case 'pot-upgrade':
+        (document.querySelector('[data-test="upgrade-pot"]') as HTMLElement | null)?.click();
+        return true;
+      case 'collection':
+        controller.openCollection();
+        return true;
+      case 'event':
+        session.state.events['base:event.moon-festival'] = { points: 118, claimed: 2 };
+        click('open-event');
+        return true;
+      case 'mission-pot':
+        session.state.inventory['base:mat.merit-seal'] = 3;
+        click('open-missions');
         return true;
       default:
         return false;

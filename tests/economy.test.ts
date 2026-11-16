@@ -114,7 +114,11 @@ test('nâng chậu: thiếu bọ hoặc đã cấp tối đa thì bị từ ch�
   const pot = s.floors[0]!.slots[0]!.potInstanceId;
   assert.deepEqual(dispatch(content, s, { type: 'upgradePot', potInstanceId: pot }, T0), { ok: false, error: 'not_enough_items' });
   assert.equal(s.player.coins, 99999);
-  s.inventory[BUG] = 100;
-  for (let i = 0; i < 4; i++) assert.ok(dispatch(content, s, { type: 'upgradePot', potInstanceId: pot }, T0).ok);
-  assert.deepEqual(dispatch(content, s, { type: 'upgradePot', potInstanceId: pot }, T0), { ok: false, error: 'max_level' });
+  s.inventory[BUG] = 1000;
+  for (const id of content.materials.keys()) s.inventory[id] = 1000;
+  s.player.level = 30;
+  const def = content.pots.get(s.pots[pot]!.potId)!;
+  for (let i = 1; i < def.openTo; i++) assert.ok(dispatch(content, s, { type: 'upgradePot', potInstanceId: pot }, T0).ok);
+  // Levels past what this build opens are designed but locked; never past the last level.
+  assert.deepEqual(dispatch(content, s, { type: 'upgradePot', potInstanceId: pot }, T0), { ok: false, error: 'level_not_open' });
 });

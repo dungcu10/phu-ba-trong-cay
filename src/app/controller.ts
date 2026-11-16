@@ -6,7 +6,10 @@ import type { GameView } from '../render/scene.ts';
 import { itemFrame } from '../render/assets.ts';
 import type { Art } from '../render/assets.ts';
 import { Hud } from '../ui/hud.ts';
-import { Panel, PotPanel, SeedPanel, StoragePanel, type PanelActions } from '../ui/panels.ts';
+import { Panel, SeedPanel, StoragePanel, type PanelActions } from '../ui/panels.ts';
+import { EventPanel, PotCollectionPanel, PotPanel, type PotSystemActions } from '../ui/potSystemPanels.ts';
+import { potIcon } from '../ui/potPanels.ts';
+import { potLook } from '../systems/pots.ts';
 import { SettingsPanel } from '../ui/settings.ts';
 import { FloorPanel, PotShopPanel, type PotShopActions } from '../ui/potPanels.ts';
 import { JournalPanel, LettersPanel, NeighborsPanel, OrdersPanel, StallPanel, type WorldActions } from '../ui/worldPanels.ts';
@@ -23,7 +26,7 @@ import type { Sfx } from './sfx.ts';
 /** How often the world is advanced while the game is open (orders return, neighbours act). */
 const TICK_MS = 5000;
 
-export class Controller implements PanelActions, PotShopActions, WorldActions, GardenActions, SeedTrayActions {
+export class Controller implements PanelActions, PotShopActions, WorldActions, GardenActions, SeedTrayActions, PotSystemActions {
   readonly toasts = new Toasts();
   readonly hud: Hud;
   private panel: Panel | null = null;
@@ -50,7 +53,8 @@ export class Controller implements PanelActions, PotShopActions, WorldActions, G
       openOrders: () => this.open(new OrdersPanel(this.session, this)),
       openStall: () => this.open(new StallPanel(this.session, this)),
       openNeighbors: () => this.open(new NeighborsPanel(this.session, (botId) => this.visit(botId))),
-      openMissions: () => this.open(new MissionsPanel(this.session, this)),
+      openMissions: () => this.open(new MissionsPanel(this.session, this, this)),
+      openEvent: () => this.open(new EventPanel(this.session, this)),
       toggleTray: () => this.toggleTray(),
       openJournal: () => this.open(new JournalPanel(this.session, this)),
       openLetters: () => {
@@ -136,8 +140,8 @@ export class Controller implements PanelActions, PotShopActions, WorldActions, G
   }
 
   /** Big ribbon across the screen; tap or wait to dismiss (DESIGN_SYSTEM 6.8). */
-  private celebrate(title: string, sub: string): void {
-    const el = h('div', { class: 'celebrate', 'data-test': 'celebrate' }, h('div', { class: 'ribbon-big' }, h('h2', {}, title), sub && h('p', {}, sub)));
+  private celebrate(title: string, sub: string, art: HTMLElement | null = null): void {
+    const el = h('div', { class: 'celebrate', 'data-test': 'celebrate' }, art && h('div', { class: 'celebrate-art' }, art), h('div', { class: 'ribbon-big' }, h('h2', {}, title), sub && h('p', {}, sub)));
     const close = () => {
       el.classList.add('out');
       setTimeout(() => el.remove(), 300);
@@ -216,6 +220,25 @@ export class Controller implements PanelActions, PotShopActions, WorldActions, G
 
   claimMissionBonus(): void {
     this.run({ type: 'claimMissionBonus' });
+  }
+
+  // --- Pot system (POT_SYSTEM) -----------------------------------------------------------------
+
+  obtainPot(potId: string): void {
+    this.run({ type: 'obtainPot', potId });
+  }
+
+  claimEventMilestone(eventId: string): void {
+    this.run({ type: 'claimEventMilestone', eventId });
+  }
+
+  claimBookReward(): void {
+    this.run({ type: 'claimBookReward' });
+  }
+
+  openCollection(): void {
+    this.sfx.play('tap');
+    this.openPanel(new PotCollectionPanel(this.session, this));
   }
 
   // --- Visiting a neighbour's garden ---------------------------------------------------------
@@ -430,15 +453,46 @@ export class Controller implements PanelActions, PotShopActions, WorldActions, G
         this.toasts.show(`Đã bán ${e.qty} ${content.items.get(e.itemId)?.name.vi ?? ''}: +${formatNumber(e.coins)} xu`, 'success', 1800);
         break;
       case 'potUpgraded': {
-        this.sfx.play('upgrade');
+        this.sfx.play(e.milestone ? 'levelUp' : 'upgrade');
         const ref = this.findPot(e.potInstanceId);
         if (ref) {
           const p = at(ref);
-          fx.burst(this.view.dot, p.x, p.y + 60, 12, { scale: 0.45, tint: hex(TOKENS.color.brand.gold) });
+          // Materials gather into the pot, it flashes, then the new look pops (SlotView).
+          for (let i = 0; i < 10; i++) {
+            const a = (i / 10) * Math.PI * 2;
+            fx.fly(this.view.dot, { x: p.x + Math.cos(a) * 160, y: p.y + 60 + Math.sin(a) * 90 }, { x: p.x, y: p.y + 60 }, i * 25, 0.5);
+          }
+          this.view.slotView(ref.floor, ref.slot).bloom();
+          fx.burst(this.view.dot, p.x, p.y + 60, e.milestone ? 26 : 12, { scale: 0.5, speed: e.milestone ? 420 : 260, tint: hex(TOKENS.color.brand.gold) });
           fx.floatText(`Chậu cấp ${e.level}!`, p.x, p.y, hex(TOKENS.color.brand.gold));
+        }
+        const pot = this.session.state.pots[e.potInstanceId];
+        const def = pot && content.pots.get(pot.potId);
+        if (def && (e.milestone || e.skills.length > 0)) {
+          const skills = def.skills.filter((s) => e.skills.includes(s.id)).map((s) => `Kỹ năng mới: ${s.name.vi} — ${s.desc.vi}`);
+          this.celebrate(e.milestone ? `Tiến hóa: ${potLook(def, e.level).look?.name.vi ?? ''}` : `${def.name.vi} cấp ${e.level}`, skills.join(' '), potIcon(def, e.level, 150));
         }
         break;
       }
+      case 'potObtained': {
+        this.sfx.play('levelUp');
+        const def = content.pots.get(e.potId)!;
+        this.celebrate(`Nhận chậu mới: ${def.name.vi}`, `${e.source === 'event' ? 'Chậu sự kiện — giữ mãi mãi.' : 'Chậu nhiệm vụ.'} Đã vào kho chậu: chạm một chậu trống để đặt.`, potIcon(def, 1, 160));
+        break;
+      }
+      case 'materialFound': {
+        const p = at(e.slot);
+        fx.floatText(`+${e.qty} ${content.items.get(e.itemId)?.name.vi ?? ''}`, p.x, p.y - 90, hex(TOKENS.color.brand.peach));
+        break;
+      }
+      case 'eventMilestoneClaimed':
+        this.sfx.play('coin');
+        if (!e.pot) this.toasts.show('Đã nhận quà lễ hội!', 'success', 2000);
+        break;
+      case 'bookRewardClaimed':
+        this.sfx.play('coin');
+        this.toasts.show(`Bộ sưu tập ${e.lines} dòng chậu: +${e.gems} Ngọc Mây`, 'level', 2600);
+        break;
       case 'floorUnlocked':
         this.sfx.play('levelUp');
         this.view.syncFloors();
@@ -451,8 +505,9 @@ export class Controller implements PanelActions, PotShopActions, WorldActions, G
         break;
       case 'potPlaced': {
         this.sfx.play('upgrade');
+        this.view.slotView(e.slot.floor, e.slot.slot).dropIn();
         const p = at(e.slot);
-        fx.burst(this.view.dot, p.x, p.y + 60, 10, { scale: 0.45, tint: hex(TOKENS.color.brand.jade) });
+        setTimeout(() => fx.burst(this.view.dot, p.x, p.y + 90, 14, { scale: 0.45, speed: 240, tint: hex(TOKENS.color.ui.paper) }), 380);
         break;
       }
       case 'giftFound': {

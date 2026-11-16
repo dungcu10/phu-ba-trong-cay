@@ -1,0 +1,68 @@
+[
+  {
+    "id": "base:event.moon-festival",
+    "name": {
+      "vi": "Lễ Hội Trăng Mây"
+    },
+    "desc": {
+      "vi": "Trăng rằm trên mây: thu hoạch, giao đơn, làm nhiệm vụ và giúp hàng xóm để tích điểm Trăng. Mốc 100 điểm tặng Chậu Sen Ngọc Trăng Rằm giữ mãi mãi."
+    },
+    "startsAt": "2026-11-16T00:00:00+07:00",
+    "endsAt": "2026-12-14T00:00:00+07:00",
+    "points": {
+      "harvest": 1,
+      "deliverOrder": 4,
+      "missionClaimed": 3,
+      "neighborHelped": 2
+    },
+    "milestones": [
+      {
+        "points": 15,
+        "reward": {
+          "coins": 200
+        }
+      },
+      {
+        "points": 35,
+        "reward": {
+          "items": {
+            "base:mat.moon-seed": 3
+          }
+        }
+      },
+      {
+        "points": 60,
+        "reward": {
+          "gems": 2,
+          "items": {
+            "base:mat.cloud-clay": 2
+          }
+        }
+      },
+      {
+        "points": 100,
+        "reward": {
+          "pot": "base:pot.jade-lotus"
+        }
+      },
+      {
+        "points": 150,
+        "reward": {
+          "items": {
+            "base:mat.moon-seed": 6,
+            "base:mat.cloud-clay": 3
+          }
+        }
+      },
+      {
+        "points": 220,
+        "reward": {
+          "gems": 5,
+          "items": {
+            "base:mat.moon-seed": 8
+          }
+        }
+      }
+    ]
+  }
+]

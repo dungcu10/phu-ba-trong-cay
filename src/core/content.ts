@@ -2,8 +2,8 @@
 // Game rules never mention a specific crop, pot or floor: everything comes from these definitions.
 
 export type LocalizedText = { vi: string; en?: string };
-export type PotStatName = 'speed' | 'yield' | 'xp' | 'attract' | 'luck';
-export const POT_STATS: PotStatName[] = ['speed', 'yield', 'xp', 'attract', 'luck'];
+export type PotStatName = 'speed' | 'yield' | 'xp' | 'attract' | 'luck' | 'care';
+export const POT_STATS: PotStatName[] = ['speed', 'yield', 'xp', 'attract', 'luck', 'care'];
 
 export interface GameConfig {
   startingCoins: number;
@@ -17,6 +17,12 @@ export interface GameConfig {
   potAffinityBonus: number;
   /** Bonus per floor star for every pot on that floor. */
   floorStarBonus?: Partial<Record<PotStatName, number>>;
+  /** Highest total bonus per stat after every source is added (POT_SYSTEM 5: no endless stacking). */
+  bonusCaps?: Partial<Record<PotStatName, number>>;
+  /** Gems for owning N different pot lines (claimed in order). */
+  collectionRewards?: Array<{ lines: number; gems: number }>;
+  /** Chance per harvest to find a common upgrade material (scaled by luck). */
+  harvestMaterial?: { item: string; chance: number };
 }
 
 export interface FloorDef {
@@ -54,14 +60,14 @@ export interface MissionDef {
   target: number;
   name: LocalizedText;
   minLevel: number;
-  reward: { coins: number; xp: number; gems: number };
+  reward: { coins: number; xp: number; gems: number; items?: Record<string, number> };
 }
 
 export interface MissionsConfig {
   perDay: number;
   /** Days change at local midnight of this UTC offset (Việt Nam = 7). */
   utcOffsetHours: number;
-  allDone: { coins: number; xp: number; gems: number };
+  allDone: { coins: number; xp: number; gems: number; items?: Record<string, number> };
   pool: MissionDef[];
 }
 
@@ -85,18 +91,97 @@ export interface PotLevelRule {
   items: Record<string, { base: number; growth: number }>;
 }
 
+/** Where a pot line comes from (POT_SYSTEM 1). */
+export type PotGroup = 'shop' | 'daily' | 'weekly' | 'monthly' | 'challenge' | 'event' | 'crafted';
+export const POT_GROUPS: PotGroup[] = ['shop', 'daily', 'weekly', 'monthly', 'challenge', 'event', 'crafted'];
+
+/** Level 1–50 growth of one pot line, expanded into explicit levels at load time (POT_SYSTEM 3). */
+export interface PotGrowth {
+  maxLevel: number;
+  /** Levels playable in this build; the rest are designed but locked ("chưa mở"). */
+  openTo: number;
+  /** value(L) = from + (to - from) * ((L-1)/(max-1))^curve */
+  curve: number;
+  stats: Partial<Record<PotStatName, [number, number]>>;
+  coins: { base: number; growth: number };
+  materials: Array<{ item: string; from: number; base: number; growth: number }>;
+  /** Extra items needed to reach an evolution milestone level ("5", "10", ...). */
+  milestones: Record<string, Record<string, number>>;
+  /** Player level needed to upgrade into each 5-level stage (index 0 = levels 1–5). */
+  stagePlayerLevel: number[];
+}
+
+/** Appearance from a level on: art frame and the effect tier (0 none, 1 glow, 2 aura + sparkles). */
+export interface PotLook {
+  from: number;
+  frame: string;
+  name: LocalizedText;
+  aura: 0 | 1 | 2;
+}
+
+export type PotSkillEffect =
+  | { kind: 'stat'; stat: PotStatName; value: number }
+  | { kind: 'doubleYield'; chance: number }
+  | { kind: 'mutationBoost'; multiplier: number };
+
+export interface PotSkill {
+  id: string;
+  level: number;
+  name: LocalizedText;
+  desc: LocalizedText;
+  effect: PotSkillEffect;
+}
+
 export interface PotDef {
   id: string;
   name: LocalizedText;
+  description?: LocalizedText;
+  group: PotGroup;
+  /** How players get it, shown in the pot window and the collection. */
+  source?: LocalizedText;
   rarity: string;
   sprite: string;
-  /** Coins to buy one at the pot shop; null = not sold. */
+  /** Coins to buy one at the pot shop; null = not sold. Only shop pots may have a price. */
   price: number | null;
   unlockLevel: number;
   favoredFamily: string | null;
   /** Pot set (REDESIGN_V2 2.2), or null. */
   set: string | null;
+  /** Main growth direction, for the collection and balance checks. */
+  focus?: PotStatName;
+  /** Line-specific upgrade material found when harvesting in a pot of this line. */
+  shard?: { item: string; chance: number };
+  /** How a non-shop pot is obtained by exchange (mission seals, crafting recipe). */
+  exchange?: { items: Record<string, number> };
   levels: PotLevelDef[];
+  /** Highest level that can be reached in this build. */
+  openTo: number;
+  /** Player level needed to upgrade TO each level (index = level - 1). */
+  levelReq: number[];
+  looks: PotLook[];
+  skills: PotSkill[];
+}
+
+/** Expands a 50-level growth rule into explicit levels (POT_SYSTEM 3). Costs are rounded. */
+export function expandPotGrowth(g: PotGrowth): PotLevelDef[] {
+  const levels: PotLevelDef[] = [];
+  for (let lv = 1; lv <= g.maxLevel; lv++) {
+    const k = g.maxLevel > 1 ? Math.pow((lv - 1) / (g.maxLevel - 1), g.curve) : 1;
+    const stats: Partial<Record<PotStatName, number>> = {};
+    for (const [stat, [a, b]] of Object.entries(g.stats) as Array<[PotStatName, [number, number]]>) {
+      const v = Math.round((a + (b - a) * k) * 1000) / 1000;
+      if (v > 0) stats[stat] = v;
+    }
+    let upgradeCost: UpgradeCost | null = null;
+    if (lv > 1) {
+      const items: Record<string, number> = {};
+      for (const m of g.materials) if (lv >= m.from) items[m.item] = Math.max(1, Math.round(m.base * Math.pow(m.growth, lv - m.from)));
+      for (const [id, q] of Object.entries(g.milestones[String(lv)] ?? {})) items[id] = (items[id] ?? 0) + q;
+      upgradeCost = { coins: Math.round(g.coins.base * Math.pow(g.coins.growth, lv - 2)), items };
+    }
+    levels.push({ level: lv, stats, upgradeCost });
+  }
+  return levels;
 }
 
 /** Expands a level rule into explicit levels (rounded so displays stay tidy). */
@@ -198,10 +283,41 @@ export interface NeighborsConfig {
   bots: BotDef[];
 }
 
+export interface MaterialDef {
+  id: string;
+  name: LocalizedText;
+  desc: LocalizedText;
+  /** Icon frame in the sprite atlas, or a built-in vector icon name ("svg:clay"). */
+  icon: string;
+}
+
+export type EventPointSource = 'harvest' | 'deliverOrder' | 'missionClaimed' | 'neighborHelped';
+
+export interface EventReward {
+  coins?: number;
+  gems?: number;
+  items?: Record<string, number>;
+  /** A pot line given to keep forever. */
+  pot?: string;
+}
+
+export interface EventDef {
+  id: string;
+  name: LocalizedText;
+  desc: LocalizedText;
+  /** ISO times with offset, e.g. "2026-11-16T00:00:00+07:00"; parsed into start/end ms. */
+  startsAt: string;
+  endsAt: string;
+  start: number;
+  end: number;
+  points: Partial<Record<EventPointSource, number>>;
+  milestones: Array<{ points: number; reward: EventReward }>;
+}
+
 export interface ItemDef {
   id: string;
   name: LocalizedText;
-  kind: 'produce' | 'bug';
+  kind: 'produce' | 'bug' | 'material';
   sellPrice: number | null;
   countsTowardStorage: boolean;
   /** For mutated produce: the mutation and the normal item it is a variant of. */
@@ -228,6 +344,8 @@ export interface ContentPack {
   bugList: BugDef[];
   potSets: Map<string, PotSetDef>;
   missions: MissionsConfig;
+  materials: Map<string, MaterialDef>;
+  events: EventDef[];
 }
 
 export interface RawContent {
@@ -242,6 +360,8 @@ export interface RawContent {
   neighbors: unknown;
   potsets: unknown;
   missions: unknown;
+  materials: unknown;
+  events: unknown;
 }
 
 export class ContentError extends Error {
@@ -257,7 +377,7 @@ type ReadJson = (relativePath: string) => Promise<unknown>;
 export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> {
   const manifest = (await readJson('manifest.json')) as {
     contentVersion: number;
-    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions', string>;
+    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions' | 'materials' | 'events', string>;
   };
   const raw: RawContent = {
     contentVersion: manifest.contentVersion,
@@ -271,6 +391,8 @@ export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> 
     neighbors: await readJson(manifest.files.neighbors),
     potsets: await readJson(manifest.files.potsets),
     missions: await readJson(manifest.files.missions),
+    materials: await readJson(manifest.files.materials),
+    events: await readJson(manifest.files.events),
   };
   return buildContentPack(raw);
 }
@@ -328,6 +450,24 @@ export function buildContentPack(raw: RawContent): ContentPack {
   asArray('pots', raw.pots, problems).forEach((p, i) => {
     if (!checkFields(`pots[${i}]`, p, ['unlockLevel'], ['id', 'rarity', 'sprite'], problems)) return;
     if (isObj(p.levelRule)) p.levels = expandPotLevels(p.levelRule as unknown as PotLevelRule);
+    const growth = isObj(p.growth) ? (p.growth as unknown as PotGrowth) : null;
+    if (growth) {
+      p.levels = expandPotGrowth(growth);
+      if (!(growth.openTo >= 1 && growth.openTo <= growth.maxLevel)) problems.push(`pots[${i}].growth.openTo: phải từ 1 đến maxLevel`);
+    }
+    const nLevels = Array.isArray(p.levels) ? p.levels.length : 0;
+    p.openTo = growth ? growth.openTo : nLevels;
+    p.levelReq = Array.from({ length: nLevels }, (_, j) => (growth ? growth.stagePlayerLevel[Math.floor(j / 5)] ?? 1 : 1));
+    if (p.group === undefined) p.group = 'shop';
+    if (!POT_GROUPS.includes(p.group as PotGroup)) problems.push(`pots[${i}].group: "${String(p.group)}" không hợp lệ`);
+    if (p.group !== 'shop' && p.price !== null && p.price !== undefined) problems.push(`pots[${i}]: chậu ${String(p.group)} không được bán bằng xu`);
+    if (p.looks === undefined) p.looks = [];
+    if (p.skills === undefined) p.skills = [];
+    (p.looks as PotLook[]).forEach((l, j, all) => {
+      if (j === 0 && l.from !== 1) problems.push(`pots[${i}].looks: ngoại hình đầu tiên phải từ cấp 1`);
+      if (j > 0 && l.from <= all[j - 1]!.from) problems.push(`pots[${i}].looks[${j}].from: phải tăng dần`);
+    });
+    for (const sk of p.skills as PotSkill[]) if (!(sk.level >= 1 && sk.level <= nLevels)) problems.push(`pots[${i}].skills ${sk.id}: cấp ngoài khoảng`);
     if (p.price !== null && !(isNum(p.price) && p.price >= 0)) problems.push(`pots[${i}].price: phải là số >= 0 hoặc null`);
     if (p.favoredFamily === undefined) p.favoredFamily = null;
     if (p.set === undefined) p.set = null;
@@ -367,6 +507,26 @@ export function buildContentPack(raw: RawContent): ContentPack {
     }
     addUnique(crops, crop, where, problems);
     addUnique(items, { id: crop.produce.id, name: crop.produce.name, kind: 'produce', sellPrice: crop.sellPrice, countsTowardStorage: true }, `${where}.produce`, problems);
+  });
+
+  const materials = new Map<string, MaterialDef>();
+  asArray('materials', raw.materials, problems).forEach((m, i) => {
+    if (!checkFields(`materials[${i}]`, m, [], ['id', 'icon'], problems)) return;
+    const mat = m as unknown as MaterialDef;
+    addUnique(materials, mat, `materials[${i}]`, problems);
+    addUnique(items, { id: mat.id, name: mat.name, kind: 'material', sellPrice: null, countsTowardStorage: false }, `materials[${i}]`, problems);
+  });
+  const events: EventDef[] = [];
+  asArray('events', raw.events, problems).forEach((e, i) => {
+    if (!checkFields(`events[${i}]`, e, [], ['id', 'startsAt', 'endsAt'], problems)) return;
+    const ev = e as unknown as EventDef;
+    ev.start = Date.parse(ev.startsAt);
+    ev.end = Date.parse(ev.endsAt);
+    if (!(ev.end > ev.start)) problems.push(`events[${i}]: thời gian không hợp lệ`);
+    ev.milestones.forEach((m, j) => {
+      if (j > 0 && m.points <= ev.milestones[j - 1]!.points) problems.push(`events[${i}].milestones[${j}]: điểm phải tăng dần`);
+    });
+    events.push(ev);
   });
 
   const orders = raw.orders as OrdersConfig;
@@ -425,6 +585,18 @@ export function buildContentPack(raw: RawContent): ContentPack {
     for (const st of f.stars) for (const id of Object.keys(st.items ?? {})) if (!items.has(id)) problems.push(`tầng ${f.id}: sao cần vật phẩm "${id}" không tồn tại`);
   }
   for (const p of pots.values()) if (p.set !== null && !potSets.has(p.set)) problems.push(`chậu ${p.id}: không có bộ "${p.set}"`);
+  for (const ev of events) {
+    for (const m of ev.milestones) {
+      for (const id of Object.keys(m.reward.items ?? {})) if (!items.has(id)) problems.push(`sự kiện ${ev.id}: vật phẩm "${id}" không tồn tại`);
+      if (m.reward.pot && pots.get(m.reward.pot)?.group !== 'event') problems.push(`sự kiện ${ev.id}: "${m.reward.pot}" không phải chậu sự kiện`);
+    }
+  }
+  if (isObj(config) && config.harvestMaterial && !items.has(config.harvestMaterial.item)) problems.push('config.harvestMaterial: vật phẩm không tồn tại');
+  for (const m of missions?.pool ?? []) for (const id of Object.keys(m.reward.items ?? {})) if (!items.has(id)) problems.push(`nhiệm vụ ${m.id}: vật phẩm "${id}" không tồn tại`);
+  for (const p of pots.values()) {
+    for (const id of [p.shard?.item, ...Object.keys(p.exchange?.items ?? {})]) if (id && !items.has(id)) problems.push(`chậu ${p.id}: vật phẩm "${id}" không tồn tại`);
+    for (const sk of p.skills) if (sk.effect.kind === 'stat' && !POT_STATS.includes(sk.effect.stat)) problems.push(`chậu ${p.id}: kỹ năng ${sk.id} chỉ số sai`);
+  }
   for (const p of pots.values()) {
     for (const lv of p.levels) for (const k of Object.keys(lv.stats)) if (!POT_STATS.includes(k as PotStatName)) problems.push(`chậu ${p.id}: chỉ số "${k}" không hợp lệ`);
   }
@@ -455,5 +627,7 @@ export function buildContentPack(raw: RawContent): ContentPack {
     bugList: [...bugs.values()],
     potSets,
     missions,
+    materials,
+    events,
   };
 }

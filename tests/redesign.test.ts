@@ -70,7 +70,7 @@ test('bộ chậu: chậu khởi đầu không có thưởng bộ; đủ 4 rồi
     assert.ok(dispatch(content, s, { type: 'buyPot', potId }, T0).ok);
     assert.ok(dispatch(content, s, { type: 'placePot', potInstanceId: s.potStock.at(-1)!, ...at(0, i) }, T0).ok);
   };
-  for (let i = 0; i < 4; i++) place(i, i % 2 ? 'base:pot.jade-lotus' : 'base:pot.porcelain');
+  for (let i = 0; i < 4; i++) place(i, 'base:pot.porcelain');
   const sets = floorSets(content, s, s.floors[0]!);
   assert.equal(sets[0]!.count, 4);
   assert.equal(sets[0]!.tier, 0);

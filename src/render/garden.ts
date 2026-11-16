@@ -6,12 +6,21 @@ import type { GameState } from '../core/state.ts';
 import { nextFloor } from '../core/game.ts';
 import { cropStatus, type CropStatus } from '../systems/growth.ts';
 import { expandCost, floorSets, potTier } from '../systems/floors.ts';
+import { potLook } from '../systems/pots.ts';
+
+/** Effect tier and small-step count of a pot at a level: from its line's looks when it has them. */
+export function potFx(pot: PotDef, level: number): { tier: 0 | 1 | 2; step: number } {
+  const { look, step } = potLook(pot, level);
+  return look ? { tier: look.aura, step } : { tier: potTier(level, pot.levels.length), step: 0 };
+}
 import { botGarden } from '../systems/visit.ts';
 
 export interface GardenPot {
   pot: PotDef;
   level: number;
   tier: 0 | 1 | 2;
+  /** Small evolution steps since the current look started (POT_SYSTEM 2). */
+  step: number;
   status: CropStatus | null;
 }
 
@@ -44,7 +53,7 @@ export function homeGarden(content: ContentPack, state: GameState, now: number):
       pots: floor.slots.map((slot) => {
         const inst = state.pots[slot.potInstanceId]!;
         const pot = content.pots.get(inst.potId)!;
-        return { pot, level: inst.level, tier: potTier(inst.level, pot.levels.length), status: cropStatus(content, state, slot, now) };
+        return { pot, level: inst.level, ...potFx(pot, inst.level), status: cropStatus(content, state, slot, now) };
       }),
     };
   });
@@ -72,7 +81,7 @@ export function visitGarden(content: ContentPack, state: GameState, botId: strin
         bug: p.need === 'bug' ? { bug, count: 1 } : null,
         isRegrow: false,
       };
-      return { pot: p.pot, level: p.level, tier: potTier(p.level, p.pot.levels.length), status };
+      return { pot: p.pot, level: p.level, ...potFx(p.pot, p.level), status };
     }),
   }));
   return { mode: 'visit', floors, locked: null };

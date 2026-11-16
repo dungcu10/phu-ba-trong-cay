@@ -1,6 +1,7 @@
 // Windows for orders, the stall, neighbours, the plant journal and letters (DESIGN_SYSTEM 6).
 // They only read state and send commands through the actions interface.
 
+import { itemIcon } from './icons.ts';
 import { svgIcon } from './icons.ts';
 import type { GameSession } from '../app/session.ts';
 import { canDeliver } from '../systems/orders.ts';
@@ -65,7 +66,7 @@ export class OrdersPanel extends Panel {
       const lines = h('div', { class: 'order-lines' });
       for (const [id, qty] of Object.entries(o.items)) {
         const have = state.inventory[id] ?? 0;
-        lines.append(h('span', { class: `order-line${have >= qty ? ' done' : ''}` }, icon(itemFrame(content, id), 44), h('span', { class: 'qty-tag' }, `${Math.min(have, qty)}/${qty}`)));
+        lines.append(h('span', { class: `order-line${have >= qty ? ' done' : ''}` }, itemIcon(content, id, 44), h('span', { class: 'qty-tag' }, `${Math.min(have, qty)}/${qty}`)));
       }
       const btn = h(
         'button',
@@ -118,7 +119,7 @@ export class StallPanel extends Panel {
         h(
           'div',
           { class: 'stall-slot', 'data-test': `listing-${l.id}` },
-          icon(itemFrame(content, l.itemId), 52),
+          itemIcon(content, l.itemId, 52),
           h('span', { class: 'count' }, `×${l.qty}`),
           h('span', { class: 'tag' }, coin(16), formatNumber(l.price)),
           h('button', { class: 'link-btn', onclick: () => this.actions.cancelListing(l.id) }, 'Gỡ'),
@@ -148,7 +149,7 @@ export class StallPanel extends Panel {
 
     const picker = h('div', { class: 'compartments' });
     for (const [iid, count] of sellable) {
-      picker.append(h('button', { class: `cell${iid === id ? ' on' : ''}`, onclick: () => (this.pick(iid), this.render()) }, icon(itemFrame(content, iid), 52), h('span', { class: 'count' }, String(count))));
+      picker.append(h('button', { class: `cell${iid === id ? ' on' : ''}`, onclick: () => (this.pick(iid), this.render()) }, itemIcon(content, iid, 52), h('span', { class: 'count' }, String(count))));
     }
     const qtyEl = h('span', { class: 'qty' }, String(this.qty));
     const priceEl = h('span', { class: 'qty' }, coin(18), String(this.price));

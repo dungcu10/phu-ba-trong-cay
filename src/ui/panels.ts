@@ -1,6 +1,7 @@
 // Fairy-tale windows (DESIGN_SYSTEM 6.5–6.7): the seed stall, the potter's bench (pot upgrade)
 // and the cloud chest (storage + selling). Windows only read state and send commands.
 
+import { itemIcon } from './icons.ts';
 import { svgIcon } from './icons.ts';
 import type { GameSession } from '../app/session.ts';
 import type { SlotRef } from '../core/game.ts';
@@ -74,79 +75,6 @@ export class SeedPanel extends Panel {
   }
 }
 
-/** "Bàn Thợ Gốm": current pot on the left, the upgraded pot glowing on the right; when the pot
- *  is empty, pots from the stock can be put in its place. */
-export class PotPanel extends Panel {
-  constructor(
-    private readonly session: GameSession,
-    private readonly slot: SlotRef,
-    private readonly actions: PanelActions,
-  ) {
-    super('Bàn Thợ Gốm', 'pot-panel');
-    this.render();
-  }
-
-  render(): void {
-    clear(this.body);
-    const { content, state } = this.session;
-    const slotState = state.floors[this.slot.floor]!.slots[this.slot.slot]!;
-    const pot = state.pots[slotState.potInstanceId]!;
-    const def = content.pots.get(pot.potId)!;
-    const lv = potLevelDef(content, pot);
-    const status = cropStatus(content, state, slotState, this.session.now());
-    if (status) {
-      this.body.append(h('p', { class: 'lead' }, status.ripe ? `${status.crop.name.vi} đã chín — chạm vào chậu để thu hoạch.` : `${status.crop.name.vi} chín sau ${formatDuration(status.remainingMs)}`));
-    }
-    const current = h('div', { class: 'bench-side' }, potIcon(def, pot.level, 110), h('strong', {}, `${def.name.vi} · cấp ${pot.level}`), rarityChip(def.rarity), statLines(lv), favText(def));
-    const cost = nextUpgradeCost(content, pot);
-    if (!cost) {
-      this.body.append(h('div', { class: 'bench' }, current), h('p', { class: 'note' }, 'Chậu đã đạt cấp cao nhất.'));
-    } else {
-      const next = def.levels[pot.level]!;
-      const preview = h('div', { class: 'bench-side preview' }, potIcon(def, pot.level + 1, 110), h('strong', {}, `Cấp ${pot.level + 1}`), statLines(next));
-      this.body.append(h('div', { class: 'bench' }, current, h('span', { class: 'bench-arrow' }), preview));
-      const needs = h('div', { class: 'needs' }, h('span', { class: `need${state.player.coins < cost.coins ? ' short' : ''}` }, coin(), formatNumber(cost.coins)));
-      const missing: string[] = [];
-      if (state.player.coins < cost.coins) missing.push(`${formatNumber(cost.coins - state.player.coins)} xu`);
-      for (const [itemId, qty] of Object.entries(cost.items)) {
-        const have = state.inventory[itemId] ?? 0;
-        needs.append(h('span', { class: `need${have < qty ? ' short' : ''}` }, icon(itemFrame(content, itemId), 30), `${have}/${qty}`));
-        if (have < qty) missing.push(`${qty - have} ${content.items.get(itemId)?.name.vi ?? ''}`);
-      }
-      const ok = canAfford(state, cost);
-      const btn = h('button', { class: `candy ${ok ? 'primary' : 'blocked'}`, 'data-test': 'upgrade-pot', onclick: () => (ok ? this.actions.upgradePot(slotState.potInstanceId) : shake(btn)) }, 'Nâng cấp chậu');
-      this.body.append(needs, h('div', { class: 'candy-wrap' }, btn, h('span', { class: 'reason' }, ok ? '' : `Thiếu ${missing.join(' và ')}`)));
-    }
-    this.body.append(this.stock(slotState.planting !== null));
-  }
-
-  /** Pots in stock that can replace this one (only when the pot is empty). */
-  private stock(busy: boolean): HTMLElement {
-    const { content, state } = this.session;
-    const box = h('div', {}, h('p', { class: 'lead' }, `Kho chậu (${state.potStock.length})`));
-    if (state.potStock.length === 0) {
-      box.append(h('p', { class: 'note' }, 'Kho chậu trống. Mua chậu mới ở Lò Gốm Bà Mây.'));
-      return box;
-    }
-    if (busy) box.append(h('p', { class: 'note' }, 'Thu hoạch xong cây này rồi mới đổi chậu được.'));
-    const list = h('div', { class: 'stock' });
-    for (const id of state.potStock) {
-      const p = state.pots[id]!;
-      const d = content.pots.get(p.potId)!;
-      list.append(
-        h(
-          'button',
-          { class: `seed-pack${busy ? ' locked' : ''}`, 'data-test': `place-${id}`, 'aria-disabled': busy ? 'true' : undefined, onclick: () => (busy ? undefined : this.actions.placePot(this.slot, id)) },
-          potIcon(d, p.level, 56),
-          h('span', { class: 'pack-info' }, `${d.name.vi} · cấp ${p.level}`),
-        ),
-      );
-    }
-    box.append(list);
-    return box;
-  }
-}
-
 /** "Rương Mây": velvet compartments, capacity as a row of baskets, a scale to sell. */
 export class StoragePanel extends Panel {
   private selected: string | null = null;
@@ -200,7 +128,7 @@ export class StoragePanel extends Panel {
               this.render();
             },
           },
-          icon(itemFrame(content, itemId), 60),
+          itemIcon(content, itemId, 60),
           h('span', { class: 'count' }, String(count)),
         ),
       );

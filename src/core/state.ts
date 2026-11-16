@@ -3,7 +3,7 @@
 import type { ContentPack, FloorDef } from './content.ts';
 import { newSeed } from './rng.ts';
 
-export const SAVE_VERSION = 7;
+export const SAVE_VERSION = 8;
 
 export interface Planting {
   /** Unique per planting, used as a key for deterministic randomness. */
@@ -44,6 +44,17 @@ export interface MissionState {
 export interface PotInstance {
   potId: string;
   level: number;
+  /** Game time it was obtained (POT_SYSTEM 8), and how. */
+  obtainedAt?: number;
+  source?: 'start' | 'shop' | 'floor' | 'exchange' | 'event' | 'old-save';
+  /** Every level reached, with the time (kept small: one entry per level, at most 50). */
+  history?: Array<{ level: number; at: number }>;
+}
+
+/** Collection record per pot line: survives even if the pot itself is gone. */
+export interface PotBookEntry {
+  firstAt: number;
+  bestLevel: number;
 }
 
 export interface Order {
@@ -121,6 +132,11 @@ export interface GameState {
   neighbors: Record<string, BotState>;
   stall: Listing[];
   notices: Notice[];
+  /** Pot collection (POT_SYSTEM 6) and how many collection rewards were claimed. */
+  potBook: Record<string, PotBookEntry>;
+  potBookClaimed: number;
+  /** Event progress: points earned and milestones claimed. */
+  events: Record<string, { points: number; claimed: number }>;
   /** Today's missions (day = local day number, -1 = not rolled yet). */
   missions: { day: number; list: MissionState[]; bonusClaimed: boolean };
 }
@@ -130,7 +146,7 @@ export function createFloorState(floorDef: FloorDef, pots: Record<string, PotIns
   const slots: SlotState[] = [];
   for (let i = 0; i < floorDef.slotCount; i++) {
     const potInstanceId = floorIndex === 0 ? `pot-${i + 1}` : `pot-f${floorIndex + 1}-${i + 1}`;
-    pots[potInstanceId] = { potId: floorDef.startingPot, level: 1 };
+    pots[potInstanceId] = { potId: floorDef.startingPot, level: 1, source: floorIndex === 0 ? 'start' : 'floor', history: [] };
     slots.push({ potInstanceId, planting: null });
   }
   return { floorId: floorDef.id, slots, stars: 0 };
@@ -163,6 +179,9 @@ export function createNewGame(content: ContentPack, now: number, entropy = now):
     stall: [],
     notices: [],
     missions: { day: -1, list: [], bonusClaimed: false },
+    potBook: Object.fromEntries([...new Set(Object.values(pots).map((p) => p.potId))].map((id) => [id, { firstAt: now, bestLevel: 1 }])),
+    potBookClaimed: 0,
+    events: {},
   };
 }
 

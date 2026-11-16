@@ -35,6 +35,8 @@ export const ERROR_TEXT: Record<ErrorCode, string> = {
   unknown_neighbor: 'Không tìm thấy hàng xóm này.',
   no_help_needed: 'Chậu này đang ổn, không cần giúp.',
   help_limit: 'Hôm nay đã giúp nhà này đủ rồi. Mai ghé tiếp nhé!',
+  level_not_open: 'Các cấp tiếp theo của dòng chậu này sẽ mở ở bản cập nhật sau.',
+  not_obtainable: 'Chậu này không đổi được bằng vật phẩm.',
 };
 
 const numberFormat = new Intl.NumberFormat('vi-VN');
@@ -76,7 +78,21 @@ export const STAT_TEXT: Record<string, string> = {
   xp: 'Kinh nghiệm',
   attract: 'Thu hút bọ',
   luck: 'May mắn',
+  care: 'Chăm sóc',
 };
+
+/** Percent with one decimal when small (pot stats grow in small steps). */
+export function formatStat(fraction: number): string {
+  const v = Math.round(fraction * 1000) / 10;
+  return `${Number.isInteger(v) ? v : v.toFixed(1).replace('.', ',')}%`;
+}
+
+export const GROUP_TEXT: Record<string, string> = { shop: 'Cửa hàng', daily: 'Nhiệm vụ ngày', weekly: 'Nhiệm vụ tuần', monthly: 'Nhiệm vụ tháng', challenge: 'Thử thách', event: 'Sự kiện', crafted: 'Chế tạo' };
+
+export function formatDate(ms: number): string {
+  const d = new Date(ms);
+  return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+}
 
 export const FAMILY_TEXT: Record<string, string> = { flower: 'Hoa', fruit: 'Quả', herb: 'Rau Thảo', wonder: 'Kỳ Hoa' };
 

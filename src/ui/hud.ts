@@ -8,9 +8,10 @@ import { storageUsed, xpToNextLevel } from '../systems/economy.ts';
 import { canDeliver } from '../systems/orders.ts';
 import { nextMilestone } from '../systems/surprises.ts';
 import { missionsReady } from '../systems/missions.ts';
+import { claimableMilestones, visibleEvents } from '../systems/events.ts';
 import { h } from './dom.ts';
 import { nextHint } from './hint.ts';
-import { formatNumber } from './text.ts';
+import { formatClock, formatNumber } from './text.ts';
 
 export interface HudActions {
   openSeeds(): void;
@@ -23,6 +24,7 @@ export interface HudActions {
   openJournal(): void;
   openLetters(): void;
   openMissions(): void;
+  openEvent(): void;
   toggleTray(): void;
 }
 
@@ -42,6 +44,9 @@ export class Hud {
   private readonly journalBadge = h('span', { class: 'badge hidden' });
   private readonly letterBadge = h('span', { class: 'badge hidden' });
   private readonly missionBadge = h('span', { class: 'badge hidden' });
+  private readonly eventBadge = h('span', { class: 'badge hidden' });
+  private readonly eventTime = h('span', { class: 'ev-timer' });
+  private readonly eventBtn: HTMLElement;
   private readonly seeds: HTMLElement;
   private last = { coins: -1, gems: -1 };
   /** Screen position of the storage button, where harvested produce flies to. */
@@ -77,9 +82,11 @@ export class Hud {
       side('Phú Bà', 'open-neighbors', svgIcon('crown', 46), null, () => actions.openNeighbors()),
       side('Sổ Tay', 'open-journal', svgIcon('journal', 46), this.journalBadge, () => actions.openJournal()),
     );
+    this.eventBtn = h('button', { class: 'side-btn event-btn', 'aria-label': 'Lễ Hội', 'data-test': 'open-event', onclick: () => actions.openEvent() }, svgIcon('moon', 50), h('span', { class: 'side-label' }, 'Lễ Hội'), this.eventTime, this.eventBadge);
     this.el = h(
       'div',
       { class: 'hud' },
+      h('div', { class: 'hud-right' }, this.eventBtn),
       h('div', { class: 'hud-top' }, levelBox, h('div', { class: 'pouches' }, this.pouch, this.gemPouch), letters, gear),
       this.hint,
       services,
@@ -128,6 +135,14 @@ export class Hud {
     this.badge(this.journalBadge, content.cropList.filter((c) => nextMilestone(content, state, c.id)).length);
     this.badge(this.letterBadge, state.notices.filter((n) => !n.read).length);
     this.badge(this.missionBadge, missionsReady(content, state));
+    const now = this.session.now();
+    const evs = visibleEvents(content, state, now);
+    this.eventBtn.classList.toggle('hidden', evs.length === 0);
+    if (evs.length > 0) {
+      const ev = evs[0]!;
+      this.eventTime.textContent = now < ev.end ? formatClock(ev.end - now).replace(/:\d\d$/, '') : 'Hết hạn';
+      this.badge(this.eventBadge, evs.reduce((n, e) => n + claimableMilestones(state, e), 0));
+    }
     const hint = nextHint(content, state, this.session.now());
     this.hint.textContent = hint.text;
     this.hint.dataset.kind = hint.kind;
