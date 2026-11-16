@@ -1,0 +1,1218 @@
+{
+ "id": "phuong_hoang",
+ "name": "Chậu Phượng Hoàng",
+ "max_level": 50,
+ "note": "Dòng chậu mẫu. 10 mốc tiến hóa; cấp giữa hai mốc thay đổi nhỏ theo tiến độ p (0→1).",
+ "materials": {
+  "clay": {
+   "color": "#C8734A",
+   "roughness": 0.72
+  },
+  "clay_light": {
+   "color": "#E09A6C",
+   "roughness": 0.6
+  },
+  "glaze_ember": {
+   "color": "#E0663A",
+   "roughness": 0.28,
+   "coat": 0.4
+  },
+  "glaze_crimson": {
+   "gradient": [
+    [
+     0.0,
+     "#5E0F16"
+    ],
+    [
+     0.55,
+     "#B3261E"
+    ],
+    [
+     1.0,
+     "#E2552C"
+    ]
+   ],
+   "roughness": 0.32,
+   "coat": 0.25
+  },
+  "glaze_lacquer": {
+   "gradient": [
+    [
+     0.0,
+     "#3A0A14"
+    ],
+    [
+     0.5,
+     "#9E1328"
+    ],
+    [
+     1.0,
+     "#D8402A"
+    ]
+   ],
+   "roughness": 0.28,
+   "coat": 0.35
+  },
+  "porcelain": {
+   "gradient": [
+    [
+     0.0,
+     "#F3E4CC"
+    ],
+    [
+     0.6,
+     "#FFF6E6"
+    ],
+    [
+     1.0,
+     "#FFFBF3"
+    ]
+   ],
+   "roughness": 0.25,
+   "coat": 0.3
+  },
+  "relief_red": {
+   "gradient": [
+    [
+     0.0,
+     "#B0281E"
+    ],
+    [
+     1.0,
+     "#F07A3E"
+    ]
+   ],
+   "roughness": 0.35
+  },
+  "gold": {
+   "color": "#F2B830",
+   "metallic": 1.0,
+   "roughness": 0.28
+  },
+  "gold_bright": {
+   "color": "#FFD36B",
+   "metallic": 1.0,
+   "roughness": 0.18
+  },
+  "gold_glow": {
+   "color": "#FFD36B",
+   "metallic": 1.0,
+   "roughness": 0.2,
+   "emission": "#FFB547",
+   "emission_strength": 0.8
+  },
+  "feather_flame": {
+   "gradient": [
+    [
+     0.0,
+     "#7A0A10"
+    ],
+    [
+     0.35,
+     "#D42A14"
+    ],
+    [
+     0.7,
+     "#FF7A12"
+    ],
+    [
+     1.0,
+     "#FFC93C"
+    ]
+   ],
+   "roughness": 0.5
+  },
+  "feather_glow": {
+   "gradient": [
+    [
+     0.0,
+     "#7A0A10"
+    ],
+    [
+     0.35,
+     "#D42A14"
+    ],
+    [
+     0.7,
+     "#FF7A12"
+    ],
+    [
+     1.0,
+     "#FFC93C"
+    ]
+   ],
+   "roughness": 0.45,
+   "emission_from_gradient": true,
+   "emission_strength": 0.18
+  },
+  "feather_halo": {
+   "gradient": [
+    [
+     0.0,
+     "#E0400E"
+    ],
+    [
+     0.6,
+     "#FF9A1E"
+    ],
+    [
+     1.0,
+     "#FFE07A"
+    ]
+   ],
+   "roughness": 0.45,
+   "emission_from_gradient": true,
+   "emission_strength": 0.6
+  },
+  "ruby": {
+   "color": "#E0203A",
+   "roughness": 0.04,
+   "transmission": 0.45,
+   "ior": 1.76,
+   "emission": "#FF2848",
+   "emission_strength": 0.45
+  },
+  "amber": {
+   "color": "#FF9F1C",
+   "roughness": 0.05,
+   "transmission": 0.4,
+   "ior": 1.55,
+   "emission": "#FFB03A",
+   "emission_strength": 0.5
+  },
+  "soil": {
+   "color": "#3A2416",
+   "roughness": 0.95
+  },
+  "cloud": {
+   "color": "#FFF4E4",
+   "roughness": 0.8,
+   "subsurface": 0.15
+  },
+  "ember": {
+   "color": "#FF8A1E",
+   "emission": "#FF8A1E",
+   "emission_strength": 8.0
+  }
+ },
+ "profiles": {
+  "egg": [
+   [
+    0.3,
+    0.0
+   ],
+   [
+    0.42,
+    0.06
+   ],
+   [
+    0.5,
+    0.25
+   ],
+   [
+    0.52,
+    0.45
+   ],
+   [
+    0.48,
+    0.7
+   ],
+   [
+    0.4,
+    0.88
+   ],
+   [
+    0.38,
+    0.95
+   ],
+   [
+    0.41,
+    1.0
+   ]
+  ],
+  "urn": [
+   [
+    0.26,
+    0.0
+   ],
+   [
+    0.4,
+    0.05
+   ],
+   [
+    0.52,
+    0.25
+   ],
+   [
+    0.55,
+    0.45
+   ],
+   [
+    0.5,
+    0.68
+   ],
+   [
+    0.4,
+    0.84
+   ],
+   [
+    0.42,
+    0.93
+   ],
+   [
+    0.5,
+    1.0
+   ]
+  ],
+  "vase": [
+   [
+    0.22,
+    0.0
+   ],
+   [
+    0.36,
+    0.06
+   ],
+   [
+    0.55,
+    0.3
+   ],
+   [
+    0.58,
+    0.5
+   ],
+   [
+    0.5,
+    0.72
+   ],
+   [
+    0.38,
+    0.86
+   ],
+   [
+    0.44,
+    0.95
+   ],
+   [
+    0.56,
+    1.02
+   ]
+  ],
+  "royal": [
+   [
+    0.24,
+    0.0
+   ],
+   [
+    0.3,
+    0.04
+   ],
+   [
+    0.52,
+    0.18
+   ],
+   [
+    0.62,
+    0.42
+   ],
+   [
+    0.58,
+    0.64
+   ],
+   [
+    0.44,
+    0.82
+   ],
+   [
+    0.46,
+    0.92
+   ],
+   [
+    0.6,
+    1.04
+   ]
+  ]
+ },
+ "milestones": [
+  {
+   "level": 1,
+   "title": "Trứng Lửa",
+   "parts": [
+    {
+     "type": "body",
+     "profile": "egg",
+     "mat": "clay",
+     "scale": {
+      "from": 1.0,
+      "to": 1.02
+     }
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "rim",
+     "mat": "glaze_ember",
+     "rr": {
+      "from": 0.03,
+      "to": 0.036
+     }
+    },
+    {
+     "type": "band",
+     "mat": "glaze_ember",
+     "z": 0.82,
+     "rr": 0.014,
+     "min_p": 0.25
+    },
+    {
+     "type": "relief",
+     "mat": "clay_light",
+     "z": 0.5,
+     "count": 8,
+     "length": 0.28,
+     "min_p": 0.5,
+     "width": 0.5
+    }
+   ]
+  },
+  {
+   "level": 5,
+   "title": "Vảy Hồng",
+   "parts": [
+    {
+     "type": "body",
+     "profile": "egg",
+     "mat": "glaze_crimson",
+     "scale": {
+      "from": 1.03,
+      "to": 1.05
+     }
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "rim",
+     "mat": "glaze_ember",
+     "rr": 0.038
+    },
+    {
+     "type": "band",
+     "mat": "glaze_ember",
+     "z": 0.82,
+     "rr": 0.016
+    },
+    {
+     "type": "relief",
+     "mat": "relief_red",
+     "z": 0.5,
+     "count": {
+      "from": 10,
+      "to": 14
+     },
+     "length": 0.28,
+     "width": 0.5
+    },
+    {
+     "type": "band",
+     "mat": "gold",
+     "z": 0.1,
+     "rr": 0.014,
+     "min_p": 0.6
+    }
+   ]
+  },
+  {
+   "level": 10,
+   "title": "Vũ Linh",
+   "parts": [
+    {
+     "type": "body",
+     "profile": "urn",
+     "mat": "glaze_crimson",
+     "scale": {
+      "from": 1.05,
+      "to": 1.07
+     }
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "rim",
+     "mat": "gold",
+     "rr": 0.04
+    },
+    {
+     "type": "relief",
+     "mat": "feather_flame",
+     "z": 0.48,
+     "count": 14,
+     "length": {
+      "from": 0.3,
+      "to": 0.32
+     },
+     "width": 0.5
+    },
+    {
+     "type": "band",
+     "mat": "gold",
+     "z": 0.1,
+     "rr": 0.016
+    },
+    {
+     "type": "wings",
+     "mat": "feather_flame",
+     "z": 0.62,
+     "count": 2,
+     "layers": 1,
+     "length": {
+      "from": 0.42,
+      "to": 0.5
+     },
+     "spread": [
+      40,
+      70
+     ],
+     "width": 0.34,
+     "curl": 0.2
+    },
+    {
+     "type": "band",
+     "mat": "gold",
+     "z": 0.78,
+     "rr": 0.012,
+     "min_p": 0.4
+    }
+   ]
+  },
+  {
+   "level": 15,
+   "title": "Hỏa Vũ",
+   "parts": [
+    {
+     "type": "body",
+     "profile": "vase",
+     "mat": "glaze_crimson",
+     "scale": {
+      "from": 1.07,
+      "to": 1.09
+     }
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "rim",
+     "mat": "gold",
+     "rr": 0.04,
+     "scallops": 12,
+     "amp": {
+      "from": 0.025,
+      "to": 0.04
+     }
+    },
+    {
+     "type": "foot",
+     "mat": "gold",
+     "rr": 0.035
+    },
+    {
+     "type": "relief",
+     "mat": "feather_flame",
+     "z": 0.36,
+     "count": 16,
+     "length": 0.28,
+     "width": 0.5
+    },
+    {
+     "type": "relief",
+     "mat": "relief_red",
+     "z": 0.66,
+     "count": 16,
+     "length": 0.28,
+     "phase": 0.2,
+     "min_p": 0.3,
+     "width": 0.5
+    },
+    {
+     "type": "wings",
+     "mat": "feather_flame",
+     "z": 0.64,
+     "count": 3,
+     "layers": 1,
+     "length": {
+      "from": 0.55,
+      "to": 0.6
+     },
+     "spread": [
+      30,
+      80
+     ],
+     "width": 0.34,
+     "curl": 0.2
+    },
+    {
+     "type": "gems",
+     "mat": "amber",
+     "z": 0.52,
+     "count": 1,
+     "size": 0.07,
+     "bezel": "gold",
+     "min_p": 0.6
+    }
+   ]
+  },
+  {
+   "level": 20,
+   "title": "Song Dực",
+   "parts": [
+    {
+     "type": "body",
+     "profile": "vase",
+     "mat": "glaze_lacquer",
+     "scale": {
+      "from": 1.09,
+      "to": 1.11
+     }
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "rim",
+     "mat": "gold_bright",
+     "rr": 0.042,
+     "scallops": 12,
+     "amp": 0.05,
+     "bead": "gold"
+    },
+    {
+     "type": "foot",
+     "mat": "gold",
+     "rr": 0.038
+    },
+    {
+     "type": "filigree",
+     "mat": "gold",
+     "z": 0.2,
+     "amp": 0.022,
+     "waves": 7,
+     "spiral": 0
+    },
+    {
+     "type": "relief",
+     "mat": "feather_flame",
+     "z": 0.6,
+     "count": 16,
+     "length": 0.28,
+     "width": 0.5
+    },
+    {
+     "type": "gems",
+     "mat": "ruby",
+     "z": 0.42,
+     "count": 1,
+     "size": 0.09,
+     "bezel": "gold_bright"
+    },
+    {
+     "type": "wings",
+     "mat": "feather_flame",
+     "z": 0.66,
+     "count": {
+      "from": 4,
+      "to": 5
+     },
+     "layers": 2,
+     "length": {
+      "from": 0.62,
+      "to": 0.7
+     },
+     "spread": [
+      25,
+      95
+     ],
+     "width": 0.34,
+     "curl": 0.2
+    }
+   ]
+  },
+  {
+   "level": 25,
+   "title": "Kim Hỏa",
+   "parts": [
+    {
+     "type": "body",
+     "profile": "royal",
+     "mat": "glaze_lacquer",
+     "scale": {
+      "from": 1.11,
+      "to": 1.13
+     }
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "rim",
+     "mat": "gold_bright",
+     "rr": 0.045,
+     "scallops": 10,
+     "amp": {
+      "from": 0.08,
+      "to": 0.1
+     },
+     "power": 4,
+     "bead": "gold"
+    },
+    {
+     "type": "foot",
+     "mat": "gold",
+     "rr": 0.04,
+     "step": true
+    },
+    {
+     "type": "filigree",
+     "mat": "gold",
+     "z": 0.18,
+     "amp": 0.022,
+     "waves": 7,
+     "spiral": 0
+    },
+    {
+     "type": "filigree",
+     "mat": "gold",
+     "z": 0.72,
+     "amp": 0.022,
+     "waves": 7,
+     "spiral": 0
+    },
+    {
+     "type": "relief",
+     "mat": "feather_flame",
+     "z": 0.5,
+     "count": 18,
+     "length": 0.28,
+     "min_p": 0.0,
+     "width": 0.5
+    },
+    {
+     "type": "gems",
+     "mat": "ruby",
+     "z": 0.44,
+     "count": {
+      "from": 3,
+      "to": 3
+     },
+     "size": 0.085,
+     "spread": 24,
+     "bezel": "gold_bright"
+    },
+    {
+     "type": "wings",
+     "mat": "feather_flame",
+     "z": 0.68,
+     "count": 5,
+     "layers": 2,
+     "length": {
+      "from": 0.72,
+      "to": 0.8
+     },
+     "spread": [
+      22,
+      98
+     ],
+     "width": 0.34,
+     "curl": 0.2
+    }
+   ]
+  },
+  {
+   "level": 30,
+   "title": "Phượng Quan",
+   "parts": [
+    {
+     "type": "body",
+     "profile": "royal",
+     "mat": "glaze_lacquer",
+     "scale": {
+      "from": 1.13,
+      "to": 1.15
+     }
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "rim",
+     "mat": "gold_bright",
+     "rr": 0.045,
+     "scallops": 10,
+     "amp": 0.1,
+     "power": 4,
+     "bead": "gold"
+    },
+    {
+     "type": "foot",
+     "mat": "gold",
+     "rr": 0.04,
+     "step": true
+    },
+    {
+     "type": "filigree",
+     "mat": "gold",
+     "z": 0.18,
+     "amp": 0.022,
+     "waves": 7,
+     "spiral": 0
+    },
+    {
+     "type": "filigree",
+     "mat": "gold",
+     "z": 0.72,
+     "amp": 0.022,
+     "waves": 7,
+     "spiral": 0
+    },
+    {
+     "type": "gems",
+     "mat": "ruby",
+     "z": 0.44,
+     "count": 3,
+     "size": 0.085,
+     "spread": 24,
+     "bezel": "gold_bright"
+    },
+    {
+     "type": "crest",
+     "mat": "feather_flame",
+     "count": {
+      "from": 3,
+      "to": 4
+     },
+     "length": {
+      "from": 0.34,
+      "to": 0.4
+     },
+     "spread": 30,
+     "gem": "amber",
+     "gem_size": 0.07,
+     "width": 0.3,
+     "curl": 0.2
+    },
+    {
+     "type": "tail",
+     "mat": "feather_flame",
+     "z": 0.75,
+     "count": 5,
+     "length": {
+      "from": 0.95,
+      "to": 1.05
+     },
+     "spread": 55,
+     "width": 0.34,
+     "curl": 0.2
+    },
+    {
+     "type": "wings",
+     "mat": "feather_flame",
+     "z": 0.68,
+     "count": 5,
+     "layers": 2,
+     "length": 0.82,
+     "spread": [
+      22,
+      100
+     ],
+     "width": 0.34,
+     "curl": 0.2
+    }
+   ]
+  },
+  {
+   "level": 35,
+   "title": "Vân Đài",
+   "parts": [
+    {
+     "type": "pedestal",
+     "mat": "cloud",
+     "plate": "gold",
+     "height": 0.3,
+     "radius": {
+      "from": 0.75,
+      "to": 0.82
+     }
+    },
+    {
+     "type": "body",
+     "profile": "royal",
+     "mat": "glaze_lacquer",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "rim",
+     "mat": "gold_bright",
+     "rr": 0.048,
+     "scallops": 10,
+     "amp": 0.1,
+     "power": 4,
+     "bead": "gold"
+    },
+    {
+     "type": "foot",
+     "mat": "gold_bright",
+     "rr": 0.042,
+     "step": true
+    },
+    {
+     "type": "filigree",
+     "mat": "gold_bright",
+     "z": 0.18,
+     "amp": 0.022,
+     "waves": 7,
+     "spiral": 0
+    },
+    {
+     "type": "filigree",
+     "mat": "gold_bright",
+     "z": 0.72,
+     "amp": 0.022,
+     "waves": 7,
+     "spiral": 0
+    },
+    {
+     "type": "gems",
+     "mat": "ruby",
+     "z": 0.44,
+     "count": 3,
+     "size": 0.09,
+     "spread": 24,
+     "bezel": "gold_bright"
+    },
+    {
+     "type": "crest",
+     "mat": "feather_flame",
+     "count": 4,
+     "length": 0.42,
+     "spread": 32,
+     "gem": "amber",
+     "gem_size": 0.075,
+     "width": 0.3,
+     "curl": 0.2
+    },
+    {
+     "type": "tail",
+     "mat": "feather_flame",
+     "z": 0.75,
+     "count": 5,
+     "length": 1.05,
+     "spread": 58,
+     "width": 0.34,
+     "curl": 0.2
+    },
+    {
+     "type": "wings",
+     "mat": "feather_flame",
+     "z": 0.68,
+     "count": 5,
+     "layers": 2,
+     "length": {
+      "from": 0.85,
+      "to": 0.9
+     },
+     "spread": [
+      20,
+      100
+     ],
+     "width": 0.34,
+     "curl": 0.2
+    },
+    {
+     "type": "embers",
+     "mat": "ember",
+     "count": {
+      "from": 4,
+      "to": 8
+     },
+     "min_p": 0.5,
+     "size": [
+      0.008,
+      0.018
+     ]
+    }
+   ]
+  },
+  {
+   "level": 40,
+   "title": "Cửu Thiên",
+   "parts": [
+    {
+     "type": "pedestal",
+     "mat": "cloud",
+     "plate": "gold_bright",
+     "height": 0.32,
+     "radius": 0.85
+    },
+    {
+     "type": "body",
+     "profile": "royal",
+     "mat": "porcelain",
+     "scale": {
+      "from": 1.16,
+      "to": 1.18
+     }
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "rim",
+     "mat": "gold_bright",
+     "rr": 0.05,
+     "scallops": 10,
+     "amp": 0.11,
+     "power": 4,
+     "bead": "gold"
+    },
+    {
+     "type": "foot",
+     "mat": "gold_bright",
+     "rr": 0.045,
+     "step": true
+    },
+    {
+     "type": "filigree",
+     "mat": "gold_bright",
+     "z": 0.16,
+     "amp": 0.022,
+     "waves": 7,
+     "spiral": 0
+    },
+    {
+     "type": "filigree",
+     "mat": "gold_bright",
+     "z": 0.48,
+     "amp": 0.022,
+     "waves": 7,
+     "spiral": 0
+    },
+    {
+     "type": "filigree",
+     "mat": "gold_bright",
+     "z": 0.76,
+     "amp": 0.022,
+     "waves": 7,
+     "spiral": 0
+    },
+    {
+     "type": "gems",
+     "mat": "ruby",
+     "z": 0.46,
+     "count": {
+      "from": 3,
+      "to": 5
+     },
+     "size": 0.09,
+     "spread": 22,
+     "arc": 0.01,
+     "bezel": "gold_bright"
+    },
+    {
+     "type": "crest",
+     "mat": "feather_glow",
+     "count": 5,
+     "length": 0.46,
+     "spread": 34,
+     "gem": "amber",
+     "gem_size": 0.08,
+     "width": 0.3,
+     "curl": 0.2
+    },
+    {
+     "type": "tail",
+     "mat": "feather_glow",
+     "z": 0.78,
+     "count": 7,
+     "length": {
+      "from": 1.1,
+      "to": 1.2
+     },
+     "spread": 62,
+     "width": 0.34,
+     "curl": 0.2
+    },
+    {
+     "type": "wings",
+     "mat": "feather_glow",
+     "z": 0.72,
+     "count": {
+      "from": 6,
+      "to": 7
+     },
+     "layers": 2,
+     "length": {
+      "from": 0.95,
+      "to": 1.0
+     },
+     "spread": [
+      6,
+      78
+     ],
+     "width": 0.34,
+     "curl": 0.2
+    },
+    {
+     "type": "embers",
+     "mat": "ember",
+     "count": {
+      "from": 12,
+      "to": 18
+     },
+     "size": [
+      0.008,
+      0.018
+     ]
+    }
+   ]
+  },
+  {
+   "level": 50,
+   "title": "Bất Tử Điểu",
+   "parts": [
+    {
+     "type": "pedestal",
+     "mat": "cloud",
+     "plate": "gold_glow",
+     "height": 0.34,
+     "radius": 0.9
+    },
+    {
+     "type": "halo",
+     "mat": "feather_halo",
+     "ring_mat": "gold_glow",
+     "count": 14,
+     "radius": 1.05,
+     "length": 0.42,
+     "z": 0.85
+    },
+    {
+     "type": "body",
+     "profile": "royal",
+     "mat": "porcelain",
+     "scale": 1.2
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "rim",
+     "mat": "gold_glow",
+     "rr": 0.052,
+     "scallops": 10,
+     "amp": 0.13,
+     "power": 4,
+     "bead": "gold_bright"
+    },
+    {
+     "type": "foot",
+     "mat": "gold_glow",
+     "rr": 0.048,
+     "step": true
+    },
+    {
+     "type": "filigree",
+     "mat": "gold_glow",
+     "z": 0.16,
+     "amp": 0.022,
+     "waves": 7,
+     "spiral": 0
+    },
+    {
+     "type": "filigree",
+     "mat": "gold_glow",
+     "z": 0.48,
+     "amp": 0.022,
+     "waves": 7,
+     "spiral": 0
+    },
+    {
+     "type": "filigree",
+     "mat": "gold_glow",
+     "z": 0.76,
+     "amp": 0.022,
+     "waves": 7,
+     "spiral": 0
+    },
+    {
+     "type": "gems",
+     "mat": "ruby",
+     "z": 0.46,
+     "count": 5,
+     "size": 0.1,
+     "spread": 22,
+     "arc": 0.01,
+     "bezel": "gold_glow"
+    },
+    {
+     "type": "crest",
+     "mat": "feather_glow",
+     "count": 5,
+     "length": 0.55,
+     "spread": 40,
+     "gem": "amber",
+     "gem_size": 0.09,
+     "width": 0.3,
+     "curl": 0.2
+    },
+    {
+     "type": "tail",
+     "mat": "feather_glow",
+     "z": 0.8,
+     "count": 7,
+     "length": 1.25,
+     "spread": 70,
+     "width": 0.34,
+     "curl": 0.2
+    },
+    {
+     "type": "wings",
+     "mat": "feather_glow",
+     "z": 0.74,
+     "count": 7,
+     "layers": 2,
+     "length": 1.05,
+     "spread": [
+      0,
+      82
+     ],
+     "width": 0.34,
+     "curl": 0.2
+    },
+    {
+     "type": "embers",
+     "mat": "ember",
+     "count": 18,
+     "size": [
+      0.008,
+      0.018
+     ]
+    }
+   ]
+  }
+ ]
+}

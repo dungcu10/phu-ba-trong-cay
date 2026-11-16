@@ -39,3 +39,12 @@ Biểu tượng ứng dụng `public/icons/*.png`: ghép từ `F2_bau-troi.jpg` 
 ## Vẽ bằng code (hiệu ứng, được phép theo `PROJECT_RULES.md` 3.3)
 
 Giọt nước báo khát, thanh tiến độ, hạt lấp lánh, khung gỗ/giấy da của giao diện (CSS). Biểu tượng đồng xu, ngôi sao XP trong giao diện là hình CSS tạm — **chờ đồ họa** đợt 5–6.
+
+## Chậu dựng bằng Blender (CTO, 2026-11-17)
+
+| File | Nội dung | Nguồn / giấy phép |
+|---|---|---|
+| `assets/art/pots_phoenix.webp/.json` | 50 cấp Chậu Phượng Hoàng (`pots/phoenix/<cấp>`) | Dựng thủ tục bằng Blender 5.2.3 LTS (Cycles, GPU) từ `tools/potgen`. Không dùng ảnh hay mô hình bên ngoài — tài sản tự tạo hoàn toàn, thuộc dự án. |
+| `assets/art/pots_catalog.webp/.json` | 50 dòng chậu ở cấp 50 (`pots/catalog/<id>/50`) | Như trên. Thông số theo danh mục của chủ dự án. Chậu số 36 đổi tên thành "Neon Tương Lai" để tránh trùng tên một trò chơi đã đăng ký. |
+
+Tái tạo: xem `tools/potgen/README.md` và `docs/reviews/2026-11-17-directive-03-chau-blender.md`.
