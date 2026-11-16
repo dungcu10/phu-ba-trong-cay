@@ -1,6 +1,7 @@
 // Windows for orders, the stall, neighbours, the plant journal and letters (DESIGN_SYSTEM 6).
 // They only read state and send commands through the actions interface.
 
+import { svgIcon } from './icons.ts';
 import type { GameSession } from '../app/session.ts';
 import { canDeliver } from '../systems/orders.ts';
 import { botWealth, playerWealth, valuation } from '../systems/neighbors.ts';
@@ -22,8 +23,8 @@ export interface WorldActions {
   claimJournal(cropId: string): void;
 }
 
-export const coin = (size = 20) => h('span', { class: 'ico-coin', style: `width:${size}px;height:${size}px` });
-export const gem = (size = 20) => h('span', { class: 'ico-gem', style: `width:${size}px;height:${size}px` });
+export const coin = (size = 20) => svgIcon('coin', size + 4);
+export const gem = (size = 20) => svgIcon('gem', size + 4);
 export const star = (size = 20) => h('span', { class: 'ico-star', style: `width:${size}px;height:${size}px` });
 
 function botName(session: GameSession, id: string): string {
@@ -53,7 +54,7 @@ export class OrdersPanel extends Panel {
           h(
             'div',
             { class: 'note-card empty', 'data-test': `order-empty-${i}` },
-            h('span', { class: 'balloon-mini' }),
+            svgIcon('orders', 44),
             h('span', { class: 'pack-info' }, wait > 0 ? `Khinh khí cầu về sau ${formatDuration(wait)}` : 'Đang hạ cánh…'),
             wait > 0 && h('button', { class: 'candy plain small', onclick: () => this.actions.rushOrder(i) }, gem(16), `${content.orders.skipNowGems} · Gọi về ngay`),
           ),

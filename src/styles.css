@@ -424,3 +424,159 @@ html, body {
   .seed-tray { right: calc(var(--safe-right) + var(--space-4)); bottom: calc(var(--safe-bottom) + 120px); }
   .cards { grid-template-columns: 1fr; }
 }
+
+/* ======================= Polish v2: fairy-tale jelly chrome (one look for every button and window) ======================= */
+:root {
+  --wood-dark: color-mix(in srgb, var(--color-ui-wood) 78%, black);
+  --gold-deep: color-mix(in srgb, var(--color-brand-gold) 70%, var(--color-ui-wood));
+  --gloss: linear-gradient(180deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0) 100%);
+  --jelly-paper: radial-gradient(circle at 35% 28%, #fff 0 18%, var(--paper) 40%, var(--paper-deep) 100%);
+  --rim: 0 0 0 3px var(--color-brand-gold), 0 0 0 6px var(--wood);
+  --lift: 0 6px 0 var(--wood-dark), 0 10px 18px var(--color-ui-dropShadow);
+}
+
+/* round HUD buttons: paper jelly, gold ring, wood rim, 3D base, glossy cap */
+.side-btn, .round-big, .knob {
+  border: 0; background: var(--jelly-paper);
+  box-shadow: inset 0 -5px 0 rgba(91, 58, 41, 0.12), var(--rim), var(--lift);
+  overflow: visible;
+}
+.side-btn::before, .round-big::before, .knob.icon-knob::before {
+  content: ""; position: absolute; left: 18%; right: 18%; top: 7%; height: 32%; border-radius: 50%;
+  background: var(--gloss); opacity: 0.8; pointer-events: none;
+}
+.side-btn > svg, .round-big > svg, .knob > svg { position: relative; z-index: 1; transition: transform var(--motion-tap-ms) var(--motion-tap-ease); }
+.side-btn:hover > svg, .round-big:hover > svg { transform: scale(1.06) rotate(-3deg); }
+.side-btn:active, .round-big:active, .knob:active { transform: translateY(4px); box-shadow: inset 0 -3px 0 rgba(91, 58, 41, 0.12), var(--rim), 0 2px 0 var(--wood-dark), 0 4px 8px var(--color-ui-dropShadow); }
+.side-btn { width: 68px; height: 68px; }
+.hud-side { gap: calc(var(--space-5) + 2px); }
+.round-big { width: 92px; height: 92px; }
+.knob.icon-knob { display: grid; place-items: center; width: 60px; height: 60px; }
+.round-big.on { box-shadow: inset 0 -5px 0 rgba(91, 58, 41, 0.12), 0 0 0 3px var(--color-brand-gold), 0 0 0 6px var(--wood), 0 0 0 10px rgba(242, 184, 48, 0.55), var(--lift); }
+
+/* labels under buttons: little wooden ribbon with a highlight */
+.side-label, .round-label {
+  z-index: 2; padding: 1px var(--space-2) 2px; border-radius: 999px;
+  background: linear-gradient(180deg, var(--color-ui-woodLight), var(--wood) 70%);
+  box-shadow: 0 0 0 2px var(--wood-dark), inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 3px 6px var(--color-ui-dropShadow);
+  text-shadow: 0 1px 0 var(--wood-dark); letter-spacing: 0.2px;
+}
+.side-label { bottom: -14px; }
+.round-label { bottom: -16px; }
+.badge {
+  z-index: 3; min-width: 24px; height: 24px; line-height: 20px; text-align: center; padding: 0 6px;
+  background: linear-gradient(180deg, #ff6b74, var(--color-ui-danger)); color: #fff; border: 2px solid #fff;
+  box-shadow: 0 2px 4px var(--color-ui-dropShadow); font-family: var(--font-display), sans-serif;
+}
+.badge.full { background: linear-gradient(180deg, #ff6b74, var(--color-ui-danger)); }
+.round-big .badge:not(.hidden) { background: linear-gradient(180deg, var(--color-ui-woodLight), var(--wood)); }
+
+/* top bar: level medallion + vine, coin/gem capsules */
+.plaque {
+  border: 0; border-radius: 999px; background: linear-gradient(180deg, var(--paper), var(--paper-deep));
+  box-shadow: inset 0 2px 0 #fff, inset 0 -3px 0 rgba(91, 58, 41, 0.1), 0 0 0 3px var(--wood), 0 5px 0 var(--wood-dark), 0 8px 14px var(--color-ui-dropShadow);
+}
+.flower {
+  border: 0; position: relative;
+  background: radial-gradient(circle at 40% 30%, #fff6c9 0 12%, var(--color-brand-gold) 35%, var(--gold-deep) 100%);
+  box-shadow: 0 0 0 3px var(--wood), 0 0 0 7px var(--color-brand-peach), 0 0 0 10px var(--wood), 0 5px 10px var(--color-ui-dropShadow);
+  color: var(--wood); text-shadow: 0 2px 0 rgba(255, 255, 255, 0.6); font-size: calc(var(--font-size-number) + 2px);
+}
+.vine { height: 24px; border-radius: 12px; background: linear-gradient(180deg, var(--paper-deep), #ead2a4); border: 0; box-shadow: inset 0 2px 3px rgba(91, 58, 41, 0.3), 0 0 0 2px var(--wood); }
+.vine-fill { border-radius: 12px; background: linear-gradient(180deg, #b7ec82, var(--color-brand-leaf) 50%, #5ea83a); box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.55); }
+.xp-text { text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); }
+.pouch { gap: var(--space-2); padding: 2px var(--space-5) 2px 4px; min-height: 52px; color: var(--wood); }
+.pouch > span:last-child { font-size: calc(var(--font-size-numberLarge) - 2px); text-shadow: 0 2px 0 #fff; letter-spacing: 0.5px; }
+.pouch > svg { margin-left: -14px; filter: drop-shadow(0 2px 2px var(--color-ui-dropShadow)); }
+
+/* hint and toasts: soft wood glass */
+.hint {
+  background: rgba(74, 46, 31, 0.82); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  border: 2px solid rgba(255, 246, 227, 0.35); box-shadow: 0 6px 14px var(--color-ui-dropShadow); border-radius: 999px;
+  font-size: var(--font-size-caption); padding: 6px var(--space-5);
+}
+.toasts { top: calc(var(--safe-top) + 84px); gap: var(--space-1); max-width: min(380px, 70vw); }
+.toast {
+  border: 0; border-radius: 18px; padding: var(--space-2) var(--space-3); font-size: var(--font-size-caption);
+  background: linear-gradient(180deg, var(--paper), var(--paper-deep));
+  box-shadow: 0 0 0 3px var(--wood), 0 4px 0 var(--wood-dark), 0 8px 16px var(--color-ui-dropShadow);
+}
+.toast.level { background: linear-gradient(180deg, #ffe08a, var(--color-brand-gold)); font-size: var(--font-size-caption); }
+.toast.success { background: linear-gradient(180deg, #e9f8d8, #cdeeb0); }
+.toast.error { background: linear-gradient(180deg, #ffe1e1, #ffc4c4); box-shadow: 0 0 0 3px var(--color-ui-danger), 0 4px 0 var(--wood-dark), 0 8px 16px var(--color-ui-dropShadow); }
+
+/* windows: layered wooden frame, gold rivets in the corners, parchment face */
+.veil { background: radial-gradient(ellipse at center, rgba(60, 40, 70, 0.25), rgba(40, 25, 50, 0.55)); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
+.win {
+  border: 0;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.7), transparent 55%),
+    radial-gradient(circle at 15% 85%, rgba(169, 116, 79, 0.08) 0 20%, transparent 21%),
+    linear-gradient(180deg, var(--paper), var(--paper-deep));
+  box-shadow:
+    inset 0 0 0 3px rgba(242, 184, 48, 0.55), inset 0 0 30px rgba(169, 116, 79, 0.18),
+    0 0 0 5px var(--color-ui-woodLight), 0 0 0 9px var(--wood), 0 0 0 11px var(--wood-dark),
+    0 10px 0 6px var(--wood-dark), 0 24px 40px rgba(40, 25, 50, 0.45);
+}
+.win::after {
+  content: ""; position: absolute; inset: -6px; pointer-events: none; border-radius: inherit;
+  background:
+    radial-gradient(circle at 14px 14px, var(--color-brand-gold) 0 6px, var(--wood) 7px 8px, transparent 9px),
+    radial-gradient(circle at calc(100% - 14px) 14px, var(--color-brand-gold) 0 6px, var(--wood) 7px 8px, transparent 9px),
+    radial-gradient(circle at 14px calc(100% - 14px), var(--color-brand-gold) 0 6px, var(--wood) 7px 8px, transparent 9px),
+    radial-gradient(circle at calc(100% - 14px) calc(100% - 14px), var(--color-brand-gold) 0 6px, var(--wood) 7px 8px, transparent 9px);
+}
+.ribbon {
+  border: 0; padding: 6px var(--space-6) 8px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--color-ui-primary) 70%, white), var(--color-ui-primary) 55%, color-mix(in srgb, var(--color-ui-primary) 80%, black));
+  box-shadow: 0 0 0 3px var(--wood), inset 0 2px 0 rgba(255, 255, 255, 0.45), 0 6px 0 var(--wood-dark), 0 10px 18px var(--color-ui-dropShadow);
+  z-index: 2;
+}
+.ribbon::before, .ribbon::after { border: 0; background: color-mix(in srgb, var(--color-ui-primary) 70%, black); box-shadow: 0 0 0 3px var(--wood); }
+.ribbon h2 { text-shadow: 0 2px 0 rgba(0, 0, 0, 0.25), 0 0 1px rgba(0, 0, 0, 0.4); letter-spacing: 0.3px; }
+.win > .knob.close { width: 52px; height: 52px; background: radial-gradient(circle at 35% 30%, #ff9aa0, var(--color-ui-danger)); z-index: 3; }
+.win > .knob.close::before, .win > .knob.close::after, .knob.close.small::before, .knob.close.small::after { background: #fff; box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2); }
+
+/* candy buttons: glossy cap and deeper base */
+.candy { position: relative; border: 0; box-shadow: 0 0 0 3px var(--wood), 0 6px 0 var(--wood-dark), 0 10px 14px var(--color-ui-dropShadow); text-shadow: 0 1px 0 rgba(0, 0, 0, 0.18); overflow: hidden; }
+.candy::before { content: ""; position: absolute; left: 8%; right: 8%; top: 3px; height: 42%; border-radius: 999px; background: var(--gloss); opacity: 0.55; pointer-events: none; }
+.candy.primary { background: linear-gradient(180deg, color-mix(in srgb, var(--color-ui-primary) 75%, white), var(--color-ui-primary)); }
+.candy.gold { background: linear-gradient(180deg, #ffe08a, var(--color-ui-secondary)); text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5); }
+.candy.danger { background: linear-gradient(180deg, #ff8a92, var(--color-ui-danger)); }
+.candy.blocked { background: linear-gradient(180deg, #ddd2c2, var(--color-ui-disabled)); text-shadow: none; }
+.candy:active { transform: translateY(4px); box-shadow: 0 0 0 3px var(--wood), 0 2px 0 var(--wood-dark), 0 4px 6px var(--color-ui-dropShadow); }
+
+/* cards, rows and tags inside windows */
+.card, .mission, .set-row, .rank-row, .need, .tag, .cell, .seed-pack, .note-card {
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.7), 0 2px 0 rgba(91, 58, 41, 0.18);
+}
+.tag { border-radius: 999px; background: linear-gradient(180deg, #fff, var(--paper)); }
+.need { border-radius: 999px; }
+.svg-icon { display: inline-block; flex: none; vertical-align: middle; overflow: visible; }
+.tag > .svg-icon, .need > .svg-icon { margin: -3px 0; }
+
+/* seed tray: wooden shelf with planks */
+.seed-tray {
+  border: 0;
+  background: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0) 0 120px, rgba(0, 0, 0, 0.06) 120px 122px), linear-gradient(180deg, #c48e62, var(--color-ui-woodLight) 40%, var(--wood));
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.35), 0 0 0 3px var(--wood-dark), 0 6px 0 var(--wood-dark), 0 12px 20px var(--color-ui-dropShadow);
+}
+.seed-chip { border: 0; background: var(--jelly-paper); box-shadow: 0 0 0 3px var(--wood), 0 4px 0 var(--wood-dark); }
+.seed-chip.on { box-shadow: 0 0 0 3px var(--color-brand-gold), 0 0 0 6px var(--wood), 0 4px 0 var(--wood-dark); }
+
+/* soft vignette over the garden for depth */
+#game::after { content: ""; position: fixed; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 45%, transparent 60%, rgba(60, 35, 70, 0.28) 100%); }
+
+@media (prefers-reduced-motion: reduce) {
+  .side-btn:hover > svg, .round-big:hover > svg { transform: none; }
+}
+/* stacking: HUD < seed tray < windows < celebrations < toasts */
+.hud { z-index: 1; }
+.veil { z-index: 20; }
+.celebrate { z-index: 25; }
+.toasts { z-index: 30; }
+/* stand-in pot colours (until each pot has its own picture) */
+.pot-standin.tint-good { filter: hue-rotate(185deg) saturate(0.7) brightness(1.15); }
+.pot-standin.tint-rare { filter: hue-rotate(120deg) saturate(0.9); }
+.pot-standin.tint-epic { filter: hue-rotate(250deg) saturate(0.8) brightness(1.1); }
+.pot-standin.tint-legendary { filter: hue-rotate(25deg) saturate(1.8) brightness(1.25); }

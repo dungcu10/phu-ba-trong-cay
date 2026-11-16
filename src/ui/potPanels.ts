@@ -1,5 +1,6 @@
 // Pot shop ("Lò Gốm Bà Mây") and the floor-opening window, plus shared pot pictures and stats.
 
+import { svgIcon } from './icons.ts';
 import type { GameSession } from '../app/session.ts';
 import type { FloorDef, PotDef, PotLevelDef } from '../core/content.ts';
 import { atlasData } from '../render/assets.ts';
@@ -12,14 +13,18 @@ export interface PotShopActions {
   unlockFloor(floorId: string): void;
 }
 
-const coin = (size = 18) => h('span', { class: 'ico-coin', style: `width:${size}px;height:${size}px` });
+const coin = (size = 18) => svgIcon('coin', size + 4);
 
 /** Pot picture: its own art when made, otherwise the terracotta of the same tier ("chờ đồ họa"). */
 export function potIcon(def: PotDef, level: number, size: number): HTMLElement {
   const own = `${def.sprite}/${level}`;
   const tier = level >= 5 ? 5 : level >= 3 ? 3 : 1;
-  const frame = atlasData.sprites.frames[own] ? own : `pots/terracotta/${tier}`;
-  return h('span', { class: `pot-ring ${def.rarity}` }, icon(frame, size));
+  const hasOwn = Boolean(atlasData.sprites.frames[own]);
+  const frame = hasOwn ? own : `pots/terracotta/${tier}`;
+  const img = icon(frame, size);
+  // Stand-in colour per pot type until its own picture exists (chờ đồ họa §11.7).
+  if (!hasOwn && def.sprite !== 'pots/terracotta') img.classList.add('pot-standin', `tint-${def.rarity}`);
+  return h('span', { class: `pot-ring ${def.rarity}` }, img);
 }
 
 export function rarityChip(rarity: string): HTMLElement {

@@ -13,6 +13,7 @@ import { formatNumber } from '../ui/text.ts';
 import { hex, TOKENS } from '../ui/tokens.ts';
 import type { Art } from './assets.ts';
 import { Effects } from './effects.ts';
+import { Ambience } from './ambience.ts';
 import { homeGarden, type GardenFloor, type GardenModel } from './garden.ts';
 import { SLOT_GEOM, SlotView } from './slotView.ts';
 import { ease, Tweens } from './tween.ts';
@@ -83,6 +84,7 @@ export class GameView {
   private readonly floorsLayer = new Container();
   private readonly trunkLayer = new Container();
   private readonly sky: Sprite;
+  private readonly ambience: Ambience;
   private floors: FloorView[] = [];
   private locked: { container: Container; def: FloorDef; info: Text } | null = null;
   private readonly tmp = new Point();
@@ -110,9 +112,10 @@ export class GameView {
     this.glow = GameView.glowTexture();
     this.sky = new Sprite(art.sky);
     this.sky.anchor.set(0.5);
-    app.stage.addChild(this.sky);
+    this.ambience = new Ambience(this.glow);
+    app.stage.addChild(this.sky, this.ambience.back);
     this.world.addChild(this.floorsLayer, this.trunkLayer, this.effects);
-    app.stage.addChild(this.world);
+    app.stage.addChild(this.world, this.ambience.front);
     this.source = () => homeGarden(session.content, session.state, session.now());
     this.model = this.source();
 
@@ -286,7 +289,10 @@ export class GameView {
     const ghost = new Container();
     const g = new Graphics();
     g.ellipse(0, -8, 52, 16).fill({ color: hex(C.ui.wood), alpha: 0.18 });
-    g.circle(0, -62, 46).fill({ color: 0xffffff, alpha: 0.55 }).stroke({ color: hex(C.brand.gold), width: 4, alpha: 0.9 });
+    g.circle(0, -62, 50).fill(hex(C.ui.wood));
+    g.circle(0, -62, 46).fill(hex(C.brand.gold));
+    g.circle(0, -62, 40).fill({ color: hex(C.ui.paper), alpha: 0.92 });
+    g.ellipse(-10, -86, 22, 9).fill({ color: 0xffffff, alpha: 0.6 });
     g.roundRect(-6, -86, 12, 48, 6).fill(hex(C.brand.gold));
     g.roundRect(-24, -68, 48, 12, 6).fill(hex(C.brand.gold));
     const price = this.text(`${formatNumber(cost)} xu`, TOKENS.font.size.caption, C.ui.textOnDark, C.ui.wood);
@@ -399,6 +405,7 @@ export class GameView {
     const k = Math.max(w / this.art.sky.width, h / this.art.sky.height);
     this.sky.scale.set(k);
     this.sky.position.set(w / 2, h / 2);
+    this.ambience.resize(w, h);
     const v = WORLD.view;
     const hud = TOKENS.touch.primary + (TOKENS.space[5] ?? 0);
     this.scale = Math.min((w * 0.97) / (v.right - v.left), (h - hud - TOKENS.layout.bottomInset) / (v.bottom - v.top));
@@ -593,7 +600,7 @@ export class GameView {
     const t = this.elapsed / 1000;
     this.floors.forEach((fv, fi) => {
       for (const s of fv.slots) s.animate(this.elapsed);
-      if (fv.ghost) fv.ghost.alpha = 0.75 + 0.25 * Math.sin(t * 2.4 + fi);
+      if (fv.ghost) fv.ghost.alpha = 0.88 + 0.12 * Math.sin(t * 2.4 + fi);
       if (!fv.animating) fv.container.y = this.floorY(fi) + Math.sin((this.elapsed / bob.periodMs) * Math.PI * 2 + fv.phase) * bob.amplitude;
     });
     if (!this.drag && Math.abs(this.scrollVelocity) > 0.5) {
@@ -601,6 +608,7 @@ export class GameView {
       this.scrollVelocity *= 0.92;
     }
     this.effects.update(dt);
+    this.ambience.update(dt, this.scroll);
     this.sinceRefresh += dt;
     if (this.sinceRefresh >= STATUS_REFRESH_MS) {
       this.sinceRefresh = 0;

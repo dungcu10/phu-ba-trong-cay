@@ -1,6 +1,7 @@
 // Fairy-tale windows (DESIGN_SYSTEM 6.5–6.7): the seed stall, the potter's bench (pot upgrade)
 // and the cloud chest (storage + selling). Windows only read state and send commands.
 
+import { svgIcon } from './icons.ts';
 import type { GameSession } from '../app/session.ts';
 import type { SlotRef } from '../core/game.ts';
 import { itemFrame } from '../render/assets.ts';
@@ -22,7 +23,7 @@ export interface PanelActions {
   openBench(slot: SlotRef): void;
 }
 
-const coin = (size = 22) => h('span', { class: 'ico-coin', style: `width:${size}px;height:${size}px` });
+const coin = (size = 22) => svgIcon('coin', size + 4);
 
 /** "Sạp Hạt Giống Bà Mây": seed packets on a wooden shelf; locked ones are under cloth. */
 export class SeedPanel extends Panel {

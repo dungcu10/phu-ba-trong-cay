@@ -2,13 +2,13 @@
 // garden services (top-left), embroidered coin and gem pouches (top-centre), letters and gear
 // (top-right), main buttons in a thumb arc (bottom-right). Under 15% of the screen.
 
+import { svgIcon } from './icons.ts';
 import type { GameSession } from '../app/session.ts';
 import { storageUsed, xpToNextLevel } from '../systems/economy.ts';
 import { canDeliver } from '../systems/orders.ts';
 import { nextMilestone } from '../systems/surprises.ts';
 import { missionsReady } from '../systems/missions.ts';
-import { itemFrame } from '../render/assets.ts';
-import { h, icon } from './dom.ts';
+import { h } from './dom.ts';
 import { nextHint } from './hint.ts';
 import { formatNumber } from './text.ts';
 
@@ -52,31 +52,30 @@ export class Hud {
     actions: HudActions,
   ) {
     const { content } = session;
-    this.pouch = h('div', { class: 'plaque pouch', 'data-test': 'coins' }, h('span', { class: 'ico-coin', style: 'width:30px;height:30px' }), this.coins);
-    this.gemPouch = h('div', { class: 'plaque pouch gems', 'data-test': 'gems' }, h('span', { class: 'ico-gem', style: 'width:26px;height:26px' }), this.gems);
+    this.pouch = h('div', { class: 'plaque pouch', 'data-test': 'coins' }, svgIcon('coin', 40), this.coins);
+    this.gemPouch = h('div', { class: 'plaque pouch gems', 'data-test': 'gems' }, svgIcon('gem', 36), this.gems);
     const levelBox = h('div', { class: 'plaque' }, this.level, h('span', { class: 'vine' }, this.vineFill, this.xpText));
-    const letters = h('button', { class: 'knob letter-knob', 'aria-label': 'Thư Mây', 'data-test': 'open-letters', onclick: () => actions.openLetters() }, this.letterBadge);
-    const gear = h('button', { class: 'knob gear', 'aria-label': 'Cài đặt', onclick: () => actions.openSettings() });
-    const firstCrop = content.cropList[0]!;
-    const seeds = (this.seeds = h('button', { class: 'round-big seeds', 'aria-label': 'Hạt giống', 'data-test': 'open-seeds', onclick: () => actions.toggleTray() }, icon(`${firstCrop.sprite}/${firstCrop.stages - 1}`, 56), h('span', { class: 'round-label' }, 'Hạt giống')));
+    const letters = h('button', { class: 'knob icon-knob', 'aria-label': 'Thư Mây', 'data-test': 'open-letters', onclick: () => actions.openLetters() }, svgIcon('letter', 38), this.letterBadge);
+    const gear = h('button', { class: 'knob icon-knob', 'aria-label': 'Cài đặt', onclick: () => actions.openSettings() }, svgIcon('gear', 36));
+    const seeds = (this.seeds = h('button', { class: 'round-big seeds', 'aria-label': 'Hạt giống', 'data-test': 'open-seeds', onclick: () => actions.toggleTray() }, svgIcon('seeds', 62), h('span', { class: 'round-label' }, 'Hạt giống')));
     this.storageButton = h(
       'button',
       { class: 'round-big', 'aria-label': 'Rương Mây', 'data-test': 'open-storage', onclick: () => actions.openStorage() },
-      icon(itemFrame(content, content.cropList[1]?.produce.id ?? ''), 52),
+      svgIcon('chest', 60),
       h('span', { class: 'round-label' }, 'Rương Mây'),
       this.storageBadge,
     );
-    const shop = h('button', { class: 'round-big', 'aria-label': 'Lò Gốm', 'data-test': 'open-shop', onclick: () => actions.openShop() }, icon('pots/terracotta/5', 58), h('span', { class: 'round-label' }, 'Lò Gốm'));
-    const side = (label: string, test: string, art: HTMLElement, badge: HTMLElement | null, run: () => void) =>
+    const shop = h('button', { class: 'round-big', 'aria-label': 'Lò Gốm', 'data-test': 'open-shop', onclick: () => actions.openShop() }, svgIcon('kiln', 62), h('span', { class: 'round-label' }, 'Lò Gốm'));
+    const side = (label: string, test: string, art: Element, badge: HTMLElement | null, run: () => void) =>
       h('button', { class: 'side-btn', 'aria-label': label, 'data-test': test, onclick: run }, art, h('span', { class: 'side-label' }, label), badge);
     const services = h(
       'div',
       { class: 'hud-side' },
-      side('Nhiệm vụ', 'open-missions', h('span', { class: 'scroll-mini' }), this.missionBadge, () => actions.openMissions()),
-      side('Đơn hàng', 'open-orders', h('span', { class: 'balloon-mini' }), this.orderBadge, () => actions.openOrders()),
-      side('Sạp', 'open-stall', icon(itemFrame(content, content.cropList[4]?.produce.id ?? ''), 40), this.stallBadge, () => actions.openStall()),
-      side('Phú Bà', 'open-neighbors', h('span', { class: 'crown' }), null, () => actions.openNeighbors()),
-      side('Sổ Tay', 'open-journal', h('span', { class: 'book' }), this.journalBadge, () => actions.openJournal()),
+      side('Nhiệm vụ', 'open-missions', svgIcon('missions', 46), this.missionBadge, () => actions.openMissions()),
+      side('Đơn hàng', 'open-orders', svgIcon('orders', 46), this.orderBadge, () => actions.openOrders()),
+      side('Sạp', 'open-stall', svgIcon('stall', 46), this.stallBadge, () => actions.openStall()),
+      side('Phú Bà', 'open-neighbors', svgIcon('crown', 46), null, () => actions.openNeighbors()),
+      side('Sổ Tay', 'open-journal', svgIcon('journal', 46), this.journalBadge, () => actions.openJournal()),
     );
     this.el = h(
       'div',

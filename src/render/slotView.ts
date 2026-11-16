@@ -32,6 +32,7 @@ export class SlotView extends Container {
   private readonly timer: Text;
   private readonly phase = Math.random() * Math.PI * 2;
   private readonly aura: Sprite;
+  private readonly shadow: Sprite;
   private readonly sparkles: Sprite[] = [];
   private tier: 0 | 1 | 2 = 0;
   private bloomT = -1;
@@ -59,6 +60,13 @@ export class SlotView extends Container {
     glow: Texture,
   ) {
     super();
+    this.shadow = new Sprite(glow);
+    this.shadow.anchor.set(0.5);
+    this.shadow.tint = hex(C.brand.shadow);
+    this.shadow.alpha = 0.45;
+    this.shadow.scale.set(0.95, 0.22);
+    this.shadow.position.set(0, -4);
+    this.shadow.zIndex = -3;
     this.aura = new Sprite(glow);
     this.aura.anchor.set(0.5);
     this.aura.position.set(0, -48);
@@ -93,7 +101,7 @@ export class SlotView extends Container {
     this.timer.anchor.set(0.5, 0);
     this.timer.y = SLOT_GEOM.barY + 10;
     // Plant in front of the pot: its base sits on the soil line inside the mouth.
-    this.addChild(this.aura, this.pot, this.plant, ...this.sparkles, this.bloomRing, this.bug, this.bugCount, this.marker, this.bar, this.timer);
+    this.addChild(this.shadow, this.aura, this.pot, this.plant, ...this.sparkles, this.bloomRing, this.bug, this.bugCount, this.marker, this.bar, this.timer);
 
     const g = SLOT_GEOM.hit;
     this.hitArea = new Rectangle(g.x, g.y, g.w, g.h);
@@ -170,20 +178,29 @@ export class SlotView extends Container {
     g.clear();
     g.visible = kind !== 'none';
     if (kind === 'none') return;
-    g.circle(0, 0, 20).fill(hex(C.ui.paper)).stroke({ color: hex(C.ui.wood), width: 3 });
-    g.poly([-6, 17, 6, 17, 0, 28]).fill(hex(C.ui.paper));
+    // Jelly bubble: wood rim, gold ring, paper face, glossy cap, little tail (matches the HUD buttons).
+    const ring = kind === 'ripe' ? C.brand.gold : C.brand.sky;
+    g.ellipse(0, 30, 14, 4).fill({ color: hex(C.brand.shadow), alpha: 0.25 });
+    g.poly([-8, 16, 8, 16, 0, 30]).fill(hex(C.ui.wood));
+    g.circle(0, 0, 25).fill(hex(C.ui.wood));
+    g.circle(0, 0, 22).fill(hex(ring));
+    g.circle(0, 0, 18).fill(hex(C.ui.paper));
+    g.poly([-5, 17, 5, 17, 0, 25]).fill(hex(C.ui.paper));
     if (kind === 'water') {
-      g.circle(0, 4, 8).fill(hex(C.brand.sky));
-      g.poly([-7, 1, 7, 1, 0, -12]).fill(hex(C.brand.sky));
+      g.circle(0, 5, 9).fill(hex(C.brand.sky));
+      g.poly([-8, 1, 8, 1, 0, -13]).fill(hex(C.brand.sky));
+      g.ellipse(-3, 3, 2.5, 4).fill({ color: 0xffffff, alpha: 0.8 });
     } else {
       const pts: number[] = [];
       for (let i = 0; i < 10; i++) {
-        const r = i % 2 === 0 ? 13 : 6;
-        const a = -Math.PI / 2 + (i * Math.PI) / 5;
-        pts.push(Math.cos(a) * r, Math.sin(a) * r + 1);
+        const r = i % 2 === 0 ? 14 : 6.5;
+        const a2 = -Math.PI / 2 + (i * Math.PI) / 5;
+        pts.push(Math.cos(a2) * r, Math.sin(a2) * r + 1);
       }
-      g.poly(pts).fill(hex(C.brand.gold)).stroke({ color: hex(C.ui.number), width: 2 });
+      g.poly(pts).fill(hex(C.brand.gold)).stroke({ color: hex(C.ui.number), width: 2.5, join: 'round' });
+      g.circle(-3, -3, 2.5).fill({ color: 0xffffff, alpha: 0.85 });
     }
+    g.ellipse(-6, -12, 9, 4).fill({ color: 0xffffff, alpha: 0.6 });
   }
 
   private updateTimer(status: CropStatus | null): void {
