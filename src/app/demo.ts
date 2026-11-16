@@ -60,7 +60,8 @@ export function makeDemo(session: GameSession, view: GameView, controller: Contr
     const tab = /^shop-t(\d+)$/.exec(step); // 'shop-t<N>': pot shop open on tab N (directive 04)
     if (tab) {
       controller.openShop();
-      click(`shop-tab-${tab[1]}`);
+      // The previous shop may still be fading out: click the tab of the newest one.
+      [...document.querySelectorAll<HTMLElement>(`[data-test="shop-tab-${tab[1]}"]`)].at(-1)?.click();
       return true;
     }
     switch (step) {
