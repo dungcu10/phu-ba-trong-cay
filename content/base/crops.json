@@ -4,7 +4,7 @@
     "name": { "vi": "Cúc Bông Gòn" },
     "family": "flower",
     "unlockLevel": 1,
-    "seedPrice": 1,
+    "seedPrice": 0,
     "growSeconds": 60,
     "regrowSeconds": null,
     "harvests": 1,

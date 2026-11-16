@@ -65,17 +65,17 @@ test('nâng cấp chậu làm cây lớn nhanh hơn', () => {
 });
 
 test('cây ngoài cấp hiện tại bị khóa; thiếu tiền không gieo được', () => {
-  const s = newGame(content, { level: 1, coins: 0 });
+  const s = newGame(content, { level: 2, coins: 0 });
   assert.deepEqual(dispatch(content, s, { type: 'plant', cropId: MINT, ...at }, T0), { ok: false, error: 'locked' });
-  assert.deepEqual(dispatch(content, s, { type: 'plant', cropId: DAISY, ...at }, T0), { ok: false, error: 'not_enough_coins' });
+  assert.deepEqual(dispatch(content, s, { type: 'plant', cropId: TOMATO, ...at }, T0), { ok: false, error: 'not_enough_coins' });
   assert.equal(s.floors[0]!.slots[0]!.planting, null);
 });
 
 test('chạm liên tục không gieo trùng và không trừ tiền hai lần', () => {
-  const s = newGame(content);
+  const s = newGame(content, { level: 2 });
   const coins = s.player.coins;
-  for (let i = 0; i < 20; i++) dispatch(content, s, { type: 'plant', cropId: DAISY, ...at }, T0);
-  assert.equal(s.player.coins, coins - 1);
+  for (let i = 0; i < 20; i++) dispatch(content, s, { type: 'plant', cropId: TOMATO, ...at }, T0);
+  assert.equal(s.player.coins, coins - content.crops.get(TOMATO)!.seedPrice);
 });
 
 test('cây chín không bao giờ héo, dù để rất lâu', () => {

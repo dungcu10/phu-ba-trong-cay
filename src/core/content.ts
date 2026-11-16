@@ -203,6 +203,11 @@ export function buildContentPack(raw: RawContent): ContentPack {
     addUnique(items, { id: crop.produce.id, name: crop.produce.name, kind: 'produce', sellPrice: crop.sellPrice, countsTowardStorage: true }, `${where}.produce`, problems);
   });
 
+  // Anti soft-lock: a brand-new or broke player must always be able to plant something.
+  if (isObj(config) && isNum(config.startingLevel) && ![...crops.values()].some((c) => c.unlockLevel <= config.startingLevel && c.seedPrice === 0)) {
+    problems.push('crops: cần ít nhất một cây miễn phí (seedPrice = 0) mở từ cấp khởi đầu, để người chơi không bao giờ kẹt');
+  }
+
   // Cross references.
   if (isObj(config) && !floors.has(config.startFloor)) problems.push(`config.startFloor: không có tầng "${config.startFloor}"`);
   for (const f of floors.values()) if (!pots.has(f.startingPot)) problems.push(`tầng ${f.id}: không có chậu "${f.startingPot}"`);

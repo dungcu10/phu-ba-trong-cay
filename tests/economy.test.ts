@@ -58,7 +58,7 @@ test('lên cấp: XP vượt ngưỡng thì tăng cấp, cộng thưởng xu, gi
   assert.ok(r.ok && r.events.some((e) => e.type === 'levelUp' && e.level === 2));
   assert.equal(s.player.level, 2);
   assert.equal(s.player.xp, 1);
-  assert.equal(s.player.coins, coins - 1 + content.config.levels.levelUpCoins);
+  assert.equal(s.player.coins, coins - content.crops.get(DAISY)!.seedPrice + content.config.levels.levelUpCoins);
 });
 
 test('người chơi mới đạt cấp 2 trong vòng 5 phút với 4 chậu Cúc Bông Gòn', () => {
