@@ -81,6 +81,24 @@ export class Art {
     return new Art(frames, sky);
   }
 
+  /** GPU memory of the loaded art, per atlas (RGBA8, no mipmaps), in bytes. */
+  textureBytes(): Record<string, number> {
+    const out: Record<string, number> = {};
+    const seen = new Set<unknown>();
+    const add = (name: string, t: Texture) => {
+      const src = t.source;
+      if (seen.has(src)) return;
+      seen.add(src);
+      out[name] = (out[name] ?? 0) + src.pixelWidth * src.pixelHeight * 4;
+    };
+    for (const s of SHEETS) {
+      const first = Object.keys(atlasData[s].frames)[0];
+      if (first && this.frames[first]) add(s, this.frames[first]!);
+    }
+    add('sky', this.sky);
+    return out;
+  }
+
   get(name: string): Texture {
     const t = this.frames[name];
     if (!t) throw new Error(`Thiếu hình "${name}"`);

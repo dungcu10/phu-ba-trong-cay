@@ -114,6 +114,12 @@ async function boot(): Promise<void> {
         await session.stopSaving();
         for (const k of SLOT_KEYS) await store.delete(k);
       },
+      benchScene: () => {
+        const w = window as unknown as { __pbtc?: { demo?: (s: string) => boolean } };
+        w.__pbtc?.demo?.('blender');
+        setTimeout(() => w.__pbtc?.demo?.('floor0'), 1200);
+      },
+      textureBytes: () => art.textureBytes(),
     });
   }
   registerServiceWorker((apply) =>

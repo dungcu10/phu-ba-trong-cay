@@ -72,7 +72,7 @@ export class PotShopPanel extends Panel {
               if (!locked) this.actions.buyPot(def.id);
             },
           },
-          potIcon(def, 1, 64),
+          potIcon(def, def.openTo, 64), // REVIEW 02 #5: best look the line can reach in this build
           h('span', { class: 'pack-name' }, def.name.vi),
           rarityChip(def.rarity),
           statLines(def.levels[0]!),
