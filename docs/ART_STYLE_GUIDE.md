@@ -206,6 +206,33 @@ Chung cho mọi dải cây: thêm câu sau vào cuối mô tả —
 | `crops/golden-gerbera.png` | Hoa Đồng Tiền Vàng (Hoa) | 1536 × 512 | `A golden gerbera: sturdy stems and broad leaves, at ripe stage two large radiant gold gerbera flowers with amber centres and a faint golden glow; stage 4 shows tight golden buds.` |
 | `bugs/ladybird.png` | Bọ Rùa Mây | 1024 × 512 | `Two frames of the same tiny cute ladybird side by side: round glossy red shell with soft dark spots, small cloud-white fluffy wings, big shiny eyes; left frame wings up, right frame wings down. Same size and position in both frames.` |
 
+
+### 11.6. Đợt 2 — ảnh cho phần mở rộng (quyết định 2026-11-16, `docs/decisions/2026-11-16-mo-rong-giai-doan-1.md`)
+
+Cùng công cụ và cách làm như tờ duyệt 01: Leonardo, chế độ **Auto Image** (ra Lucid Origin, gói miễn phí), 16:9 cho dải ngang, 9:16 cho vật đứng. Mỗi câu lệnh = phần mở đầu chung bên dưới + mô tả riêng + phần kết chung.
+
+Mở đầu chung: `Premium fairy-tale mobile farming game asset, stylized painterly 3D illustration, original design. Soft rounded chunky toy-like shapes, hand-painted detail, warm golden key light from upper left, soft lavender shadows, highly detailed, polished, charming. Front-facing side view.`
+Kết chung: `Isolated on a flat plain solid light grey background, sharp focus everywhere, no depth of field. No text, no letters, no numbers, no labels, no watermark, no black outlines, not pixel art, not flat vector, not photorealistic.`
+
+Ưu tiên theo thứ tự (hạn mức ~17 ảnh/ngày):
+
+| # | Tên file (`assets/art-src/`) | Cỡ | Mô tả riêng |
+|---|---|---|---|
+| 1 | `V2_than-cay-leo_doan.jpg` | 9:16 | `A straight vertical segment of a giant ancient climbing beanstalk trunk, braided green vines twisting around it, a few big heart-shaped leaves and small golden lanterns, the top and bottom edges cut flat horizontally so the segment can repeat seamlessly when stacked. No roots, no top foliage.` |
+| 2 | `F3_tang-may_tra.jpg` | 16:9 | `A long floating cloud shelf for a row of pots, misty tea-garden theme: soft white cloud base with pale green tea bushes and dew drops along its rim, small bamboo lanterns hanging underneath. Flat top, empty, wide horizontal.` |
+| 3 | `F4_tang-may_hoang-kim.jpg` | 16:9 | `A long floating cloud shelf for a row of pots, golden rice-terrace theme: cloud base with tiny golden terraced fields along its rim, warm amber glow, small brass lanterns hanging underneath. Flat top, empty, wide horizontal.` |
+| 4 | `P4-P6_chau-hiem.jpg` | 16:9 | `Three different flower pots side by side, each with a clearly different silhouette and dark soil inside, empty: (1) a tall-necked white-and-blue porcelain pot with cloud patterns, (2) a bronze tripod cauldron pot with three curled feet and green patina, (3) a jade-green pot shaped like a blooming lotus.` |
+| 5 | `P7-P9_chau-quy.jpg` | 16:9 | `Three different luxurious flower pots side by side, each with a clearly different silhouette and dark soil inside, empty: (1) a carved rosewood pot with gold inlay, (2) a fluffy cloud-shaped pot made of soft white cloud with a pearl rim, (3) a golden treasure pot with jade gems and coins around its base.` |
+| 6 | `O1_khinh-khi-cau.jpg` | 9:16 | `A cute hot-air balloon delivering goods: peach-and-cream striped balloon with golden ropes, a woven wicker basket hanging below holding small wooden crates of fruit and flowers, a tiny pennant flag.` |
+| 7 | `O2_bang-don-hang.jpg` | 16:9 | `A wooden order board on two posts with a small tiled roof, six empty parchment notes pinned in two rows with little brass pins, vines and tiny flowers on the posts.` |
+| 8 | `G1_ruong-may.jpg` | 16:9 | `Three items side by side: (1) a small wooden treasure chest with gold trim wrapped in a little cloud, closed, (2) the same chest open with golden light and coins spilling out, (3) a single shining jade-green gem shaped like a cloud.` |
+| 9 | `G2_xu-ngoc-sao.jpg` | 16:9 | `Three game icons side by side: (1) a thick gold coin with a tiny sprout embossed in the middle, (2) a faceted jade-green gem, (3) a plump soft blue star.` |
+| 10 | `N1-N4_hang-xom.jpg` | 16:9 | `Four chibi fairy-tale villager characters standing in a row, 2.5 heads tall, each clearly different: (1) a cheerful plump auntie in a silk ao ba ba with a conical hat trimmed in gold, (2) a young gardener boy with a straw hat and a watering can, (3) an elegant rich lady with pearls and a parasol, (4) a grandpa with a white beard holding a bamboo basket. Front view, full body.` |
+| 11 | `N5-N8_hang-xom.jpg` | 16:9 | `Four more chibi fairy-tale villager characters standing in a row, 2.5 heads tall, each clearly different: (1) a little girl with twin buns holding a flower, (2) a merchant uncle with a round belly and an abacus, (3) a shy bookish young woman with round glasses, (4) a sporty auntie in a tracksuit with a towel. Front view, full body.` |
+| 12 | `M1_bien-di.jpg` | 16:9 | `Three magical fruit variations side by side: (1) a ripe tomato made of shining gold, (2) a ripe strawberry made of translucent green jade, (3) a ripe flower glowing with soft rainbow light and sparkles.` |
+
+Tầng mây theo tầng có thể tạm dùng `F1_tang-may.jpg` đổi màu bằng code cho đến khi có ảnh 2–3. Biến Dị có thể tạm dùng ánh sáng phủ màu bằng code cho đến khi có ảnh 12.
+
 ## 12. Kiểm duyệt chất lượng
 
 - [ ] Đúng góc isometric 2:1, mặt chính dưới–trái
