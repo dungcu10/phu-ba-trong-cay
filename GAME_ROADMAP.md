@@ -23,22 +23,24 @@ Trạng thái: 🟨
 **Cột mốc M0:** Báo cáo rà soát + nền móng được nghiệm thu. → *Chủ dự án duyệt.*
 
 ## Giai đoạn 1 — Vườn tầng mây đầu tiên (Core Loop)
-**Mục tiêu:** Gieo → chăm → thu hoạch → bán → nâng chậu phải *vui* ngay cả khi chưa có gì khác.
-Mô hình đã chốt: **chậu trên các tầng mây** (xem `docs/GAMEPLAY_DESIGN.md`). Giai đoạn này chỉ làm lát cắt dọc.
-Trạng thái: ⬜
+**Mục tiêu:** Gieo → chăm → thu hoạch → bán/giao đơn → nâng chậu → mở tầng phải *vui* và có mục tiêu ngay từ đầu.
+Mô hình đã chốt: **chậu trên các tầng mây**, góc chính diện, cây leo cổ thụ (xem `docs/GAMEPLAY_DESIGN.md`).
+Phạm vi mở rộng theo quyết định chủ dự án 2026-11-16 (`docs/decisions/2026-11-16-mo-rong-giai-doan-1.md`); chủ dự án kiêm vai trò CTO từ 2026-11-16 19:46.
+Trạng thái: 🟨
 
-- [ ] 1 tầng mây (Đồng Mây Ngọc) với 4 vị trí chậu.
-- [ ] 6 giống cây, mỗi giống có lý do để chọn (kiểm chứng bằng bảng cân bằng theo 2 kiểu chơi: chăm chỉ và thỉnh thoảng ghé).
-- [ ] Gieo, tưới, bắt Bọ Mây, thu hoạch; cây thu nhiều lần mọc lại.
-- [ ] Sinh trưởng theo thời gian thực, tiếp tục khi tắt game.
+- [ ] 3 tầng mây có đặc tính môi trường, 10 chậu mỗi tầng, vuốt dọc, mở tầng có hoạt ảnh.
+- [ ] 6 giống cây, mỗi giống có lý do để chọn (bảng cân bằng theo 3 kiểu chơi).
+- [ ] Gieo, tưới, bắt Bọ Mây, thu hoạch; cây thu nhiều lần mọc lại; sinh trưởng theo thời gian thực, tiếp tục khi tắt game.
 - [ ] Kho có giới hạn; bán nông sản lấy xu.
-- [ ] Nâng cấp chậu bằng xu + Bọ Mây, luôn thành công.
-- [ ] Cấp độ người chơi và mở khóa cây theo cấp.
-- [ ] Không có trạng thái kẹt: người chơi luôn gieo được ít nhất một cây.
-- [ ] Vẽ bằng PixiJS (hình tạm được phép), thao tác cảm ứng, phản hồi tức thì: hiệu ứng, số bay lên.
+- [ ] Chậu: 5 độ hiếm, chỉ số, hệ ưa thích, mua ở Lò Gốm, kho chậu, nâng cấp luôn thành công.
+- [ ] Đơn hàng khinh khí cầu: 6 đơn, thưởng cao hơn bán lẻ, đơn quý hiếm.
+- [ ] Quà bất ngờ khi thu hoạch, Ngọc Mây (chỉ kiếm trong game), quả Biến Dị, Sổ Tay Thực Vật.
+- [ ] Hàng xóm BOT: có trạng thái, quyết định theo thế giới, mua ở Sạp Phú Bà, đặt đơn, ghé thăm tặng quà, Bảng Phú Bà, sống khi tắt game, có công cụ xem lý do.
+- [ ] Cấp độ người chơi và mở khóa theo cấp; không có trạng thái kẹt.
+- [ ] Vẽ bằng PixiJS (hình tạm được phép, ghi "chờ đồ họa"), cảm ứng, phản hồi tức thì.
 - [ ] Bản thử cài được lên iPad qua GitHub Pages, chạy offline.
 
-**KHÔNG làm trong giai đoạn này:** Linh Thú, bộ chậu, độ hiếm chậu, Biến Dị, Thông Thạo, BOT, giao thương, đơn hàng, sự kiện, tầng thứ 2.
+**KHÔNG làm trong giai đoạn này:** Linh Thú, bộ chậu, chậu kỹ năng, Thông Thạo sao, giao thương giữa người chơi thật, sự kiện theo mùa.
 
 **Cột mốc M1:** Một người chơi mới chơi 15 phút liên tục trên iPad mà không bối rối và muốn chơi tiếp. → *Chủ dự án chơi thử và duyệt.*
 
