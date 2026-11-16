@@ -139,6 +139,11 @@ def smooth_profile(pts, per=6):
                        + (-p0[d] + 3 * p1[d] - 3 * p2[d] + p3[d]) * t3)
                 for d in (0, 1)))
     out.append(tuple(pts[-1]))
+    # chặn vọt lố của Catmull-Rom ở các điểm sát nhau: z luôn không giảm (R(z) cần đơn điệu)
+    zmax = -1e9
+    for i, (r, z) in enumerate(out):
+        zmax = max(zmax, z)
+        out[i] = (max(0.0, r), zmax)
     return out
 
 
@@ -180,15 +185,17 @@ def mesh_object(name, verts, faces, mat=None, smooth=True):
     return bpy.data.objects.new(name, me)
 
 
-def lathe(name, prof, seg=72, cap_bottom=True, mat=None):
-    """Tiện tròn hồ sơ (r, z) quanh trục Z. Pháp tuyến hướng ra ngoài."""
+def lathe(name, prof, seg=72, cap_bottom=True, mat=None, rmod=None, smooth=True):
+    """Tiện tròn hồ sơ (r, z) quanh trục Z. Pháp tuyến hướng ra ngoài.
+    rmod(a, z) -> hệ số nhân bán kính (múi bí ngô, gân đèn lồng...)."""
     n = len(prof)
     verts, faces = [], []
     for i in range(seg):
         a = TAU * i / seg
         c, s = math.cos(a), math.sin(a)
         for r, z in prof:
-            verts.append((r * c, r * s, z))
+            k = rmod(a, z) if rmod else 1.0
+            verts.append((r * k * c, r * k * s, z))
     for i in range(seg):
         i2 = (i + 1) % seg
         for j in range(n - 1):
@@ -200,7 +207,7 @@ def lathe(name, prof, seg=72, cap_bottom=True, mat=None):
         for i in range(seg):
             i2 = (i + 1) % seg
             faces.append((i2 * n, i * n, ci))
-    return mesh_object(name, verts, faces, mat)
+    return mesh_object(name, verts, faces, mat, smooth=smooth)
 
 
 def ring(name, R, z, rr, seg=128, sides=14, zfunc=None, rfunc=None, mat=None):
@@ -445,7 +452,7 @@ def feather_obj(ctx, me, mat, loc, rot, scale=1.0, sub=2, thick=0.012):
     if sub > 0:
         add_mod(ob, "SOLIDIFY", thickness=thick, offset=0.0)
         subsurf(ob, sub)
-    elif me.name.startswith(("WingFeather", "TailFeather", "CrestFeather", "HaloFeather")) and len(me.polygons) < 64:
+    elif len(me.polygons) < 64:
         add_mod(ob, "SOLIDIFY", thickness=thick * 1.5, offset=0.0)
     else:
         add_mod(ob, "BEVEL", width=0.025, segments=2)
@@ -454,11 +461,32 @@ def feather_obj(ctx, me, mat, loc, rot, scale=1.0, sub=2, thick=0.012):
 
 # ------------------------------------------------------------ các bộ phận ---
 
+def body_profile(line, part):
+    raw = line["profiles"][part["profile"]]
+    return smooth_profile(raw) if part.get("smooth", True) else [tuple(x) for x in raw]
+
+
+def _lobe_fn(part):
+    k, amp = part.get("lobes", 0), part.get("lobe_amp", 0.06)
+    if not k:
+        return None
+    sharp = part.get("lobe_sharp", 1.0)
+
+    def f(a, z):
+        return 1.0 - amp + amp * 2.0 * abs(math.cos(k * a / 2.0)) ** sharp
+    return f
+
+
 def part_body(ctx, part, p):
-    prof = smooth_profile(ctx.line["profiles"][part["profile"]])
-    ob = lathe("Body", prof, seg=part.get("seg", 72), mat=ctx.mat(part["mat"]))
+    prof = body_profile(ctx.line, part)
+    facets = part.get("facets", 0)
+    ob = lathe("Body", prof, seg=facets or part.get("seg", 72), mat=ctx.mat(part["mat"]),
+               rmod=_lobe_fn(part), smooth=not facets)
     add_mod(ob, "SOLIDIFY", thickness=part.get("wall", 0.045), offset=-1.0, use_even_offset=True)
-    subsurf(ob, 2)
+    if facets:
+        add_mod(ob, "BEVEL", width=0.01, segments=2)
+    else:
+        subsurf(ob, 2)
     ctx.link(ob)
 
 
@@ -818,11 +846,437 @@ def part_embers(ctx, part, p):
         placed += 1
 
 
+# ------------------------------------------------- bộ phận "món đặc trưng" ---
+
+def _blob(ctx, me, loc, scale, rot=(0.0, 0.0, 0.0), parent=True):
+    ob = bpy.data.objects.new(me.name, me)
+    ob.location = loc
+    ob.scale = scale
+    ob.rotation_euler = Euler(rot, "XYZ")
+    return ctx.link(ob, parent=parent)
+
+
+def _ico(name, mat, sub=3):
+    me = ico_mesh(name, 1.0, sub)
+    me.materials.append(mat)
+    return me
+
+
+def part_face(ctx, part, p):
+    """Khuôn mặt kawaii: mắt bóng có đốm sáng, má hồng, miệng cười."""
+    z = part.get("z", 0.5) * ctx.H
+    gap = math.radians(part.get("gap", 17))
+    s = part.get("eye", 0.07)
+    eye = _ico("Eye", ctx.mat(part.get("eye_mat", "face_eye")))
+    hi = _ico("EyeHi", ctx.mat(part.get("hi_mat", "face_hi")), 2)
+    blush = _ico("Blush", ctx.mat(part.get("blush_mat", "face_blush")), 2)
+    sleepy = part.get("sleepy", False)
+    for side in (-1, 1):
+        th = FRONT + side * gap
+        n = Vector((math.cos(th), math.sin(th), 0.0))
+        if sleepy:
+            pts = []
+            for k in range(13):
+                a = math.pi * k / 12
+                q = ctx.surface(th + 0.9 * s * math.cos(a) / ctx.R(z), z - 0.5 * s * math.sin(a), 0.006)
+                pts.append(tuple(q))
+            ctx.link(tube("EyeLid", pts, 0.012, ctx.mat(part.get("eye_mat", "face_eye"))))
+        else:
+            c = ctx.surface(th, z, -s * 0.15)
+            _blob(ctx, eye, c, (s, s, s * 1.15), (math.pi / 2, 0.0, th + math.pi / 2))
+            hc = c + n * (s * 0.62) + Vector((0, 0, s * 0.38)) + Vector((-math.sin(th), math.cos(th), 0)) * (-s * 0.3)
+            _blob(ctx, hi, hc, (s * 0.3, s * 0.3, s * 0.3))
+        bth = FRONT + side * gap * 1.85
+        _blob(ctx, blush, ctx.surface(bth, z - s * 1.5, -0.004), (s * 0.95, s * 0.95, s * 0.55),
+              (math.pi / 2, 0.0, bth + math.pi / 2))
+    pts = []
+    for k in range(13):
+        a = -0.5 + k / 12
+        pts.append(tuple(ctx.surface(FRONT + a * gap * 0.75, z - s * 1.4 - 0.05 * s * math.cos(a * math.pi) * 6, 0.006)))
+    ctx.link(tube("Smile", pts, 0.011, ctx.mat(part.get("eye_mat", "face_eye"))))
+
+
+def part_brim(ctx, part, p):
+    """Vành nấm / mái xòe quanh miệng chậu (để hở giữa cho cây mọc)."""
+    z0 = ctx.H - part.get("below", 0.06)
+    r_in = ctx.R(ctx.H) * 0.92
+    w = part.get("width", 0.45)
+    h = part.get("height", 0.18)
+    prof = [(r_in, z0 + h * 0.6), (r_in + w * 0.35, z0 + h), (r_in + w * 0.75, z0 + h * 0.55), (r_in + w, z0 - h * 0.25)]
+    ob = lathe("Brim", smooth_profile(prof, 8), seg=96, cap_bottom=False, mat=ctx.mat(part["mat"]))
+    add_mod(ob, "SOLIDIFY", thickness=part.get("thick", 0.05), offset=-1.0)
+    subsurf(ob, 2)
+    ctx.link(ob)
+    if part.get("dots_mat"):
+        me = _ico("BrimDot", ctx.mat(part["dots_mat"]), 2)
+        rng = random.Random(5)
+        for i in range(part.get("dots", 14)):
+            th = FRONT + rng.uniform(-1.4, 1.4)
+            f = rng.uniform(0.15, 0.8)
+            r = r_in + w * f
+            zz = z0 + h * (0.6 + 0.4 * math.sin(math.pi * min(1.0, f / 0.75))) - (h * 0.8 * max(0.0, f - 0.75) / 0.25) + 0.02
+            s = rng.uniform(0.035, 0.065)
+            _blob(ctx, me, Vector((r * math.cos(th), r * math.sin(th), zz)), (s, s, s * 0.45))
+
+
+def part_minis(ctx, part, p):
+    """Nấm/cây nhỏ mọc quanh chân chậu."""
+    stem_mat, cap_mat = ctx.mat(part["stem_mat"]), ctx.mat(part["cap_mat"])
+    for k, (dx, sc) in enumerate(part.get("spots", [[-0.75, 0.9], [0.8, 0.7], [-0.52, 0.55]])):
+        y = -0.25 - 0.1 * (k % 2)
+        stem = lathe("MiniStem", smooth_profile([(0.05, 0.0), (0.045, 0.1), (0.035, 0.18)]), seg=24, mat=stem_mat)
+        subsurf(stem, 1)
+        stem.location, stem.scale = Vector((dx, y, 0.0)), (sc, sc, sc)
+        ctx.link(stem, parent=False)
+        cap = lathe("MiniCap", smooth_profile([(0.02, 0.24), (0.1, 0.23), (0.15, 0.18), (0.16, 0.15)]), seg=32,
+                    cap_bottom=False, mat=cap_mat)
+        add_mod(cap, "SOLIDIFY", thickness=0.03, offset=-1.0)
+        subsurf(cap, 2)
+        cap.location, cap.scale = Vector((dx, y, 0.0)), (sc, sc, sc)
+        ctx.link(cap, parent=False)
+
+
+def part_drips(ctx, part, p):
+    """Kem chảy dọc mép tầng bánh."""
+    me = _ico("Drip", ctx.mat(part["mat"]), 3)
+    rng = random.Random(part.get("seed", 2))
+    for zf in part.get("zs", [0.98]):
+        z = zf * ctx.H
+        n = part.get("count", 14)
+        for i in range(n):
+            th = TAU * i / n + rng.uniform(-0.08, 0.08)
+            L = rng.uniform(0.04, 0.11)
+            c = ctx.surface(th, z - L * 0.6, 0.0)
+            _blob(ctx, me, c, (0.045, 0.045, L))
+        ring_ob = ring("Frosting", ctx.R(z) + 0.01, z, 0.04, mat=ctx.mat(part["mat"]),
+                       zfunc=lambda a: 0.015 * math.sin(a * 22))
+        subsurf(ring_ob, 1)
+        ctx.link(ring_ob)
+
+
+def part_candles(ctx, part, p):
+    wax, flame = ctx.mat(part["mat"]), ctx.mat(part["flame_mat"])
+    n = part.get("count", 5)
+    R0 = ctx.R(ctx.H) * 0.78
+    fme = _ico("Flame", flame, 3)
+    for i in range(n):
+        th = FRONT + math.pi + (i - (n - 1) / 2) * part.get("spread", 0.55)
+        x, y = R0 * math.cos(th), R0 * math.sin(th)
+        h = part.get("height", 0.32) * (1.0 - 0.15 * (i % 2))
+        c = lathe("Candle", [(0.035, 0.0), (0.035, h), (0.012, h + 0.01)], seg=24, mat=wax)
+        c.location = Vector((x, y, ctx.H - 0.05))
+        ctx.link(c)
+        _blob(ctx, fme, Vector((x, y, ctx.H - 0.05 + h + 0.06)), (0.035, 0.035, 0.07))
+
+
+def part_ears(ctx, part, p):
+    """Tai (mèo/cáo) gắn trên vành."""
+    me, sub = element_mesh("Ear", "blade", 0.9)
+    inner, _ = element_mesh("EarIn", "blade", 0.9)
+    L = part.get("length", 0.32)
+    for side in (-1, 1):
+        th = FRONT + side * math.radians(part.get("angle", 48))
+        base = ctx.surface(th, ctx.H - 0.04, -0.02)
+        rot = Euler((0.0, side * math.radians(part.get("tilt", 18)), 0.0), "XYZ")
+        feather_obj(ctx, me, ctx.mat(part["mat"]), base, rot, scale=L, sub=0, thick=0.08)
+        feather_obj(ctx, inner, ctx.mat(part["inner_mat"]), base + Vector((0, -0.035, 0.03)), rot,
+                    scale=L * 0.62, sub=0, thick=0.06)
+
+
+def part_orbit(ctx, part, p):
+    """Vành hành tinh nghiêng ôm quanh chậu."""
+    z = part.get("z", 0.55) * ctx.H
+    rg = ring("Orbit", ctx.R(z) * part.get("scale", 1.75), 0.0, part.get("rr", 0.035), seg=128, sides=12,
+              mat=ctx.mat(part["mat"]))
+    rg.location = Vector((0.0, 0.0, z))
+    rg.rotation_euler = Euler((math.radians(part.get("tilt", 72)), math.radians(part.get("roll", -14)), 0.0), "XYZ")
+    rg.scale = (1.0, 1.0, part.get("flat", 0.25))
+    subsurf(rg, 1)
+    ctx.link(rg)
+    if part.get("moons"):
+        me = _ico("Moon", ctx.mat(part["moon_mat"]))
+        R = ctx.R(z) * part.get("scale", 1.75)
+        for k, a in enumerate((0.4, 2.6, 4.4)[: part["moons"]]):
+            loc = Vector((R * math.cos(a), R * math.sin(a) * 0.3, z + R * math.sin(a) * 0.25))
+            _blob(ctx, me, loc, (0.06 - 0.012 * k,) * 3)
+
+
+def part_antenna(ctx, part, p):
+    th = FRONT + math.radians(part.get("angle", 20)) + math.pi
+    base = ctx.surface(th, ctx.H - 0.02, -0.03)
+    top = base + Vector((0.08, 0.05, part.get("height", 0.45)))
+    pts = [tuple(base.lerp(top, t) + Vector((0.05 * math.sin(t * 3), 0, 0))) for t in [k / 10 for k in range(11)]]
+    ctx.link(tube("Antenna", pts, 0.012, ctx.mat(part["mat"])))
+    _blob(ctx, _ico("AntennaBall", ctx.mat(part["ball_mat"])), Vector(pts[-1]), (0.055,) * 3)
+
+
+def part_handles(ctx, part, p):
+    z = part.get("z", 0.78) * ctx.H
+    for side in (-1, 1):
+        rg = ring("Handle", part.get("r", 0.11), 0.0, part.get("rr", 0.025), seg=48, sides=10,
+                  mat=ctx.mat(part["mat"]))
+        rg.location = Vector((side * (ctx.R(z) + part.get("r", 0.11) * 0.6), 0.0, z))
+        rg.rotation_euler = Euler((math.pi / 2, 0.0, 0.0), "XYZ")
+        subsurf(rg, 1)
+        ctx.link(rg)
+
+
+def part_stand(ctx, part, p):
+    """Đế đứng (lục giác/bát giác) — chậu đặt lên trên, như bệ ngọc."""
+    h = part.get("height", 0.22)
+    r = part.get("radius", 0.55)
+    prof = [(r * 0.8, 0.0), (r, 0.03), (r, h * 0.55), (r * 0.82, h * 0.75), (r * 0.9, h * 0.92), (r * 0.86, h)]
+    ob = lathe("Stand", prof, seg=part.get("sides", 6), mat=ctx.mat(part["mat"]))
+    for poly in ob.data.polygons:
+        poly.use_smooth = False
+    add_mod(ob, "BEVEL", width=0.012, segments=2)
+    ctx.link(ob, parent=False)
+
+
+def part_straw(ctx, part, p):
+    pts = []
+    for k in range(21):
+        t = k / 20
+        x = 0.12 + 0.35 * max(0.0, t - 0.55) / 0.45
+        z = ctx.H - 0.25 + t * part.get("height", 0.75) - 0.12 * max(0.0, t - 0.75) / 0.25
+        pts.append((x, 0.05, z))
+    ctx.link(tube("Straw", pts, part.get("radius", 0.05), ctx.mat(part["mat"]), resolution=6))
+
+
+def part_lid(ctx, part, p):
+    """Nắp vòm trong suốt kiểu ly trà sữa (để hở lỗ giữa)."""
+    R = ctx.R(ctx.H) + 0.02
+    prof = [(R * 0.35, ctx.H + 0.2), (R * 0.75, ctx.H + 0.16), (R, ctx.H + 0.05), (R + 0.03, ctx.H)]
+    ob = lathe("Lid", smooth_profile(prof, 8), seg=96, cap_bottom=False, mat=ctx.mat(part["mat"]))
+    add_mod(ob, "SOLIDIFY", thickness=0.02, offset=-1.0)
+    subsurf(ob, 2)
+    ctx.link(ob)
+
+
+# ------------------------------------------- bộ phận tổng quát (bộ 50 chậu) ---
+
+def _deg(v):
+    return [math.radians(x) for x in v]
+
+
+def _prim_obj(ctx, kind, mat, sides=24):
+    """Khối cơ bản đã gán vật liệu. Kích thước chuẩn ~1 (bán kính hoặc chiều dài)."""
+    if kind == "sphere":
+        ob = bpy.data.objects.new("Sph", _ico("Sph", mat, 3))
+    elif kind in ("cyl", "hex", "oct"):
+        sd = {"hex": 6, "oct": 8}.get(kind, sides)
+        ob = lathe("Cyl", [(0.001, 0.0), (1.0, 0.0), (1.0, 1.0), (0.001, 1.0)], seg=sd, cap_bottom=False,
+                   mat=mat, smooth=kind == "cyl")
+        add_mod(ob, "BEVEL", width=0.04, segments=2)
+    elif kind == "cone":
+        # Review 03: điểm giữa 0,6 + subsurf làm nón phình thành quả trứng -> nón thẳng
+        ob = lathe("Cone", [(1.0, 0.0), (0.5, 0.5), (0.02, 1.0)], seg=sides, mat=mat)
+    elif kind == "horn":
+        ob = lathe("Horn", smooth_profile([(1.0, 0.0), (0.8, 0.3), (0.45, 0.65), (0.02, 1.0)]), seg=sides, mat=mat)
+    elif kind == "tear":
+        ob = lathe("Tear", smooth_profile([(0.001, 0.0), (0.8, 0.25), (0.9, 0.45), (0.5, 0.8), (0.001, 1.0)]),
+                   seg=sides, cap_bottom=False, mat=mat)
+        subsurf(ob, 1)
+    elif kind == "dome":
+        ob = lathe("Dome", smooth_profile([(1.0, 0.0), (0.92, 0.4), (0.6, 0.85), (0.001, 1.0)]), seg=sides, mat=mat)
+        subsurf(ob, 1)
+    elif kind == "torus":
+        ob = ring("Torus", 1.0, 0.0, 0.28, seg=48, sides=12, mat=mat)
+        subsurf(ob, 1)
+    elif kind == "box":
+        ob = lathe("Box", [(0.001, -0.5), (0.71, -0.5), (0.71, 0.5), (0.001, 0.5)], seg=4, cap_bottom=False,
+                   mat=mat, smooth=False)
+        ob.rotation_euler = Euler((0.0, 0.0, math.pi / 4), "XYZ")
+        add_mod(ob, "BEVEL", width=0.08, segments=3)
+    else:  # feather, leaf, petal, blade, spike, flame, fin, membrane, ribbon, coin, gear, orb
+        me, sub = element_mesh(kind, kind, 0.45 if kind in ("leaf", "petal") else 0.3)
+        if not me.materials:
+            me.materials.append(mat)
+        ob = bpy.data.objects.new(kind, me)
+        if sub > 0:
+            add_mod(ob, "SOLIDIFY", thickness=0.03, offset=0.0)
+            subsurf(ob, sub)
+        else:
+            add_mod(ob, "SOLIDIFY", thickness=0.05, offset=0.0)
+    return ob
+
+
+def _place(ctx, it, side=1):
+    """Vị trí + hướng của một chi tiết. 'surf': [độ lệch so với mặt trước, z tỉ lệ, đẩy ra];
+    'at': [x, y, z tỉ lệ]."""
+    rot = it.get("rot")
+    if "surf" in it:
+        deg, zf, off = (list(it["surf"]) + [0.0])[:3]
+        th = FRONT + side * math.radians(deg)
+        loc = ctx.surface(th, zf * ctx.H, off)
+        if rot is None:
+            r = orient_outward(th, math.pi / 2 if it.get("flat") else math.radians(it.get("tilt", 0)))
+        else:
+            r = Euler(_deg(rot), "XYZ")
+            r = Euler((r[0], side * r[1], r[2] + (th + math.pi / 2 if it.get("follow") else 0.0)), "XYZ")
+        return loc, r
+    x, y, zf = it.get("at", [0.0, 0.0, 1.0])
+    loc = Vector((side * x, y, zf * ctx.H if not it.get("abs_z") else zf))
+    r = _deg(rot or [0, 0, 0])
+    return loc, Euler((r[0], side * r[1], side * r[2]), "XYZ")
+
+
+def part_prop(ctx, part, p):
+    """Danh sách chi tiết tự do: tai thỏ, mõm heo, sừng, quả dâu, lá, chân... 'mirror' nhân đôi trái/phải."""
+    for it in part.get("items", [part]):
+        mat = ctx.mat(it.get("mat", part.get("mat")))
+        for side in ((1, -1) if it.get("mirror") else (1,)):
+            ob = _prim_obj(ctx, it["shape"], mat, it.get("sides", 24))
+            loc, rot = _place(ctx, it, side)
+            if it["shape"] == "box":
+                rot = Euler((rot[0], rot[1], rot[2] + math.pi / 4), "XYZ")
+            ob.location, ob.rotation_euler = loc, rot
+            s = it.get("scale", 0.1)
+            ob.scale = tuple(s) if isinstance(s, list) else (s, s, s)
+            ctx.link(ob, parent=not it.get("ground"))
+
+
+def part_petals(ctx, part, p):
+    """Vòng cánh hoa / vảy / lá xòe quanh thân (sen, vỏ sò, đuôi công...)."""
+    z = part.get("z", 0.3) * ctx.H
+    n = part.get("count", 8)
+    arc = math.radians(part.get("arc", 360))
+    center = FRONT + math.radians(part.get("center", 0))
+    me, sub = element_mesh("Petal", part.get("shape", "petal"), part.get("width", 0.4))
+    mat = ctx.mat(part["mat"])
+    L = part.get("length", 0.5)
+    tilt = math.radians(part.get("tilt", 25))
+    for i in range(n):
+        f = (i + 0.5) / n if arc >= TAU - 1e-6 else (i / max(1, n - 1))
+        th = center - arc / 2 + arc * f + part.get("phase", 0.0)
+        g = part.get("len_var", 0.0) * math.sin(math.pi * f)
+        feather_obj(ctx, me, mat, ctx.surface(th, z, part.get("off", -0.02)), orient_outward(th, tilt),
+                    scale=L * (1.0 + g), sub=sub, thick=part.get("thick", 0.02))
+
+
+def part_meridians(ctx, part, p):
+    """Gân dọc chạy theo thân: sọc dưa hấu, nếp giấy cupcake, nan đèn lồng, rãnh bí ngô."""
+    n = part.get("count", 12)
+    arc = math.radians(part.get("arc", 360))
+    z0, z1 = part.get("z", [0.05, 0.95])
+    wav = part.get("wave", 0.0)
+    tw = part.get("twist", 0.0)
+    for i in range(n):
+        th0 = FRONT - arc / 2 + arc * ((i + 0.5) / n if arc >= TAU - 1e-6 else i / max(1, n - 1))
+        pts = []
+        for k in range(25):
+            t = k / 24
+            th = th0 + wav * math.sin(t * math.pi * 3) + tw * t
+            pts.append(tuple(ctx.surface(th, (z0 + (z1 - z0) * t) * ctx.H, part.get("off", 0.0))))
+        ctx.link(tube("Meridian", pts, part.get("radius", 0.015), ctx.mat(part["mat"])))
+
+
+def part_tiles(ctx, part, p):
+    """Lưới chi tiết phủ mặt trước: ô tổ ong, vảy quả thông, lông cú, hạt cơm, vân trống đồng."""
+    rows, cols = part.get("rows", 4), part.get("cols", 6)
+    z0, z1 = part.get("z", [0.15, 0.85])
+    arc = math.radians(part.get("arc", 150))
+    shape = part.get("shape", "hex")
+    mat = ctx.mat(part["mat"])
+    s = part.get("size", 0.07)
+    flat = part.get("flat", 0.25)
+    for r in range(rows):
+        z = (z0 + (z1 - z0) * (r / max(1, rows - 1))) * ctx.H
+        for c in range(cols):
+            f = (c + 0.5 * (r % 2) + 0.25) / cols
+            th = FRONT - arc / 2 + arc * f
+            if shape in ("feather", "petal", "leaf", "blade", "fin"):
+                me, sub = element_mesh("Tile", shape, part.get("width", 0.5))
+                tl = math.atan2(ctx.slope(z), 1.0)
+                feather_obj(ctx, me, mat, ctx.surface(th, z + s * 0.6, 0.004),
+                            Euler((-tl - math.radians(part.get("lift", 12)), math.pi, th + math.pi / 2), "XYZ"),
+                            scale=s, sub=sub, thick=0.02)
+                continue
+            ob = _prim_obj(ctx, shape, mat)
+            ob.location = ctx.surface(th, z, part.get("off", 0.0))
+            ob.rotation_euler = orient_outward(th, math.pi / 2)
+            ob.scale = (s, s, s * flat) if shape == "sphere" else (s, s, flat * s)
+            if shape in ("hex", "cyl", "oct"):
+                ob.location = ctx.surface(th, z, part.get("off", -0.01))
+            ctx.link(ob)
+
+
+def _catmull3(pts, per=8):
+    P = [pts[0]] + list(pts) + [pts[-1]]
+    out = []
+    for i in range(1, len(P) - 2):
+        p0, p1, p2, p3 = P[i - 1], P[i], P[i + 1], P[i + 2]
+        for k in range(per):
+            t = k / per
+            out.append(tuple(0.5 * (2 * p1[d] + (-p0[d] + p2[d]) * t
+                                    + (2 * p0[d] - 5 * p1[d] + 4 * p2[d] - p3[d]) * t * t
+                                    + (-p0[d] + 3 * p1[d] - 3 * p2[d] + p3[d]) * t ** 3) for d in range(3)))
+    out.append(tuple(pts[-1]))
+    return out
+
+
+def part_path(ctx, part, p):
+    """Ống cong tự do qua các điểm [x, y, z tỉ lệ]: cổ thiên nga, vòi ấm, quai, khói đèn thần, trăng khuyết.
+    'taper': [đầu, giữa, cuối] độ dày tương đối."""
+    for side in ((1, -1) if part.get("mirror") else (1,)):
+        pts = [(side * x, y, z * ctx.H) for x, y, z in part["points"]]
+        sm = _catmull3(pts, part.get("per", 8))
+        tp = part.get("taper")
+        radii = None
+        if tp:
+            a, b, c = tp
+            radii = []
+            for k in range(len(sm)):
+                t = k / max(1, len(sm) - 1)
+                radii.append(a + (b - a) * (t / 0.5) if t < 0.5 else b + (c - b) * ((t - 0.5) / 0.5))
+        ctx.link(tube("Path", sm, part.get("radius", 0.04), ctx.mat(part["mat"]), cyclic=part.get("cyclic", False),
+                      radii=radii, resolution=6))
+
+
+def part_coil(ctx, part, p):
+    """Thân rồng / dây quấn xoắn quanh chậu."""
+    z0, z1 = part.get("z", [0.15, 0.85])
+    turns = part.get("turns", 1.2)
+    pts, radii = [], []
+    n = 120
+    for k in range(n + 1):
+        t = k / n
+        th = FRONT + math.radians(part.get("start", -120)) + TAU * turns * t
+        z = (z0 + (z1 - z0) * t) * ctx.H
+        pts.append(tuple(ctx.surface(th, z, part.get("off", 0.06))))
+        radii.append(0.35 + 0.65 * math.sin(math.pi * min(1.0, 0.15 + t * 0.85)))
+    ctx.link(tube("Coil", pts, part.get("radius", 0.07), ctx.mat(part["mat"]), radii=radii, resolution=8))
+    if part.get("scale_mat"):
+        me = _ico("CoilScale", ctx.mat(part["scale_mat"]), 2)
+        for k in range(6, n - 4, part.get("spikes_every", 6)):
+            _blob(ctx, me, Vector(pts[k]) + Vector((0, 0, part.get("radius", 0.07) * radii[k] * 0.9)),
+                  (0.03, 0.03, 0.05))
+
+
+def part_puffs(ctx, part, p):
+    """Cụm mây/bọt bồng bềnh (metaball) ôm thân chậu."""
+    mb = bpy.data.metaballs.new("Puffs")
+    mb.resolution = 0.03
+    mb.render_resolution = 0.018
+    for x, y, z, r in part["balls"]:
+        e = mb.elements.new()
+        e.co = (x, y, z * ctx.H)
+        e.radius = r
+    mb.materials.append(ctx.mat(part["mat"]))
+    ob = bpy.data.objects.new("Puffs", mb)
+    ctx.link(ob)
+
+
 PARTS = {
     "body": part_body, "soil": part_soil, "rim": part_rim, "foot": part_foot,
     "band": part_band, "relief": part_relief, "filigree": part_filigree, "gems": part_gems,
     "wings": part_wings, "tail": part_tail, "crest": part_crest, "pedestal": part_pedestal,
     "halo": part_halo, "embers": part_embers, "dots": part_dots,
+    "face": part_face, "brim": part_brim, "minis": part_minis, "drips": part_drips,
+    "candles": part_candles, "ears": part_ears, "orbit": part_orbit, "antenna": part_antenna,
+    "handles": part_handles, "stand": part_stand, "straw": part_straw, "lid": part_lid,
+    "prop": part_prop, "petals": part_petals, "meridians": part_meridians, "tiles": part_tiles,
+    "path": part_path, "coil": part_coil, "puffs": part_puffs,
 }
 
 
@@ -848,14 +1302,15 @@ def build_pot(line, mats, milestone, p, seed=1):
     coll = clear_pot()
     parts = [pt for pt in milestone["parts"] if part_active(pt, p)]
     body = next(pt for pt in parts if pt["type"] == "body")
-    prof = smooth_profile(line["profiles"][body["profile"]])
+    prof = body_profile(line, body)
     R, slope = radius_fn(prof)
     H = prof[-1][1]
 
     root = bpy.data.objects.new("PotRoot", None)
     coll.objects.link(root)
-    ped = next((pt for pt in parts if pt["type"] == "pedestal"), None)
-    root.location = (0.0, 0.0, V(ped.get("height", 0.28), p) if ped else 0.0)
+    ped = next((pt for pt in parts if pt["type"] in ("pedestal", "stand")), None)
+    lift = (V(ped.get("height", 0.28 if ped["type"] == "pedestal" else 0.22), p)) if ped else 0.0
+    root.location = (0.0, 0.0, lift)
     s = V(body.get("scale", 1.0), p)
     root.scale = (s, s, s)
 
@@ -870,7 +1325,7 @@ def build_pot(line, mats, milestone, p, seed=1):
 
 
 # Lớp chuyển động trong game: hào quang (xoay), cánh trái/phải (vỗ), lấp lánh (nhấp nháy), thân (đứng yên)
-LAYER_OF = {"halo": "halo", "wings": "wings", "tail": "halo", "embers": "fx", "pedestal": "base"}
+LAYER_OF = {"halo": "halo", "wings": "wings", "tail": "halo", "embers": "fx", "pedestal": "base", "stand": "base", "minis": "base", "orbit": "fx"}
 LAYERS = ["halo", "wing_l", "wing_r", "base", "body", "fx"]
 
 

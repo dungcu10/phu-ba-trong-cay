@@ -88,6 +88,23 @@ def catalog_jobs(potgen, master_dir):
     return jobs
 
 
+def signature_jobs(potgen, master_dir, line_file="signature_all.json"):
+    """Bộ 50 chậu đặc trưng: mỗi chậu có hồ sơ + tỉ lệ riêng, có thể đứng trên đế (stand)."""
+    cat = json.load(open(os.path.join(potgen, "lines", line_file), encoding="utf-8"))
+    jobs = []
+    for pot in cat["pots"]:
+        path = os.path.join(master_dir, f"pot_{pot['id']:02d}.png")
+        if not os.path.exists(path):
+            continue
+        body = next(pt for pt in pot["parts"] if pt["type"] == "body")
+        stand = next((pt for pt in pot["parts"] if pt["type"] in ("stand", "pedestal")), None)
+        lift = stand.get("height", 0.22 if stand["type"] == "stand" else 0.28) if stand else 0.0
+        profs = {**cat.get("profiles", {}), **pot.get("profiles", {})}
+        g = geometry(profs[body["profile"]], body.get("scale", 1.0), lift)
+        jobs.append((f"pots/sig/{pot['id']:02d}/50", path, g))
+    return jobs
+
+
 def prepare(jobs, cam):
     frames = []
     for name, path, g in jobs:
@@ -153,6 +170,8 @@ def main():
         results += pack(prepare(phoenix_jobs(potgen, ph_dir), cam), "pots_phoenix", out)
     if cat_dir != "-":
         results += pack(prepare(catalog_jobs(potgen, cat_dir), cam), "pots_catalog", out)
+    if len(sys.argv) > 5 and sys.argv[5] != "-":
+        results += pack(prepare(signature_jobs(potgen, sys.argv[5]), cam), "pots_signature", out)
     for base, W, H, n in results:
         print(f"{os.path.basename(base)}: {n} hình, {W}×{H}, {os.path.getsize(base + '.png') // 1024} KB")
 

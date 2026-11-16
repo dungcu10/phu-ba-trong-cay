@@ -46,5 +46,6 @@ Giọt nước báo khát, thanh tiến độ, hạt lấp lánh, khung gỗ/gi�
 |---|---|---|
 | `assets/art/pots_phoenix.webp/.json` | 50 cấp Chậu Phượng Hoàng (`pots/phoenix/<cấp>`) | Dựng thủ tục bằng Blender 5.2.3 LTS (Cycles, GPU) từ `tools/potgen`. Không dùng ảnh hay mô hình bên ngoài — tài sản tự tạo hoàn toàn, thuộc dự án. |
 | `assets/art/pots_catalog.webp/.json` | 50 dòng chậu ở cấp 50 (`pots/catalog/<id>/50`) | Như trên. Thông số theo danh mục của chủ dự án. Chậu số 36 đổi tên thành "Neon Tương Lai" để tránh trùng tên một trò chơi đã đăng ký. |
+| `assets/art/pots_signature.webp/.json` | 50 chậu đặc trưng ở cấp 50 (`pots/sig/<số>/50`), 5 nhóm: Đồ ăn, Linh vật, Thiên nhiên, Gốm Á Đông, Thần thoại | Dựng thủ tục bằng **bpy 5.3.0 (Blender dạng mô-đun Python), Cycles CPU**, cùng script `tools/potgen/blender/render_catalog.py` và cùng cảnh `studio_cream` (96 mẫu, 1024 px, OIDN) như hai atlas trên. Thông số chậu sinh từ `tools/potgen/tools/build_signature_all.py` → `tools/potgen/lines/signature_all.json`. Đóng gói bằng `tools/potgen/tools/pack_pots.py`, WebP chất lượng 90 giữ kênh alpha. Không dùng ảnh hay mô hình bên ngoài — tài sản tự tạo hoàn toàn, thuộc dự án. CTO chấp nhận dùng bpy 5.3 CPU thay cho Blender 5.2 CUDA (Review 03). |
 
 Tái tạo: xem `tools/potgen/README.md` và `docs/reviews/2026-11-17-directive-03-chau-blender.md`.
