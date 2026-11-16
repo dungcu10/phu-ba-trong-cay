@@ -22,20 +22,25 @@ Trạng thái: 🟨
 
 **Cột mốc M0:** Báo cáo rà soát + nền móng được nghiệm thu. → *Chủ dự án duyệt.*
 
-## Giai đoạn 1 — Vòng lặp lõi (Core Loop)
-**Mục tiêu:** Trồng → chăm → thu hoạch → bán → mở rộng phải *vui* ngay cả khi chưa có gì khác.
+## Giai đoạn 1 — Vườn tầng mây đầu tiên (Core Loop)
+**Mục tiêu:** Gieo → chăm → thu hoạch → bán → nâng chậu phải *vui* ngay cả khi chưa có gì khác.
+Mô hình đã chốt: **chậu trên các tầng mây** (xem `docs/GAMEPLAY_DESIGN.md`). Giai đoạn này chỉ làm lát cắt dọc.
 Trạng thái: ⬜
 
-- [ ] Ô đất trên đảo mây: cày, gieo, tưới, bón, thu hoạch.
-- [ ] Tối thiểu 8 loại cây với thời gian, giá trị và yêu cầu khác nhau (có lý do để chọn cây này thay cây kia).
-- [ ] Sinh trưởng theo thời gian thực, tiếp tục khi tắt game (tính toán offline progress).
-- [ ] Kho chứa có giới hạn, nâng cấp được.
-- [ ] Bán nông sản: giá cơ bản + biến động nhẹ.
-- [ ] Mở rộng đất / mở khóa ô mới.
-- [ ] Cấp độ người chơi và mở khóa theo cấp.
-- [ ] Phản hồi tức thì: âm thanh, hiệu ứng, số bay lên khi thu hoạch/bán.
+- [ ] 1 tầng mây (Đồng Mây Ngọc) với 4 vị trí chậu.
+- [ ] 6 giống cây, mỗi giống có lý do để chọn (kiểm chứng bằng bảng cân bằng theo 2 kiểu chơi: chăm chỉ và thỉnh thoảng ghé).
+- [ ] Gieo, tưới, bắt Bọ Mây, thu hoạch; cây thu nhiều lần mọc lại.
+- [ ] Sinh trưởng theo thời gian thực, tiếp tục khi tắt game.
+- [ ] Kho có giới hạn; bán nông sản lấy xu.
+- [ ] Nâng cấp chậu bằng xu + Bọ Mây, luôn thành công.
+- [ ] Cấp độ người chơi và mở khóa cây theo cấp.
+- [ ] Không có trạng thái kẹt: người chơi luôn gieo được ít nhất một cây.
+- [ ] Vẽ bằng PixiJS (hình tạm được phép), thao tác cảm ứng, phản hồi tức thì: hiệu ứng, số bay lên.
+- [ ] Bản thử cài được lên iPad qua GitHub Pages, chạy offline.
 
-**Cột mốc M1:** Một người chơi mới chơi 15 phút liên tục mà không bối rối và muốn chơi tiếp. → *Chủ dự án chơi thử và duyệt.*
+**KHÔNG làm trong giai đoạn này:** Linh Thú, bộ chậu, độ hiếm chậu, Biến Dị, Thông Thạo, BOT, giao thương, đơn hàng, sự kiện, tầng thứ 2.
+
+**Cột mốc M1:** Một người chơi mới chơi 15 phút liên tục trên iPad mà không bối rối và muốn chơi tiếp. → *Chủ dự án chơi thử và duyệt.*
 
 ## Giai đoạn 2 — Đồ họa chuẩn và cảm giác (Art & Feel)
 **Mục tiêu:** Thay toàn bộ placeholder của vòng lặp lõi bằng tài nguyên hoàn chỉnh, thống nhất phong cách.
@@ -54,11 +59,12 @@ Trạng thái: ⬜
 **Mục tiêu:** Người chơi có chiến lược dài hạn.
 Trạng thái: ⬜
 
-- [ ] Chế biến: máy móc biến nông sản thành sản phẩm giá trị cao (chuỗi sản xuất 2–3 bậc).
 - [ ] Đơn hàng (orders) với phần thưởng và thời hạn.
 - [ ] Thị trường có cung–cầu: bán nhiều một mặt hàng thì giá giảm, hồi phục theo thời gian.
-- [ ] Vật nuôi trên mây (tùy chủ dự án duyệt).
-- [ ] Mở rộng sang đảo mây mới với khí hậu/cây đặc trưng.
+- [ ] Chậu chuyên sâu: độ hiếm, thuộc tính, ngoại hình theo cấp, bộ chậu.
+- [ ] Cây chuyên sâu: Thông Thạo, Biến Dị, Sổ Tay Thực Vật.
+- [ ] Linh Thú Tầng chế biến nông sản.
+- [ ] Mở tầng mây mới với đặc tính môi trường riêng.
 - [ ] Mô hình cân bằng kinh tế bằng bảng tính/mô phỏng, có kiểm thử tự động tránh lạm phát.
 
 **Cột mốc M3:** Kinh tế ổn định qua mô phỏng 30 ngày chơi; không có chiến thuật "vô hạn tiền". → *Chủ dự án duyệt.*
@@ -70,7 +76,7 @@ Trạng thái: ⬜
 - [ ] Kiến trúc AI chung: mỗi BOT có nhu cầu/mục tiêu, nhận thức trạng thái thế giới, chọn hành động (Utility AI hoặc Behavior Tree).
 - [ ] **Khách hàng BOT:** đến mua theo nhu cầu, phản ứng với giá và chất lượng.
 - [ ] **Người giúp việc BOT:** tự tưới, thu hoạch, chở hàng theo ưu tiên người chơi đặt; có giới hạn năng lực.
-- [ ] **Hàng xóm/đối thủ BOT:** cũng trồng, bán, ảnh hưởng thị trường; có thể giao thương.
+- [ ] **Hàng xóm/đối thủ BOT:** có cột tầng mây và chậu riêng, chơi cùng luật với người chơi, đua trên Bảng Phú Bà; có thể giao thương.
 - [ ] Tìm đường trên đảo, tránh va chạm.
 - [ ] BOT vẫn "sống" khi người chơi offline (mô phỏng gộp, không cần render).
 - [ ] Công cụ debug hiển thị BOT đang nghĩ gì (mục tiêu hiện tại, lý do chọn hành động).
