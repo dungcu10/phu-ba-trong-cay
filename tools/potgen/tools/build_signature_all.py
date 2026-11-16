@@ -72,7 +72,8 @@ P.append(pot(3, F, "Kem Ốc Quế", {"waffle": [[0.3, 0.0], [0.33, 0.03], [0.5,
     [body("waffle"), SOIL,
      {"type": "meridians", "mat": "grid", "count": 14, "twist": 0.9, "radius": 0.014, "z": [0.04, 0.86]},
      {"type": "meridians", "mat": "grid", "count": 14, "twist": -0.9, "radius": 0.014, "z": [0.04, 0.86]},
-     {"type": "brim", "mat": "scoop", "width": 0.26, "height": 0.24, "below": 0.02},
+     # Review 03: vành phẳng nhìn như mũ -> vòng viên kem tròn quanh miệng
+     {"type": "puffs", "mat": "scoop", "balls": [[0.6 * __import__("math").cos(a / 11 * 6.283), 0.6 * __import__("math").sin(a / 11 * 6.283), 1.0, 0.19] for a in range(11)]},
      {"type": "drips", "mat": "scoop", "zs": [0.93], "count": 12},
      {"type": "prop", "items": [{"shape": "sphere", "mat": "cherry", "at": [0.38, 0.12, 1.13], "scale": 0.1}]},
      {"type": "path", "mat": "stem", "radius": 0.012, "points": [[0.38, 0.12, 1.22], [0.42, 0.12, 1.32], [0.5, 0.14, 1.38]]},
@@ -120,7 +121,9 @@ P.append(pot(9, F, "Sushi Cá Hồi", {"roll": [[0.55, 0.0], [0.6, 0.03], [0.62,
     [body("roll"), SOIL,
      {"type": "prop", "items": [{"shape": "cyl", "mat": "nori", "at": [0, 0, 0.12], "scale": [0.73, 0.73, 0.3]}]},
      {"type": "tiles", "mat": "grain", "shape": "sphere", "rows": 2, "cols": 12, "z": [0.68, 0.84], "size": 0.032, "flat": 0.6, "arc": 200},
-     {"type": "brim", "mat": "salmon", "width": 0.22, "height": 0.13, "below": 0.0},
+     # Review 03: vành tròn lơ lửng -> lát cá hồi nghiêng phủ nửa sau miệng, có vân trắng
+     {"type": "prop", "items": [{"shape": "sphere", "mat": "salmon", "at": [0.0, 0.22, 1.04], "rot": [-18, 0, 0], "scale": [0.62, 0.36, 0.09]}]},
+     *[{"type": "path", "mat": "grain", "radius": 0.012, "points": [[x - 0.12, 0.05, 1.1], [x, 0.22, 1.16], [x + 0.12, 0.42, 1.1]]} for x in (-0.3, -0.05, 0.2)],
      face(0.33, eye_mat="eye_w", eye=0.06)]))
 P.append(pot(10, F, "Cupcake", {"wrap": [[0.38, 0.0], [0.4, 0.03], [0.52, 0.55], [0.54, 0.58]]},
     {"body": G("#5AAEE6", "#8FD0FF", roughness=0.5), "pleat": C("#3E8FCC"), "frost": G("#F7A8C4", "#FFE3EE", roughness=0.4, subsurface=0.3),
@@ -135,7 +138,12 @@ P.append(pot(10, F, "Cupcake", {"wrap": [[0.38, 0.0], [0.4, 0.03], [0.52, 0.55],
 _cat = reuse(11, A, 38)
 _cat["parts"] = [dict(pt, scale=1.3) if pt["type"] == "orbit" else pt for pt in _cat["parts"]]
 P.append(_cat)
-P.append(reuse(12, A, 46))
+# Review 03: 9 đuôi trắng trên nền kem dính thành một khối như quả cầu -> đuôi hẹp hơn, đầu đuôi xanh đậm
+_fox = reuse(12, A, 46)
+_fox["materials"] = dict(_fox["materials"], tail={"gradient": [[0.0, "#FFFFFF"], [0.55, "#E6F2FF"], [0.8, "#7FC4FF"], [1.0, "#3A7BFF"]],
+                                                  "roughness": 0.6, "sheen": 1, "emission_from_gradient": True, "emission_strength": 0.12})
+_fox["parts"] = [dict(pt, width=0.34, spread=84) if pt["type"] == "tail" else pt for pt in _fox["parts"]]
+P.append(_fox)
 P.append(pot(13, A, "Thỏ Ngọc", {"orb": ORB},
     {"body": G("#EEF0F8", "#FFFFFF", roughness=0.4, subsurface=0.2), "pink": C("#F7A8C4", roughness=0.5), "moon": GLOW("#FFE08A", 3)},
     [body("orb"), SOIL,
@@ -197,9 +205,9 @@ P.append(pot(18, A, "Ếch Lá Sen", {"squat": [[0.4, 0.0], [0.55, 0.05], [0.62,
     [body("squat"), SOIL,
      {"type": "prop", "items": [
          {"shape": "cyl", "mat": "pad", "at": [0, 0, 0.0], "abs_z": True, "scale": [1.05, 1.0, 0.03], "ground": True},
-         {"shape": "sphere", "mat": "body", "at": [0.26, -0.18, 0.66], "scale": 0.17, "mirror": True},
-         {"shape": "sphere", "mat": "eye_w", "at": [0.26, -0.3, 0.7], "scale": 0.1, "mirror": True},
-         {"shape": "sphere", "mat": "pupil", "at": [0.26, -0.38, 0.7], "scale": 0.055, "mirror": True},
+         {"shape": "sphere", "mat": "body", "at": [0.26, -0.2, 1.1], "scale": 0.17, "mirror": True},
+         {"shape": "sphere", "mat": "eye_w", "at": [0.26, -0.32, 1.14], "scale": 0.1, "mirror": True},
+         {"shape": "sphere", "mat": "pupil", "at": [0.26, -0.4, 1.14], "scale": 0.055, "mirror": True},
          {"shape": "sphere", "mat": "face_blush", "surf": [40, 0.32, -0.01], "flat": True, "scale": [0.06, 0.04, 0.02], "mirror": True},
          *[{"shape": "petal", "mat": "lotus", "at": [0.72, -0.35, 0.04], "abs_z": True, "rot": [r, 0, a], "scale": 0.22}
            for a, r in ((0, 35), (72, 35), (144, 35), (216, 35), (288, 35), (36, 12), (180, 12))]]},
@@ -208,7 +216,9 @@ P.append(pot(19, A, "Cú Mèo", {"egg": EGG},
     {"body": G("#8B5A35", "#B07A4E", roughness=0.6), "feather": C("#D8B48A", roughness=0.6), "disc": C("#FFF3DD", roughness=0.5),
      "iris": C("#F2B33D", roughness=0.1, coat=1.0), "pupil": C("#1F150E", roughness=0.05, coat=1.0), "beak": C("#E08A2E")},
     [body("egg"), SOIL,
-     {"type": "tiles", "mat": "feather", "shape": "feather", "rows": 3, "cols": 6, "z": [0.14, 0.4], "arc": 110, "size": 0.15, "width": 0.4},
+     # Review 03: tiles lông không hiện -> 3 hàng lông chúc xuống trên bụng
+     *[{"type": "petals", "mat": "feather", "shape": "petal", "count": 6, "arc": 100, "center": 0, "z": z, "length": 0.16, "width": 0.6, "tilt": 165, "off": 0.0, "phase": ph}
+       for z, ph in ((0.42, 0.0), (0.3, 0.08), (0.18, 0.0))],
      {"type": "prop", "items": [
          {"shape": "sphere", "mat": "disc", "surf": [19, 0.64, -0.02], "flat": True, "scale": [0.17, 0.17, 0.05], "mirror": True},
          {"shape": "sphere", "mat": "iris", "surf": [19, 0.64, 0.02], "flat": True, "scale": [0.09, 0.09, 0.04], "mirror": True},
@@ -289,7 +299,9 @@ P.append(pot(28, N, "Quả Thông", {"egg": EGG},
     {"body": G("#6E4528", "#9C6B3F", roughness=0.6), "scale_m": G("#7A4E2E", "#B2814F", roughness=0.55), "berry": C("#D7192F", roughness=0.15, coat=0.8),
      "holly": C("#2F8A3E", roughness=0.3)},
     [body("egg"), SOIL,
-     {"type": "tiles", "mat": "scale_m", "shape": "petal", "rows": 5, "cols": 11, "z": [0.1, 0.78], "arc": 360, "size": 0.2, "width": 0.55, "lift": 18},
+     # Review 03: tiles vảy không hiện -> 6 vòng vảy chúc xuống, so le
+     *[{"type": "petals", "mat": "scale_m", "shape": "petal", "count": 12, "z": z, "length": 0.22, "width": 0.7, "tilt": 150, "off": 0.0, "phase": 0.26 * (i % 2)}
+       for i, z in enumerate((0.92, 0.78, 0.64, 0.5, 0.36, 0.22))],
      {"type": "prop", "items": [{"shape": "sphere", "mat": "berry", "at": [-0.35, -0.2, 1.0], "scale": 0.06},
                                 {"shape": "sphere", "mat": "berry", "at": [-0.27, -0.25, 1.02], "scale": 0.06},
                                 {"shape": "leaf", "mat": "holly", "at": [-0.32, -0.2, 1.0], "rot": [-50, -70, 0], "scale": 0.25},
@@ -426,13 +438,15 @@ P.append(pot(44, T, "Rồng Ngọc", {"urn": URN},
                                 {"shape": "sphere", "mat": "pearl", "at": [-0.6, -0.3, 1.2], "scale": 0.1}]},
      {"type": "rim", "mat": "dragon", "rr": 0.035}]))
 P.append(pot(45, T, "Long Cung", {"urn": URN},
-    {"body": G("#0E4C92", "#2F8BD6", roughness=0.1, coat=1.0), "wave": C("#BFE6FF", roughness=0.2), "coral": G("#FF6F7A", "#FFB0A8", roughness=0.4),
+    {"body": G("#0E4C92", "#2F8BD6", roughness=0.1, coat=1.0), "wave": C("#BFE6FF", roughness=0.2), "coral": G("#FF5E6C", "#FFB0A8", roughness=0.4), "kelp": G("#2E9E6A", "#7FD9A0", roughness=0.4),
      "pearl": C("#FFFDF8", roughness=0.08, metallic=0.3, coat=1.0), "bubble": GLASS("#DDF3FF", 0.9)},
     [body("urn"), SOIL,
      {"type": "filigree", "mat": "wave", "z": 0.35, "amp": 0.05, "waves": 7, "spiral": 0.05},
      {"type": "filigree", "mat": "wave", "z": 0.65, "amp": 0.04, "waves": 7, "spiral": 0},
-     {"type": "path", "mat": "coral", "radius": 0.04, "taper": [1, 0.8, 0.5], "mirror": True, "points": [[0.42, 0.1, 0.9], [0.55, 0.1, 1.15], [0.5, 0.1, 1.35]]},
-     {"type": "path", "mat": "coral", "radius": 0.03, "taper": [1, 0.8, 0.4], "mirror": True, "points": [[0.55, 0.1, 1.12], [0.72, 0.1, 1.25], [0.75, 0.1, 1.4]]},
+     # Review 03: san hô nhánh mảnh nhìn như sừng hươu -> quạt san hô dày phía sau + rong biển hai bên
+     {"type": "petals", "mat": "coral", "shape": "fin", "count": 5, "arc": 120, "center": 180, "z": 0.85, "length": 0.5, "width": 0.8, "tilt": 15, "len_var": 0.3},
+     {"type": "path", "mat": "kelp", "radius": 0.035, "taper": [1, 0.8, 0.2], "mirror": True,
+      "points": [[0.55, 0.0, 0.1], [0.68, -0.05, 0.4], [0.6, -0.05, 0.7], [0.72, -0.05, 1.0]]},
      {"type": "prop", "items": [{"shape": "sphere", "mat": "pearl", "surf": [0, 0.5, 0.02], "scale": 0.08},
                                 {"shape": "sphere", "mat": "bubble", "at": [-0.7, -0.2, 0.6], "scale": 0.06},
                                 {"shape": "sphere", "mat": "bubble", "at": [0.75, -0.25, 0.4], "scale": 0.045}]},
@@ -447,7 +461,7 @@ P.append(pot(46, T, "Cung Trăng", {"urn": URN},
      {"type": "dots", "mat": "gold", "count": 3, "size": [0.03, 0.035], "z": [0.25, 0.25], "ring": True, "arc": 50},
      {"type": "embers", "mat": "star", "count": 10, "size": [0.012, 0.022]},
      face(0.6, sleepy=True)]))
-P.append(pot(47, T, "Đèn Thần", {"lamp": [[0.4, 0.0], [0.5, 0.05], [0.62, 0.2], [0.6, 0.35], [0.48, 0.42]]},
+P.append(pot(47, T, "Đèn Thần", {"lamp": [[0.36, 0.0], [0.46, 0.05], [0.6, 0.22], [0.63, 0.4], [0.54, 0.56], [0.46, 0.62]]},
     {"body": G("#C9952A", "#F2C94C", metallic=1.0, roughness=0.2), "ruby": {**GLASS("#E8203A", 0.4), "emission": "#E8203A", "emission_strength": 0.5},
      "smoke": {"color": "#B49CF7", "roughness": 0.5, "transmission": 0.5, "emission": "#C6B2FF", "emission_strength": 0.8}},
     [body("lamp"), SOIL,

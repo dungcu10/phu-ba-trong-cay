@@ -1069,8 +1069,8 @@ def _prim_obj(ctx, kind, mat, sides=24):
                    mat=mat, smooth=kind == "cyl")
         add_mod(ob, "BEVEL", width=0.04, segments=2)
     elif kind == "cone":
-        ob = lathe("Cone", [(1.0, 0.0), (0.6, 0.45), (0.02, 1.0)], seg=sides, mat=mat)
-        subsurf(ob, 1)
+        # Review 03: điểm giữa 0,6 + subsurf làm nón phình thành quả trứng -> nón thẳng
+        ob = lathe("Cone", [(1.0, 0.0), (0.5, 0.5), (0.02, 1.0)], seg=sides, mat=mat)
     elif kind == "horn":
         ob = lathe("Horn", smooth_profile([(1.0, 0.0), (0.8, 0.3), (0.45, 0.65), (0.02, 1.0)]), seg=sides, mat=mat)
     elif kind == "tear":
