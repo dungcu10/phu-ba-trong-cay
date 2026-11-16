@@ -119,3 +119,27 @@ test('xuất và nhập file sao lưu, kiểm tra hợp lệ', () => {
   assert.deepEqual(mgr.parseImport(text), s);
   assert.throws(() => mgr.parseImport(text.replace('"seed":', '"seed":1')), SaveFormatError);
 });
+
+/** A version-1 save, in the exact shape written before R2 (caughtBugStages). */
+function v1SaveText(): string {
+  const s = newGame(content);
+  dispatch(content, s, { type: 'plant', cropId: DAISY, floor: 0, slot: 0 }, T0);
+  const raw = JSON.parse(JSON.stringify(s)) as Record<string, any>;
+  raw.saveVersion = 1;
+  const p = raw.floors[0].slots[0].planting;
+  delete p.caughtBugs;
+  p.caughtBugStages = [2, 3];
+  const data = JSON.stringify(raw);
+  return `{"format":"${SAVE_FORMAT}","saveVersion":1,"savedAt":${T0},"checksum":"${checksumOf(data)}","data":${data}}`;
+}
+
+test('migration 1 → 2: caughtBugStages đổi thành caughtBugs, cây vẫn còn', () => {
+  const { state, migratedFrom } = deserialize(v1SaveText());
+  assert.equal(migratedFrom, 1);
+  assert.ok(state.saveVersion >= 2);
+  const p = state.floors[0]!.slots[0]!.planting!;
+  assert.equal(p.cropId, DAISY);
+  assert.deepEqual(p.caughtBugs, {});
+  assert.equal('caughtBugStages' in p, false);
+  assert.ok(dispatch(content, state, { type: 'harvest', floor: 0, slot: 0 }, T0 + 2 * MIN).ok);
+});

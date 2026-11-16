@@ -12,8 +12,25 @@ export class MigrationError extends Error {
   }
 }
 
-/** Key = version the migration starts from. Version 1 is the first released format: none yet. */
-export const MIGRATIONS: Record<number, Migration> = {};
+type RawPlanting = Record<string, unknown> | null;
+type RawFloor = { slots?: Array<{ planting?: RawPlanting }> };
+
+/** Key = version the migration starts from. */
+export const MIGRATIONS: Record<number, Migration> = {
+  // 1 -> 2 (R2): bugs are counted per bug id and stay until harvest. The old per-stage record
+  // cannot be mapped to the new bug positions, so the current cycle's catches restart from zero.
+  1: (data) => {
+    for (const floor of (data.floors as RawFloor[] | undefined) ?? []) {
+      for (const slot of floor.slots ?? []) {
+        const p = slot.planting;
+        if (!p) continue;
+        delete p.caughtBugStages;
+        p.caughtBugs = {};
+      }
+    }
+    return data;
+  },
+};
 
 export function migrate(
   data: unknown,

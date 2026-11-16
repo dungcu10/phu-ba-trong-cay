@@ -109,7 +109,7 @@ Giai đoạn: Hạt → Mầm → Lớn → Ra hoa/đậu trái → Chín. Cây 
 ## 6. Chăm sóc
 
 - **Tưới**: khát một lần mỗi giai đoạn; tưới giảm 10% thời gian còn lại; không tưới không bị phạt.
-- **Bọ Mây**: đậu ngẫu nhiên khi cây lớn (nhiều hơn khi Thu Hút cao); chạm để bắt; là nguyên liệu nâng cấp chậu; không bắt thì bay đi, cây không bị hại.
+- **Bọ Mây**: số bọ mỗi vụ tỉ lệ với thời gian sinh trưởng (trung bình 1 con mỗi `growSecondsPerBug` giây, tối đa `maxPerCycle`; nhiều hơn khi Thu Hút cao ở giai đoạn sau); bọ đậu khi cây đã lớn (25–95% tiến độ) và ở lại đến khi bị bắt hoặc khi thu hoạch, nên người ghé thưa vẫn bắt được; chạm để bắt từng con; là nguyên liệu nâng cấp chậu; thu hoạch mà chưa bắt thì bọ bay đi, cây không bị hại. (Sửa theo biên bản CTO 01, R2.)
 - **Sâu Tham Ăn** (giai đoạn sau): giảm 10% sản lượng nếu còn trên cây lúc thu hoạch.
 - **Thu hoạch**: kéo qua hàng chậu; kho đầy thì cây chờ, không hỏng; cây chín không héo.
 - **Gieo lại như cũ**; **Rương Mây Trôi** 3–5 lần/ngày (giai đoạn sau).

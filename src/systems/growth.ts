@@ -3,11 +3,14 @@
 
 import type { BugDef, ContentPack, CropDef } from '../core/content.ts';
 import type { GameState, Planting, SlotState } from '../core/state.ts';
-import { randomFor } from '../core/rng.ts';
+import { randomFor, stochasticRound } from '../core/rng.ts';
 import { potStat } from './pots.ts';
 
 /** In a regrow cycle the crop restarts from this stage (the "grown, no fruit" stage). */
 export const REGROW_FROM_STAGE = 2;
+/** Bugs land somewhere between these fractions of a cycle's growth (never on a fresh seed). */
+const BUG_ARRIVAL_FROM = 0.25;
+const BUG_ARRIVAL_TO = 0.95;
 
 export interface CropStatus {
   crop: CropDef;
@@ -19,7 +22,8 @@ export interface CropStatus {
   remainingMs: number;
   readyAt: number;
   thirsty: boolean;
-  bug: { bug: BugDef; stage: number; leavesAt: number } | null;
+  /** Bọ Mây currently on the plant (they stay until caught or harvested). */
+  bug: { bug: BugDef; count: number } | null;
   isRegrow: boolean;
 }
 
@@ -45,22 +49,36 @@ function stageAt(crop: CropDef, planting: Planting, progress: number): number {
   return Math.min(last - 1, from + Math.floor(progress * span));
 }
 
-/** Real time at which a given growing stage starts in the current cycle. */
-function stageStartsAt(crop: CropDef, planting: Planting, stage: number, cycleMs: number): number {
-  const from = firstStageOfCycle(planting);
-  const span = crop.stages - 1 - from;
-  const progressAtStart = (stage - from) / span;
-  return planting.cycleStartedAt - planting.bonusMs + progressAtStart * cycleMs;
+/** Base (unmodified) length of the current cycle in seconds: drives how many Bọ Mây it attracts. */
+function baseCycleSeconds(crop: CropDef, planting: Planting): number {
+  return planting.harvestsDone === 0 || crop.regrowSeconds === null ? crop.growSeconds : crop.regrowSeconds;
 }
 
-function visibleBug(content: ContentPack, state: GameState, crop: CropDef, planting: Planting, stage: number, cycleMs: number, now: number) {
+/**
+ * Bọ Mây are attracted by growing time, not by number of stages: a cycle of T seconds brings
+ * on average T / growSecondsPerBug bugs (capped). Each bug lands at a fixed point of the
+ * cycle's growth progress and stays until caught or until the harvest. Because arrival is
+ * tied to progress, watering (which only moves progress forward) can never remove a bug.
+ */
+export function bugsInCycle(state: GameState, bug: BugDef, crop: CropDef, planting: Planting): number {
+  const expected = Math.min(bug.maxPerCycle, baseCycleSeconds(crop, planting) / bug.growSecondsPerBug);
+  return stochasticRound(expected, state.seed, 'bug', bug.id, planting.id, planting.harvestsDone);
+}
+
+function arrivedBugs(state: GameState, bug: BugDef, crop: CropDef, planting: Planting, progress: number): number {
+  const total = bugsInCycle(state, bug, crop, planting);
+  let arrived = 0;
+  for (let i = 0; i < total; i++) {
+    const at = BUG_ARRIVAL_FROM + randomFor(state.seed, 'bugAt', bug.id, planting.id, planting.harvestsDone, i) * (BUG_ARRIVAL_TO - BUG_ARRIVAL_FROM);
+    if (progress >= at) arrived += 1;
+  }
+  return arrived;
+}
+
+function visibleBug(content: ContentPack, state: GameState, crop: CropDef, planting: Planting, progress: number) {
   for (const bug of content.bugList) {
-    if (planting.caughtBugStages.includes(stage)) return null;
-    const roll = randomFor(state.seed, 'bug', bug.id, planting.id, planting.harvestsDone, stage);
-    if (roll >= bug.chancePerStage) continue;
-    const arrivesAt = stageStartsAt(crop, planting, stage, cycleMs);
-    const leavesAt = arrivesAt + bug.lingerSeconds * 1000;
-    if (now >= arrivesAt && now < leavesAt) return { bug, stage, leavesAt };
+    const count = arrivedBugs(state, bug, crop, planting, progress) - (planting.caughtBugs[bug.id] ?? 0);
+    if (count > 0) return { bug, count };
   }
   return null;
 }
@@ -85,7 +103,7 @@ export function cropStatus(content: ContentPack, state: GameState, slot: SlotSta
     remainingMs,
     readyAt: now + remainingMs,
     thirsty: !ripe && !planting.wateredStages.includes(stage),
-    bug: ripe ? null : visibleBug(content, state, crop, planting, stage, cycleMs, now),
+    bug: visibleBug(content, state, crop, planting, progress),
     isRegrow: planting.harvestsDone > 0,
   };
 }

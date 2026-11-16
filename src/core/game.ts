@@ -94,7 +94,7 @@ function plant(content: ContentPack, state: GameState, ref: SlotRef, cropId: str
     harvestsDone: 0,
     bonusMs: 0,
     wateredStages: [],
-    caughtBugStages: [],
+    caughtBugs: {},
   };
   return { ok: true, events: [{ type: 'planted', slot: ref, cropId, cost: crop.seedPrice }] };
 }
@@ -117,7 +117,8 @@ function catchBug(content: ContentPack, state: GameState, ref: SlotRef, now: num
   const status = cropStatus(content, state, slot, now);
   if (!status || !slot.planting) return fail('slot_empty');
   if (!status.bug) return fail('no_bug');
-  slot.planting.caughtBugStages.push(status.bug.stage);
+  const bugId = status.bug.bug.id;
+  slot.planting.caughtBugs[bugId] = (slot.planting.caughtBugs[bugId] ?? 0) + 1;
   addItem(state, status.bug.bug.id, 1);
   state.stats.bugsCaught += 1;
   return { ok: true, events: [{ type: 'bugCaught', slot: ref, itemId: status.bug.bug.id }] };
@@ -146,7 +147,7 @@ function harvest(content: ContentPack, state: GameState, ref: SlotRef, now: numb
     planting.cycleStartedAt = now;
     planting.bonusMs = 0;
     planting.wateredStages = [];
-    planting.caughtBugStages = [];
+    planting.caughtBugs = {};
   }
   events.push({ type: 'harvested', slot: ref, itemId: crop.produce.id, qty, xp: crop.xp, cleared });
   for (const level of addXp(content, state, crop.xp)) events.push({ type: 'levelUp', level });

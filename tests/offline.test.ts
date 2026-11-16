@@ -41,7 +41,7 @@ test('tính một lần hay chia nhỏ cho cùng kết quả (bọ, sản lượ
     const seen: string[] = [];
     for (let t = T0; t <= T0 + 3 * HOUR; t += stepMs) {
       const st = cropStatus(content, s, s.floors[0]!.slots[0]!, t);
-      if (st?.bug) seen.push(`${st.bug.stage}@${Math.floor(st.bug.leavesAt / 1000)}`);
+      if (st?.bug) seen.push(`${st.bug.bug.id}x${st.bug.count}@${st.stage}`);
     }
     dispatch(content, s, { type: 'harvest', ...at }, T0 + 3 * HOUR);
     return { bugs: [...new Set(seen)], inv: JSON.stringify(s.inventory) };

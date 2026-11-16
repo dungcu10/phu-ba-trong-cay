@@ -3,7 +3,7 @@
 import type { ContentPack } from './content.ts';
 import { newSeed } from './rng.ts';
 
-export const SAVE_VERSION = 1;
+export const SAVE_VERSION = 2;
 
 export interface Planting {
   /** Unique per planting, used as a key for deterministic randomness. */
@@ -17,8 +17,8 @@ export interface Planting {
   bonusMs: number;
   /** Stage indexes already watered in this cycle. */
   wateredStages: number[];
-  /** Stage indexes whose bug was already caught in this cycle. */
-  caughtBugStages: number[];
+  /** Bọ Mây caught in this cycle, per bug id. */
+  caughtBugs: Record<string, number>;
 }
 
 export interface SlotState {

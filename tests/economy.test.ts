@@ -24,7 +24,8 @@ test('giá dao động trong ±5% và giống nhau trong cùng một ngày', () 
   const item = 'base:item.cloud-strawberry';
   for (let d = 0; d < 30; d++) {
     const p = sellPrice(content, s, item, T0 + d * 86_400_000)!;
-    assert.ok(p >= Math.round(22 * 0.95) && p <= Math.round(22 * 1.05), `ngày ${d}: ${p}`);
+    const base = content.items.get(item)!.sellPrice!;
+    assert.ok(p >= Math.round(base * 0.95) && p <= Math.round(base * 1.05), `ngày ${d}: ${p}`);
   }
   assert.equal(sellPrice(content, s, item, T0), sellPrice(content, s, item, T0 + 60_000));
 });
@@ -79,7 +80,7 @@ test('người chơi mới đạt cấp 2 trong vòng 5 phút với 4 chậu Cú
   assert.ok(t - T0 <= 5 * MIN);
 });
 
-test('bắt Bọ Mây: có bọ mới bắt được, bắt rồi thì không bắt lại; dùng bọ để nâng chậu', () => {
+test('bắt Bọ Mây: có bọ mới bắt được, mỗi lần bắt bớt đúng 1 con; dùng bọ để nâng chậu', () => {
   const at = { floor: 0, slot: 0 };
   let total = 0;
   let s = newGame(content, { level: 3, coins: 500 }, 0);
@@ -94,7 +95,8 @@ test('bắt Bọ Mây: có bọ mới bắt được, bắt rồi thì không b�
       assert.equal(r.ok, Boolean(st?.bug));
       if (r.ok) {
         caught += 1;
-        assert.deepEqual(dispatch(content, s, { type: 'catchBug', ...at }, t), { ok: false, error: 'no_bug' });
+        const after = cropStatus(content, s, slot, t);
+        assert.equal(after?.bug?.count ?? 0, st!.bug!.count - 1);
       }
     }
     assert.equal(s.inventory[BUG] ?? 0, caught);

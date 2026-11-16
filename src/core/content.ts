@@ -63,8 +63,10 @@ export interface CropDef {
 export interface BugDef {
   id: string;
   name: LocalizedText;
-  chancePerStage: number;
-  lingerSeconds: number;
+  /** On average one bug per this many seconds of (unmodified) growing time. */
+  growSecondsPerBug: number;
+  /** Most bugs one growth cycle can attract. */
+  maxPerCycle: number;
   sprite: string;
 }
 
@@ -179,9 +181,9 @@ export function buildContentPack(raw: RawContent): ContentPack {
   const items = new Map<string, ItemDef>();
   const bugs = new Map<string, BugDef>();
   asArray('bugs', raw.bugs, problems).forEach((b, i) => {
-    if (!checkFields(`bugs[${i}]`, b, ['chancePerStage', 'lingerSeconds'], ['id', 'sprite'], problems)) return;
+    if (!checkFields(`bugs[${i}]`, b, ['growSecondsPerBug', 'maxPerCycle'], ['id', 'sprite'], problems)) return;
     const bug = b as unknown as BugDef;
-    if (bug.chancePerStage > 1) problems.push(`bugs[${i}].chancePerStage: phải <= 1`);
+    if (bug.growSecondsPerBug <= 0) problems.push(`bugs[${i}].growSecondsPerBug: phải > 0`);
     addUnique(bugs, bug, `bugs[${i}]`, problems);
     addUnique(items, { id: bug.id, name: bug.name, kind: 'bug', sellPrice: null, countsTowardStorage: false }, `bugs[${i}]`, problems);
   });
