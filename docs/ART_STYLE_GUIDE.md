@@ -148,16 +148,63 @@ AVOID: text, letters, watermark, signature, frame, black outlines, pixel art, fl
 
 Nhận ảnh → tách nền → cắt bảng → chuẩn hóa cỡ và điểm neo → chuẩn hóa màu/ánh sáng → chuẩn bị chuyển động (mặt nạ gió, tách bộ phận) → đóng gói atlas WebP + file khung cho PixiJS → tờ duyệt. Ngân sách theo `QUALITY_STANDARDS.md`: tải lần đầu ≤ 60 MB (mục tiêu ≤ 30 MB), ảnh không lớn hơn 2× kích thước hiển thị.
 
-## 11. Danh sách tài nguyên cho lát cắt giai đoạn 1
+## 11. Danh sách tài nguyên và câu lệnh cho lát cắt giai đoạn 1
 
 | Đợt | Nhóm | Nội dung |
 | --- | --- | --- |
-| 1 | Ảnh mỏ neo | Một tầng Đồng Mây Ngọc có 4 chậu, cây nhiều giai đoạn, Xu Xu |
-| 2 | Tầng mây | Khối đảo tầng 1, 4 bệ chậu, nền trời |
-| 3 | Chậu | Chậu Thường × 4 bậc ngoại hình |
-| 4 | Cây | 6 bảng 5 giai đoạn + Bọ Mây |
-| 5 | Biểu tượng | 6 nông sản, xu, XP, bình tưới, vợt |
-| 6 | Giao diện | Khung bảng, nút, thanh XP, biểu tượng ứng dụng |
+| 1 | Ảnh mỏ neo | Một tầng Đồng Mây Ngọc có 4 chậu, cây nhiều giai đoạn |
+| 2 | Tầng mây | Đảo tầng 1, bệ chậu, bộ mây trôi |
+| 3 | Chậu | Chậu Đất Nung × 3 bậc ngoại hình (lát cắt chỉ có cấp 1–5) |
+| 4 | Cây | 6 bảng 5 giai đoạn + Bọ Rùa Mây |
+| 5 | Biểu tượng | 6 nông sản, xu, XP, bình tưới, vợt (câu lệnh viết sau) |
+| 6 | Giao diện | Khung gỗ, giấy da, ruy băng, nút theo `DESIGN_SYSTEM.md` (câu lệnh viết sau) |
+
+### 11.1. Cách dùng (người tạo ảnh)
+
+- Công cụ: **Leonardo AI, gói miễn phí** (mục 9). Một mô hình cho cả đợt; ghi tên mô hình vào `assets/ASSET_SOURCES.md`.
+- Mỗi câu lệnh = **tiền tố phong cách ở mục 9** + một dòng mô tả bên dưới. Dán nguyên văn tiền tố, không sửa.
+- Đợt 1 tạo trước. Ảnh mỏ neo được duyệt thì dùng làm **ảnh tham chiếu** (Image Guidance / Style Reference) cho mọi ảnh đợt 2–4.
+- Nền: Leonardo gói miễn phí không xuất nền trong suốt ổn định → luôn yêu cầu nền xám phẳng `#808080`. Developer tách nền ở bước hậu kỳ (mục 10).
+- Với ảnh mỏ neo, dải 5 giai đoạn cây, bộ mây và 2 khung bọ: bỏ câu `Single object, centered, fully visible with margin.` khỏi tiền tố và bỏ `multiple objects` khỏi dòng AVOID (các ảnh này cố ý có nhiều vật).
+- Mỗi ảnh tạo 4 bản, chọn 1. Gửi ảnh gốc PNG, **đặt đúng tên file** ở cột "Tên file" để code nạp được ngay. Thư mục: `assets/art/<nhóm>/`.
+- Cỡ tạo: dùng cỡ ở cột "Cỡ tạo"; developer thu về "Khung @2x" ở mục 6.
+
+### 11.2. Đợt 1 — Ảnh mỏ neo
+
+| Tên file | Cỡ tạo | Mô tả (nối sau tiền tố) |
+| --- | --- | --- |
+| `anchor/anchor-floor1.png` | 1536 × 1024 | `Reference scene, not a single object: one long floating cloud island "jade cloud meadow" seen in isometric view, soft spring grass top, rounded earth edge with small roots, fluffy cream cloud underside, four round stone pot pedestals in a row along the island, each holding a terracotta pot with a plant at a different growth stage (seed mound, sprout, leafy plant, plant with ripe red fruits), one tiny red ladybird with cloud-white wings resting on a leaf, a few small peach flowers in the grass, hanging paper lantern at the island edge. Bright sky-blue background with soft clouds. Fairy-tale picture-book mood.` |
+
+### 11.3. Đợt 2 — Tầng mây
+
+| Tên file | Cỡ tạo | Mô tả |
+| --- | --- | --- |
+| `floors/cloud-meadow.png` | 1536 × 640 | `A long, wide floating island platform for a row of four pots, jade cloud meadow theme: flat soft spring-green grass top (#9FE07A, #6CC6A0), thick rounded earth edge with a few dangling roots and tiny pink blossoms (#FFE9F0), fluffy cream cloud mass underneath, two small hanging lanterns at the ends. Top surface left empty and flat (no pots, no plants). Wide horizontal composition, whole island visible.` |
+| `floors/pedestal.png` | 1024 × 1024 | `A single small round stone pedestal for a flower pot, cream pebble stone with a thin moss ring and a tiny gold rivet, low and wide, empty top.` |
+| `clouds/cloud-set.png` | 1536 × 640 | `Three separate fluffy cream-white cumulus clouds of different sizes (small, medium, large) arranged left to right with clear space between them, soft lavender shading underneath, cotton-candy texture.` |
+
+### 11.4. Đợt 3 — Chậu Đất Nung (theo `DESIGN_SYSTEM.md` mục 7: mỗi bậc thêm vật thể, giữ nguyên bóng dáng bầu tròn)
+
+| Tên file | Dùng cho cấp | Cỡ tạo | Mô tả |
+| --- | --- | --- | --- |
+| `pots/terracotta-1.png` | 1–2 | 1024 × 1024 | `A round-bellied terracotta flower pot, plain smooth warm orange-brown clay (#A9744F rim), wide rolled rim, dark moist soil visible inside the mouth, empty (no plant).` |
+| `pots/terracotta-2.png` | 3–4 | 1024 × 1024 | `The same round-bellied terracotta flower pot, same shape and size, now with raised carved leaf-and-cloud relief around the belly and a glossy jade-glazed rim, soil inside, empty (no plant).` |
+| `pots/terracotta-3.png` | 5 | 1024 × 1024 | `The same round-bellied terracotta flower pot with carved leaf-and-cloud relief and jade-glazed rim, now also with two small gold handles, a gold foot ring and three small inset jade gemstones, soil inside, empty (no plant).` |
+
+### 11.5. Đợt 4 — Cây (mỗi giống một ảnh dải 5 giai đoạn) và Bọ Mây
+
+Chung cho mọi dải cây: thêm câu sau vào cuối mô tả —
+`Five growth stages of the same plant shown left to right in one horizontal strip, evenly spaced, all at the same scale and standing on the same baseline, each stage clearly different in shape: 1 seed in a small soil mound, 2 tiny sprout with two leaves, 3 young leafy plant, 4 budding or flowering plant, 5 fully ripe plant. Plants only, no pots.`
+
+| Tên file | Cây | Cỡ tạo | Mô tả (bóng dáng và màu chủ đạo riêng, theo `DESIGN_SYSTEM.md` mục 9) |
+| --- | --- | --- | --- |
+| `crops/cotton-daisy.png` | Cúc Bông Gòn (Hoa) | 1536 × 512 | `A cotton daisy: slender stems, at ripe stage three fluffy round white daisies with soft cotton-ball petals and warm yellow centres.` |
+| `crops/cherry-tomato.png` | Cà Chua Bi Ngọt (Quả) | 1536 × 512 | `A cherry tomato vine: bushy plant on a tiny bamboo stake, at ripe stage heavy clusters of glossy scarlet cherry tomatoes; stage 4 shows small yellow star flowers and green fruits.` |
+| `crops/cloud-mint.png` | Bạc Hà Mây (Rau Thảo) | 1536 × 512 | `A cloud mint herb: upright stems with layered pairs of soft jade-blue serrated leaves, at ripe stage the top leaves are lush and give off small white cloud wisps.` |
+| `crops/sky-carrot.png` | Cà Rốt Mây (Rau Thảo) | 1536 × 512 | `A sky carrot: tall feathery bright green fronds, at ripe stage a big round orange carrot shoulder pushes out of the soil with a tiny cloud puff beside it.` |
+| `crops/cloud-strawberry.png` | Dâu Tây Mây (Quả) | 1536 × 512 | `A cloud strawberry plant: low rounded clump of trefoil leaves, at ripe stage plump pearly pink strawberries with cream seeds hanging over the leaves; stage 4 shows white blossoms.` |
+| `crops/golden-gerbera.png` | Hoa Đồng Tiền Vàng (Hoa) | 1536 × 512 | `A golden gerbera: sturdy stems and broad leaves, at ripe stage two large radiant gold gerbera flowers with amber centres and a faint golden glow; stage 4 shows tight golden buds.` |
+| `bugs/ladybird.png` | Bọ Rùa Mây | 1024 × 512 | `Two frames of the same tiny cute ladybird side by side: round glossy red shell with soft dark spots, small cloud-white fluffy wings, big shiny eyes; left frame wings up, right frame wings down. Same size and position in both frames.` |
 
 ## 12. Kiểm duyệt chất lượng
 
