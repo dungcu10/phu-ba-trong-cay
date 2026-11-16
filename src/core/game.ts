@@ -7,7 +7,9 @@ import { adjustedOffset, gameTime } from './clock.ts';
 import { stochasticRound } from './rng.ts';
 import { cropStatus } from '../systems/growth.ts';
 import { addItem, addXp, removeItem, sellPrice, storageFree } from '../systems/economy.ts';
-import { canAfford, nextUpgradeCost, potStat } from '../systems/pots.ts';
+import { canAfford, nextUpgradeCost } from '../systems/pots.ts';
+import { slotBonus } from '../systems/modifiers.ts';
+import { createFloorState } from './state.ts';
 
 export type SlotRef = { floor: number; slot: number };
 
@@ -17,7 +19,10 @@ export type Command =
   | ({ type: 'catchBug' } & SlotRef)
   | ({ type: 'harvest' } & SlotRef)
   | { type: 'sell'; itemId: string; qty: number }
-  | { type: 'upgradePot'; potInstanceId: string };
+  | { type: 'upgradePot'; potInstanceId: string }
+  | { type: 'unlockFloor'; floorId: string }
+  | { type: 'buyPot'; potId: string }
+  | ({ type: 'placePot'; potInstanceId: string } & SlotRef);
 
 export type GameEvent =
   | { type: 'planted'; slot: SlotRef; cropId: string; cost: number }
@@ -26,7 +31,10 @@ export type GameEvent =
   | { type: 'harvested'; slot: SlotRef; itemId: string; qty: number; xp: number; cleared: boolean }
   | { type: 'sold'; itemId: string; qty: number; coins: number }
   | { type: 'potUpgraded'; potInstanceId: string; level: number }
-  | { type: 'levelUp'; level: number };
+  | { type: 'levelUp'; level: number }
+  | { type: 'floorUnlocked'; floorId: string; index: number; cost: number }
+  | { type: 'potBought'; potInstanceId: string; potId: string; cost: number }
+  | { type: 'potPlaced'; slot: SlotRef; potInstanceId: string; replaced: string };
 
 export type ErrorCode =
   | 'bad_slot'
@@ -43,7 +51,10 @@ export type ErrorCode =
   | 'bad_quantity'
   | 'not_sellable'
   | 'unknown_pot'
-  | 'max_level';
+  | 'max_level'
+  | 'not_next_floor'
+  | 'not_for_sale'
+  | 'not_in_stock';
 
 export type Result = { ok: true; events: GameEvent[] } | { ok: false; error: ErrorCode };
 
@@ -81,6 +92,12 @@ export function dispatch(content: ContentPack, state: GameState, cmd: Command, r
       return sell(content, state, cmd.itemId, cmd.qty, now);
     case 'upgradePot':
       return upgradePot(content, state, cmd.potInstanceId);
+    case 'unlockFloor':
+      return unlockFloor(content, state, cmd.floorId);
+    case 'buyPot':
+      return buyPot(content, state, cmd.potId);
+    case 'placePot':
+      return placePot(state, cmd, cmd.potInstanceId);
   }
 }
 
@@ -138,9 +155,9 @@ function harvest(content: ContentPack, state: GameState, ref: SlotRef, now: numb
   const planting = slot.planting;
   if (!status || !planting) return fail('slot_empty');
   if (!status.ripe) return fail('not_ripe');
-  const pot = state.pots[slot.potInstanceId]!;
   const crop = status.crop;
-  const qty = stochasticRound(crop.yield * (1 + potStat(content, pot, 'yield')), state.seed, 'yield', planting.id, planting.harvestsDone);
+  const qty = stochasticRound(crop.yield * (1 + slotBonus(content, state, slot, crop, 'yield')), state.seed, 'yield', planting.id, planting.harvestsDone);
+  const xp = stochasticRound(crop.xp * (1 + slotBonus(content, state, slot, crop, 'xp')), state.seed, 'xp', planting.id, planting.harvestsDone);
   if (storageFree(content, state) < qty) return fail('storage_full');
 
   addItem(state, crop.produce.id, qty);
@@ -156,8 +173,8 @@ function harvest(content: ContentPack, state: GameState, ref: SlotRef, now: numb
     planting.wateredStages = [];
     planting.caughtBugs = {};
   }
-  events.push({ type: 'harvested', slot: ref, itemId: crop.produce.id, qty, xp: crop.xp, cleared });
-  for (const level of addXp(content, state, crop.xp)) events.push({ type: 'levelUp', level });
+  events.push({ type: 'harvested', slot: ref, itemId: crop.produce.id, qty, xp, cleared });
+  for (const level of addXp(content, state, xp)) events.push({ type: 'levelUp', level });
   return { ok: true, events };
 }
 
@@ -184,4 +201,47 @@ function upgradePot(content: ContentPack, state: GameState, potInstanceId: strin
   for (const [id, qty] of Object.entries(cost.items)) removeItem(state, id, qty);
   pot.level += 1;
   return { ok: true, events: [{ type: 'potUpgraded', potInstanceId, level: pot.level }] };
+}
+
+/** The next floor that can be unlocked (floors open bottom to top, in content order). */
+export function nextFloor(content: ContentPack, state: GameState) {
+  const have = new Set(state.floors.map((f) => f.floorId));
+  return content.floorList.find((f) => !have.has(f.id)) ?? null;
+}
+
+function unlockFloor(content: ContentPack, state: GameState, floorId: string): Result {
+  const def = nextFloor(content, state);
+  if (!def || def.id !== floorId) return fail('not_next_floor');
+  if (def.unlockLevel > state.player.level) return fail('locked');
+  if (state.player.coins < def.unlockCost) return fail('not_enough_coins');
+  state.player.coins -= def.unlockCost;
+  const index = state.floors.length;
+  state.floors.push(createFloorState(def, state.pots, index));
+  return { ok: true, events: [{ type: 'floorUnlocked', floorId, index, cost: def.unlockCost }] };
+}
+
+function buyPot(content: ContentPack, state: GameState, potId: string): Result {
+  const def = content.pots.get(potId);
+  if (!def) return fail('unknown_pot');
+  if (def.price === null) return fail('not_for_sale');
+  if (def.unlockLevel > state.player.level) return fail('locked');
+  if (state.player.coins < def.price) return fail('not_enough_coins');
+  state.player.coins -= def.price;
+  const potInstanceId = `pot-b${state.nextId++}`;
+  state.pots[potInstanceId] = { potId, level: 1 };
+  state.potStock.push(potInstanceId);
+  return { ok: true, events: [{ type: 'potBought', potInstanceId, potId, cost: def.price }] };
+}
+
+/** Puts a pot from stock on a slot; the pot that was there goes back to stock. */
+function placePot(state: GameState, ref: SlotRef, potInstanceId: string): Result {
+  const slot = slotAt(state, ref);
+  if (!slot) return fail('bad_slot');
+  const i = state.potStock.indexOf(potInstanceId);
+  if (i < 0 || !state.pots[potInstanceId]) return fail('not_in_stock');
+  if (slot.planting) return fail('slot_busy');
+  const replaced = slot.potInstanceId;
+  state.potStock.splice(i, 1, replaced);
+  slot.potInstanceId = potInstanceId;
+  return { ok: true, events: [{ type: 'potPlaced', slot: ref, potInstanceId, replaced }] };
 }

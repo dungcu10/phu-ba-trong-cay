@@ -1,11 +1,48 @@
 [
   {
     "id": "base:floor.cloud-meadow",
-    "name": { "vi": "Đồng Mây Ngọc" },
+    "name": {
+      "vi": "Đồng Mây Ngọc"
+    },
     "unlockLevel": 1,
     "unlockCost": 0,
     "slotCount": 10,
     "startingPot": "base:pot.terracotta",
-    "sprite": "floors/cloud-meadow"
+    "sprite": "floors/cloud-meadow",
+    "trait": null
+  },
+  {
+    "id": "base:floor.tea-mist",
+    "name": {
+      "vi": "Vườn Trà Sương Sớm"
+    },
+    "unlockLevel": 5,
+    "unlockCost": 2000,
+    "slotCount": 10,
+    "startingPot": "base:pot.terracotta",
+    "sprite": "floors/tea-mist",
+    "trait": {
+      "family": "herb",
+      "stat": "speed",
+      "value": 0.1
+    },
+    "tint": "#CFE8D5"
+  },
+  {
+    "id": "base:floor.golden-terrace",
+    "name": {
+      "vi": "Ruộng Bậc Thang Hoàng Kim"
+    },
+    "unlockLevel": 10,
+    "unlockCost": 8000,
+    "slotCount": 10,
+    "startingPot": "base:pot.terracotta",
+    "sprite": "floors/golden-terrace",
+    "trait": {
+      "family": "fruit",
+      "stat": "yield",
+      "value": 0.1
+    },
+    "tint": "#F5C84C"
   }
 ]

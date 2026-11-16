@@ -36,7 +36,7 @@ function assertState(value: unknown): asserts value is GameState {
   const s = value as GameState;
   const isObj = (v: unknown) => typeof v === 'object' && v !== null && !Array.isArray(v);
   const ok =
-    isObj(s) && isObj(s.player) && isObj(s.inventory) && isObj(s.pots) && isObj(s.stats) &&
+    isObj(s) && isObj(s.player) && isObj(s.inventory) && isObj(s.pots) && isObj(s.stats) && Array.isArray(s.potStock) &&
     Array.isArray(s.floors) &&
     s.floors.every((f) => isObj(f) && typeof f.floorId === 'string' && Array.isArray(f.slots) &&
       f.slots.every((sl) => isObj(sl) && typeof sl.potInstanceId === 'string' && (sl.planting === null || isObj(sl.planting)))) &&

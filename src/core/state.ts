@@ -1,9 +1,9 @@
 // Game state: plain data only, serializable to JSON as-is. No class instances, no functions.
 
-import type { ContentPack } from './content.ts';
+import type { ContentPack, FloorDef } from './content.ts';
 import { newSeed } from './rng.ts';
 
-export const SAVE_VERSION = 4;
+export const SAVE_VERSION = 5;
 
 export interface Planting {
   /** Unique per planting, used as a key for deterministic randomness. */
@@ -51,8 +51,21 @@ export interface GameState {
   inventory: Record<string, number>;
   floors: FloorState[];
   pots: Record<string, PotInstance>;
+  /** Owned pots not placed on any floor (bought, or swapped out). */
+  potStock: string[];
   nextId: number;
   stats: { harvests: number; coinsEarned: number; bugsCaught: number };
+}
+
+/** Builds a floor with its starting pots (used for the first floor and every unlocked one). */
+export function createFloorState(floorDef: FloorDef, pots: Record<string, PotInstance>, floorIndex: number): FloorState {
+  const slots: SlotState[] = [];
+  for (let i = 0; i < floorDef.slotCount; i++) {
+    const potInstanceId = floorIndex === 0 ? `pot-${i + 1}` : `pot-f${floorIndex + 1}-${i + 1}`;
+    pots[potInstanceId] = { potId: floorDef.startingPot, level: 1 };
+    slots.push({ potInstanceId, planting: null });
+  }
+  return { floorId: floorDef.id, slots };
 }
 
 /** A brand-new profile built entirely from content data. */
@@ -61,12 +74,7 @@ export function createNewGame(content: ContentPack, now: number, entropy = now):
   const floorDef = content.floors.get(cfg.startFloor);
   if (!floorDef) throw new Error(`Không tìm thấy tầng khởi đầu ${cfg.startFloor}`);
   const pots: Record<string, PotInstance> = {};
-  const slots: SlotState[] = [];
-  for (let i = 0; i < floorDef.slotCount; i++) {
-    const potInstanceId = `pot-${i + 1}`;
-    pots[potInstanceId] = { potId: floorDef.startingPot, level: 1 };
-    slots.push({ potInstanceId, planting: null });
-  }
+  const floor = createFloorState(floorDef, pots, 0);
   return {
     saveVersion: SAVE_VERSION,
     contentVersion: content.contentVersion,
@@ -76,8 +84,9 @@ export function createNewGame(content: ContentPack, now: number, entropy = now):
     clockOffsetMs: 0,
     player: { coins: cfg.startingCoins, xp: 0, level: cfg.startingLevel },
     inventory: {},
-    floors: [{ floorId: floorDef.id, slots }],
+    floors: [floor],
     pots,
+    potStock: [],
     nextId: 1,
     stats: { harvests: 0, coinsEarned: 0, bugsCaught: 0 },
   };

@@ -39,6 +39,11 @@ export const MIGRATIONS: Record<number, Migration> = {
   // 3 -> 4 (R5): plantings record seedCost. Migrations do not see the content pack, so the
   // value is filled in by reconcile() right after loading (current seed price of that crop).
   3: (data) => data,
+  // 4 -> 5 (multi-floor + pot shop): owned pots not on a floor.
+  4: (data) => {
+    data.potStock = [];
+    return data;
+  },
 };
 
 export function migrate(

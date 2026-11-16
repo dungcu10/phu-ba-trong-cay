@@ -5,10 +5,12 @@ import { dispatch } from '../src/core/game.ts';
 import { createNewGame } from '../src/core/state.ts';
 import { buildContentPack, loadBase, MIN, readRaw, T0 } from './helpers.ts';
 
-test('gói nội dung gốc hợp lệ: 1 tầng, 10 chậu, 6 giống cây, 1 loại Bọ Mây', async () => {
+test('gói nội dung gốc hợp lệ: 3 tầng × 10 chậu, 7 loại chậu, 6 giống cây, 1 loại Bọ Mây', async () => {
   const c = await loadBase();
-  assert.equal(c.floors.size, 1);
-  assert.equal([...c.floors.values()][0]!.slotCount, 10);
+  assert.equal(c.floors.size, 3);
+  for (const f of c.floorList) assert.equal(f.slotCount, 10);
+  assert.equal(c.pots.size, 7);
+  assert.deepEqual([...new Set(c.potList.map((p) => p.rarity))].sort(), ['common', 'epic', 'good', 'legendary', 'rare']);
   assert.equal(c.crops.size, 6);
   assert.equal(c.bugs.size, 1);
   for (const crop of c.cropList) assert.ok(crop.stages >= 4, `${crop.id} phải có >= 4 giai đoạn`);

@@ -14,5 +14,6 @@
   "market": {
     "dailyPriceVariation": 0.05
   },
-  "startFloor": "base:floor.cloud-meadow"
+  "startFloor": "base:floor.cloud-meadow",
+  "potAffinityBonus": 0.2
 }

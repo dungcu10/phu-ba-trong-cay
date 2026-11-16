@@ -2,7 +2,8 @@
 // Game rules never mention a specific crop, pot or floor: everything comes from these definitions.
 
 export type LocalizedText = { vi: string; en?: string };
-export type PotStatName = 'speed' | 'yield';
+export type PotStatName = 'speed' | 'yield' | 'xp' | 'attract' | 'luck';
+export const POT_STATS: PotStatName[] = ['speed', 'yield', 'xp', 'attract', 'luck'];
 
 export interface GameConfig {
   startingCoins: number;
@@ -12,6 +13,8 @@ export interface GameConfig {
   water: { remainingTimeReduction: number };
   market: { dailyPriceVariation: number };
   startFloor: string;
+  /** Pot stats are multiplied by (1 + this) when the crop's family is the pot's favoured one. */
+  potAffinityBonus: number;
 }
 
 export interface FloorDef {
@@ -22,6 +25,10 @@ export interface FloorDef {
   slotCount: number;
   startingPot: string;
   sprite: string;
+  /** Environment bonus for crops of a family grown on this floor (GAMEPLAY_DESIGN 3). */
+  trait: { family: string; stat: PotStatName; value: number } | null;
+  /** Optional colour wash for the floor art until each floor has its own picture. */
+  tint?: string;
 }
 
 export interface UpgradeCost {
@@ -31,8 +38,17 @@ export interface UpgradeCost {
 
 export interface PotLevelDef {
   level: number;
-  stats: Record<PotStatName, number>;
+  stats: Partial<Record<PotStatName, number>>;
   upgradeCost: UpgradeCost | null;
+}
+
+/** Compact way to describe a pot's levels: base stats grow by perLevel × base each level. */
+export interface PotLevelRule {
+  maxLevel: number;
+  base: Partial<Record<PotStatName, number>>;
+  perLevel: number;
+  coins: { base: number; growth: number };
+  items: Record<string, { base: number; growth: number }>;
 }
 
 export interface PotDef {
@@ -40,7 +56,29 @@ export interface PotDef {
   name: LocalizedText;
   rarity: string;
   sprite: string;
+  /** Coins to buy one at the pot shop; null = not sold. */
+  price: number | null;
+  unlockLevel: number;
+  favoredFamily: string | null;
   levels: PotLevelDef[];
+}
+
+/** Expands a level rule into explicit levels (rounded so displays stay tidy). */
+export function expandPotLevels(rule: PotLevelRule): PotLevelDef[] {
+  const levels: PotLevelDef[] = [];
+  for (let lv = 1; lv <= rule.maxLevel; lv++) {
+    const stats: Partial<Record<PotStatName, number>> = {};
+    for (const [k, v] of Object.entries(rule.base)) stats[k as PotStatName] = Math.round(v * (1 + rule.perLevel * (lv - 1)) * 1000) / 1000;
+    const upgradeCost =
+      lv === 1
+        ? null
+        : {
+            coins: Math.round(rule.coins.base * Math.pow(rule.coins.growth, lv - 2)),
+            items: Object.fromEntries(Object.entries(rule.items).map(([id, c]) => [id, Math.round(c.base * Math.pow(c.growth, lv - 2))])),
+          };
+    levels.push({ level: lv, stats, upgradeCost });
+  }
+  return levels;
 }
 
 export interface CropDef {
@@ -87,6 +125,9 @@ export interface ContentPack {
   bugs: Map<string, BugDef>;
   items: Map<string, ItemDef>;
   cropList: CropDef[];
+  /** Floors in the order they unlock (bottom to top). */
+  floorList: FloorDef[];
+  potList: PotDef[];
   bugList: BugDef[];
 }
 
@@ -157,18 +198,22 @@ function addUnique<T extends { id: string }>(map: Map<string, T>, item: T, where
 export function buildContentPack(raw: RawContent): ContentPack {
   const problems: string[] = [];
   const config = raw.config as GameConfig;
-  checkFields('config', config, ['startingCoins', 'startingLevel', 'storageCapacity'], ['startFloor'], problems);
+  checkFields('config', config, ['startingCoins', 'startingLevel', 'storageCapacity', 'potAffinityBonus'], ['startFloor'], problems);
 
   const floors = new Map<string, FloorDef>();
   asArray('floors', raw.floors, problems).forEach((f, i) => {
     if (checkFields(`floors[${i}]`, f, ['unlockLevel', 'unlockCost', 'slotCount'], ['id', 'startingPot', 'sprite'], problems)) {
+      if (f.trait === undefined) f.trait = null;
       addUnique(floors, f as unknown as FloorDef, `floors[${i}]`, problems);
     }
   });
 
   const pots = new Map<string, PotDef>();
   asArray('pots', raw.pots, problems).forEach((p, i) => {
-    if (!checkFields(`pots[${i}]`, p, [], ['id', 'rarity', 'sprite'], problems)) return;
+    if (!checkFields(`pots[${i}]`, p, ['unlockLevel'], ['id', 'rarity', 'sprite'], problems)) return;
+    if (isObj(p.levelRule)) p.levels = expandPotLevels(p.levelRule as unknown as PotLevelRule);
+    if (p.price !== null && !(isNum(p.price) && p.price >= 0)) problems.push(`pots[${i}].price: phải là số >= 0 hoặc null`);
+    if (p.favoredFamily === undefined) p.favoredFamily = null;
     const levels = asArray(`pots[${i}].levels`, p.levels, problems) as PotLevelDef[];
     if (levels.length === 0) problems.push(`pots[${i}].levels: cần ít nhất 1 cấp`);
     levels.forEach((lv, j) => {
@@ -214,7 +259,13 @@ export function buildContentPack(raw: RawContent): ContentPack {
 
   // Cross references.
   if (isObj(config) && !floors.has(config.startFloor)) problems.push(`config.startFloor: không có tầng "${config.startFloor}"`);
-  for (const f of floors.values()) if (!pots.has(f.startingPot)) problems.push(`tầng ${f.id}: không có chậu "${f.startingPot}"`);
+  for (const f of floors.values()) {
+    if (!pots.has(f.startingPot)) problems.push(`tầng ${f.id}: không có chậu "${f.startingPot}"`);
+    if (f.trait && !POT_STATS.includes(f.trait.stat)) problems.push(`tầng ${f.id}: đặc tính "${f.trait.stat}" không hợp lệ`);
+  }
+  for (const p of pots.values()) {
+    for (const lv of p.levels) for (const k of Object.keys(lv.stats)) if (!POT_STATS.includes(k as PotStatName)) problems.push(`chậu ${p.id}: chỉ số "${k}" không hợp lệ`);
+  }
   for (const p of pots.values()) {
     for (const lv of p.levels) {
       for (const itemId of Object.keys(lv.upgradeCost?.items ?? {})) {
@@ -233,6 +284,8 @@ export function buildContentPack(raw: RawContent): ContentPack {
     bugs,
     items,
     cropList: [...crops.values()],
+    floorList: [...floors.values()].sort((a, b) => a.unlockLevel - b.unlockLevel),
+    potList: [...pots.values()],
     bugList: [...bugs.values()],
   };
 }

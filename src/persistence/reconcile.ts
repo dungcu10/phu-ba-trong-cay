@@ -58,6 +58,7 @@ export function reconcile(input: GameState, content: ContentPack, mode: Reconcil
   reconcileInventory(state, content, c);
   reconcilePots(state, content, c);
   reconcileFloors(state, content, c);
+  reconcileStock(state);
 
   // nextId must stay above every planting id so new plantings never reuse random keys.
   for (const f of state.floors) for (const s of f.slots) if (s.planting) state.nextId = Math.max(state.nextId, s.planting.id + 1);
@@ -103,8 +104,16 @@ function reconcileFloors(state: GameState, content: ContentPack, c: Checker): vo
     c.warnings.push(`Tầng ${floor.floorId} không còn trong game, đã bỏ`);
     return false;
   });
-  for (const floor of state.floors) {
+  for (const [fi, floor] of state.floors.entries()) {
     const def = content.floors.get(floor.floorId)!;
+    // A floor that gained slots in a content update gets the new positions with starting pots.
+    for (let i = floor.slots.length; i < def.slotCount; i++) {
+      const id = fi === 0 ? `pot-${i + 1}` : `pot-f${fi + 1}-${i + 1}`;
+      const potInstanceId = state.pots[id] ? `${id}-n` : id;
+      state.pots[potInstanceId] = { potId: def.startingPot, level: 1 };
+      floor.slots.push({ potInstanceId, planting: null });
+      if (i === def.slotCount - 1) c.warnings.push(`${def.name.vi} có thêm vị trí chậu mới`);
+    }
     floor.slots.forEach((slot, i) => {
       if (!state.pots[slot.potInstanceId]) {
         c.warnings.push(`Chậu ${slot.potInstanceId} bị thiếu, đã đặt chậu mới`);
@@ -113,6 +122,13 @@ function reconcileFloors(state: GameState, content: ContentPack, c: Checker): vo
       reconcilePlanting(state, content, slot, `chậu ${i + 1}`, c);
     });
   }
+}
+
+/** Pot stock holds only existing pots that are not placed on a slot, each once. */
+function reconcileStock(state: GameState): void {
+  const placed = new Set(state.floors.flatMap((f) => f.slots.map((s) => s.potInstanceId)));
+  const stock = Array.isArray(state.potStock) ? state.potStock : [];
+  state.potStock = [...new Set(stock)].filter((id) => typeof id === 'string' && state.pots[id] && !placed.has(id));
 }
 
 function clearAndRefund(state: GameState, slot: SlotState, refund: number, note: string, c: Checker): void {

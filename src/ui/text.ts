@@ -18,6 +18,9 @@ export const ERROR_TEXT: Record<ErrorCode, string> = {
   not_sellable: 'Món này không bán được.',
   unknown_pot: 'Không tìm thấy chậu.',
   max_level: 'Chậu đã đạt cấp tối đa.',
+  not_next_floor: 'Phải mở các tầng bên dưới trước.',
+  not_for_sale: 'Chậu này không bán ở cửa hàng.',
+  not_in_stock: 'Chậu này không còn trong kho chậu.',
 };
 
 const numberFormat = new Intl.NumberFormat('vi-VN');
