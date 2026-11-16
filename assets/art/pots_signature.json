@@ -1,0 +1,1265 @@
+{
+ "frames": {
+  "pots/sig/01/50": {
+   "frame": {
+    "x": 1171,
+    "y": 429,
+    "w": 180,
+    "h": 192
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 180,
+    "h": 192
+   },
+   "sourceSize": {
+    "w": 180,
+    "h": 192
+   },
+   "anchor": {
+    "x": 0.4944,
+    "y": 0.9012
+   },
+   "soil": 104.1
+  },
+  "pots/sig/02/50": {
+   "frame": {
+    "x": 2751,
+    "y": 2,
+    "w": 185,
+    "h": 265
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 185,
+    "h": 265
+   },
+   "sourceSize": {
+    "w": 185,
+    "h": 265
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 0.9532
+   },
+   "soil": 146.4
+  },
+  "pots/sig/03/50": {
+   "frame": {
+    "x": 1353,
+    "y": 429,
+    "w": 203,
+    "h": 192
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 203,
+    "h": 192
+   },
+   "sourceSize": {
+    "w": 203,
+    "h": 192
+   },
+   "anchor": {
+    "x": 0.4901,
+    "y": 0.9464
+   },
+   "soil": 117.6
+  },
+  "pots/sig/04/50": {
+   "frame": {
+    "x": 3524,
+    "y": 655,
+    "w": 174,
+    "h": 115
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 174,
+    "h": 115
+   },
+   "sourceSize": {
+    "w": 174,
+    "h": 115
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 0.8781
+   },
+   "soil": 75.2
+  },
+  "pots/sig/05/50": {
+   "frame": {
+    "x": 2437,
+    "y": 429,
+    "w": 171,
+    "h": 177
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 171,
+    "h": 177
+   },
+   "sourceSize": {
+    "w": 171,
+    "h": 177
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 0.9337
+   },
+   "soil": 93.5
+  },
+  "pots/sig/06/50": {
+   "frame": {
+    "x": 3335,
+    "y": 655,
+    "w": 187,
+    "h": 119
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 187,
+    "h": 119
+   },
+   "sourceSize": {
+    "w": 187,
+    "h": 119
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 0.9164
+   },
+   "soil": 73.7
+  },
+  "pots/sig/07/50": {
+   "frame": {
+    "x": 3700,
+    "y": 655,
+    "w": 169,
+    "h": 111
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 169,
+    "h": 111
+   },
+   "sourceSize": {
+    "w": 169,
+    "h": 111
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 0.88
+   },
+   "soil": 73.2
+  },
+  "pots/sig/08/50": {
+   "frame": {
+    "x": 1125,
+    "y": 655,
+    "w": 230,
+    "h": 138
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 230,
+    "h": 138
+   },
+   "sourceSize": {
+    "w": 230,
+    "h": 138
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 0.8069
+   },
+   "soil": 71.9
+  },
+  "pots/sig/09/50": {
+   "frame": {
+    "x": 2038,
+    "y": 655,
+    "w": 198,
+    "h": 128
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 198,
+    "h": 128
+   },
+   "sourceSize": {
+    "w": 198,
+    "h": 128
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 0.8595
+   },
+   "soil": 77.9
+  },
+  "pots/sig/10/50": {
+   "frame": {
+    "x": 173,
+    "y": 655,
+    "w": 188,
+    "h": 152
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 188,
+    "h": 152
+   },
+   "sourceSize": {
+    "w": 188,
+    "h": 152
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 0.9064
+   },
+   "soil": 77.6
+  },
+  "pots/sig/11/50": {
+   "frame": {
+    "x": 439,
+    "y": 2,
+    "w": 321,
+    "h": 325
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 321,
+    "h": 325
+   },
+   "sourceSize": {
+    "w": 321,
+    "h": 325
+   },
+   "anchor": {
+    "x": 0.4548,
+    "y": 0.8077
+   },
+   "soil": 116.1
+  },
+  "pots/sig/12/50": {
+   "frame": {
+    "x": 2938,
+    "y": 2,
+    "w": 313,
+    "h": 262
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 313,
+    "h": 262
+   },
+   "sourceSize": {
+    "w": 313,
+    "h": 262
+   },
+   "anchor": {
+    "x": 0.4585,
+    "y": 0.9645
+   },
+   "soil": 127.4
+  },
+  "pots/sig/13/50": {
+   "frame": {
+    "x": 612,
+    "y": 429,
+    "w": 211,
+    "h": 219
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 211,
+    "h": 219
+   },
+   "sourceSize": {
+    "w": 211,
+    "h": 219
+   },
+   "anchor": {
+    "x": 0.5213,
+    "y": 0.9613
+   },
+   "soil": 116.1
+  },
+  "pots/sig/14/50": {
+   "frame": {
+    "x": 3017,
+    "y": 429,
+    "w": 236,
+    "h": 170
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 236,
+    "h": 170
+   },
+   "sourceSize": {
+    "w": 236,
+    "h": 170
+   },
+   "anchor": {
+    "x": 0.4873,
+    "y": 0.9207
+   },
+   "soil": 116.1
+  },
+  "pots/sig/15/50": {
+   "frame": {
+    "x": 363,
+    "y": 655,
+    "w": 281,
+    "h": 151
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 281,
+    "h": 151
+   },
+   "sourceSize": {
+    "w": 281,
+    "h": 151
+   },
+   "anchor": {
+    "x": 0.4377,
+    "y": 0.9438
+   },
+   "soil": 116.1
+  },
+  "pots/sig/16/50": {
+   "frame": {
+    "x": 1788,
+    "y": 429,
+    "w": 206,
+    "h": 181
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 206,
+    "h": 181
+   },
+   "sourceSize": {
+    "w": 206,
+    "h": 181
+   },
+   "anchor": {
+    "x": 0.4175,
+    "y": 0.9531
+   },
+   "soil": 116.1
+  },
+  "pots/sig/17/50": {
+   "frame": {
+    "x": 1996,
+    "y": 429,
+    "w": 239,
+    "h": 178
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 239,
+    "h": 178
+   },
+   "sourceSize": {
+    "w": 239,
+    "h": 178
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 0.8603
+   },
+   "soil": 125.9
+  },
+  "pots/sig/18/50": {
+   "frame": {
+    "x": 2423,
+    "y": 655,
+    "w": 249,
+    "h": 125
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 249,
+    "h": 125
+   },
+   "sourceSize": {
+    "w": 249,
+    "h": 125
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 0.7875
+   },
+   "soil": 63.6
+  },
+  "pots/sig/19/50": {
+   "frame": {
+    "x": 1000,
+    "y": 429,
+    "w": 169,
+    "h": 194
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 169,
+    "h": 194
+   },
+   "sourceSize": {
+    "w": 169,
+    "h": 194
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 0.9182
+   },
+   "soil": 125.9
+  },
+  "pots/sig/20/50": {
+   "frame": {
+    "x": 1357,
+    "y": 655,
+    "w": 187,
+    "h": 130
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 187,
+    "h": 130
+   },
+   "sourceSize": {
+    "w": 187,
+    "h": 130
+   },
+   "anchor": {
+    "x": 0.4545,
+    "y": 0.9099
+   },
+   "soil": 85.1
+  },
+  "pots/sig/21/50": {
+   "frame": {
+    "x": 3253,
+    "y": 2,
+    "w": 396,
+    "h": 247
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 396,
+    "h": 247
+   },
+   "sourceSize": {
+    "w": 396,
+    "h": 247
+   },
+   "anchor": {
+    "x": 0.4924,
+    "y": 0.946
+   },
+   "soil": 124.1
+  },
+  "pots/sig/22/50": {
+   "frame": {
+    "x": 3651,
+    "y": 2,
+    "w": 187,
+    "h": 229
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 187,
+    "h": 229
+   },
+   "sourceSize": {
+    "w": 187,
+    "h": 229
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 0.9048
+   },
+   "soil": 94.5
+  },
+  "pots/sig/23/50": {
+   "frame": {
+    "x": 3530,
+    "y": 429,
+    "w": 182,
+    "h": 166
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 182,
+    "h": 166
+   },
+   "sourceSize": {
+    "w": 182,
+    "h": 166
+   },
+   "anchor": {
+    "x": 0.4698,
+    "y": 0.9189
+   },
+   "soil": 112.6
+  },
+  "pots/sig/24/50": {
+   "frame": {
+    "x": 2,
+    "y": 429,
+    "w": 319,
+    "h": 224
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 319,
+    "h": 224
+   },
+   "sourceSize": {
+    "w": 319,
+    "h": 224
+   },
+   "anchor": {
+    "x": 0.4577,
+    "y": 0.9433
+   },
+   "soil": 96.9
+  },
+  "pots/sig/25/50": {
+   "frame": {
+    "x": 1546,
+    "y": 655,
+    "w": 302,
+    "h": 129
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 302,
+    "h": 129
+   },
+   "sourceSize": {
+    "w": 302,
+    "h": 129
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 0.867
+   },
+   "soil": 64.2
+  },
+  "pots/sig/26/50": {
+   "frame": {
+    "x": 3255,
+    "y": 429,
+    "w": 273,
+    "h": 168
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 273,
+    "h": 168
+   },
+   "sourceSize": {
+    "w": 273,
+    "h": 168
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 0.8345
+   },
+   "soil": 94.5
+  },
+  "pots/sig/27/50": {
+   "frame": {
+    "x": 2238,
+    "y": 655,
+    "w": 183,
+    "h": 126
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 183,
+    "h": 126
+   },
+   "sourceSize": {
+    "w": 183,
+    "h": 126
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 0.9113
+   },
+   "soil": 79.0
+  },
+  "pots/sig/28/50": {
+   "frame": {
+    "x": 2794,
+    "y": 429,
+    "w": 221,
+    "h": 171
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 221,
+    "h": 171
+   },
+   "sourceSize": {
+    "w": 221,
+    "h": 171
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 0.8955
+   },
+   "soil": 125.9
+  },
+  "pots/sig/29/50": {
+   "frame": {
+    "x": 3714,
+    "y": 429,
+    "w": 224,
+    "h": 164
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 224,
+    "h": 164
+   },
+   "sourceSize": {
+    "w": 224,
+    "h": 164
+   },
+   "anchor": {
+    "x": 0.5089,
+    "y": 0.9454
+   },
+   "soil": 106.7
+  },
+  "pots/sig/30/50": {
+   "frame": {
+    "x": 2855,
+    "y": 655,
+    "w": 220,
+    "h": 121
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 220,
+    "h": 121
+   },
+   "sourceSize": {
+    "w": 220,
+    "h": 121
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 0.8226
+   },
+   "soil": 68.5
+  },
+  "pots/sig/31/50": {
+   "frame": {
+    "x": 2557,
+    "y": 2,
+    "w": 192,
+    "h": 270
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 192,
+    "h": 270
+   },
+   "sourceSize": {
+    "w": 192,
+    "h": 270
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 0.9555
+   },
+   "soil": 231.6
+  },
+  "pots/sig/32/50": {
+   "frame": {
+    "x": 1850,
+    "y": 655,
+    "w": 186,
+    "h": 129
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 186,
+    "h": 129
+   },
+   "sourceSize": {
+    "w": 186,
+    "h": 129
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 0.8647
+   },
+   "soil": 80.0
+  },
+  "pots/sig/33/50": {
+   "frame": {
+    "x": 926,
+    "y": 655,
+    "w": 197,
+    "h": 144
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 197,
+    "h": 144
+   },
+   "sourceSize": {
+    "w": 197,
+    "h": 144
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 0.886
+   },
+   "soil": 102.2
+  },
+  "pots/sig/34/50": {
+   "frame": {
+    "x": 2674,
+    "y": 655,
+    "w": 179,
+    "h": 125
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 179,
+    "h": 125
+   },
+   "sourceSize": {
+    "w": 179,
+    "h": 125
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 0.8615
+   },
+   "soil": 75.7
+  },
+  "pots/sig/35/50": {
+   "frame": {
+    "x": 2237,
+    "y": 429,
+    "w": 198,
+    "h": 178
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 198,
+    "h": 178
+   },
+   "sourceSize": {
+    "w": 198,
+    "h": 178
+   },
+   "anchor": {
+    "x": 0.4621,
+    "y": 0.93
+   },
+   "soil": 72.9
+  },
+  "pots/sig/36/50": {
+   "frame": {
+    "x": 3077,
+    "y": 655,
+    "w": 256,
+    "h": 120
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 256,
+    "h": 120
+   },
+   "sourceSize": {
+    "w": 256,
+    "h": 120
+   },
+   "anchor": {
+    "x": 0.502,
+    "y": 0.898
+   },
+   "soil": 79.5
+  },
+  "pots/sig/37/50": {
+   "frame": {
+    "x": 2,
+    "y": 655,
+    "w": 169,
+    "h": 160
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 169,
+    "h": 160
+   },
+   "sourceSize": {
+    "w": 169,
+    "h": 160
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 0.9401
+   },
+   "soil": 125.8
+  },
+  "pots/sig/38/50": {
+   "frame": {
+    "x": 825,
+    "y": 429,
+    "w": 173,
+    "h": 202
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 173,
+    "h": 202
+   },
+   "sourceSize": {
+    "w": 173,
+    "h": 202
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 0.944
+   },
+   "soil": 166.7
+  },
+  "pots/sig/39/50": {
+   "frame": {
+    "x": 3871,
+    "y": 655,
+    "w": 177,
+    "h": 102
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 177,
+    "h": 102
+   },
+   "sourceSize": {
+    "w": 177,
+    "h": 102
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 0.9019
+   },
+   "soil": 58.8
+  },
+  "pots/sig/40/50": {
+   "frame": {
+    "x": 2610,
+    "y": 429,
+    "w": 182,
+    "h": 177
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 182,
+    "h": 177
+   },
+   "sourceSize": {
+    "w": 182,
+    "h": 177
+   },
+   "anchor": {
+    "x": 0.4808,
+    "y": 0.9467
+   },
+   "soil": 145.9
+  },
+  "pots/sig/41/50": {
+   "frame": {
+    "x": 1100,
+    "y": 2,
+    "w": 344,
+    "h": 279
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 344,
+    "h": 279
+   },
+   "sourceSize": {
+    "w": 344,
+    "h": 279
+   },
+   "anchor": {
+    "x": 0.4637,
+    "y": 0.9684
+   },
+   "soil": 120.5
+  },
+  "pots/sig/42/50": {
+   "frame": {
+    "x": 1446,
+    "y": 2,
+    "w": 335,
+    "h": 279
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 335,
+    "h": 279
+   },
+   "sourceSize": {
+    "w": 335,
+    "h": 279
+   },
+   "anchor": {
+    "x": 0.4522,
+    "y": 0.9684
+   },
+   "soil": 120.5
+  },
+  "pots/sig/43/50": {
+   "frame": {
+    "x": 323,
+    "y": 429,
+    "w": 287,
+    "h": 223
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 287,
+    "h": 223
+   },
+   "sourceSize": {
+    "w": 287,
+    "h": 223
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 0.9605
+   },
+   "soil": 120.5
+  },
+  "pots/sig/44/50": {
+   "frame": {
+    "x": 1558,
+    "y": 429,
+    "w": 228,
+    "h": 183
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 228,
+    "h": 183
+   },
+   "sourceSize": {
+    "w": 228,
+    "h": 183
+   },
+   "anchor": {
+    "x": 0.4583,
+    "y": 0.9519
+   },
+   "soil": 120.5
+  },
+  "pots/sig/45/50": {
+   "frame": {
+    "x": 3840,
+    "y": 2,
+    "w": 219,
+    "h": 229
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 219,
+    "h": 229
+   },
+   "sourceSize": {
+    "w": 219,
+    "h": 229
+   },
+   "anchor": {
+    "x": 0.4909,
+    "y": 0.9615
+   },
+   "soil": 120.5
+  },
+  "pots/sig/46/50": {
+   "frame": {
+    "x": 762,
+    "y": 2,
+    "w": 336,
+    "h": 280
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 336,
+    "h": 280
+   },
+   "sourceSize": {
+    "w": 336,
+    "h": 280
+   },
+   "anchor": {
+    "x": 0.4509,
+    "y": 0.9685
+   },
+   "soil": 120.5
+  },
+  "pots/sig/47/50": {
+   "frame": {
+    "x": 646,
+    "y": 655,
+    "w": 278,
+    "h": 147
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 278,
+    "h": 147
+   },
+   "sourceSize": {
+    "w": 278,
+    "h": 147
+   },
+   "anchor": {
+    "x": 0.4424,
+    "y": 0.8886
+   },
+   "soil": 71.4
+  },
+  "pots/sig/48/50": {
+   "frame": {
+    "x": 2,
+    "y": 2,
+    "w": 435,
+    "h": 425
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 435,
+    "h": 425
+   },
+   "sourceSize": {
+    "w": 435,
+    "h": 425
+   },
+   "anchor": {
+    "x": 0.5,
+    "y": 0.8216
+   },
+   "soil": 141.9
+  },
+  "pots/sig/49/50": {
+   "frame": {
+    "x": 1783,
+    "y": 2,
+    "w": 346,
+    "h": 279
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 346,
+    "h": 279
+   },
+   "sourceSize": {
+    "w": 346,
+    "h": 279
+   },
+   "anchor": {
+    "x": 0.4697,
+    "y": 0.9684
+   },
+   "soil": 120.5
+  },
+  "pots/sig/50/50": {
+   "frame": {
+    "x": 2131,
+    "y": 2,
+    "w": 424,
+    "h": 279
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 424,
+    "h": 279
+   },
+   "sourceSize": {
+    "w": 424,
+    "h": 279
+   },
+   "anchor": {
+    "x": 0.5106,
+    "y": 0.9684
+   },
+   "soil": 120.5
+  }
+ },
+ "meta": {
+  "app": "potgen/pack_pots.py",
+  "version": "1",
+  "image": "pots_signature.webp",
+  "format": "RGBA8888",
+  "size": {
+   "w": 4061,
+   "h": 817
+  },
+  "scale": "2"
+ }
+}
