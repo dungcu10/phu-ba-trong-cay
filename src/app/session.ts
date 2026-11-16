@@ -108,6 +108,15 @@ export class GameSession {
     await this.saves.save(next, this.now());
   }
 
+  /** Untouched copies of older-version saves kept before upgrading (REVIEW 02 #1). */
+  upgradeBackups() {
+    return this.saves.upgradeBackups();
+  }
+
+  upgradeBackupText(key: string): Promise<string | null> {
+    return this.saves.upgradeBackupText(key);
+  }
+
   exportText(): string {
     return this.saves.exportText(this.state, this.now());
   }

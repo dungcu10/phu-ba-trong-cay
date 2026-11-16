@@ -9,6 +9,18 @@ import type { SaveStore } from './store.ts';
 import { deserialize, serialize, SaveFormatError } from './serializer.ts';
 
 export const SLOT_KEYS = ['slot-a', 'slot-b'] as const;
+/** Key of the untouched copy of a save made by an older version, kept before upgrading it. */
+export const upgradeBackupKey = (version: number) => `pre-upgrade-v${version}`;
+const BACKUP_INDEX = 'pre-upgrade-index';
+
+export interface UpgradeBackup {
+  key: string;
+  fromVersion: number;
+  /** Real time the copy was made. */
+  copiedAt: number;
+  /** When the copied save was written by the old version (game time). */
+  savedAt: number;
+}
 type SlotKey = (typeof SLOT_KEYS)[number];
 
 export type LoadResult =
@@ -63,6 +75,9 @@ export class SaveManager {
       return { kind: 'unreadable', errors: reads.map((r) => r.error).filter((e): e is string => e !== null) };
     }
     const best = valid[0]!;
+    // REVIEW 02 #1: an older version's save is copied, word for word, before this version upgrades
+    // it and before anything is written. The first copy per version is kept and never overwritten.
+    if (best.parsed!.migratedFrom !== null) await this.keepUpgradeBackup(best.raw!, best.parsed!.migratedFrom, best.parsed!.savedAt);
     // "Recovered" when another slot exists but is broken (the newer write failed).
     const recoveredFromBackup = reads.some((r) => r.error !== null);
     this.lastSlot = best.slot;
@@ -76,6 +91,30 @@ export class SaveManager {
       migratedFrom: best.parsed!.migratedFrom,
       warnings: best.parsed!.warnings,
     };
+  }
+
+  private async keepUpgradeBackup(raw: string, fromVersion: number, savedAt: number): Promise<void> {
+    const key = upgradeBackupKey(fromVersion);
+    if ((await this.store.get(key)) !== null) return;
+    await this.store.put(key, raw);
+    const list = await this.upgradeBackups();
+    list.push({ key, fromVersion, copiedAt: Date.now(), savedAt });
+    await this.store.put(BACKUP_INDEX, JSON.stringify(list));
+  }
+
+  /** Copies made before upgrades, oldest first. */
+  async upgradeBackups(): Promise<UpgradeBackup[]> {
+    try {
+      const v = JSON.parse((await this.store.get(BACKUP_INDEX)) ?? '[]') as UpgradeBackup[];
+      return Array.isArray(v) ? v : [];
+    } catch {
+      return [];
+    }
+  }
+
+  /** The raw text of a copy (for download, or to restore through the normal import path). */
+  async upgradeBackupText(key: string): Promise<string | null> {
+    return this.store.get(key);
   }
 
   /** Writes to the other slot. savedAt never decreases, even if the device clock moved back. */
