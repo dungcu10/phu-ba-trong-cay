@@ -13,6 +13,9 @@ import { createFloorState } from './state.ts';
 import { canDeliver, refillOrders } from '../systems/orders.ts';
 import { nextMilestone, recordHarvest, rollGift, rollMutation, type Gift } from '../systems/surprises.ts';
 import { simulateNeighbors, type NeighborEvent } from '../systems/neighbors.ts';
+import { expandCost, nextStar } from '../systems/floors.ts';
+import { allMissionsClaimed, ensureMissions, localDay, missionDef, recordMissions } from '../systems/missions.ts';
+import { botGarden, helpReward, helpsLeft, helpToday, type HelpKind } from '../systems/visit.ts';
 
 export type SlotRef = { floor: number; slot: number };
 
@@ -35,7 +38,14 @@ export type Command =
   | { type: 'claimJournal'; cropId: string }
   | { type: 'listItem'; itemId: string; qty: number; price: number }
   | { type: 'cancelListing'; listingId: number }
-  | { type: 'readNotices' };
+  | { type: 'readNotices' }
+  /** Opens one more pot slot on a floor (REDESIGN_V2 2.1). */
+  | { type: 'expandFloor'; floor: number }
+  | { type: 'upgradeFloorStar'; floor: number }
+  | { type: 'claimMission'; index: number }
+  | { type: 'claimMissionBonus' }
+  /** Helps one pot while visiting a neighbour's garden. */
+  | { type: 'helpNeighbor'; botId: string; floor: number; slot: number; kind: HelpKind };
 
 export type GameEvent =
   | { type: 'planted'; slot: SlotRef; cropId: string; cost: number }
@@ -55,7 +65,13 @@ export type GameEvent =
   | { type: 'levelUp'; level: number }
   | { type: 'floorUnlocked'; floorId: string; index: number; cost: number }
   | { type: 'potBought'; potInstanceId: string; potId: string; cost: number }
-  | { type: 'potPlaced'; slot: SlotRef; potInstanceId: string; replaced: string };
+  | { type: 'potPlaced'; slot: SlotRef; potInstanceId: string; replaced: string }
+  | { type: 'floorExpanded'; floor: number; slot: number; cost: number }
+  | { type: 'floorStarred'; floor: number; stars: number }
+  | { type: 'missionDone'; index: number; missionId: string }
+  | { type: 'missionClaimed'; index: number; coins: number; xp: number; gems: number }
+  | { type: 'missionBonusClaimed'; coins: number; xp: number; gems: number }
+  | { type: 'neighborHelped'; botId: string; floor: number; slot: number; kind: HelpKind; coins: number; xp: number };
 
 export type ErrorCode =
   | 'bad_slot'
@@ -82,7 +98,14 @@ export type ErrorCode =
   | 'nothing_to_claim'
   | 'stall_full'
   | 'bad_price'
-  | 'unknown_listing';
+  | 'unknown_listing'
+  | 'max_slots'
+  | 'max_stars'
+  | 'not_complete'
+  | 'already_claimed'
+  | 'unknown_neighbor'
+  | 'no_help_needed'
+  | 'help_limit';
 
 export type Result = { ok: true; events: GameEvent[] } | { ok: false; error: ErrorCode };
 
@@ -116,7 +139,12 @@ export function updateWorld(content: ContentPack, state: GameState, now: number)
 
 export function dispatch(content: ContentPack, state: GameState, cmd: Command, realNow: number): Result {
   const now = advanceTime(state, realNow);
-  return run(content, state, cmd, now);
+  ensureMissions(content, state, now);
+  const result = run(content, state, cmd, now);
+  if (result.ok) {
+    for (const index of recordMissions(content, state, result.events)) result.events.push({ type: 'missionDone', index, missionId: state.missions.list[index]!.id });
+  }
+  return result;
 }
 
 function run(content: ContentPack, state: GameState, cmd: Command, now: number): Result {
@@ -156,7 +184,93 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
     case 'readNotices':
       for (const n of state.notices) n.read = true;
       return { ok: true, events: [] };
+    case 'expandFloor':
+      return expandFloor(content, state, cmd.floor);
+    case 'upgradeFloorStar':
+      return upgradeFloorStar(content, state, cmd.floor);
+    case 'claimMission':
+      return claimMission(content, state, cmd.index);
+    case 'claimMissionBonus':
+      return claimMissionBonus(content, state);
+    case 'helpNeighbor':
+      return helpNeighbor(content, state, cmd, now);
   }
+}
+
+function expandFloor(content: ContentPack, state: GameState, index: number): Result {
+  const floor = state.floors[index];
+  const def = floor && content.floors.get(floor.floorId);
+  if (!floor || !def) return fail('bad_slot');
+  const cost = expandCost(def, floor);
+  if (cost === null) return fail('max_slots');
+  if (state.player.coins < cost) return fail('not_enough_coins');
+  state.player.coins -= cost;
+  const slot = floor.slots.length;
+  let potInstanceId = index === 0 ? `pot-${slot + 1}` : `pot-f${index + 1}-${slot + 1}`;
+  while (state.pots[potInstanceId]) potInstanceId += '-n';
+  state.pots[potInstanceId] = { potId: def.startingPot, level: 1 };
+  floor.slots.push({ potInstanceId, planting: null });
+  return { ok: true, events: [{ type: 'floorExpanded', floor: index, slot, cost }] };
+}
+
+function upgradeFloorStar(content: ContentPack, state: GameState, index: number): Result {
+  const floor = state.floors[index];
+  const def = floor && content.floors.get(floor.floorId);
+  if (!floor || !def) return fail('bad_slot');
+  const star = nextStar(def, floor);
+  if (!star) return fail('max_stars');
+  if (state.player.level < star.level) return fail('locked');
+  if (state.player.coins < star.coins) return fail('not_enough_coins');
+  if (!canAfford(state, { coins: star.coins, items: star.items })) return fail('not_enough_items');
+  state.player.coins -= star.coins;
+  for (const [id, qty] of Object.entries(star.items)) removeItem(state, id, qty);
+  floor.stars += 1;
+  return { ok: true, events: [{ type: 'floorStarred', floor: index, stars: floor.stars }] };
+}
+
+function giveReward(content: ContentPack, state: GameState, r: { coins: number; xp: number; gems: number }, events: GameEvent[]): void {
+  state.player.coins += r.coins;
+  state.player.gems += r.gems;
+  state.stats.coinsEarned += r.coins;
+  for (const level of addXp(content, state, r.xp)) events.push({ type: 'levelUp', level });
+}
+
+function claimMission(content: ContentPack, state: GameState, index: number): Result {
+  const m = state.missions.list[index];
+  const def = m && missionDef(content, m.id);
+  if (!m || !def) return fail('nothing_to_claim');
+  if (m.claimed) return fail('already_claimed');
+  if (m.progress < def.target) return fail('not_complete');
+  m.claimed = true;
+  const events: GameEvent[] = [{ type: 'missionClaimed', index, ...def.reward }];
+  giveReward(content, state, def.reward, events);
+  return { ok: true, events };
+}
+
+function claimMissionBonus(content: ContentPack, state: GameState): Result {
+  if (state.missions.bonusClaimed) return fail('already_claimed');
+  if (!allMissionsClaimed(state)) return fail('not_complete');
+  state.missions.bonusClaimed = true;
+  const r = content.missions.allDone;
+  const events: GameEvent[] = [{ type: 'missionBonusClaimed', ...r }];
+  giveReward(content, state, r, events);
+  return { ok: true, events };
+}
+
+function helpNeighbor(content: ContentPack, state: GameState, cmd: { botId: string; floor: number; slot: number; kind: HelpKind }, now: number): Result {
+  const bot = state.neighbors[cmd.botId];
+  if (!bot || !content.bots.has(cmd.botId)) return fail('unknown_neighbor');
+  if (helpsLeft(content, bot, now) <= 0) return fail('help_limit');
+  const pot = botGarden(content, state, cmd.botId, now)[cmd.floor]?.pots[cmd.slot];
+  if (!pot) return fail('bad_slot');
+  if (pot.need !== cmd.kind) return fail('no_help_needed');
+  const day = localDay(content, now);
+  bot.help = { day, pots: [...helpToday(content, bot, now), pot.key] };
+  bot.friendship += content.neighbors.help.friendship;
+  const r = helpReward(content, bot);
+  const events: GameEvent[] = [{ type: 'neighborHelped', botId: cmd.botId, floor: cmd.floor, slot: cmd.slot, kind: cmd.kind, ...r }];
+  giveReward(content, state, { ...r, gems: 0 }, events);
+  return { ok: true, events };
 }
 
 function plant(content: ContentPack, state: GameState, ref: SlotRef, cropId: string, now: number): Result {

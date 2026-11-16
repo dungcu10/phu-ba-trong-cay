@@ -22,6 +22,8 @@ export async function readRaw(): Promise<RawContent> {
     orders: await read(manifest.files.orders!),
     surprises: await read(manifest.files.surprises!),
     neighbors: await read(manifest.files.neighbors!),
+    potsets: await read(manifest.files.potsets!),
+    missions: await read(manifest.files.missions!),
   };
 }
 

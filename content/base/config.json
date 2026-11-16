@@ -15,5 +15,9 @@
     "dailyPriceVariation": 0.05
   },
   "startFloor": "base:floor.cloud-meadow",
-  "potAffinityBonus": 0.2
+  "potAffinityBonus": 0.2,
+  "floorStarBonus": {
+    "speed": 0.05,
+    "xp": 0.05
+  }
 }

@@ -3,7 +3,7 @@
 import type { ContentPack, FloorDef } from './content.ts';
 import { newSeed } from './rng.ts';
 
-export const SAVE_VERSION = 6;
+export const SAVE_VERSION = 7;
 
 export interface Planting {
   /** Unique per planting, used as a key for deterministic randomness. */
@@ -31,6 +31,14 @@ export interface SlotState {
 export interface FloorState {
   floorId: string;
   slots: SlotState[];
+  /** Floor stars earned (0–3, REDESIGN_V2 2.1). */
+  stars: number;
+}
+
+export interface MissionState {
+  id: string;
+  progress: number;
+  claimed: boolean;
 }
 
 export interface PotInstance {
@@ -72,6 +80,8 @@ export interface BotState {
   /** Game time up to which this neighbour has been simulated. */
   simulatedTo: number;
   lastAction: { kind: string; reason: string; at: number } | null;
+  /** Pots the player helped in this neighbour's garden today (local day number, pot keys). */
+  help: { day: number; pots: string[] };
 }
 
 export interface Listing {
@@ -111,6 +121,8 @@ export interface GameState {
   neighbors: Record<string, BotState>;
   stall: Listing[];
   notices: Notice[];
+  /** Today's missions (day = local day number, -1 = not rolled yet). */
+  missions: { day: number; list: MissionState[]; bonusClaimed: boolean };
 }
 
 /** Builds a floor with its starting pots (used for the first floor and every unlocked one). */
@@ -121,7 +133,7 @@ export function createFloorState(floorDef: FloorDef, pots: Record<string, PotIns
     pots[potInstanceId] = { potId: floorDef.startingPot, level: 1 };
     slots.push({ potInstanceId, planting: null });
   }
-  return { floorId: floorDef.id, slots };
+  return { floorId: floorDef.id, slots, stars: 0 };
 }
 
 /** A brand-new profile built entirely from content data. */
@@ -150,13 +162,14 @@ export function createNewGame(content: ContentPack, now: number, entropy = now):
     neighbors: newNeighbors(content, now),
     stall: [],
     notices: [],
+    missions: { day: -1, list: [], bonusClaimed: false },
   };
 }
 
 export function newNeighbors(content: ContentPack, now: number): Record<string, BotState> {
   const out: Record<string, BotState> = {};
   for (const b of content.bots.values()) {
-    out[b.id] = { level: b.startLevel, xp: 0, coins: b.startCoins, gardenValue: b.startCoins, friendship: 0, simulatedTo: now, lastAction: null };
+    out[b.id] = { level: b.startLevel, xp: 0, coins: b.startCoins, gardenValue: b.startCoins, friendship: 0, simulatedTo: now, lastAction: null, help: { day: -1, pots: [] } };
   }
   return out;
 }

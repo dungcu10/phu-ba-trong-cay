@@ -15,6 +15,8 @@ export interface GameConfig {
   startFloor: string;
   /** Pot stats are multiplied by (1 + this) when the crop's family is the pot's favoured one. */
   potAffinityBonus: number;
+  /** Bonus per floor star for every pot on that floor. */
+  floorStarBonus?: Partial<Record<PotStatName, number>>;
 }
 
 export interface FloorDef {
@@ -29,6 +31,38 @@ export interface FloorDef {
   trait: { family: string; stat: PotStatName; value: number } | null;
   /** Optional colour wash for the floor art until each floor has its own picture. */
   tint?: string;
+  /** Slots a new floor starts with, the most it can be expanded to, and the coin cost of each extra slot. */
+  maxSlots: number;
+  expandCosts: number[];
+  /** Floor stars (REDESIGN_V2 2.1): each star needs a level, coins and produce. */
+  stars: Array<{ level: number; coins: number; items: Record<string, number> }>;
+}
+
+export interface PotSetDef {
+  id: string;
+  name: LocalizedText;
+  /** Bonus for every pot on a floor holding at least `count` pots of the set (highest tier reached). */
+  tiers: Array<{ count: number; stats: Partial<Record<PotStatName, number>> }>;
+}
+
+export type MissionKind = 'harvest' | 'plant' | 'water' | 'catchBug' | 'deliverOrder' | 'helpNeighbor' | 'sell';
+export const MISSION_KINDS: MissionKind[] = ['harvest', 'plant', 'water', 'catchBug', 'deliverOrder', 'helpNeighbor', 'sell'];
+
+export interface MissionDef {
+  id: string;
+  kind: MissionKind;
+  target: number;
+  name: LocalizedText;
+  minLevel: number;
+  reward: { coins: number; xp: number; gems: number };
+}
+
+export interface MissionsConfig {
+  perDay: number;
+  /** Days change at local midnight of this UTC offset (Việt Nam = 7). */
+  utcOffsetHours: number;
+  allDone: { coins: number; xp: number; gems: number };
+  pool: MissionDef[];
 }
 
 export interface UpgradeCost {
@@ -60,6 +94,8 @@ export interface PotDef {
   price: number | null;
   unlockLevel: number;
   favoredFamily: string | null;
+  /** Pot set (REDESIGN_V2 2.2), or null. */
+  set: string | null;
   levels: PotLevelDef[];
 }
 
@@ -157,6 +193,8 @@ export interface NeighborsConfig {
   giftChance: number;
   visitFriendship: number;
   orderFriendship: number;
+  /** Helping in a neighbour's garden (water, catch a bug) while visiting. */
+  help: { perBotPerDay: number; coinsBase: number; coinsPerLevel: number; xp: number; friendship: number };
   bots: BotDef[];
 }
 
@@ -188,6 +226,8 @@ export interface ContentPack {
   neighbors: NeighborsConfig;
   bots: Map<string, BotDef>;
   bugList: BugDef[];
+  potSets: Map<string, PotSetDef>;
+  missions: MissionsConfig;
 }
 
 export interface RawContent {
@@ -200,6 +240,8 @@ export interface RawContent {
   orders: unknown;
   surprises: unknown;
   neighbors: unknown;
+  potsets: unknown;
+  missions: unknown;
 }
 
 export class ContentError extends Error {
@@ -215,7 +257,7 @@ type ReadJson = (relativePath: string) => Promise<unknown>;
 export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> {
   const manifest = (await readJson('manifest.json')) as {
     contentVersion: number;
-    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors', string>;
+    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions', string>;
   };
   const raw: RawContent = {
     contentVersion: manifest.contentVersion,
@@ -227,6 +269,8 @@ export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> 
     orders: await readJson(manifest.files.orders),
     surprises: await readJson(manifest.files.surprises),
     neighbors: await readJson(manifest.files.neighbors),
+    potsets: await readJson(manifest.files.potsets),
+    missions: await readJson(manifest.files.missions),
   };
   return buildContentPack(raw);
 }
@@ -269,6 +313,13 @@ export function buildContentPack(raw: RawContent): ContentPack {
   asArray('floors', raw.floors, problems).forEach((f, i) => {
     if (checkFields(`floors[${i}]`, f, ['unlockLevel', 'unlockCost', 'slotCount'], ['id', 'startingPot', 'sprite'], problems)) {
       if (f.trait === undefined) f.trait = null;
+      if (f.maxSlots === undefined) f.maxSlots = f.slotCount;
+      if (f.expandCosts === undefined) f.expandCosts = [];
+      if (f.stars === undefined) f.stars = [];
+      const extra = (f.maxSlots as number) - (f.slotCount as number);
+      if (!isNum(f.maxSlots) || extra < 0) problems.push(`floors[${i}].maxSlots: phải >= slotCount`);
+      else if (!Array.isArray(f.expandCosts) || f.expandCosts.length !== extra || !f.expandCosts.every((c) => isNum(c) && c >= 0)) problems.push(`floors[${i}].expandCosts: cần ${extra} giá xu >= 0`);
+      asArray(`floors[${i}].stars`, f.stars, problems).forEach((st, j) => checkFields(`floors[${i}].stars[${j}]`, st, ['level', 'coins'], [], problems));
       addUnique(floors, f as unknown as FloorDef, `floors[${i}]`, problems);
     }
   });
@@ -279,6 +330,7 @@ export function buildContentPack(raw: RawContent): ContentPack {
     if (isObj(p.levelRule)) p.levels = expandPotLevels(p.levelRule as unknown as PotLevelRule);
     if (p.price !== null && !(isNum(p.price) && p.price >= 0)) problems.push(`pots[${i}].price: phải là số >= 0 hoặc null`);
     if (p.favoredFamily === undefined) p.favoredFamily = null;
+    if (p.set === undefined) p.set = null;
     const levels = asArray(`pots[${i}].levels`, p.levels, problems) as PotLevelDef[];
     if (levels.length === 0) problems.push(`pots[${i}].levels: cần ít nhất 1 cấp`);
     levels.forEach((lv, j) => {
@@ -338,6 +390,28 @@ export function buildContentPack(raw: RawContent): ContentPack {
     if (checkFields(`neighbors.bots[${i}]`, b, ['startLevel', 'startCoins'], ['id', 'portrait', 'likes'], problems)) addUnique(bots, b as unknown as BotDef, `neighbors.bots[${i}]`, problems);
   });
 
+  const potSets = new Map<string, PotSetDef>();
+  asArray('potsets', raw.potsets, problems).forEach((ps, i) => {
+    if (!checkFields(`potsets[${i}]`, ps, [], ['id'], problems)) return;
+    const tiers = asArray(`potsets[${i}].tiers`, ps.tiers, problems) as PotSetDef['tiers'];
+    tiers.forEach((t, j) => {
+      if (!isNum(t.count) || t.count < 1 || (j > 0 && t.count <= tiers[j - 1]!.count)) problems.push(`potsets[${i}].tiers[${j}].count: phải tăng dần, >= 1`);
+      for (const k of Object.keys(t.stats ?? {})) if (!POT_STATS.includes(k as PotStatName)) problems.push(`potsets[${i}].tiers[${j}]: chỉ số "${k}" không hợp lệ`);
+    });
+    addUnique(potSets, ps as unknown as PotSetDef, `potsets[${i}]`, problems);
+  });
+  const missions = raw.missions as MissionsConfig;
+  if (checkFields('missions', missions, ['perDay', 'utcOffsetHours'], [], problems)) {
+    const ids = new Set<string>();
+    asArray('missions.pool', missions.pool, problems).forEach((m, i) => {
+      if (!checkFields(`missions.pool[${i}]`, m, ['target', 'minLevel'], ['id', 'kind'], problems)) return;
+      if (!MISSION_KINDS.includes(m.kind as MissionKind)) problems.push(`missions.pool[${i}].kind: "${String(m.kind)}" không hợp lệ`);
+      if (ids.has(m.id as string)) problems.push(`missions.pool[${i}]: trùng id`);
+      ids.add(m.id as string);
+    });
+    if (isObj(config) && missions.pool.filter((m) => m.minLevel <= config.startingLevel).length < missions.perDay) problems.push('missions: không đủ nhiệm vụ cho người mới');
+  }
+
   // Anti soft-lock: a brand-new or broke player must always be able to plant something.
   if (isObj(config) && isNum(config.startingLevel) && ![...crops.values()].some((c) => c.unlockLevel <= config.startingLevel && c.seedPrice === 0)) {
     problems.push('crops: cần ít nhất một cây miễn phí (seedPrice = 0) mở từ cấp khởi đầu, để người chơi không bao giờ kẹt');
@@ -348,7 +422,9 @@ export function buildContentPack(raw: RawContent): ContentPack {
   for (const f of floors.values()) {
     if (!pots.has(f.startingPot)) problems.push(`tầng ${f.id}: không có chậu "${f.startingPot}"`);
     if (f.trait && !POT_STATS.includes(f.trait.stat)) problems.push(`tầng ${f.id}: đặc tính "${f.trait.stat}" không hợp lệ`);
+    for (const st of f.stars) for (const id of Object.keys(st.items ?? {})) if (!items.has(id)) problems.push(`tầng ${f.id}: sao cần vật phẩm "${id}" không tồn tại`);
   }
+  for (const p of pots.values()) if (p.set !== null && !potSets.has(p.set)) problems.push(`chậu ${p.id}: không có bộ "${p.set}"`);
   for (const p of pots.values()) {
     for (const lv of p.levels) for (const k of Object.keys(lv.stats)) if (!POT_STATS.includes(k as PotStatName)) problems.push(`chậu ${p.id}: chỉ số "${k}" không hợp lệ`);
   }
@@ -377,5 +453,7 @@ export function buildContentPack(raw: RawContent): ContentPack {
     neighbors,
     bots,
     bugList: [...bugs.values()],
+    potSets,
+    missions,
   };
 }

@@ -116,6 +116,15 @@ function reconcileFloors(state: GameState, content: ContentPack, c: Checker): vo
       floor.slots.push({ potInstanceId, planting: null });
       if (i === def.slotCount - 1) c.warnings.push(`${def.name.vi} có thêm vị trí chậu mới`);
     }
+    // Slots beyond the floor's maximum (content shrank) keep their pots in stock.
+    if (floor.slots.length > Math.max(def.maxSlots, def.slotCount)) {
+      for (const extra of floor.slots.splice(Math.max(def.maxSlots, def.slotCount))) {
+        if (extra.planting) clearAndRefund(state, extra, extra.planting.seedCost ?? 0, `Cây ở vị trí đã bỏ của ${def.name.vi}`, c);
+        state.potStock.push(extra.potInstanceId);
+      }
+      c.warnings.push(`${def.name.vi} bớt vị trí chậu, chậu thừa đã cất vào kho`);
+    }
+    floor.stars = c.num(`sao ${def.name.vi}`, floor.stars, { min: 0, max: def.stars.length, int: true, fallback: 0 });
     floor.slots.forEach((slot, i) => {
       if (!state.pots[slot.potInstanceId]) {
         c.warnings.push(`Chậu ${slot.potInstanceId} bị thiếu, đã đặt chậu mới`);
@@ -146,8 +155,17 @@ function reconcileWorld(state: GameState, content: ContentPack, c: Checker): voi
 
   const fresh = newNeighbors(content, now);
   const neighbors: GameState['neighbors'] = {};
-  for (const id of content.bots.keys()) neighbors[id] = state.neighbors?.[id] ?? fresh[id]!;
+  for (const id of content.bots.keys()) {
+    const bot = state.neighbors?.[id] ?? fresh[id]!;
+    if (!bot.help || typeof bot.help.day !== 'number' || !Array.isArray(bot.help.pots)) bot.help = { day: -1, pots: [] };
+    neighbors[id] = bot;
+  }
   state.neighbors = neighbors;
+
+  const m = state.missions;
+  const valid = m && typeof m.day === 'number' && Array.isArray(m.list) && m.list.every((x) => x && content.missions.pool.some((d) => d.id === x.id));
+  if (!valid) state.missions = { day: -1, list: [], bonusClaimed: false };
+  else for (const x of m.list) x.progress = Math.max(0, Math.floor(Number(x.progress)) || 0);
 
   state.stall = (Array.isArray(state.stall) ? state.stall : []).filter((l) => {
     if (l && content.items.has(l.itemId) && l.qty > 0 && l.price > 0) return true;

@@ -98,6 +98,8 @@ test('game mở được và chơi tiếp với save có cây đã bị gỡ kh�
   const s = stateWithTomato();
   const raw = await readRaw();
   raw.crops = (raw.crops as Array<{ id: string }>).filter((c) => c.id !== TOMATO);
+  // A content edit that removes a crop also removes it from floor star requirements.
+  for (const f of raw.floors as Array<{ stars: Array<{ items: Record<string, number> }> }>) for (const st of f.stars) delete st.items['base:item.cherry-tomato'];
   const smaller = buildContentPack(raw);
   const r = await loadLocal(envelope(s), smaller);
   assert.ok(r.kind === 'loaded');

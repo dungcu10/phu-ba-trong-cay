@@ -28,6 +28,13 @@ export const ERROR_TEXT: Record<ErrorCode, string> = {
   stall_full: 'Sạp đã kín chỗ — chờ hàng xóm mua bớt nhé.',
   bad_price: 'Giá không hợp lệ.',
   unknown_listing: 'Món này không còn trên sạp.',
+  max_slots: 'Tầng này đã mở rộng hết chỗ.',
+  max_stars: 'Tầng này đã đủ 3 sao.',
+  not_complete: 'Nhiệm vụ chưa xong.',
+  already_claimed: 'Đã nhận thưởng rồi.',
+  unknown_neighbor: 'Không tìm thấy hàng xóm này.',
+  no_help_needed: 'Chậu này đang ổn, không cần giúp.',
+  help_limit: 'Hôm nay đã giúp nhà này đủ rồi. Mai ghé tiếp nhé!',
 };
 
 const numberFormat = new Intl.NumberFormat('vi-VN');

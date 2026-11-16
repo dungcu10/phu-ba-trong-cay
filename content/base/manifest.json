@@ -9,6 +9,8 @@
     "bugs": "bugs.json",
     "orders": "orders.json",
     "surprises": "surprises.json",
-    "neighbors": "neighbors.json"
+    "neighbors": "neighbors.json",
+    "potsets": "potsets.json",
+    "missions": "missions.json"
   }
 }

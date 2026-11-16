@@ -59,6 +59,14 @@ export const MIGRATIONS: Record<number, Migration> = {
     data.notices = [];
     return data;
   },
+  // 6 -> 7 (REDESIGN_V2): floor stars, daily missions, help given in neighbours' gardens.
+  // Floors keep every slot they have (10 = fully expanded).
+  6: (data) => {
+    for (const floor of (data.floors as Array<Record<string, unknown>> | undefined) ?? []) floor.stars = 0;
+    for (const bot of Object.values((data.neighbors as Record<string, Record<string, unknown>> | undefined) ?? {})) bot.help = { day: -1, pots: [] };
+    data.missions = { day: -1, list: [], bonusClaimed: false };
+    return data;
+  },
 };
 
 export function migrate(

@@ -131,5 +131,12 @@
       "startLevel": 5,
       "startCoins": 1200
     }
-  ]
+  ],
+  "help": {
+    "perBotPerDay": 3,
+    "coinsBase": 6,
+    "coinsPerLevel": 1.5,
+    "xp": 3,
+    "friendship": 1
+  }
 }

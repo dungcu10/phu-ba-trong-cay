@@ -70,7 +70,8 @@
           }
         }
       }
-    ]
+    ],
+    "set": null
   },
   {
     "id": "base:pot.porcelain",
@@ -99,7 +100,8 @@
           "growth": 1.35
         }
       }
-    }
+    },
+    "set": "base:set.palace-ceramic"
   },
   {
     "id": "base:pot.bronze-tripod",
@@ -128,7 +130,8 @@
           "growth": 1.35
         }
       }
-    }
+    },
+    "set": "base:set.ancient-craft"
   },
   {
     "id": "base:pot.jade-lotus",
@@ -157,7 +160,8 @@
           "growth": 1.35
         }
       }
-    }
+    },
+    "set": "base:set.palace-ceramic"
   },
   {
     "id": "base:pot.rosewood",
@@ -186,7 +190,8 @@
           "growth": 1.35
         }
       }
-    }
+    },
+    "set": "base:set.ancient-craft"
   },
   {
     "id": "base:pot.cloud-puff",
@@ -216,7 +221,8 @@
           "growth": 1.35
         }
       }
-    }
+    },
+    "set": "base:set.sky-treasure"
   },
   {
     "id": "base:pot.golden-treasure",
@@ -246,6 +252,7 @@
           "growth": 1.35
         }
       }
-    }
+    },
+    "set": "base:set.sky-treasure"
   }
 ]

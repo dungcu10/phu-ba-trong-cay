@@ -17,7 +17,7 @@ const GOLDEN = 'base:floor.golden-terrace';
 const PORCELAIN = 'base:pot.porcelain';
 const at = (floor: number, slot: number) => ({ floor, slot });
 
-test('mở tầng: đúng thứ tự, cần đủ cấp và xu, tạo 10 vị trí có chậu, không mở hai lần', () => {
+test('mở tầng: đúng thứ tự, cần đủ cấp và xu, tạo 6 vị trí có chậu, không mở hai lần', () => {
   const s = newGame(content, { level: 4, coins: 100_000 });
   assert.equal(nextFloor(content, s)?.id, TEA);
   assert.deepEqual(dispatch(content, s, { type: 'unlockFloor', floorId: GOLDEN }, T0), { ok: false, error: 'not_next_floor' });
@@ -30,11 +30,11 @@ test('mở tầng: đúng thứ tự, cần đủ cấp và xu, tạo 10 vị tr
   assert.ok(r.ok && r.events[0]!.type === 'floorUnlocked');
   assert.equal(s.player.coins, 0);
   assert.equal(s.floors.length, 2);
-  assert.equal(s.floors[1]!.slots.length, 10);
+  assert.equal(s.floors[1]!.slots.length, 6);
   for (const sl of s.floors[1]!.slots) assert.ok(s.pots[sl.potInstanceId]);
-  assert.equal(new Set(s.floors.flatMap((f) => f.slots.map((x) => x.potInstanceId))).size, 20, 'mã chậu không trùng');
+  assert.equal(new Set(s.floors.flatMap((f) => f.slots.map((x) => x.potInstanceId))).size, 12, 'mã chậu không trùng');
   assert.deepEqual(dispatch(content, s, { type: 'unlockFloor', floorId: TEA }, T0), { ok: false, error: 'not_next_floor' });
-  assert.ok(dispatch(content, s, { type: 'plant', cropId: DAISY, ...at(1, 9) }, T0).ok);
+  assert.ok(dispatch(content, s, { type: 'plant', cropId: DAISY, ...at(1, 5) }, T0).ok);
 });
 
 test('mua chậu: theo giá và cấp; đặt chậu: chậu cũ về kho, chậu đang có cây thì không đổi', () => {
@@ -123,7 +123,8 @@ test('save cũ (bản 4) lên bản 5 có kho chậu; tầng được thêm vị
   assert.equal(migrated.saveVersion, SAVE_VERSION);
   assert.deepEqual(migrated.potStock, []);
   const { state, warnings } = reconcile(migrated as any, content, 'local');
-  assert.equal(state.floors[0]!.slots.length, 10);
-  assert.equal(new Set(state.floors[0]!.slots.map((x) => x.potInstanceId)).size, 10);
+  // Old saves had fewer slots than the floor now starts with: the missing ones are added.
+  assert.equal(state.floors[0]!.slots.length, 6);
+  assert.equal(new Set(state.floors[0]!.slots.map((x) => x.potInstanceId)).size, 6);
   assert.ok(warnings.some((w) => w.includes('vị trí chậu mới')));
 });
