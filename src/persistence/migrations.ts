@@ -30,6 +30,12 @@ export const MIGRATIONS: Record<number, Migration> = {
     }
     return data;
   },
+  // 2 -> 3 (R4): game time = device clock + clockOffsetMs. Old saves start with no offset; the
+  // first command after loading sets it from maxSeenAt if the device clock is behind.
+  2: (data) => {
+    data.clockOffsetMs = 0;
+    return data;
+  },
 };
 
 export function migrate(

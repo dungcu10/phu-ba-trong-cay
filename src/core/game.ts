@@ -3,7 +3,7 @@
 
 import type { ContentPack } from './content.ts';
 import type { GameState, SlotState } from './state.ts';
-import { guardedNow } from './clock.ts';
+import { adjustedOffset, gameTime } from './clock.ts';
 import { stochasticRound } from './rng.ts';
 import { cropStatus } from '../systems/growth.ts';
 import { addItem, addXp, removeItem, sellPrice, storageFree } from '../systems/economy.ts';
@@ -53,9 +53,15 @@ function slotAt(state: GameState, ref: SlotRef): SlotState | null {
   return state.floors[ref.floor]?.slots[ref.slot] ?? null;
 }
 
-/** Moves the "latest time seen" marker forward and returns the guarded game time. */
+/** Current game time for a device time, without changing the state (for display). */
+export function currentGameTime(state: GameState, realNow: number): number {
+  return gameTime(realNow, state.clockOffsetMs, state.maxSeenAt);
+}
+
+/** Records the device time: updates the clock offset and the latest-seen marker, returns game time. */
 export function advanceTime(state: GameState, realNow: number): number {
-  const now = guardedNow(realNow, state.maxSeenAt);
+  state.clockOffsetMs = adjustedOffset(realNow, state.clockOffsetMs, state.maxSeenAt);
+  const now = gameTime(realNow, state.clockOffsetMs, state.maxSeenAt);
   state.maxSeenAt = now;
   return now;
 }

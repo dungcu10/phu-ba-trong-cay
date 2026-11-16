@@ -35,7 +35,7 @@ function assertState(value: unknown): asserts value is GameState {
   const s = value as GameState;
   const ok =
     typeof s === 'object' && s !== null &&
-    typeof s.seed === 'number' && typeof s.maxSeenAt === 'number' &&
+    typeof s.seed === 'number' && typeof s.maxSeenAt === 'number' && typeof s.clockOffsetMs === 'number' &&
     typeof s.player?.coins === 'number' && typeof s.player?.level === 'number' && typeof s.player?.xp === 'number' &&
     typeof s.inventory === 'object' && Array.isArray(s.floors) && typeof s.pots === 'object';
   if (!ok) throw new SaveFormatError('Cấu trúc save không hợp lệ');

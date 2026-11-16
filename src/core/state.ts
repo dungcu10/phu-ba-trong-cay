@@ -3,7 +3,7 @@
 import type { ContentPack } from './content.ts';
 import { newSeed } from './rng.ts';
 
-export const SAVE_VERSION = 2;
+export const SAVE_VERSION = 3;
 
 export interface Planting {
   /** Unique per planting, used as a key for deterministic randomness. */
@@ -43,6 +43,8 @@ export interface GameState {
   seed: number;
   /** Latest game time ever seen; game time never goes below it. */
   maxSeenAt: number;
+  /** Added to the device clock to get game time; grows when the device clock is found behind. */
+  clockOffsetMs: number;
   player: { coins: number; xp: number; level: number };
   inventory: Record<string, number>;
   floors: FloorState[];
@@ -69,6 +71,7 @@ export function createNewGame(content: ContentPack, now: number, entropy = now):
     createdAt: now,
     seed: newSeed(entropy),
     maxSeenAt: now,
+    clockOffsetMs: 0,
     player: { coins: cfg.startingCoins, xp: 0, level: cfg.startingLevel },
     inventory: {},
     floors: [{ floorId: floorDef.id, slots }],

@@ -126,6 +126,7 @@ function v1SaveText(): string {
   dispatch(content, s, { type: 'plant', cropId: DAISY, floor: 0, slot: 0 }, T0);
   const raw = JSON.parse(JSON.stringify(s)) as Record<string, any>;
   raw.saveVersion = 1;
+  delete raw.clockOffsetMs;
   const p = raw.floors[0].slots[0].planting;
   delete p.caughtBugs;
   p.caughtBugStages = [2, 3];
@@ -133,7 +134,7 @@ function v1SaveText(): string {
   return `{"format":"${SAVE_FORMAT}","saveVersion":1,"savedAt":${T0},"checksum":"${checksumOf(data)}","data":${data}}`;
 }
 
-test('migration 1 → 2: caughtBugStages đổi thành caughtBugs, cây vẫn còn', () => {
+test('migration 1 → 2 → 3: caughtBugStages đổi thành caughtBugs, thêm clockOffsetMs, cây vẫn còn', () => {
   const { state, migratedFrom } = deserialize(v1SaveText());
   assert.equal(migratedFrom, 1);
   assert.ok(state.saveVersion >= 2);
@@ -141,5 +142,17 @@ test('migration 1 → 2: caughtBugStages đổi thành caughtBugs, cây vẫn c�
   assert.equal(p.cropId, DAISY);
   assert.deepEqual(p.caughtBugs, {});
   assert.equal('caughtBugStages' in p, false);
+  assert.equal(state.clockOffsetMs, 0);
   assert.ok(dispatch(content, state, { type: 'harvest', floor: 0, slot: 0 }, T0 + 2 * MIN).ok);
+});
+
+test('migration 2 → 3: thêm clockOffsetMs = 0, giữ nguyên phần còn lại', () => {
+  const s = newGame(content);
+  const raw = JSON.parse(JSON.stringify(s)) as Record<string, unknown>;
+  delete raw.clockOffsetMs;
+  raw.saveVersion = 2;
+  const out = migrate(raw, 2) as Record<string, unknown>;
+  assert.equal(out.clockOffsetMs, 0);
+  assert.equal(out.saveVersion, SAVE_VERSION);
+  assert.deepEqual({ ...out, clockOffsetMs: undefined, saveVersion: undefined }, { ...raw, clockOffsetMs: undefined, saveVersion: undefined });
 });

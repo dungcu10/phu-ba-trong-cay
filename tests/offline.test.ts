@@ -1,9 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { advanceTime, dispatch } from '../src/core/game.ts';
+import { advanceTime, currentGameTime, dispatch } from '../src/core/game.ts';
 import { cropStatus } from '../src/systems/growth.ts';
 import { serialize, deserialize } from '../src/persistence/serializer.ts';
-import { HOUR, loadBase, MIN, newGame, T0 } from './helpers.ts';
+import { HOUR, loadBase, MIN, newGame, SEC, T0 } from './helpers.ts';
 
 const content = await loadBase();
 
@@ -65,4 +65,19 @@ test('lùi giờ không cho thu hoạch hai lần cùng một vụ', () => {
   dispatch(content, s, { type: 'plant', cropId: 'base:crop.cherry-tomato', ...at }, T0);
   assert.ok(dispatch(content, s, { type: 'harvest', ...at }, T0 + 10 * MIN).ok);
   assert.deepEqual(dispatch(content, s, { type: 'harvest', ...at }, T0), { ok: false, error: 'not_ripe' });
+});
+
+test('R4: thu hoạch lúc đồng hồ ở +365 ngày, chỉnh giờ về, gieo Cúc: chín sau 60 giây thật', () => {
+  const s = newGame(content);
+  const at = { floor: 0, slot: 0 };
+  const ahead = T0 + 365 * 24 * HOUR;
+  dispatch(content, s, { type: 'plant', cropId: 'base:crop.cotton-daisy', ...at }, T0);
+  assert.ok(dispatch(content, s, { type: 'harvest', ...at }, ahead).ok);
+  const real = T0 + 10 * MIN; // đồng hồ thiết bị được chỉnh về đúng giờ
+  assert.ok(dispatch(content, s, { type: 'plant', cropId: 'base:crop.cotton-daisy', ...at }, real).ok);
+  assert.deepEqual(dispatch(content, s, { type: 'harvest', ...at }, real + 30 * SEC), { ok: false, error: 'not_ripe' });
+  const st = cropStatus(content, s, s.floors[0]!.slots[0]!, currentGameTime(s, real + 30 * SEC))!;
+  assert.ok(st.progress > 0.4 && st.progress < 0.6, `tiến độ sau 30 giây thật: ${st.progress}`);
+  assert.ok(dispatch(content, s, { type: 'harvest', ...at }, real + 60 * SEC).ok);
+  assert.ok(s.maxSeenAt >= ahead, 'thời gian game không được lùi');
 });

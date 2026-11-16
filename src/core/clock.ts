@@ -35,10 +35,18 @@ export class OffsetClock implements Clock {
 }
 
 /**
- * Game time never moves backwards. If the device clock is set back, game time stays at the
- * latest moment ever seen until the real clock passes it again, so rolling back the clock
- * cannot re-run timers or produce anything twice.
+ * Game time = device clock + an offset kept in the save. It never moves backwards and never
+ * stands still: if the device clock is found behind the latest game time ever seen (clock set
+ * back, or set forward and then corrected), the offset grows so game time continues from that
+ * moment and keeps flowing with the real clock. Rolling the clock back therefore cannot re-run
+ * timers or produce anything twice, and correcting a clock set ahead does not freeze the game.
  */
-export function guardedNow(realNow: number, maxSeenAt: number): number {
-  return Math.max(realNow, maxSeenAt);
+export function gameTime(realNow: number, clockOffsetMs: number, maxSeenAt: number): number {
+  return Math.max(realNow + clockOffsetMs, maxSeenAt);
+}
+
+/** Offset to store so that gameTime(realNow, offset) === the returned game time. */
+export function adjustedOffset(realNow: number, clockOffsetMs: number, maxSeenAt: number): number {
+  const t = realNow + clockOffsetMs;
+  return t < maxSeenAt ? maxSeenAt - realNow : clockOffsetMs;
 }
