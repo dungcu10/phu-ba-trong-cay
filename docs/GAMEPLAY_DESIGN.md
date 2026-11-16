@@ -61,7 +61,9 @@ Mỗi tầng là một đảo mây nổi riêng, xếp chồng và nối nhau b�
 | 9 | Cung Trăng Ngọc | 55 | 2,6 triệu | Rơi Ngọc Mây khi thu hoạch (hiếm) |
 | 10 | Đỉnh Phú Quý | 65 | 6 triệu | Thuộc tính chậu trên tầng mạnh thêm 10% |
 
-**Cấp tầng (1–5)**: mở ra với 4 vị trí chậu, +1 vị trí mỗi cấp (tối đa 8), đặc tính môi trường mạnh hơn. Nâng cấp cần xu + nguyên liệu của Linh Thú tầng đó.
+**Mỗi tầng có 10 vị trí chậu** (quyết định của chủ dự án, 16/11/2026). **Cấp tầng (1–5)**: đặc tính môi trường mạnh hơn; cách mở rộng tầng theo cấp chờ CTO thiết kế lại cho mốc 10 chậu.
+
+**Góc nhìn và bố cục** (chủ dự án, 16/11/2026): nhìn chính diện; một cây leo cổ thụ đứng dọc bên trái, các tầng mây là kệ mây bám vào thân cây, xếp chồng lên trời. Nâng cấp cần xu + nguyên liệu của Linh Thú tầng đó.
 
 **Hoạt ảnh**: mở tầng — máy quay lướt lên, mây dạt ra, đảo nổi lên, cầu thang mọc, pháo hoa vàng kim. Nâng cấp — đảo rung nhẹ, nở rộng, vị trí chậu mới trồi lên.
 
