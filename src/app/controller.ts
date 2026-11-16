@@ -10,6 +10,7 @@ import { Panel, PotPanel, SeedPanel, StoragePanel, type PanelActions } from '../
 import { SettingsPanel } from '../ui/settings.ts';
 import { ERROR_TEXT, formatNumber } from '../ui/text.ts';
 import { Toasts } from '../ui/toast.ts';
+import { hex, TOKENS } from '../ui/tokens.ts';
 import type { GameSession } from './session.ts';
 import type { Sfx } from './sfx.ts';
 
@@ -28,7 +29,7 @@ export class Controller implements PanelActions {
     private readonly overlay: HTMLElement,
     private readonly saveSound: (on: boolean) => void,
   ) {
-    this.hud = new Hud(session, { openStorage: () => this.openStorage(), openSettings: () => this.openSettings() });
+    this.hud = new Hud(session, { openSeeds: () => this.openSeeds(), openStorage: () => this.openStorage(), openSettings: () => this.openSettings() });
     overlay.append(this.hud.el, this.toasts.el);
     view.handlers = { onTap: (s, t) => this.tap(s, t), onSwipe: (s) => this.swipe(s) };
     session.onChange((events) => this.onEvents(events));
@@ -71,15 +72,29 @@ export class Controller implements PanelActions {
       if (this.lastCrop) this.run({ type: 'plant', cropId: this.lastCrop, ...ref });
       return;
     }
+    // Catch any Bọ Mây first so a sweep never lets them fly away, then harvest or water.
+    while (this.run({ type: 'catchBug', ...ref }, true).ok);
     if (status.ripe) this.run({ type: 'harvest', ...ref });
-    else if (status.bug) this.run({ type: 'catchBug', ...ref }, true);
     else if (status.thirsty) this.run({ type: 'water', ...ref }, true);
   }
 
-  plant(slot: SlotRef, cropId: string): boolean {
-    const ok = this.run({ type: 'plant', cropId, ...slot }).ok;
-    if (ok) this.lastCrop = cropId;
-    return ok;
+  plant(slot: SlotRef | null, cropId: string): number {
+    const targets: SlotRef[] = slot
+      ? [slot]
+      : this.session.state.floors.flatMap((f, floor) => f.slots.map((s, i) => ({ floor, slot: i, empty: !s.planting }))).filter((t) => t.empty).map(({ floor, slot: i }) => ({ floor, slot: i }));
+    let planted = 0;
+    for (const t of targets) {
+      // Stop at the first failure (e.g. coins ran out) and show why.
+      if (!this.run({ type: 'plant', cropId, ...t }).ok) break;
+      planted += 1;
+    }
+    if (planted > 0) this.lastCrop = cropId;
+    return planted;
+  }
+
+  openSeeds(): void {
+    this.sfx.play('tap');
+    this.openPanel(new SeedPanel(this.session, null, this));
   }
 
   sell(itemId: string, qty: number): void {
@@ -132,19 +147,19 @@ export class Controller implements PanelActions {
         this.sfx.play('plant');
         this.view.slotView(e.slot.slot).popPlant(0.3);
         const p = at(e.slot);
-        fx.floatText(`-${formatNumber(e.cost)} xu`, p.x, p.y + 40, 0xffe7b8);
+        if (e.cost > 0) fx.floatText(`-${formatNumber(e.cost)} xu`, p.x, p.y + 40, hex(TOKENS.color.brand.cream));
         break;
       }
       case 'watered': {
         this.sfx.play('water');
         const p = at(e.slot);
-        fx.burst(this.art.get('ui/bubble-water'), p.x, p.y, 6, { scale: 0.22, speed: 200 });
+        fx.burst(this.view.dot, p.x, p.y, 8, { scale: 0.5, speed: 200, tint: hex(TOKENS.color.brand.sky) });
         break;
       }
       case 'bugCaught': {
         this.sfx.play('bug');
         const p = this.view.slotView(e.slot.slot).bugPoint();
-        fx.floatText(`+1 ${content.items.get(e.itemId)?.name.vi ?? ''}`, p.x, p.y - 20, 0xffd0d0);
+        fx.floatText(`+1 ${content.items.get(e.itemId)?.name.vi ?? ''}`, p.x, p.y - 20, hex(TOKENS.color.brand.peach));
         break;
       }
       case 'harvested': {
@@ -152,7 +167,7 @@ export class Controller implements PanelActions {
         const p = at(e.slot);
         fx.burst(this.art.get(itemFrame(content, e.itemId)), p.x, p.y + 20, Math.min(8, e.qty + 3), { scale: 0.32 });
         fx.floatText(`+${e.qty} ${content.items.get(e.itemId)?.name.vi ?? ''}`, p.x, p.y - 10);
-        fx.floatText(`+${e.xp} XP`, p.x, p.y + 30, 0xb8e4ff);
+        fx.floatText(`+${e.xp} XP`, p.x, p.y + 30, hex(TOKENS.color.brand.sky));
         break;
       }
       case 'sold':
@@ -164,8 +179,8 @@ export class Controller implements PanelActions {
         const index = this.session.state.floors[0]!.slots.findIndex((s) => s.potInstanceId === e.potInstanceId);
         if (index >= 0) {
           const p = at({ floor: 0, slot: index });
-          fx.burst(this.art.get('icons/coin'), p.x, p.y + 60, 10, { scale: 0.22 });
-          fx.floatText(`Chậu cấp ${e.level}!`, p.x, p.y, 0xf2b830);
+          fx.burst(this.view.dot, p.x, p.y + 60, 12, { scale: 0.45, tint: hex(TOKENS.color.brand.gold) });
+          fx.floatText(`Chậu cấp ${e.level}!`, p.x, p.y, hex(TOKENS.color.brand.gold));
         }
         break;
       }
@@ -177,7 +192,7 @@ export class Controller implements PanelActions {
         this.toasts.show(`Lên cấp ${e.level}! +${formatNumber(bonus)} xu thưởng.${extra}`, 'level', 4000);
         for (let i = 0; i < 4; i++) {
           const p = this.view.slotView(i % this.session.state.floors[0]!.slots.length).feedbackPoint();
-          fx.burst(this.art.get('icons/xp'), p.x, p.y - 60, 5, { scale: 0.26, speed: 360 });
+          fx.burst(this.view.dot, p.x, p.y - 60, 6, { scale: 0.5, speed: 360, tint: hex(TOKENS.color.brand.gold) });
         }
         break;
       }

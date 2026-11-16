@@ -20,7 +20,7 @@ export function h<K extends keyof HTMLElementTagNameMap>(tag: K, attrs: Attrs = 
 }
 
 /** An icon cut from the world atlas with CSS, so the HTML UI reuses the same image file. */
-export function icon(frame: string, sizePt: number, sheet: keyof typeof atlasData = 'world'): HTMLElement {
+export function icon(frame: string, sizePt: number, sheet: keyof typeof atlasData = 'sprites'): HTMLElement {
   const data = atlasData[sheet];
   const f = data.frames[frame]?.frame;
   const el = h('span', { class: 'icon', 'aria-hidden': 'true' });

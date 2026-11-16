@@ -1,5 +1,6 @@
-// Always-visible HUD: level + XP, coins, next-action hint, Kho and Cài đặt buttons.
-// Takes under 15% of the screen (ART_STYLE_GUIDE 8).
+// Always-visible HUD (DESIGN_SYSTEM 6.3): flower level badge + vine XP bar (top-left),
+// embroidered coin pouch (top-centre), gear (top-right), main buttons in a thumb arc
+// (bottom-right). Under 15% of the screen.
 
 import type { GameSession } from '../app/session.ts';
 import { storageUsed, xpToNextLevel } from '../systems/economy.ts';
@@ -9,40 +10,37 @@ import { formatNumber } from './text.ts';
 
 export class Hud {
   readonly el: HTMLElement;
-  private readonly level = h('span', { class: 'level-num' });
-  private readonly xpFill = h('span', { class: 'xp-fill' });
+  private readonly level = h('span', { class: 'flower', 'data-test': 'level' });
+  private readonly vineFill = h('span', { class: 'vine-fill' });
   private readonly xpText = h('span', { class: 'xp-text' });
-  private readonly coins = h('span', { class: 'coin-num' });
+  private readonly coins = h('span', {});
+  private readonly pouch: HTMLElement;
   private readonly hint = h('div', { class: 'hint', role: 'status' });
   private readonly storageBadge = h('span', { class: 'badge' });
   private lastCoins = -1;
 
   constructor(
     private readonly session: GameSession,
-    actions: { openStorage(): void; openSettings(): void },
+    actions: { openSeeds(): void; openStorage(): void; openSettings(): void },
   ) {
-    const levelBox = h(
-      'div',
-      { class: 'pill level-pill' },
-      h('span', { class: 'level-badge' }, icon('icons/xp', 34), this.level),
-      h('span', { class: 'xp-bar' }, this.xpFill, this.xpText),
-    );
-    const coinBox = h('div', { class: 'pill coin-pill', 'data-test': 'coins' }, icon('icons/coin', 34), this.coins);
-    const settingsBtn = h('button', { class: 'round-btn settings-btn', 'aria-label': 'Cài đặt', onclick: () => actions.openSettings() }, h('span', { class: 'gear' }, '⚙︎'));
-    const storageBtn = h(
+    this.pouch = h('div', { class: 'plaque pouch', 'data-test': 'coins' }, h('span', { class: 'ico-coin', style: 'width:30px;height:30px' }), this.coins);
+    const levelBox = h('div', { class: 'plaque' }, this.level, h('span', { class: 'vine' }, this.vineFill, this.xpText));
+    const gear = h('button', { class: 'knob gear', 'aria-label': 'Cài đặt', onclick: () => actions.openSettings() });
+    const seedFrame = session.content.cropList[0]!;
+    const seeds = h(
       'button',
-      { class: 'big-btn storage-btn', 'aria-label': 'Kho', 'data-test': 'open-storage', onclick: () => actions.openStorage() },
-      icon('icons/storage', 54),
-      h('span', { class: 'big-btn-label' }, 'Kho'),
+      { class: 'round-big seeds', 'aria-label': 'Hạt giống', 'data-test': 'open-seeds', onclick: () => actions.openSeeds() },
+      icon(`${seedFrame.sprite}/${seedFrame.stages - 1}`, 56),
+      h('span', { class: 'round-label' }, 'Hạt giống'),
+    );
+    const storage = h(
+      'button',
+      { class: 'round-big', 'aria-label': 'Kho', 'data-test': 'open-storage', onclick: () => actions.openStorage() },
+      icon('items/cherry-tomato', 52),
+      h('span', { class: 'round-label' }, 'Rương Mây'),
       this.storageBadge,
     );
-    this.el = h(
-      'div',
-      { class: 'hud' },
-      h('div', { class: 'hud-top' }, levelBox, coinBox, settingsBtn),
-      this.hint,
-      h('div', { class: 'hud-bottom' }, storageBtn),
-    );
+    this.el = h('div', { class: 'hud' }, h('div', { class: 'hud-top' }, levelBox, this.pouch, gear), this.hint, h('div', { class: 'hud-arc' }, seeds, storage));
   }
 
   update(): void {
@@ -51,13 +49,13 @@ export class Hud {
     const need = xpToNextLevel(content, p.level);
     const maxed = p.level >= content.config.levels.maxLevel;
     this.level.textContent = String(p.level);
-    this.xpFill.style.width = maxed ? '100%' : `${Math.min(100, (p.xp / need) * 100)}%`;
+    this.vineFill.style.width = maxed ? '100%' : `${Math.min(100, (p.xp / need) * 100)}%`;
     this.xpText.textContent = maxed ? 'Tối đa' : `${formatNumber(p.xp)}/${formatNumber(need)}`;
     if (p.coins !== this.lastCoins) {
       if (this.lastCoins >= 0 && p.coins > this.lastCoins) {
-        this.coins.parentElement?.classList.remove('bump');
-        void this.coins.parentElement?.offsetWidth;
-        this.coins.parentElement?.classList.add('bump');
+        this.pouch.classList.remove('bump');
+        void this.pouch.offsetWidth;
+        this.pouch.classList.add('bump');
       }
       this.lastCoins = p.coins;
       this.coins.textContent = formatNumber(p.coins);

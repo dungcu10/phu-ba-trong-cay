@@ -3,7 +3,7 @@
 
 import type { Clock } from '../core/clock.ts';
 import type { ContentPack } from '../core/content.ts';
-import { dispatch, type Command, type GameEvent, type Result } from '../core/game.ts';
+import { currentGameTime, dispatch, type Command, type GameEvent, type Result } from '../core/game.ts';
 import type { GameState } from '../core/state.ts';
 import type { SaveManager } from '../persistence/saveManager.ts';
 
@@ -36,8 +36,9 @@ export class GameSession {
     private readonly timing: SessionTiming = DEFAULT_TIMING,
   ) {}
 
+  /** Game time (device clock + stored offset, never behind the latest time seen). */
   now(): number {
-    return Math.max(this.clock.now(), this.state.maxSeenAt);
+    return currentGameTime(this.state, this.clock.now());
   }
 
   onChange(listener: Listener): void {
@@ -89,14 +90,17 @@ export class GameSession {
   }
 
   /** Validates a backup file. Throws SaveFormatError when it is not a valid save. */
-  parseBackup(text: string): GameState {
+  parseBackup(text: string): { state: GameState; warnings: string[] } {
     return this.saves.parseImport(text);
   }
 
-  /**
-   * Makes `next` the newest stored save and stops this session from saving again, so the
-   * caller can reload into it. The previous save stays in the other slot as a fallback.
-   */
+  /** Stops all further writes from this session (before a reset or an import + reload). */
+  async stopSaving(): Promise<void> {
+    this.locked = true;
+    if (this.saveTimer) clearTimeout(this.saveTimer);
+    await this.saving;
+  }
+
   async replaceStoredSave(next: GameState): Promise<void> {
     this.locked = true;
     await this.saving;

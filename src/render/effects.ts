@@ -3,6 +3,7 @@
 // and the number of live particles is capped (QUALITY_STANDARDS 1 and 3.3).
 
 import { Container, Sprite, Text, Texture } from 'pixi.js';
+import { hex, TOKENS } from '../ui/tokens.ts';
 
 const FLOAT_POOL = 16;
 const PARTICLE_POOL = 60;
@@ -45,11 +46,11 @@ export class Effects extends Container {
       const text = new Text({
         text: '',
         style: {
-          fontFamily: '"Baloo 2", "Nunito", sans-serif',
+          fontFamily: `"${TOKENS.font.display}", sans-serif`,
           fontWeight: '800',
-          fontSize: 30,
-          fill: 0xffffff,
-          stroke: { color: 0x5b3a29, width: 6, join: 'round' },
+          fontSize: TOKENS.font.size.numberLarge,
+          fill: hex(TOKENS.color.ui.textOnDark),
+          stroke: { color: hex(TOKENS.color.ui.wood), width: 6, join: 'round' },
         },
         resolution: 2,
       });
@@ -60,7 +61,7 @@ export class Effects extends Container {
     }
   }
 
-  floatText(label: string, x: number, y: number, color = 0xffffff): void {
+  floatText(label: string, x: number, y: number, color = hex(TOKENS.color.ui.textOnDark)): void {
     const f = this.floaters[this.nextFloater]!;
     this.nextFloater = (this.nextFloater + 1) % FLOAT_POOL;
     f.text.text = label;
@@ -73,7 +74,7 @@ export class Effects extends Container {
     f.vy = -70;
   }
 
-  burst(texture: Texture, x: number, y: number, count: number, opts: { speed?: number; scale?: number; gravity?: number; life?: number } = {}): void {
+  burst(texture: Texture, x: number, y: number, count: number, opts: { speed?: number; scale?: number; gravity?: number; life?: number; tint?: number } = {}): void {
     const speed = opts.speed ?? 260;
     for (let i = 0; i < count; i++) {
       const p = this.particles[this.nextParticle]!;
@@ -81,6 +82,7 @@ export class Effects extends Container {
       const a = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.2;
       const v = speed * (0.5 + Math.random() * 0.6);
       p.sprite.texture = texture;
+      p.sprite.tint = opts.tint ?? 0xffffff;
       p.sprite.position.set(x, y);
       p.sprite.alpha = 1;
       p.sprite.rotation = Math.random() * Math.PI;
