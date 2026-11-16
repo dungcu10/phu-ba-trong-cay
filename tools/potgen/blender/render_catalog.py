@@ -43,8 +43,23 @@ def metal_or_glaze(color, glow=False):
     return {"color": color, "roughness": 0.3, "coat": 0.4}
 
 
+FACE_MATS = {
+    "face_eye": {"color": "#24151C", "roughness": 0.08, "coat": 1.0},
+    "face_hi": {"color": "#FFFFFF", "emission": "#FFFFFF", "emission_strength": 2.0},
+    "face_blush": {"color": "#FF8FAB", "roughness": 0.7},
+    "soil": {"color": "#3A2416", "roughness": 0.95},
+}
+
+
 def template_l50(pot):
-    """Bộ khung chuẩn cấp 50 → (line, milestone) dùng được với potlib.build_pot."""
+    """Bộ khung chuẩn cấp 50 → (line, milestone) dùng được với potlib.build_pot.
+    Chậu có khóa "parts" là thiết kế riêng (món đặc trưng): dùng nguyên bộ phận của nó."""
+    if "parts" in pot:
+        mats = dict(FACE_MATS)
+        mats.update(pot["materials"])
+        line = {"id": f"pot{pot['id']:02d}", "name": pot["name"], "materials": mats,
+                "profiles": {**CATALOG["profiles"], **pot.get("profiles", {})}, "max_level": 50}
+        return line, {"level": 50, "title": pot["name"], "parts": pot["parts"]}
     ex = pot.get("extras", {})
     w, h = pot["wing"], pot["halo"]
     body = {"gradient": grad(pot["body"]), "roughness": 0.3}
@@ -149,7 +164,7 @@ def main():
         style["samples"] = int(a["samples"])
     ids = parse_ids(a["levels"]) if a["levels"] != "milestones" else list(range(1, 51))
     pots = [p for p in CATALOG["pots"] if p["id"] in ids]
-    out = os.path.abspath(os.path.join(a["out"], "catalog_l50"))
+    out = os.path.abspath(os.path.join(a["out"], CATALOG.get("out_name", "catalog_l50")))
     dirs = {k: os.path.join(out, k) for k in ("master", "game", "preview")}
     for d in dirs.values():
         os.makedirs(d, exist_ok=True)
@@ -167,7 +182,7 @@ def main():
             path = os.path.join(dirs["master"], f"pot_{pot['id']:02d}.png")
             bpy.context.scene.render.filepath = path
             bpy.ops.render.render(write_still=True)
-            done.append({"id": pot["id"], "name": pot["name"], "category": pot["category"],
+            done.append({"id": pot["id"], "name": pot["name"], "category": pot.get("category", pot.get("group", "")),
                          "objects": n, "seconds": round(time.time() - t0, 1)})
             print(f"[potgen] chậu {pot['id']:>2} {pot['name']}: {n} vật thể, {time.time() - t0:.1f}s", flush=True)
         except Exception as e:  # một chậu lỗi không làm hỏng cả loạt
@@ -186,14 +201,14 @@ def main():
         RL.save_rgba(os.path.join(dirs["game"], f"pot_{d['id']:02d}.png"), RL.downscale(full, max(1, res // 512)))
         tiles.append(RL.downscale(full, max(1, res // 256)))
     if tiles:
-        RL.save_rgba(os.path.join(dirs["preview"], "catalog_l50.png"),
+        RL.save_rgba(os.path.join(dirs["preview"], CATALOG.get("out_name", "catalog_l50") + ".png"),
                      RL.contact_sheet(tiles, 10, tiles[0].shape[0], bg))
     manifest = {
         "schema": "phuba.pot-catalog/1", "level": 50,
         "frame": {"width": 512, "height": 512, "anchor": {"x": anchor[0], "y": anchor[1]}},
         "render": {"device": device, "samples": style.get("samples"), "resolution": res,
                    "style": os.path.basename(a["style"])},
-        "pots": [{"id": d["id"], "name": d["name"], "category": d["category"],
+        "pots": [{"id": d["id"], "name": d["name"], "category": d.get("category", ""),
                   "alias": f"pot.catalog.{d['id']}.l50", "src": f"assets/pots/catalog/pot_{d['id']:02d}_l50.png"}
                  for d in ok],
         "pixi": {"bundles": [{"name": "pots-catalog-l50", "assets": [
