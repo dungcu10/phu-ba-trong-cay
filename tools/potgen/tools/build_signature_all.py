@@ -122,7 +122,7 @@ P.append(pot(9, F, "Sushi Cá Hồi", {"roll": [[0.55, 0.0], [0.6, 0.03], [0.62,
      {"type": "prop", "items": [{"shape": "cyl", "mat": "nori", "at": [0, 0, 0.12], "scale": [0.73, 0.73, 0.3]}]},
      {"type": "tiles", "mat": "grain", "shape": "sphere", "rows": 2, "cols": 12, "z": [0.68, 0.84], "size": 0.032, "flat": 0.6, "arc": 200},
      # Review 03: vành tròn lơ lửng -> lát cá hồi nghiêng phủ nửa sau miệng, có vân trắng
-     {"type": "prop", "items": [{"shape": "sphere", "mat": "salmon", "at": [0.0, 0.22, 1.04], "rot": [-18, 0, 0], "scale": [0.62, 0.36, 0.09]}]},
+     {"type": "prop", "items": [{"shape": "sphere", "mat": "salmon", "at": [0.0, 0.26, 1.08], "rot": [-32, 0, 0], "scale": [0.6, 0.34, 0.16]}]},
      *[{"type": "path", "mat": "grain", "radius": 0.012, "points": [[x - 0.12, 0.05, 1.1], [x, 0.22, 1.16], [x + 0.12, 0.42, 1.1]]} for x in (-0.3, -0.05, 0.2)],
      face(0.33, eye_mat="eye_w", eye=0.06)]))
 P.append(pot(10, F, "Cupcake", {"wrap": [[0.38, 0.0], [0.4, 0.03], [0.52, 0.55], [0.54, 0.58]]},
@@ -359,7 +359,7 @@ P.append(pot(35, K, "Rổ Tre Nón Lá", {"basket": [[0.4, 0.0], [0.46, 0.06], [
      {"type": "meridians", "mat": "weave", "count": 18, "twist": 0.7, "radius": 0.013},
      {"type": "meridians", "mat": "weave", "count": 18, "twist": -0.7, "radius": 0.013},
      {"type": "rim", "mat": "weave", "rr": 0.04},
-     {"type": "prop", "items": [{"shape": "cone", "mat": "nonla", "sides": 48, "at": [0.3, 0.42, 1.05], "rot": [62, 0, -20], "scale": [0.5, 0.5, 0.36]}]},
+     {"type": "prop", "items": [{"shape": "cone", "mat": "nonla", "sides": 48, "at": [0.32, 0.4, 0.92], "rot": [-18, 0, -20], "scale": [0.5, 0.5, 0.3]}]},
      {"type": "path", "mat": "ribbon", "radius": 0.012, "points": [[0.6, -0.05, 0.55], [0.55, -0.25, 0.4], [0.5, -0.3, 0.25]]}]))
 P.append(pot(36, K, "Ấm Tử Sa", {"teapot": [[0.35, 0.0], [0.45, 0.03], [0.6, 0.3], [0.58, 0.55], [0.45, 0.66]]},
     {"body": G("#7E3F22", "#A85C36", roughness=0.55), "line": C("#5E2C16", roughness=0.6)},
@@ -461,7 +461,7 @@ P.append(pot(46, T, "Cung Trăng", {"urn": URN},
      {"type": "dots", "mat": "gold", "count": 3, "size": [0.03, 0.035], "z": [0.25, 0.25], "ring": True, "arc": 50},
      {"type": "embers", "mat": "star", "count": 10, "size": [0.012, 0.022]},
      face(0.6, sleepy=True)]))
-P.append(pot(47, T, "Đèn Thần", {"lamp": [[0.36, 0.0], [0.46, 0.05], [0.6, 0.22], [0.63, 0.4], [0.54, 0.56], [0.46, 0.62]]},
+P.append(pot(47, T, "Đèn Thần", {"lamp": [[0.34, 0.0], [0.44, 0.05], [0.58, 0.25], [0.62, 0.45], [0.55, 0.65], [0.45, 0.75], [0.48, 0.8]]},
     {"body": G("#C9952A", "#F2C94C", metallic=1.0, roughness=0.2), "ruby": {**GLASS("#E8203A", 0.4), "emission": "#E8203A", "emission_strength": 0.5},
      "smoke": {"color": "#B49CF7", "roughness": 0.5, "transmission": 0.5, "emission": "#C6B2FF", "emission_strength": 0.8}},
     [body("lamp"), SOIL,
