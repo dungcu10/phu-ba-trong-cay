@@ -53,6 +53,7 @@ export const ERROR_TEXT: Record<ErrorCode, string> = {
   unknown_recipe: 'Không thấy công thức này.',
   help_used: 'Hôm nay bạn đã nhờ hàng xóm rồi. Mai nhờ tiếp nhé!',
   bird_busy: 'Chú chim này đang bay theo một khinh khí cầu khác.',
+  not_castable: 'Chậu này không đúc được.',
 };
 
 const numberFormat = new Intl.NumberFormat('vi-VN');

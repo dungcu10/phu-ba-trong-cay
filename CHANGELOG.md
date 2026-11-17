@@ -29,6 +29,13 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Chỉ thị 10 M7 phần 1 — Đúc Chậu (tag `m-10-m7a`)
+- Loại: Thêm
+- Mô tả: Lò Gốm có nút "Đúc Chậu" (mở từ cấp 12): đúc chậu nhóm crafted bằng xu + vật liệu (đồng, đá mây, ngọc mài, bạc, bụi vàng, ngọc thô) theo bậc hiếm. Mỗi lần đúc có 10% "đúc hoàn hảo" → chậu +1 sao; mỗi sao +4% chỉ số chậu. Kết quả xác định từ seed. Bảng hiện nguyên liệu có/cần và nguồn rơi.
+- File/Module: content/base/casting.json (mới), src/systems/casting.ts, src/ui/castingPanel.ts, src/systems/pots.ts (sao), src/core/game.ts (lệnh castPot), src/persistence/reconcile.ts (kẹp sao 0–5), tests/casting10.test.ts.
+- Ảnh hưởng save: Không (PotInstance.stars là trường tuỳ chọn; save cũ mở bình thường).
+- Quyết định tự chọn: giá xu và vật liệu mỗi bậc chỉ là số khởi điểm, CTO chỉnh qua mô phỏng (A3).
+
 ### [2026-11-18] CTO — Bot mô phỏng dùng chỗ tiêu bọ mới (B6)
 - Bot chạy Xưởng mỗi lần ghé (ưu tiên hàng đơn đang cần), cuối ngày bán bọ dư quá 40 con mỗi loại cho thương lái.
 - Bọ tồn ngày 30: 22,6 → 1,4 ngày bắt; ngày 60 giữ ~250 con. Bật chặn chỉ số này.
