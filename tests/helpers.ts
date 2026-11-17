@@ -49,3 +49,8 @@ export const DAISY = 'base:crop.cotton-daisy';
 export const TOMATO = 'base:crop.cherry-tomato';
 export const MINT = 'base:crop.cloud-mint';
 export const BUG = 'base:bug.ladybird';
+
+/** Chỉ thị 10 § 3.1: gives the Sợi Mây Kết / Giọt Sương Trời a floor asks for (tests about other rules). */
+export function giveFloorItems(content: ContentPack, s: GameState, floorId: string): void {
+  for (const [id, q] of Object.entries(content.floors.get(floorId)?.unlockItems ?? {})) s.inventory[id] = (s.inventory[id] ?? 0) + q;
+}

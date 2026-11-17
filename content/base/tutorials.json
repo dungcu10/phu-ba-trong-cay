@@ -50,6 +50,16 @@
     "target": "open-event"
   },
   {
+    "id": "tut.birds",
+    "title": {
+      "vi": "Mở khóa: Chim Bắt Sâu"
+    },
+    "text": {
+      "vi": "Thuê Sẻ Mây đậu ở mép tầng: chim tự bắt bọ trên cây Hoa, cả khi bạn tắt game. Nhớ cho chim ăn Hạt Kê Mây, chim đói thì ngủ."
+    },
+    "target": "open-birds"
+  },
+  {
     "id": "tut.stall",
     "title": {
       "vi": "Mở khóa: Sạp Phú Bà"

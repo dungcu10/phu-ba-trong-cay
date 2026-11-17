@@ -31,13 +31,19 @@ export function icon(frame: string, sizePt: number, sheetName?: SheetName): HTML
   if (!f) return el;
   const k = sizePt / Math.max(f.w, f.h);
   const meta = data.meta.size!;
-  Object.assign(el.style, {
-    width: `${sizePt}px`,
-    height: `${sizePt}px`,
+  Object.assign(el.style, { width: `${sizePt}px`, height: `${sizePt}px`, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' });
+  // The picture is clipped to its own frame, so a non-square frame never shows its atlas neighbours.
+  const pic = h('span', { 'aria-hidden': 'true' });
+  Object.assign(pic.style, {
+    display: 'block',
+    width: `${f.w * k}px`,
+    height: `${f.h * k}px`,
     backgroundImage: `url("${url}")`,
     backgroundSize: `${meta.w * k}px ${meta.h * k}px`,
-    backgroundPosition: `${-f.x * k + (sizePt - f.w * k) / 2}px ${-f.y * k + (sizePt - f.h * k) / 2}px`,
+    backgroundPosition: `${-f.x * k}px ${-f.y * k}px`,
+    backgroundRepeat: 'no-repeat',
   });
+  el.append(pic);
   return el;
 }
 

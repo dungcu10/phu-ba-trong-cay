@@ -4,7 +4,7 @@
 import type { BugDef, ContentPack, CropDef } from '../core/content.ts';
 import type { GameState, Planting, SlotState } from '../core/state.ts';
 import { randomFor, stochasticRound } from '../core/rng.ts';
-import { slotBonus } from './modifiers.ts';
+import { floorOfSlot, slotBonus } from './modifiers.ts';
 
 /** In a regrow cycle the crop restarts from this stage (the "grown, no fruit" stage). */
 export const REGROW_FROM_STAGE = 2;
@@ -86,6 +86,47 @@ export function isNight(content: ContentPack, at: number): boolean {
   return h >= n.from || h < n.to;
 }
 
+const DAY_MS = 86_400_000;
+const HOUR_MS = 3_600_000;
+
+/** Milliseconds of night (game local time) between two moments. */
+export function nightMs(content: ContentPack, from: number, to: number): number {
+  if (to <= from) return 0;
+  const off = content.missions.utcOffsetHours * HOUR_MS;
+  const n = content.config.night ?? { from: 19, to: 6 };
+  let total = 0;
+  const first = Math.floor((from + off) / DAY_MS) - 1;
+  const last = Math.floor((to + off) / DAY_MS);
+  for (let d = first; d <= last; d++) {
+    const start = d * DAY_MS - off;
+    // Night of local day d: [d + from h, d + 24 h + to h).
+    const a = Math.max(from, start + n.from * HOUR_MS);
+    const b = Math.min(to, start + (24 + n.to) * HOUR_MS);
+    if (b > a) total += b - a;
+  }
+  return total;
+}
+
+/** Growth time counted between two moments on a floor that grows faster at night. */
+function grownMs(content: ContentPack, nightSpeed: number, from: number, to: number): number {
+  const real = Math.max(0, to - from);
+  return nightSpeed > 0 ? real + nightSpeed * nightMs(content, from, to) : real;
+}
+
+/** First moment the growth time since `from` reaches `target` (exact to the millisecond). */
+function reachedAt(content: ContentPack, nightSpeed: number, from: number, target: number): number {
+  if (nightSpeed <= 0) return from + target;
+  // Integer bisection on whole milliseconds: lo never reaches the target, hi always does.
+  let lo = Math.floor(from + target / (1 + nightSpeed)) - 1;
+  let hi = Math.ceil(from + target);
+  while (hi - lo > 1) {
+    const mid = lo + Math.floor((hi - lo) / 2);
+    if (grownMs(content, nightSpeed, from, mid) >= target) hi = mid;
+    else lo = mid;
+  }
+  return hi;
+}
+
 /** Weight multiplier for a bug on a floor (Vườn Trăng: Đom Đóm Sao twice as often). */
 export type BugBoost = (bugId: string) => number;
 
@@ -154,11 +195,21 @@ export function cropStatus(content: ContentPack, state: GameState, slot: SlotSta
   const crop = content.crops.get(planting.cropId);
   if (!crop) throw new Error(`Không có cây ${planting.cropId}`);
   const cycleMs = cycleDurationMs(content, state, slot, planting);
-  const elapsed = Math.max(0, now - planting.cycleStartedAt) + planting.bonusMs;
+  // Chỉ thị 10 § 3.1: the floor's night growth bonus and bug weights (Vườn Trăng Lơ Lửng).
+  const floorDef = (() => {
+    const f = floorOfSlot(state, slot);
+    return f ? content.floors.get(f.floorId) : undefined;
+  })();
+  const nightSpeed = floorDef?.nightSpeed ?? 0;
+  const floorBoost = floorDef?.bugBoost;
+  if (!boost && floorBoost) boost = (id) => floorBoost[id] ?? 1;
+  // Real time already covers the cycle: ripe, no need to count the night bonus (it can only add).
+  const real = Math.max(0, now - planting.cycleStartedAt) + planting.bonusMs;
+  const elapsed = real >= cycleMs ? real : grownMs(content, nightSpeed, planting.cycleStartedAt, now) + planting.bonusMs;
   const progress = Math.min(1, elapsed / cycleMs);
   const stage = stageAt(crop, planting, progress);
   const ripe = progress >= 1;
-  const remainingMs = Math.max(0, cycleMs - elapsed);
+  const remainingMs = ripe ? 0 : Math.max(0, reachedAt(content, nightSpeed, planting.cycleStartedAt, cycleMs - planting.bonusMs) - now);
   return {
     crop,
     stage,

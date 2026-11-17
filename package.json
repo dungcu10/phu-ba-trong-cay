@@ -11,7 +11,8 @@
     "test": "tsx --test tests/*.test.ts",
     "test:browser": "npm run build && tsx --test tests/browser/*.test.ts",
     "typecheck": "tsc --noEmit -p .",
-    "validate-content": "tsx tools/validate-content.ts"
+    "validate-content": "tsx tools/validate-content.ts",
+    "check": "tsx tools/check.ts"
   },
   "devDependencies": {
     "@types/node": "26.6.6",

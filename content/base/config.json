@@ -75,7 +75,6 @@
     "names": [
       "Đảo Mây Hồng",
       "Thung Lũng Sương Bạc",
-      "Vườn Trăng Lơ Lửng",
       "Đồi Cầu Vồng",
       "Hồ Sen Mây",
       "Rừng Tre Gió",
@@ -128,7 +127,7 @@
       "perFloor": 0.01,
       "max": 0.3
     },
-    "firstLevel": 16,
+    "firstLevel": 19,
     "levelStep": 3,
     "levelStepGrowth": 0,
     "slotCount": 6,
@@ -161,7 +160,11 @@
       }
     ],
     "costHours": 4,
-    "costHoursPerFloor": 5
+    "costHoursPerFloor": 5,
+    "unlockItems": {
+      "base:mat.cloud-thread": 12,
+      "base:mat.sky-dew": 10
+    }
   },
   "storageUpgrade": {
     "perTier": 20,
@@ -176,5 +179,12 @@
     "visitMinutes": 30,
     "potsPerFloor": 8,
     "potBonus": 0.3
+  },
+  "floorMaterialDrop": {
+    "chance": 0.02,
+    "items": [
+      "base:mat.cloud-thread",
+      "base:mat.sky-dew"
+    ]
   }
 }

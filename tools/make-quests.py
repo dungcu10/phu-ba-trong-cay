@@ -121,6 +121,8 @@ features=[
  {"id":"neighbors","name":{"vi":"Phú Bà"},"level":3,"tutorial":"tut.neighbors"},
  {"id":"event","name":{"vi":"Lễ Hội"},"level":3,"tutorial":"tut.event"},
  {"id":"stall","name":{"vi":"Sạp"},"level":4,"tutorial":"tut.stall"},
+ # Chỉ thị 10 § 3.3 + chỉ thị 11 đính chính D2: chim mở ở cấp 3 (Sẻ Mây).
+ {"id":"birds","name":{"vi":"Chim Bắt Sâu"},"level":3,"tutorial":"tut.birds"},
 ]
 json.dump(features,open('content/base/features.json','w'),ensure_ascii=False,indent=2)
 tut=[
@@ -129,6 +131,7 @@ tut=[
  {"id":"tut.shop","title":{"vi":"Mở khóa: Lò Gốm Bà Mây"},"text":{"vi":"Mua chậu mới: mỗi chậu có chỉ số riêng và lên được 50 cấp. Chậu hợp họ cây thì càng mạnh."},"target":"open-shop"},
  {"id":"tut.neighbors","title":{"vi":"Mở khóa: Bảng Phú Bà"},"text":{"vi":"Xem ai giàu nhất làng mây, ghé vườn hàng xóm tưới cây và bắt bọ giúp họ để nhận xu và tình thân."},"target":"open-neighbors"},
  {"id":"tut.event","title":{"vi":"Mở khóa: Lễ Hội"},"text":{"vi":"Lễ hội có hạn: chơi như thường để tích điểm, đạt mốc nhận quà độc quyền."},"target":"open-event"},
+ {"id":"tut.birds","title":{"vi":"Mở khóa: Chim Bắt Sâu"},"text":{"vi":"Thuê Sẻ Mây đậu ở mép tầng: chim tự bắt bọ trên cây Hoa, cả khi bạn tắt game. Nhớ cho chim ăn Hạt Kê Mây, chim đói thì ngủ."},"target":"open-birds"},
  {"id":"tut.stall","title":{"vi":"Mở khóa: Sạp Phú Bà"},"text":{"vi":"Bày nông sản lên sạp với giá bạn chọn. Hàng xóm ghé mua theo sở thích — giá càng hời bán càng nhanh."},"target":"open-stall"},
 ]
 json.dump(tut,open('content/base/tutorials.json','w'),ensure_ascii=False,indent=2)

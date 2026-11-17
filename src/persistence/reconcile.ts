@@ -9,6 +9,7 @@
 
 import { adoptQuestsForOldSave, emptyQuestState } from '../systems/quests.ts';
 import type { ContentPack } from '../core/content.ts';
+import { genFloorNumber } from '../core/floorgen.ts';
 import { emptyV12Parts, newNeighbors, type GameState, type Planting, type SlotState } from '../core/state.ts';
 import { SaveFormatError } from './serializer.ts';
 
@@ -113,6 +114,16 @@ function reconcilePots(state: GameState, content: ContentPack, c: Checker): void
 }
 
 function reconcileFloors(state: GameState, content: ContentPack, c: Checker): void {
+  // Chỉ thị 10: a generated floor whose position became a hand-made floor (Tầng 4 → Vườn Trăng
+  // Lơ Lửng) keeps its slots, pots and plants under the new floor id.
+  state.floors.forEach((floor, i) => {
+    const n = genFloorNumber(floor.floorId);
+    const hand = n !== null ? content.floorList[n - 1] : undefined;
+    if (hand && n === i + 1 && !content.floors.has(floor.floorId)) {
+      c.warnings.push(`Tầng ${n} nay là ${hand.name.vi}, giữ nguyên chậu và cây`);
+      floor.floorId = hand.id;
+    }
+  });
   state.floors = state.floors.filter((floor, i) => {
     if (content.floors.has(floor.floorId)) return true;
     if (i === 0) {
@@ -133,14 +144,8 @@ function reconcileFloors(state: GameState, content: ContentPack, c: Checker): vo
       floor.slots.push({ potInstanceId, planting: null });
       if (i === def.slotCount - 1) c.warnings.push(`${def.name.vi} có thêm vị trí chậu mới`);
     }
-    // Slots beyond the floor's maximum (content shrank) keep their pots in stock.
-    if (floor.slots.length > Math.max(def.maxSlots, def.slotCount)) {
-      for (const extra of floor.slots.splice(Math.max(def.maxSlots, def.slotCount))) {
-        if (extra.planting) clearAndRefund(state, extra, extra.planting.seedCost ?? 0, `Cây ở vị trí đã bỏ của ${def.name.vi}`, c);
-        state.potStock.push(extra.potInstanceId);
-      }
-      c.warnings.push(`${def.name.vi} bớt vị trí chậu, chậu thừa đã cất vào kho`);
-    }
+    // Chỉ thị 10: floors now start at 4 slots and expand to 6, but a floor the player already
+    // opened further keeps every slot it has (nothing is taken away; it just cannot grow more).
     floor.stars = c.num(`sao ${def.name.vi}`, floor.stars, { min: 0, max: def.stars.length, int: true, fallback: 0 });
     floor.slots.forEach((slot, i) => {
       if (!state.pots[slot.potInstanceId]) {

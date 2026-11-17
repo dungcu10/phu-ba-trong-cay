@@ -317,6 +317,58 @@ def pedestal_anchor(im, _name=None):
     return float((xs.min() + xs.max()) / 2), float(y)
 
 
+ICON_PT = 64  # UI item icons (chỉ thị 10/11 § CẦN HÌNH: 7_bieu-tuong)
+ICON_SHEETS = [
+    ("to1_che-bien-va-vat-pham.png", ["dried-flowers", "jam", "juice", "cloud-gem",
+                                      "cloud-thread", "sky-dew", "cloud-millet", "wind-energy"], 4, None),
+    # The minerals sheet has an English caption under every picture: blank those bands first.
+    ("to2_khoang-moi-trung-rong.png", ["cloud-stone", "copper-ore", "silver-ore", "gold-nugget",
+                                       "raw-jade", "bait", "sweet-bait", "dragon-egg-shard"], 4, [(214, 268), (474, 530)]),
+    ("to3_ca-va-phao.png", ["fish-cloud", "fish-pink", "fish-gold", "fish-moon", "fish-dragon", "float"], 3, None),
+    ("to4_huy-hieu-diem-su-kien-ruong.png", ["badge-kitten", "badge-fox", "badge-sparrow", "badge-dragon",
+                                             "event-point", "drift-chest"], 3, None),
+    ("to5_huy-chuong-do-cao.png", ["medal-low-sky", "medal-golden-sky", "medal-sunset", "medal-night"], 2, None),
+]
+
+
+def blank_bands(bands):
+    def fix(im):
+        a = np.asarray(im).copy()
+        for y0, y1 in bands:
+            a[y0:y1, :, 3] = 0
+        return Image.fromarray(a)
+    return fix
+
+
+def crystal_icon():
+    """Decor "pha lê": the crystal hanging under floor 1 (cut out; the cloud behind its hanger removed),
+    upscaled ×4 like the rest of the art. Not in 7_bieu-tuong, so it is cut from the approved floor."""
+    src = Image.open(os.path.join(SRC, "1_tang-may", "tang1_dong-may-ngoc.png")).convert("RGB").crop((560, 522, 660, 632))
+    big = esrgan_x4(src)
+    mask = np.asarray(cut_white(src)).copy()
+    rgb = mask[..., :3].astype(int)
+    mask[(rgb[..., 0] > 170) & (rgb[..., 2] > 150) & (rgb[..., 1] < rgb[..., 0] - 5), 3] = 0
+    lab, n = ndimage.label(mask[..., 3] > 40)
+    sizes = ndimage.sum(np.ones_like(lab), lab, range(1, n + 1))
+    mask[lab != 1 + int(np.argmax(sizes)), 3] = 0
+    alpha = Image.fromarray(mask[..., 3]).resize(big.size, Image.LANCZOS)
+    im = big.convert("RGBA")
+    im.putalpha(alpha)
+    im = im.crop(im.getbbox())
+    k = ICON_PT * 2 / max(im.size)
+    im = resize_rgba(im, (round(im.width * k), round(im.height * k)))
+    return im, centre(im)
+
+
+def build_icons():
+    ent = {"icon/crystal": crystal_icon()}
+    for fname, names, rows, bands in ICON_SHEETS:
+        got = build_sheet(os.path.join(SRC, "7_bieu-tuong", fname), names, ICON_PT, centre,
+                          fixer=blank_bands(bands) if bands else None, rows=rows)
+        ent.update({f"icon/{k}": v for k, v in got.items()})
+    write_atlas("icons", ent)
+
+
 def main():
     only = sys.argv[sys.argv.index("--only") + 1].split(",") if "--only" in sys.argv else None
     want = lambda k: only is None or k in only  # noqa: E731
@@ -334,6 +386,9 @@ def main():
     if want("rings"):
         print("rings", flush=True)
         build_rings(meta)
+    if want("icons"):
+        print("icons", flush=True)
+        build_icons()
     if not want("chars"):
         return
     print("pedestals", flush=True)

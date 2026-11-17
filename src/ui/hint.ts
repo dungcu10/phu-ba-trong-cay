@@ -1,6 +1,7 @@
 // "What should I do next?" — one short line always shown under the HUD (QUALITY_STANDARDS 3.4).
 // Pure function of content, state and time so it can be tested without a browser.
 
+import { canOpenFloor } from '../systems/floors.ts';
 import type { ContentPack } from '../core/content.ts';
 import type { GameState } from '../core/state.ts';
 import { cropStatus } from '../systems/growth.ts';
@@ -57,7 +58,7 @@ export function nextHint(content: ContentPack, state: GameState, now: number): H
   }
 
   const floor = nextFloor(content, state);
-  if (floor && state.player.level >= floor.unlockLevel && state.player.coins >= floor.unlockCost) {
+  if (floor && canOpenFloor(floor, state)) {
     return { kind: 'floor', text: `Đủ điều kiện mở ${floor.name.vi} — vuốt lên dọc cây leo và chạm vào tầng mờ.` };
   }
 

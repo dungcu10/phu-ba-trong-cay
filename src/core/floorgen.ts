@@ -32,6 +32,9 @@ export interface FloorGenConfig {
   maxSlots: number;
   /** Each extra slot costs this fraction of the floor's unlock cost. */
   expandFactors: number[];
+  /** Chỉ thị 10: items for each extra slot and to open the floor. */
+  expandItems?: Array<Record<string, number>>;
+  unlockItems?: Record<string, number>;
   startingPot: string;
   /** Floor stars: level above the unlock level, coins as a fraction of the unlock cost, and
    *  produce of the newest crop unlocked by then (qty + qtyPerFloor × k). */
@@ -66,6 +69,8 @@ export function makeGeneratedFloor(gen: FloorGenConfig, handCount: number, crops
     slotCount: gen.slotCount,
     maxSlots: gen.maxSlots,
     expandCosts: gen.expandFactors.slice(0, gen.maxSlots - gen.slotCount).map((f) => tidy(unlockCost * f)),
+    ...(gen.expandItems ? { expandItems: gen.expandItems.slice(0, gen.maxSlots - gen.slotCount) } : {}),
+    ...(gen.unlockItems ? { unlockItems: gen.unlockItems } : {}),
     startingPot: gen.startingPot,
     sprite: gen.sprites[k % gen.sprites.length]!,
     tint: gen.tints[k % gen.tints.length],

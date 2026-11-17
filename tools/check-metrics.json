@@ -1,0 +1,16 @@
+{
+  "visitMinutes": 120,
+  "days": 30,
+  "metrics": [
+    { "id": "level1", "label": "Cấp ngày 1", "min": 5, "max": 6, "block": false },
+    { "id": "level7", "label": "Cấp ngày 7", "min": 13, "max": 15, "block": false },
+    { "id": "level30", "label": "Cấp ngày 30", "min": 25, "max": 28, "block": false },
+    { "id": "milestonesPerDay", "label": "Mốc tiến bộ mỗi ngày (ngày 10–30)", "min": 2, "max": 1000, "block": false },
+    { "id": "coinsPerUnit", "label": "Xu/U", "min": 1, "max": 5, "block": false },
+    { "id": "commonBugsPerDay", "label": "Bọ Thường mỗi ngày (ngày 7–30)", "min": 40, "max": 70, "block": false },
+    { "id": "epicBugsPerDay", "label": "Bọ Rất hiếm mỗi ngày (1 con / 3–5 ngày)", "min": 0.2, "max": 0.34, "block": false },
+    { "id": "signaturePots30", "label": "Chậu chữ ký sở hữu ngày 30", "min": 10, "max": 15, "block": false },
+    { "id": "storageFullShare", "label": "Thời gian kho đầy", "min": 0, "max": 0.2, "block": false },
+    { "id": "ordersPerDay", "label": "Đơn giao mỗi ngày", "min": 10, "max": 20, "block": false }
+  ]
+}

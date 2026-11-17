@@ -86,7 +86,11 @@
           "base:item.cloud-mint": 30
         }
       }
-    ]
+    ],
+    "unlockItems": {
+      "base:mat.cloud-thread": 3,
+      "base:mat.sky-dew": 2
+    }
   },
   {
     "id": "base:floor.golden-terrace",
@@ -133,6 +137,61 @@
           "base:item.cloud-strawberry": 30
         }
       }
-    ]
+    ],
+    "unlockItems": {
+      "base:mat.cloud-thread": 6,
+      "base:mat.sky-dew": 4
+    }
+  },
+  {
+    "id": "base:floor.moon-garden",
+    "name": {
+      "vi": "Vườn Trăng Lơ Lửng"
+    },
+    "unlockLevel": 16,
+    "unlockCost": 25000,
+    "startingPot": "base:pot.terracotta",
+    "sprite": "floors/golden-terrace",
+    "trait": null,
+    "tint": "#D5DDF0",
+    "nightSpeed": 0.25,
+    "bugBoost": {
+      "base:bug.star-firefly": 2
+    },
+    "stars": [
+      {
+        "level": 18,
+        "coins": 9000,
+        "items": {
+          "base:item.golden-gerbera": 15
+        }
+      },
+      {
+        "level": 21,
+        "coins": 16000,
+        "items": {
+          "base:item.cloud-strawberry": 25
+        }
+      },
+      {
+        "level": 25,
+        "coins": 30000,
+        "items": {
+          "base:item.golden-gerbera": 30
+        }
+      }
+    ],
+    "slotCount": 6,
+    "maxSlots": 10,
+    "expandCosts": [
+      8000,
+      16000,
+      27000,
+      45000
+    ],
+    "unlockItems": {
+      "base:mat.cloud-thread": 10,
+      "base:mat.sky-dew": 8
+    }
   }
 ]

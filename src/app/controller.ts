@@ -134,6 +134,7 @@ export class Controller implements BirdActions, PanelActions, PotShopActions, Wo
       journal: () => this.open(new JournalPanel(this.session, this)),
       event: () => this.open(new EventPanel(this.session, this)),
       shop: () => this.openShop(),
+      birds: () => this.open(new BirdsPanel(this.session, this)),
     };
     setTimeout(() => go[feature]?.(), 250);
   }

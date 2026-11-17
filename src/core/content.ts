@@ -12,6 +12,8 @@ import { validateQuests, type FeatureDef, type QuestDef, type QuestPack, type Tr
 export interface GameConfig {
   /** Chỉ thị 10: night hours in local time (from ≥ from, or < to). */
   night?: { from: number; to: number };
+  /** Chỉ thị 10 § 3.1: floor materials (Sợi Mây Kết, Giọt Sương Trời) found at harvest. */
+  floorMaterialDrop?: { chance: number; items: string[] };
   startingCoins: number;
   startingLevel: number;
   /** Rương Mây capacity before any upgrade. */
@@ -68,6 +70,13 @@ export interface FloorDef {
   /** Slots a new floor starts with, the most it can be expanded to, and the coin cost of each extra slot. */
   maxSlots: number;
   expandCosts: number[];
+  /** Chỉ thị 10 § 3.1: items asked on top of the coins, to open the floor and each extra slot. */
+  unlockItems?: Record<string, number>;
+  expandItems?: Array<Record<string, number>>;
+  /** Extra growth speed at night (device time), e.g. 0.25 on Vườn Trăng Lơ Lửng. */
+  nightSpeed?: number;
+  /** Bug weight multipliers on this floor (Vườn Trăng: Đom Đóm Sao ×2). */
+  bugBoost?: Record<string, number>;
   /** Floor stars (REDESIGN_V2 2.1): each star needs a level, coins and produce. */
   stars: Array<{ level: number; coins: number; items: Record<string, number> }>;
 }
@@ -313,7 +322,7 @@ export interface SurprisesConfig {
   giftChanceMax: number;
   /** Gems surprise gifts may give per local day; past it a gem gift becomes a coin gift (plan C: gift budget). */
   giftGemsPerDay: number;
-  gifts: Array<{ kind: 'coins' | 'gems' | 'bug'; weight: number; perLevel?: number; min?: number; max?: number }>;
+  gifts: Array<{ kind: 'coins' | 'gems' | 'bug' | 'item'; weight: number; perLevel?: number; min?: number; max?: number; items?: string[] }>;
   mutations: MutationDef[];
   journal: { milestones: number[]; gems: number[] };
 }
@@ -583,6 +592,10 @@ export function buildContentPack(raw: RawContent): ContentPack {
       const extra = (f.maxSlots as number) - (f.slotCount as number);
       if (!isNum(f.maxSlots) || extra < 0) problems.push(`floors[${i}].maxSlots: phải >= slotCount`);
       else if (!Array.isArray(f.expandCosts) || f.expandCosts.length !== extra || !f.expandCosts.every((c) => isNum(c) && c >= 0)) problems.push(`floors[${i}].expandCosts: cần ${extra} giá xu >= 0`);
+      const itemsOk = (v: unknown) => isObj(v) && Object.values(v).every((q) => isNum(q) && q > 0);
+      if (f.unlockItems !== undefined && !itemsOk(f.unlockItems)) problems.push(`floors[${i}].unlockItems: cần số lượng > 0`);
+      if (f.expandItems !== undefined && (!Array.isArray(f.expandItems) || f.expandItems.length !== extra || !f.expandItems.every(itemsOk))) problems.push(`floors[${i}].expandItems: cần ${extra} mục`);
+      if (f.nightSpeed !== undefined && (!isNum(f.nightSpeed) || f.nightSpeed < 0)) problems.push(`floors[${i}].nightSpeed: phải >= 0`);
       asArray(`floors[${i}].stars`, f.stars, problems).forEach((st, j) => checkFields(`floors[${i}].stars[${j}]`, st, ['level', 'coins'], [], problems));
       addUnique(floors, f as unknown as FloorDef, `floors[${i}]`, problems);
     }
