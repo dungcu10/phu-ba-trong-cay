@@ -13,11 +13,23 @@ const STRAW = 'base:item.cloud-strawberry';
 const JAM = 'base:good.jam.cloud-strawberry';
 const POT = 'base:machine.jam-pot';
 
+const WORKER = content.machines!.get(POT)!.worker;
+
 function game(level = 20) {
   const s = newGame(content, { level, coins: 1e6 }, 5);
   s.inventory[STRAW] = 40;
+  s.inventory[WORKER] = 20;
   return s;
 }
+
+test('mỗi mẻ tốn bọ thợ của máy (B6: chỗ tiêu bọ lặp lại); thiếu bọ thợ thì không làm được', () => {
+  const s = game();
+  s.inventory[WORKER] = 0;
+  assert.deepEqual(dispatch(content, s, { type: 'startJob', recipeId: R }, T0), { ok: false, error: 'not_enough_items' });
+  s.inventory[WORKER] = 3;
+  assert.ok(dispatch(content, s, { type: 'startJob', recipeId: R }, T0).ok);
+  assert.equal(s.inventory[WORKER], 3 - (content.recipes!.get(R)!.recipe.workerBugs ?? 1));
+});
 
 test('giá hàng chế biến không quá 1,6 lần nông sản đầu vào; mọi công thức có thật', () => {
   assert.ok(content.recipes && content.recipes.size >= 4);
@@ -86,7 +98,8 @@ test('kho đầy: thành phẩm chờ trong máy, không mất; có chỗ thì v
 
 test('nâng sao bằng bọ thợ + xu; mỗi sao nhanh hơn 5%', () => {
   const s = game();
-  const worker = content.machines!.get(POT)!.worker;
+  const worker = WORKER;
+  s.inventory[worker] = 0;
   assert.deepEqual(dispatch(content, s, { type: 'upgradeMachine', machineId: POT }, T0), { ok: false, error: 'not_enough_items' });
   s.inventory[worker] = 5;
   assert.ok(dispatch(content, s, { type: 'upgradeMachine', machineId: POT }, T0).ok);

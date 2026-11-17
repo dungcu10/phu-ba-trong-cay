@@ -481,6 +481,10 @@ export class Controller implements WorkshopActions, BirdActions, PanelActions, P
     this.openPanel(new SeedPanel(this.session, null, this));
   }
 
+  sellBugs(itemId: string, qty: number): void {
+    this.run({ type: 'sellBugs', itemId, qty });
+  }
+
   sell(itemId: string, qty: number): void {
     this.run({ type: 'sell', itemId, qty });
   }
@@ -567,6 +571,10 @@ export class Controller implements WorkshopActions, BirdActions, PanelActions, P
         }, 700);
         break;
       }
+      case 'bugsSold':
+        this.sfx.play('coin');
+        this.toasts.show(`Thương lái mua ${e.qty} ${content.items.get(e.itemId)?.name.vi ?? ''}: +${formatNumber(e.coins)} xu`, 'success', 2200);
+        break;
       case 'goodsMade':
         this.toasts.show(`Xưởng Bọ làm xong: ${content.items.get(e.itemId)?.name.vi ?? ''}`, 'success', 2200);
         break;

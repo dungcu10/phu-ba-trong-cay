@@ -14,11 +14,13 @@ import { clear, h, icon } from './dom.ts';
 import { formatDuration, formatNumber, formatPercent } from './text.ts';
 import { Panel } from './panel.ts';
 import { potIcon, favText, statLines, rarityChip, shake } from './potPanels.ts';
+import { bugTraderPrice } from '../systems/neighbors.ts';
 
 export interface PanelActions {
   /** Plants one pot, or every empty pot when slot is null. Returns how many were planted. */
   plant(slot: SlotRef | null, cropId: string): number;
   sell(itemId: string, qty: number): void;
+  sellBugs(itemId: string, qty: number): void;
   upgradePot(potInstanceId: string): void;
   placePot(slot: SlotRef, potInstanceId: string): void;
   openBench(slot: SlotRef): void;
@@ -153,9 +155,11 @@ export class StoragePanel extends Panel {
     const id = this.selected!;
     const item = content.items.get(id)!;
     const have = state.inventory[id] ?? 0;
-    const price = sellPrice(content, state, id, this.session.now());
+    // Chỉ thị 12 B6.3: bugs sell to a BOT trader at a low price (floor for spare bugs).
+    const trader = content.bugs.has(id) ? bugTraderPrice(content, id) : null;
+    const price = sellPrice(content, state, id, this.session.now()) ?? trader;
     const box = h('div', { class: 'scale' }, h('div', { class: 'pack-name' }, `${item.name.vi} ×${have}`));
-    if (price === null) {
+    if (price === null || have <= 0) {
       // Materials say what they are for (materials.json desc); bugs are pot-upgrade material.
       const desc = content.materials.get(id)?.desc?.vi ?? (content.bugs.has(id) ? `${item.name.vi} là nguyên liệu nâng cấp chậu ở Lò Gốm.` : null);
       box.append(h('p', { class: 'note' }, `${desc ?? 'Vật phẩm dùng trong game.'} Không bán được.`));
@@ -171,8 +175,8 @@ export class StoragePanel extends Panel {
     });
     box.append(
       h('div', { class: 'scale-row' }, qtyEl, slider, total),
-      h('p', { class: 'note' }, `${formatNumber(price)} xu mỗi cái hôm nay (giá đổi nhẹ mỗi ngày)`),
-      h('div', { class: 'candy-wrap' }, h('button', { class: 'candy gold', 'data-test': `sell-${id}`, onclick: () => this.actions.sell(id, this.qty) }, 'Bán')),
+      h('p', { class: 'note' }, trader !== null ? `Thương lái trả ${formatNumber(price)} xu mỗi con. Bọ còn dùng để nâng chậu và chạy Xưởng.` : `${formatNumber(price)} xu mỗi cái hôm nay (giá đổi nhẹ mỗi ngày)`),
+      h('div', { class: 'candy-wrap' }, h('button', { class: 'candy gold', 'data-test': `sell-${id}`, onclick: () => (trader !== null ? this.actions.sellBugs(id, this.qty) : this.actions.sell(id, this.qty)) }, trader !== null ? 'Bán cho thương lái' : 'Bán')),
     );
     return box;
   }

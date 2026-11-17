@@ -379,6 +379,8 @@ export interface MarketConfig {
   restockChance: number;
   /** Reference value of items the shop does not buy (bugs, materials). */
   values: Record<string, number>;
+  /** Chỉ thị 12 B6.3: BOT traders buy bugs at a low price (a floor for spare bugs). */
+  bugTrader?: { factor: number; rarityValue: Partial<Record<BugRarity, number>> };
 }
 
 export interface MaterialDef {
@@ -469,6 +471,8 @@ export interface RecipeDef {
   inputs: Record<string, number>;
   output: string;
   minutes: number;
+  /** B6: worker bugs of the machine each batch uses (default 1). */
+  workerBugs?: number;
 }
 
 /** Chỉ thị 10 § 3.5: a processed good (Hoa Sấy, Hũ Mứt, Chai Nước Ép…): sold like produce, kept in storage. */
@@ -909,6 +913,7 @@ export function buildContentPack(raw: RawContent): ContentPack {
         for (const id of Object.keys(r.inputs ?? {})) if (!items.has(id)) problems.push(`${r.id}: đầu vào "${id}" không tồn tại`);
         if (!items.has(r.output)) problems.push(`${r.id}: thành phẩm "${r.output}" không tồn tại`);
         if (!isNum(r.minutes) || r.minutes <= 0) problems.push(`${r.id}: minutes phải > 0`);
+        if (r.workerBugs !== undefined && (!Number.isInteger(r.workerBugs) || r.workerBugs < 0)) problems.push(`${r.id}: workerBugs phải là số nguyên ≥ 0`);
         // § 3.5: a good is worth at most valueCap × the produce that went in.
         const out = items.get(r.output);
         const inValue = Object.entries(r.inputs ?? {}).reduce((a, [id, q]) => a + (items.get(id)?.sellPrice ?? 0) * q, 0);

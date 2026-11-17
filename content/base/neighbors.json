@@ -751,6 +751,16 @@
       "base:bug.ladybird": 30,
       "base:mat.cloud-clay": 90,
       "base:mat.merit-seal": 420
+    },
+    "bugTrader": {
+      "_note": "Chỉ thị 12 B6.3 (luồng tính năng, trường mới): thương lái BOT mua bọ giá thấp — sàn cho bọ thừa. Giá = market.values (nếu có) hoặc rarityValue × factor. CTO chỉnh số bằng mô phỏng.",
+      "factor": 0.5,
+      "rarityValue": {
+        "common": 30,
+        "good": 80,
+        "rare": 250,
+        "epic": 800
+      }
     }
   }
 }

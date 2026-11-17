@@ -7,20 +7,21 @@
 // bug, Bọ Rùa Mây: one per growSecondsPerBug), for the share of time a crop is growing. The kind is
 // picked from the crop's own bug list with the same eligibility as on the player's plants.
 
-import type { BirdDef, BotDef, BugDef, ContentPack } from '../core/content.ts';
+import type { BirdDef, BotDef, BugDef, ContentPack, CropDef } from '../core/content.ts';
 import type { BotState, GameState } from '../core/state.ts';
 import { randomFor } from '../core/rng.ts';
 import { addFood, birdCanTake, cycleMs, foodAt, newBird, runBirds, type BirdEvent, type BirdOwner } from './birds.ts';
 import { isNight } from './growth.ts';
 import { localDay } from './missions.ts';
-import { botGarden, type VisitFloor } from './visit.ts';
+import { botCrops } from './visit.ts';
 
 const DAY_MS = 86_400_000;
 
 /** Generated gardens per neighbour and day (they change once a day). Small, bounded memo. */
-const gardens = new Map<string, VisitFloor[]>();
+const gardens = new Map<string, CropDef[][]>();
 
-function gardenOn(content: ContentPack, state: GameState, botId: string, at: number): VisitFloor[] {
+/** The crops on each floor of a neighbour's generated garden today (same keys as the visit view). */
+function gardenOn(content: ContentPack, state: GameState, botId: string, at: number): CropDef[][] {
   const day = localDay(content, at);
   // The generated garden depends on the seed, the neighbour, the day and the neighbour's level.
   const key = `${state.seed}:${botId}:${day}:${state.neighbors[botId]?.level ?? 0}`;
@@ -28,7 +29,7 @@ function gardenOn(content: ContentPack, state: GameState, botId: string, at: num
   if (!g) {
     if (gardens.size > 512) gardens.clear();
     const start = day * DAY_MS - content.missions.utcOffsetHours * 3_600_000;
-    g = botGarden(content, state, botId, start);
+    g = botCrops(content, state, botId, start);
     gardens.set(key, g);
   }
   return g;
@@ -57,10 +58,10 @@ function planFor(content: ContentPack, state: GameState, botId: string, level: n
       return { list, total: list.reduce((a, k) => a + k.w, 0) };
     };
     plan = {
-      spots: floor.pots
-        .map((p, slot) => ({ p, slot }))
-        .filter((x) => def.families.length === 0 || def.families.includes(x.p.crop.family))
-        .map((x) => ({ slot: x.slot, day: kinds(x.p.crop.bugs, false), night: kinds(x.p.crop.bugs, true) })),
+      spots: floor
+        .map((crop, slot) => ({ crop, slot }))
+        .filter((x) => def.families.length === 0 || def.families.includes(x.crop.family))
+        .map((x) => ({ slot: x.slot, day: kinds(x.crop.bugs, false), night: kinds(x.crop.bugs, true) })),
     };
   }
   plans.set(key, plan);
@@ -80,11 +81,22 @@ function mulberry(seed: number): () => number {
 }
 
 /** The neighbour's side of the bird rules. */
-export function botBirdOwner(content: ContentPack, state: GameState, bot: BotDef, s: BotState): BirdOwner {
+export function botBirdOwner(content: ContentPack, state: GameState, bot: BotDef, s: BotState, sessionAt = 0): BirdOwner {
   const share = content.birdRules?.bots?.growingShare ?? 0;
   const perBugMs = (content.bugList[0]?.growSecondsPerBug ?? 1800) * 1000;
   let pending: string | null = null;
   const memos = new Map<string, { day: number; plan: Plan | null }>();
+  // One keyed draw per bird and session seeds a small generator; the bird's looks in the session take
+  // the next numbers in time order (the same in a continuous run and after a long time away).
+  const gens = new Map<string, () => number>();
+  const gen = (birdId: string) => {
+    let g = gens.get(birdId);
+    if (!g) {
+      g = mulberry(Math.floor(randomFor(state.seed, 'botBird', bot.id, birdId, sessionAt) * 4294967296));
+      gens.set(birdId, g);
+    }
+    return g;
+  };
   const owner: BirdOwner = {
     birds: s.birds,
     seed: state.seed,
@@ -97,12 +109,10 @@ export function botBirdOwner(content: ContentPack, state: GameState, bot: BotDef
       }
       const plan = memo.plan;
       if (!plan || plan.spots.length === 0) return -1;
-      // One keyed draw per look; the pot and the kind come from a small generator seeded by it.
-      const u = randomFor(state.seed, 'botBird', bot.id, b.id, at);
+      const next = gen(b.id);
       // Bugs that landed since the bird's last look: fitting crops × rate × time × growing share.
       const chance = Math.min(1, (plan.spots.length * share * cycleMs(content, b.level)) / perBugMs);
-      if (u >= chance) return -1;
-      const next = mulberry(Math.floor(u * 4294967296));
+      if (next() >= chance) return -1;
       const spot = plan.spots[Math.floor(next() * plan.spots.length)]!;
       const kinds = isNight(content, at) ? spot.night : spot.day;
       if (kinds.total <= 0) return -1;
@@ -136,7 +146,38 @@ export function botBirdOwner(content: ContentPack, state: GameState, bot: BotDef
 /** Runs a neighbour's birds up to `at` (shared runBirds). */
 export function advanceBotBirds(content: ContentPack, state: GameState, bot: BotDef, s: BotState, at: number): BirdEvent[] {
   if (!content.birds || !content.birdRules || s.birds.length === 0) return [];
-  return runBirds(content, botBirdOwner(content, state, bot, s), at);
+  return runBirds(content, botBirdOwner(content, state, bot, s, at), at);
+}
+
+/** Pots of a neighbour's garden today, with each crop's bug kinds it may catch by day and by night. */
+const handPlans = new Map<string, Array<{ day: Kinds; night: Kinds }>>();
+
+function handPlan(content: ContentPack, state: GameState, botId: string, level: number, at: number): Array<{ day: Kinds; night: Kinds }> {
+  const key = `${state.seed}:${botId}:${localDay(content, at)}:${level}`;
+  let plan = handPlans.get(key);
+  if (!plan) {
+    if (handPlans.size > 1024) handPlans.clear();
+    const kinds = (bugs: Array<{ id: string; weight: number }>, night: boolean): Kinds => {
+      const list = bugs
+        .map((x) => ({ bug: content.bugs.get(x.id), w: x.weight }))
+        .filter((x): x is { bug: BugDef; w: number } => !!x.bug && x.bug.unlockLevel <= level && (!x.bug.nightOnly || night))
+        .map((x) => ({ id: x.bug.id, w: x.w }));
+      return { list, total: list.reduce((a, k) => a + k.w, 0) };
+    };
+    const byCrop = new Map<string, { day: Kinds; night: Kinds }>();
+    plan = gardenOn(content, state, botId, at).flatMap((f) =>
+      f.map((crop) => {
+        let k = byCrop.get(crop.id);
+        if (!k) {
+          k = { day: kinds(crop.bugs, false), night: kinds(crop.bugs, true) };
+          byCrop.set(crop.id, k);
+        }
+        return k;
+      }),
+    );
+    handPlans.set(key, plan);
+  }
+  return plan;
 }
 
 /**
@@ -149,8 +190,7 @@ export function botCatchBugs(content: ContentPack, state: GameState, bot: BotDef
   const share = content.birdRules?.bots?.growingShare ?? 0;
   const perBugMs = (content.bugList[0]?.growSecondsPerBug ?? 1800) * 1000;
   if (share <= 0 || to <= from) return 0;
-  const garden = gardenOn(content, state, bot.id, from);
-  const pots = garden.flatMap((f) => f.pots);
+  const pots = handPlan(content, state, bot.id, s.level, from);
   if (pots.length === 0) return 0;
   const landed = (pots.length * share * (to - from)) / perBugMs - birdTook;
   if (landed <= 0) return 0;
@@ -161,15 +201,11 @@ export function botCatchBugs(content: ContentPack, state: GameState, bot: BotDef
   const night = isNight(content, to);
   let caught = 0;
   for (let k = 0; k < n; k++) {
-    const crop = pots[Math.floor(next() * pots.length)]!.crop;
-    const kinds = crop.bugs.filter((x) => {
-      const b = content.bugs.get(x.id);
-      return !!b && b.unlockLevel <= s.level && (!b.nightOnly || night);
-    });
-    const total = kinds.reduce((a, x) => a + x.weight, 0);
-    if (total <= 0) continue;
-    let r = next() * total;
-    const id = (kinds.find((x) => (r -= x.weight) < 0) ?? kinds[kinds.length - 1]!).id;
+    const pot = pots[Math.floor(next() * pots.length)]!;
+    const kinds = night ? pot.night : pot.day;
+    if (kinds.total <= 0) continue;
+    let r = next() * kinds.total;
+    const id = (kinds.list.find((x) => (r -= x.w) < 0) ?? kinds.list[kinds.list.length - 1]!).id;
     s.bugs[id] = (s.bugs[id] ?? 0) + 1;
     caught += 1;
   }
@@ -177,8 +213,8 @@ export function botCatchBugs(content: ContentPack, state: GameState, bot: BotDef
 }
 
 /** How many of a floor's crops a bird species can work on (no family limit = every crop). */
-function fitting(def: BirdDef, floor: VisitFloor): number {
-  return def.families.length === 0 ? floor.pots.length : floor.pots.filter((p) => def.families.includes(p.crop.family)).length;
+function fitting(def: BirdDef, floor: CropDef[]): number {
+  return def.families.length === 0 ? floor.length : floor.filter((c) => def.families.includes(c.family)).length;
 }
 
 /**

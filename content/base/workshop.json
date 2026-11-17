@@ -14,7 +14,8 @@
             "base:item.cloud-rose": 3
           },
           "output": "base:good.dried-flowers.cloud-rose",
-          "minutes": 10
+          "minutes": 10,
+          "workerBugs": 1
         },
         {
           "id": "base:recipe.dryer.golden-gerbera",
@@ -22,7 +23,8 @@
             "base:item.golden-gerbera": 3
           },
           "output": "base:good.dried-flowers.golden-gerbera",
-          "minutes": 120
+          "minutes": 120,
+          "workerBugs": 1
         },
         {
           "id": "base:recipe.dryer.sun-sunflower",
@@ -30,7 +32,8 @@
             "base:item.sun-sunflower": 3
           },
           "output": "base:good.dried-flowers.sun-sunflower",
-          "minutes": 180
+          "minutes": 180,
+          "workerBugs": 1
         }
       ]
     },
@@ -48,7 +51,8 @@
             "base:item.cloud-strawberry": 4
           },
           "output": "base:good.jam.cloud-strawberry",
-          "minutes": 45
+          "minutes": 45,
+          "workerBugs": 1
         },
         {
           "id": "base:recipe.jam-pot.sky-apple",
@@ -56,7 +60,8 @@
             "base:item.sky-apple": 4
           },
           "output": "base:good.jam.sky-apple",
-          "minutes": 20
+          "minutes": 20,
+          "workerBugs": 1
         },
         {
           "id": "base:recipe.jam-pot.heaven-peach",
@@ -64,7 +69,8 @@
             "base:item.heaven-peach": 4
           },
           "output": "base:good.jam.heaven-peach",
-          "minutes": 240
+          "minutes": 240,
+          "workerBugs": 1
         }
       ]
     },
@@ -83,7 +89,8 @@
             "base:item.cherry-tomato": 1
           },
           "output": "base:good.juice.cloud-bokchoy",
-          "minutes": 8
+          "minutes": 8,
+          "workerBugs": 1
         },
         {
           "id": "base:recipe.juicer.sky-carrot",
@@ -92,7 +99,8 @@
             "base:item.cherry-tomato": 1
           },
           "output": "base:good.juice.sky-carrot",
-          "minutes": 30
+          "minutes": 30,
+          "workerBugs": 1
         }
       ]
     },
@@ -110,7 +118,8 @@
             "base:mat.cloud-stone": 3
           },
           "output": "base:mat.cut-gem",
-          "minutes": 60
+          "minutes": 60,
+          "workerBugs": 1
         },
         {
           "id": "base:recipe.gem-grinder.jade",
@@ -119,7 +128,8 @@
             "base:mat.cloud-stone": 1
           },
           "output": "base:mat.cut-gem",
-          "minutes": 40
+          "minutes": 40,
+          "workerBugs": 1
         },
         {
           "id": "base:recipe.gem-grinder.crescent-flower",
@@ -128,7 +138,8 @@
             "base:item.crescent-flower": 1
           },
           "output": "base:mat.cut-gem",
-          "minutes": 30
+          "minutes": 30,
+          "workerBugs": 1
         },
         {
           "id": "base:recipe.gem-grinder.shooting-star-grass",
@@ -137,7 +148,8 @@
             "base:item.shooting-star-grass": 1
           },
           "output": "base:mat.cut-gem",
-          "minutes": 30
+          "minutes": 30,
+          "workerBugs": 1
         }
       ]
     }

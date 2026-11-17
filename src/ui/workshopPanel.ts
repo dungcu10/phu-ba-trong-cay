@@ -4,7 +4,7 @@
 // (chỉ thị 11: the village house will call the same function).
 
 import type { GameSession } from '../app/session.ts';
-import { machineState, nextSlotCost, nextStarCost, jobMs } from '../systems/workshop.ts';
+import { jobInputs, machineState, nextSlotCost, nextStarCost, jobMs } from '../systems/workshop.ts';
 import { itemIcon } from './icons.ts';
 import { clear, h } from './dom.ts';
 import { Panel } from './panel.ts';
@@ -46,14 +46,15 @@ export class WorkshopPanel extends Panel {
       if (!busy) worker.classList.add('idle');
       const recipes = h('div', { class: 'recipes' });
       for (const r of machine.recipes) {
-        const enough = Object.entries(r.inputs).every(([id, q]) => (state.inventory[id] ?? 0) >= q);
+        const take = jobInputs(machine, r);
+        const enough = Object.entries(take).every(([id, q]) => (state.inventory[id] ?? 0) >= q);
         const ok = enough && m.queue.length < m.slots;
         const btn = h('button', { class: `candy ${ok ? 'primary' : 'blocked'} small`, 'data-test': `start-${r.id}`, onclick: () => (ok ? this.actions.startJob(r.id) : shake(btn)) }, 'Làm');
         recipes.append(
           h(
             'div',
             { class: 'recipe' },
-            h('span', { class: 'recipe-in' }, ...Object.entries(r.inputs).map(([id, q]) => h('span', { class: `order-line${(state.inventory[id] ?? 0) >= q ? ' done' : ''}` }, itemIcon(content, id, 28), h('span', { class: 'qty-tag' }, `${Math.min(state.inventory[id] ?? 0, q)}/${q}`)))),
+            h('span', { class: 'recipe-in' }, ...Object.entries(take).map(([id, q]) => h('span', { class: `order-line${(state.inventory[id] ?? 0) >= q ? ' done' : ''}` }, itemIcon(content, id, 28), h('span', { class: 'qty-tag' }, `${Math.min(state.inventory[id] ?? 0, q)}/${q}`)))),
             h('span', { class: 'recipe-arrow' }, '→'),
             h('span', { class: 'recipe-out', title: content.items.get(r.output)?.name.vi ?? '' }, itemIcon(content, r.output, 34), h('span', { class: 'pack-info' }, formatMinutes(jobMs(content, r, m.stars)))),
             btn,

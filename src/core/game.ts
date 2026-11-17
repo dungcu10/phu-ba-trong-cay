@@ -15,7 +15,7 @@ import { slotBonus } from '../systems/modifiers.ts';
 import { createFloorState } from './state.ts';
 import { askNeighborsHelp, canDeliver, flightFor, refillOrders, stillNeeded, type OrderWorldEvent } from '../systems/orders.ts';
 import { coinGiftAmount, nextMilestone, recordHarvest, rollGift, rollMutation, type Gift } from '../systems/surprises.ts';
-import { playerPrice, simulateNeighbors, snapshotRanks, type NeighborEvent } from '../systems/neighbors.ts';
+import { playerPrice, sellBugs, simulateNeighbors, snapshotRanks, type NeighborEvent } from '../systems/neighbors.ts';
 import { expandCost, expandItems, nextStar } from '../systems/floors.ts';
 import { allMissionsClaimed, ensureMissions, localDay, missionDef, recordMissions } from '../systems/missions.ts';
 import { ensureQuestPeriods, questActive, questClaims, questReward, questView, recordQuests } from '../systems/quests.ts';
@@ -77,7 +77,9 @@ export type Command =
   /** Chỉ thị 10 § 3.5: Xưởng Bọ. */
   | { type: 'startJob'; recipeId: string }
   | { type: 'upgradeMachine'; machineId: string }
-  | { type: 'buyMachineSlot'; machineId: string };
+  | { type: 'buyMachineSlot'; machineId: string }
+  /** Chỉ thị 12 B6.3: sell spare bugs to a BOT trader at a low price. */
+  | { type: 'sellBugs'; itemId: string; qty: number };
 
 export type GameEvent =
   | { type: 'planted'; slot: SlotRef; cropId: string; cost: number }
@@ -94,6 +96,7 @@ export type GameEvent =
   | { type: 'orderDelivered'; slot: number; coins: number; xp: number; gems: number; customer: string; rare: boolean }
   | { type: 'orderSkipped'; slot: number }
   | Exclude<OrderWorldEvent, { type: 'levelUp' }>
+  | { type: 'bugsSold'; itemId: string; qty: number; coins: number }
   | { type: 'neighborsChipped'; slot: number; help: Array<{ botId: string; itemId: string; qty: number }> }
   | { type: 'journalClaimed'; cropId: string; gems: number; harvests: number }
   | { type: 'itemListed'; listingId: number; itemId: string; qty: number; price: number }
@@ -260,6 +263,10 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
       return birdResult(placeBird(content, state, cmd.birdId, cmd.floor, cmd.branch), []);
     case 'buyMillet':
       return birdResult(buyMillet(content, state, cmd.qty), []);
+    case 'sellBugs': {
+      const r = sellBugs(content, state, cmd.itemId, cmd.qty);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'bugsSold', itemId: cmd.itemId, qty: cmd.qty, coins: r.coins }] };
+    }
     case 'startJob':
     case 'upgradeMachine':
     case 'buyMachineSlot': {

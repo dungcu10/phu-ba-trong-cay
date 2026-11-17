@@ -5,8 +5,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { simulateNeighbors } from '../src/systems/neighbors.ts';
+import { botCrops, botGarden } from '../src/systems/visit.ts';
 import { simulateProgression } from '../tools/progression.ts';
-import { loadBase, MIN, newGame, T0 } from './helpers.ts';
+import { HOUR, loadBase, MIN, newGame, T0 } from './helpers.ts';
 
 const content = await loadBase();
 const DAY = 86_400_000;
@@ -55,6 +56,18 @@ test('BOT chỉ thuê loài chim hợp họ cây trong vườn: chim nào cũng 
   simulateNeighbors(content, s, T0 + 7 * DAY);
   for (const [id, b] of Object.entries(s.neighbors)) {
     for (const bird of b.birds) assert.ok(bird.caught > 0, `${id}: ${bird.species} bắt 0 bọ`);
+  }
+});
+
+test('vườn rút gọn của BOT (chỉ cây) trùng đúng cây của vườn khi người chơi ghé thăm', () => {
+  const s = newGame(content, { level: 20 }, 13);
+  simulateNeighbors(content, s, T0 + 3 * DAY);
+  for (const id of Object.keys(s.neighbors)) {
+    for (const at of [T0, T0 + 2 * DAY + 5 * HOUR]) {
+      const full = botGarden(content, s, id, at).map((f) => f.pots.map((p) => p.crop.id));
+      const light = botCrops(content, s, id, at).map((f) => f.map((c) => c.id));
+      assert.deepEqual(light, full, id);
+    }
   }
 });
 
