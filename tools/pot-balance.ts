@@ -53,5 +53,20 @@ const parts = [
     return [`## ${d.name.vi}`, '', d.description?.vi ?? '', '', `Kỹ năng: ${d.skills.map((s) => `cấp ${s.level} **${s.name.vi}** — ${s.desc.vi}`).join('; ')}`, '', table(d), ''];
   }),
 ];
+// Directive 05: the 50 signature pots (shop), one row each. Full level tables follow the same
+// growth rules as above; see tools/signature-balance.ts for how they are solved.
+const RARITY: Record<string, string> = { common: 'Thường', good: 'Tốt', rare: 'Hiếm', epic: 'Sử Thi', legendary: 'Huyền Thoại' };
+const sig = content.potList.filter((d) => d.id.startsWith('base:pot.sig-'));
+const toTen = (d: PotDef) => d.levels.slice(1, 10).reduce((a, l) => a + (l.upgradeCost?.coins ?? 0), 0);
+parts.push(
+  '## 50 chậu đặc trưng (chỉ thị 05)',
+  '',
+  `Đất Nung (thường) để so: cấp 10 = ${powerScore(content.pots.get(LINES[0]!)!, 10)}, cấp 25 = ${powerScore(content.pots.get(LINES[0]!)!, 25)}, cấp 50 = ${powerScore(content.pots.get(LINES[0]!)!, 50)}. Mở tới cấp 10 trong bản này.`,
+  '',
+  '| # | Chậu | Nhóm | Độ hiếm | Hướng | Giá | Cấp mở | Xu nâng 1→10 | Cấp 1 | Cấp 10 | Cấp 25 | Cấp 50 | Kỹ năng (10 / 25 / 50) |',
+  '|---|---|---|---|---|---|---|---|---|---|---|---|---|',
+  ...sig.map((d, i) => `| ${i + 1} | ${d.name.vi} | ${d.theme ?? ''} | ${RARITY[d.rarity] ?? d.rarity} | ${STAT[d.focus ?? 'speed']} | ${(d.price ?? 0).toLocaleString('vi')} | ${d.unlockLevel} | ${toTen(d).toLocaleString('vi')} | ${[1, 10, 25, 50].map((l) => powerScore(d, l)).join(' | ')} | ${d.skills.map((s) => `${s.name.vi}: ${s.desc.vi}`).join(' / ')} |`),
+  '',
+);
 await writeFile(join(import.meta.dirname, '..', 'docs', 'POT_BALANCE.md'), parts.join('\n'));
 console.log('đã ghi docs/POT_BALANCE.md');

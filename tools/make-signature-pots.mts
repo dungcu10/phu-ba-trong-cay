@@ -2,14 +2,17 @@
 // - Old catalog pots base:pot.NN-… keep their ids and gain "retired": true (hidden from the shop,
 //   still loadable, owned ones keep working).
 // - New base:pot.sig-NN-<slug> take name and theme (shop group) from tools/potgen/lines/signature_all.json,
-//   sprite "pots/sig/NN", and copy the economy fields of old pot NN exactly (no new numbers).
+//   sprite "pots/sig/NN", and copy rarity, price, unlock level, favoured family, set and group of old pot NN.
+// - Directive 05 (CTO): growth, skills and focus come from tools/signature-balance.ts (replaces the
+//   inherited levelRule, under which a legendary pot at level 50 was weaker than a common one).
 // Re-running is idempotent. Usage: npx tsx tools/make-signature-pots.mts
 
 import { readFileSync, writeFileSync } from 'node:fs';
+import { signatureEconomy, type Tier } from './signature-balance.ts';
 
 const POTS = 'content/base/pots.json';
 const LINE = 'tools/potgen/lines/signature_all.json';
-const INHERIT = ['rarity', 'price', 'unlockLevel', 'favoredFamily', 'levelRule', 'set', 'group'] as const;
+const INHERIT = ['rarity', 'price', 'unlockLevel', 'favoredFamily', 'set', 'group'] as const;
 
 type Pot = Record<string, unknown> & { id: string; sprite: string };
 const pots = JSON.parse(readFileSync(POTS, 'utf8')) as Pot[];
@@ -42,6 +45,11 @@ const sig: Pot[] = line.pots.map((s) => {
   if (!src) throw new Error(`thiếu chậu cũ số ${nn}`);
   const p: Pot = { id: `base:pot.sig-${nn}-${slug(s.name)}`, name: { vi: s.name }, sprite: `pots/sig/${nn}`, theme: s.group } as Pot;
   for (const k of INHERIT) p[k] = structuredClone(src[k]);
+  const eco = signatureEconomy(s.id, s.group, src.rarity as Tier);
+  p.focus = eco.focus;
+  p.source = eco.source;
+  p.growth = eco.growth;
+  p.skills = eco.skills;
   p.art = { frames: `pots/sig/${nn}/50`, levels: '50 (chỉ có ảnh mốc cấp 50)' };
   return p;
 });

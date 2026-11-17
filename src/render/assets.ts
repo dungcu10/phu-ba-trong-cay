@@ -77,11 +77,31 @@ export class Art {
     readonly sky: Texture,
   ) {}
 
-  static async load(): Promise<Art> {
-    const [sky, ...textures] = await Promise.all([Assets.load<Texture>(skyJpg), ...SHEETS.map((s) => Assets.load<Texture>(atlasUrls[s]))]);
+  /**
+   * Loads the art. Directive 05 step 3: atlases in `skip` are left out (saves GPU memory, e.g. the
+   * 29.5 MB retired catalog pots when the save has none); their frames then fall back like any
+   * missing art, and loadSheet() can bring them in later.
+   */
+  static async load(skip: readonly SheetName[] = []): Promise<Art> {
+    const sheets = SHEETS.filter((s) => !skip.includes(s));
+    const [sky, ...textures] = await Promise.all([Assets.load<Texture>(skyJpg), ...sheets.map((s) => Assets.load<Texture>(atlasUrls[s]))]);
     const frames: Record<string, Texture> = {};
-    for (let i = 0; i < SHEETS.length; i++) Object.assign(frames, await new Spritesheet(textures[i]!, atlasData[SHEETS[i]!]).parse());
-    return new Art(frames, sky);
+    for (let i = 0; i < sheets.length; i++) Object.assign(frames, await new Spritesheet(textures[i]!, atlasData[sheets[i]!]).parse());
+    const art = new Art(frames, sky);
+    for (const s of SHEETS) if (!sheets.includes(s)) art.notLoaded.add(s);
+    return art;
+  }
+
+  /** Atlases left out at load time (directive 05 step 3). */
+  readonly notLoaded = new Set<SheetName>();
+
+  /** Loads an atlas that was skipped at start. Returns true if it was not loaded before. */
+  async loadSheet(sheet: SheetName): Promise<boolean> {
+    if (!this.notLoaded.has(sheet)) return false;
+    this.notLoaded.delete(sheet);
+    const tex = await Assets.load<Texture>(atlasUrls[sheet]);
+    Object.assign(this.frames, await new Spritesheet(tex, atlasData[sheet]).parse());
+    return true;
   }
 
   /** GPU memory of the loaded art, per atlas (RGBA8, no mipmaps), in bytes. */

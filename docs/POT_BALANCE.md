@@ -193,3 +193,60 @@ Kỹ năng: cấp 10 **Ánh Trăng Rằm** — Cơ hội ra quả Biến Dị tr
 | 50 🔒 | Tối Thượng | 40% | 22% | 25% | 8% | 112.479 | 33 Bọ Rùa Mây, 50 Hạt Sen Trăng, 9 Đất Sét Mây | 27 | **Sen Trăng Vĩnh Cửu Tối Thượng** (mới) | **Hằng Nga Ban Phúc** | 0.744 |
 
 Tổng chi phí cấp 1→50: **773.770 xu**, 547 Bọ Rùa Mây, 494 Hạt Sen Trăng, 166 Đất Sét Mây.
+
+## 50 chậu đặc trưng (chỉ thị 05)
+
+Đất Nung (thường) để so: cấp 10 = 0.298, cấp 25 = 0.481, cấp 50 = 0.826. Mở tới cấp 10 trong bản này.
+
+| # | Chậu | Nhóm | Độ hiếm | Hướng | Giá | Cấp mở | Xu nâng 1→10 | Cấp 1 | Cấp 10 | Cấp 25 | Cấp 50 | Kỹ năng (10 / 25 / 50) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | Bánh Kem Sinh Nhật | Đồ ăn | Hiếm | Sản lượng | 5.000 | 12 | 4.197 | 0.123 | 0.318 | 0.573 | 0.95 | Bếp Ấm: Sản lượng +3%. / Mẻ Bánh Đôi: 4% cơ hội thu hoạch gấp đôi. / Tiệc Mây: Sản lượng +6%. |
+| 2 | Trà Sữa Trân Châu | Đồ ăn | Hiếm | Sản lượng | 5.000 | 12 | 4.197 | 0.124 | 0.319 | 0.574 | 0.95 | Bếp Ấm: Sản lượng +3%. / Mẻ Bánh Đôi: 4% cơ hội thu hoạch gấp đôi. / Tiệc Mây: Sản lượng +6%. |
+| 3 | Kem Ốc Quế | Đồ ăn | Hiếm | Sản lượng | 5.000 | 12 | 4.197 | 0.123 | 0.318 | 0.573 | 0.95 | Bếp Ấm: Sản lượng +3%. / Mẻ Bánh Đôi: 4% cơ hội thu hoạch gấp đôi. / Tiệc Mây: Sản lượng +6%. |
+| 4 | Donut Cầu Vồng | Đồ ăn | Hiếm | Sản lượng | 5.000 | 12 | 4.197 | 0.124 | 0.319 | 0.574 | 0.95 | Bếp Ấm: Sản lượng +3%. / Mẻ Bánh Đôi: 4% cơ hội thu hoạch gấp đôi. / Tiệc Mây: Sản lượng +6%. |
+| 5 | Bánh Bao | Đồ ăn | Hiếm | Sản lượng | 5.000 | 12 | 4.197 | 0.123 | 0.318 | 0.573 | 0.95 | Bếp Ấm: Sản lượng +3%. / Mẻ Bánh Đôi: 4% cơ hội thu hoạch gấp đôi. / Tiệc Mây: Sản lượng +6%. |
+| 6 | Dưa Hấu | Đồ ăn | Hiếm | Sản lượng | 5.000 | 12 | 4.197 | 0.124 | 0.319 | 0.574 | 0.95 | Bếp Ấm: Sản lượng +3%. / Mẻ Bánh Đôi: 4% cơ hội thu hoạch gấp đôi. / Tiệc Mây: Sản lượng +6%. |
+| 7 | Macaron | Đồ ăn | Hiếm | Sản lượng | 5.000 | 12 | 4.197 | 0.123 | 0.318 | 0.573 | 0.95 | Bếp Ấm: Sản lượng +3%. / Mẻ Bánh Đôi: 4% cơ hội thu hoạch gấp đôi. / Tiệc Mây: Sản lượng +6%. |
+| 8 | Bánh Flan | Đồ ăn | Hiếm | Sản lượng | 5.000 | 12 | 4.197 | 0.124 | 0.319 | 0.574 | 0.95 | Bếp Ấm: Sản lượng +3%. / Mẻ Bánh Đôi: 4% cơ hội thu hoạch gấp đôi. / Tiệc Mây: Sản lượng +6%. |
+| 9 | Sushi Cá Hồi | Đồ ăn | Hiếm | Sản lượng | 5.000 | 12 | 4.197 | 0.123 | 0.318 | 0.573 | 0.95 | Bếp Ấm: Sản lượng +3%. / Mẻ Bánh Đôi: 4% cơ hội thu hoạch gấp đôi. / Tiệc Mây: Sản lượng +6%. |
+| 10 | Cupcake | Đồ ăn | Hiếm | Sản lượng | 5.000 | 12 | 4.197 | 0.124 | 0.319 | 0.574 | 0.95 | Bếp Ấm: Sản lượng +3%. / Mẻ Bánh Đôi: 4% cơ hội thu hoạch gấp đôi. / Tiệc Mây: Sản lượng +6%. |
+| 11 | Phi Hành Gia Mèo | Linh vật | Hiếm | Kinh nghiệm | 5.000 | 12 | 4.197 | 0.123 | 0.317 | 0.572 | 0.949 | Bạn Nhỏ Chăm Chỉ: Kinh nghiệm +5%. / Bùa May: May mắn +8%. / Tri Kỷ: Kinh nghiệm +10%. |
+| 12 | Cáo Chín Đuôi | Linh vật | Hiếm | Kinh nghiệm | 5.000 | 12 | 4.197 | 0.123 | 0.318 | 0.575 | 0.95 | Bạn Nhỏ Chăm Chỉ: Kinh nghiệm +5%. / Bùa May: May mắn +8%. / Tri Kỷ: Kinh nghiệm +10%. |
+| 13 | Thỏ Ngọc | Linh vật | Hiếm | Kinh nghiệm | 5.000 | 12 | 4.197 | 0.123 | 0.317 | 0.572 | 0.949 | Bạn Nhỏ Chăm Chỉ: Kinh nghiệm +5%. / Bùa May: May mắn +8%. / Tri Kỷ: Kinh nghiệm +10%. |
+| 14 | Rồng Con | Linh vật | Hiếm | Kinh nghiệm | 5.000 | 12 | 4.197 | 0.123 | 0.318 | 0.575 | 0.95 | Bạn Nhỏ Chăm Chỉ: Kinh nghiệm +5%. / Bùa May: May mắn +8%. / Tri Kỷ: Kinh nghiệm +10%. |
+| 15 | Cá Koi | Linh vật | Hiếm | Kinh nghiệm | 5.000 | 12 | 4.197 | 0.123 | 0.317 | 0.572 | 0.949 | Bạn Nhỏ Chăm Chỉ: Kinh nghiệm +5%. / Bùa May: May mắn +8%. / Tri Kỷ: Kinh nghiệm +10%. |
+| 16 | Gấu Trúc | Linh vật | Sử Thi | Kinh nghiệm | 12.000 | 16 | 6.715 | 0.139 | 0.359 | 0.646 | 1.07 | Bạn Nhỏ Chăm Chỉ: Kinh nghiệm +5,6%. / Bùa May: May mắn +9%. / Tri Kỷ: Kinh nghiệm +11,2%. |
+| 17 | Chim Cánh Cụt | Linh vật | Sử Thi | Kinh nghiệm | 12.000 | 16 | 6.715 | 0.139 | 0.358 | 0.646 | 1.07 | Bạn Nhỏ Chăm Chỉ: Kinh nghiệm +5,6%. / Bùa May: May mắn +9%. / Tri Kỷ: Kinh nghiệm +11,2%. |
+| 18 | Ếch Lá Sen | Linh vật | Sử Thi | Kinh nghiệm | 12.000 | 16 | 6.715 | 0.139 | 0.359 | 0.646 | 1.07 | Bạn Nhỏ Chăm Chỉ: Kinh nghiệm +5,6%. / Bùa May: May mắn +9%. / Tri Kỷ: Kinh nghiệm +11,2%. |
+| 19 | Cú Mèo | Linh vật | Sử Thi | Kinh nghiệm | 12.000 | 16 | 6.715 | 0.139 | 0.358 | 0.646 | 1.07 | Bạn Nhỏ Chăm Chỉ: Kinh nghiệm +5,6%. / Bùa May: May mắn +9%. / Tri Kỷ: Kinh nghiệm +11,2%. |
+| 20 | Heo Đất | Linh vật | Sử Thi | Kinh nghiệm | 12.000 | 16 | 6.715 | 0.139 | 0.359 | 0.646 | 1.07 | Bạn Nhỏ Chăm Chỉ: Kinh nghiệm +5,6%. / Bùa May: May mắn +9%. / Tri Kỷ: Kinh nghiệm +11,2%. |
+| 21 | Nấm Rừng Đỏ | Thiên nhiên | Sử Thi | Lớn nhanh | 12.000 | 16 | 6.715 | 0.138 | 0.358 | 0.646 | 1.07 | Sương Sớm: Chăm sóc +11,2%. / Nắng Non: Lớn nhanh +4,5%. / Rừng Thiêng: Lớn nhanh +6,7%. |
+| 22 | Vỏ Sò Ngọc Trai | Thiên nhiên | Sử Thi | Lớn nhanh | 12.000 | 16 | 6.715 | 0.139 | 0.359 | 0.646 | 1.07 | Sương Sớm: Chăm sóc +11,2%. / Nắng Non: Lớn nhanh +4,5%. / Rừng Thiêng: Lớn nhanh +6,7%. |
+| 23 | Tổ Ong | Thiên nhiên | Sử Thi | Lớn nhanh | 12.000 | 16 | 6.715 | 0.138 | 0.358 | 0.646 | 1.07 | Sương Sớm: Chăm sóc +11,2%. / Nắng Non: Lớn nhanh +4,5%. / Rừng Thiêng: Lớn nhanh +6,7%. |
+| 24 | Hang Pha Lê | Thiên nhiên | Sử Thi | Lớn nhanh | 12.000 | 16 | 6.715 | 0.139 | 0.359 | 0.646 | 1.07 | Sương Sớm: Chăm sóc +11,2%. / Nắng Non: Lớn nhanh +4,5%. / Rừng Thiêng: Lớn nhanh +6,7%. |
+| 25 | Đám Mây Cầu Vồng | Thiên nhiên | Sử Thi | Lớn nhanh | 12.000 | 16 | 6.715 | 0.138 | 0.358 | 0.646 | 1.07 | Sương Sớm: Chăm sóc +11,2%. / Nắng Non: Lớn nhanh +4,5%. / Rừng Thiêng: Lớn nhanh +6,7%. |
+| 26 | Hoa Sen | Thiên nhiên | Sử Thi | Lớn nhanh | 12.000 | 16 | 6.715 | 0.139 | 0.359 | 0.646 | 1.07 | Sương Sớm: Chăm sóc +11,2%. / Nắng Non: Lớn nhanh +4,5%. / Rừng Thiêng: Lớn nhanh +6,7%. |
+| 27 | Bí Ngô | Thiên nhiên | Sử Thi | Lớn nhanh | 12.000 | 16 | 6.715 | 0.138 | 0.358 | 0.646 | 1.07 | Sương Sớm: Chăm sóc +11,2%. / Nắng Non: Lớn nhanh +4,5%. / Rừng Thiêng: Lớn nhanh +6,7%. |
+| 28 | Quả Thông | Thiên nhiên | Sử Thi | Lớn nhanh | 12.000 | 16 | 6.715 | 0.139 | 0.359 | 0.646 | 1.07 | Sương Sớm: Chăm sóc +11,2%. / Nắng Non: Lớn nhanh +4,5%. / Rừng Thiêng: Lớn nhanh +6,7%. |
+| 29 | Bong Bóng Xà Phòng | Thiên nhiên | Sử Thi | Lớn nhanh | 12.000 | 16 | 6.715 | 0.138 | 0.358 | 0.646 | 1.07 | Sương Sớm: Chăm sóc +11,2%. / Nắng Non: Lớn nhanh +4,5%. / Rừng Thiêng: Lớn nhanh +6,7%. |
+| 30 | Gốc Cây Rêu | Thiên nhiên | Sử Thi | Lớn nhanh | 12.000 | 16 | 6.715 | 0.139 | 0.359 | 0.646 | 1.07 | Sương Sớm: Chăm sóc +11,2%. / Nắng Non: Lớn nhanh +4,5%. / Rừng Thiêng: Lớn nhanh +6,7%. |
+| 31 | Gốm Sứ Thanh Hoa | Gốm Á Đông | Huyền Thoại | Chăm sóc | 25.000 | 20 | 10.071 | 0.155 | 0.402 | 0.723 | 1.2 | Men Hương: Hút bọ +12,5%. / Lò Cổ: Chăm sóc +16,3%. / Báu Vật Gia Truyền: 7,5% cơ hội thu hoạch gấp đôi. |
+| 32 | Sơn Mài Son Vàng | Gốm Á Đông | Huyền Thoại | Chăm sóc | 25.000 | 20 | 10.071 | 0.155 | 0.402 | 0.723 | 1.2 | Men Hương: Hút bọ +12,5%. / Lò Cổ: Chăm sóc +16,3%. / Báu Vật Gia Truyền: 7,5% cơ hội thu hoạch gấp đôi. |
+| 33 | Đèn Lồng Hội An | Gốm Á Đông | Huyền Thoại | Chăm sóc | 25.000 | 20 | 10.071 | 0.155 | 0.402 | 0.723 | 1.2 | Men Hương: Hút bọ +12,5%. / Lò Cổ: Chăm sóc +16,3%. / Báu Vật Gia Truyền: 7,5% cơ hội thu hoạch gấp đôi. |
+| 34 | Trống Đồng | Gốm Á Đông | Huyền Thoại | Chăm sóc | 25.000 | 20 | 10.071 | 0.155 | 0.402 | 0.723 | 1.2 | Men Hương: Hút bọ +12,5%. / Lò Cổ: Chăm sóc +16,3%. / Báu Vật Gia Truyền: 7,5% cơ hội thu hoạch gấp đôi. |
+| 35 | Rổ Tre Nón Lá | Gốm Á Đông | Huyền Thoại | Chăm sóc | 25.000 | 20 | 10.071 | 0.155 | 0.402 | 0.723 | 1.2 | Men Hương: Hút bọ +12,5%. / Lò Cổ: Chăm sóc +16,3%. / Báu Vật Gia Truyền: 7,5% cơ hội thu hoạch gấp đôi. |
+| 36 | Ấm Tử Sa | Gốm Á Đông | Huyền Thoại | Chăm sóc | 25.000 | 20 | 10.071 | 0.155 | 0.402 | 0.723 | 1.2 | Men Hương: Hút bọ +12,5%. / Lò Cổ: Chăm sóc +16,3%. / Báu Vật Gia Truyền: 7,5% cơ hội thu hoạch gấp đôi. |
+| 37 | Hũ Men Nâu | Gốm Á Đông | Huyền Thoại | Chăm sóc | 25.000 | 20 | 10.071 | 0.155 | 0.402 | 0.723 | 1.2 | Men Hương: Hút bọ +12,5%. / Lò Cổ: Chăm sóc +16,3%. / Báu Vật Gia Truyền: 7,5% cơ hội thu hoạch gấp đôi. |
+| 38 | Bình Men Ngọc | Gốm Á Đông | Huyền Thoại | Chăm sóc | 25.000 | 20 | 10.071 | 0.155 | 0.402 | 0.723 | 1.2 | Men Hương: Hút bọ +12,5%. / Lò Cổ: Chăm sóc +16,3%. / Báu Vật Gia Truyền: 7,5% cơ hội thu hoạch gấp đôi. |
+| 39 | Bát Tràng Men Lam | Gốm Á Đông | Huyền Thoại | Chăm sóc | 25.000 | 20 | 10.071 | 0.155 | 0.402 | 0.723 | 1.2 | Men Hương: Hút bọ +12,5%. / Lò Cổ: Chăm sóc +16,3%. / Báu Vật Gia Truyền: 7,5% cơ hội thu hoạch gấp đôi. |
+| 40 | Bình Hồ Lô Đỏ | Gốm Á Đông | Huyền Thoại | Chăm sóc | 25.000 | 20 | 10.071 | 0.155 | 0.402 | 0.723 | 1.2 | Men Hương: Hút bọ +12,5%. / Lò Cổ: Chăm sóc +16,3%. / Báu Vật Gia Truyền: 7,5% cơ hội thu hoạch gấp đôi. |
+| 41 | Phượng Hoàng Lửa | Thần thoại | Huyền Thoại | May mắn | 25.000 | 20 | 10.071 | 0.15 | 0.389 | 0.7 | 1.2 | Phúc Khí: May mắn +7,5%. / Thần Ân: 5% cơ hội thu hoạch gấp đôi. / Thiên Mệnh: 11,2% cơ hội thu hoạch gấp đôi. |
+| 42 | Kỳ Lân | Thần thoại | Huyền Thoại | May mắn | 25.000 | 20 | 10.071 | 0.15 | 0.389 | 0.702 | 1.201 | Phúc Khí: May mắn +7,5%. / Thần Ân: 5% cơ hội thu hoạch gấp đôi. / Thiên Mệnh: 11,2% cơ hội thu hoạch gấp đôi. |
+| 43 | Thiên Nga Ngọc | Thần thoại | Huyền Thoại | May mắn | 25.000 | 20 | 10.071 | 0.15 | 0.389 | 0.7 | 1.2 | Phúc Khí: May mắn +7,5%. / Thần Ân: 5% cơ hội thu hoạch gấp đôi. / Thiên Mệnh: 11,2% cơ hội thu hoạch gấp đôi. |
+| 44 | Rồng Ngọc | Thần thoại | Huyền Thoại | May mắn | 25.000 | 20 | 10.071 | 0.15 | 0.389 | 0.702 | 1.201 | Phúc Khí: May mắn +7,5%. / Thần Ân: 5% cơ hội thu hoạch gấp đôi. / Thiên Mệnh: 11,2% cơ hội thu hoạch gấp đôi. |
+| 45 | Long Cung | Thần thoại | Huyền Thoại | May mắn | 25.000 | 20 | 10.071 | 0.15 | 0.389 | 0.7 | 1.2 | Phúc Khí: May mắn +7,5%. / Thần Ân: 5% cơ hội thu hoạch gấp đôi. / Thiên Mệnh: 11,2% cơ hội thu hoạch gấp đôi. |
+| 46 | Cung Trăng | Thần thoại | Huyền Thoại | May mắn | 25.000 | 20 | 10.071 | 0.15 | 0.389 | 0.702 | 1.201 | Phúc Khí: May mắn +7,5%. / Thần Ân: 5% cơ hội thu hoạch gấp đôi. / Thiên Mệnh: 11,2% cơ hội thu hoạch gấp đôi. |
+| 47 | Đèn Thần | Thần thoại | Huyền Thoại | May mắn | 25.000 | 20 | 10.071 | 0.15 | 0.389 | 0.7 | 1.2 | Phúc Khí: May mắn +7,5%. / Thần Ân: 5% cơ hội thu hoạch gấp đôi. / Thiên Mệnh: 11,2% cơ hội thu hoạch gấp đôi. |
+| 48 | Ngai Vàng Thiên Giới | Thần thoại | Huyền Thoại | May mắn | 25.000 | 20 | 10.071 | 0.15 | 0.389 | 0.702 | 1.201 | Phúc Khí: May mắn +7,5%. / Thần Ân: 5% cơ hội thu hoạch gấp đôi. / Thiên Mệnh: 11,2% cơ hội thu hoạch gấp đôi. |
+| 49 | Thiên Thần | Thần thoại | Huyền Thoại | May mắn | 25.000 | 20 | 10.071 | 0.15 | 0.389 | 0.7 | 1.2 | Phúc Khí: May mắn +7,5%. / Thần Ân: 5% cơ hội thu hoạch gấp đôi. / Thiên Mệnh: 11,2% cơ hội thu hoạch gấp đôi. |
+| 50 | Hồ Điệp Tiên | Thần thoại | Huyền Thoại | May mắn | 25.000 | 20 | 10.071 | 0.15 | 0.389 | 0.702 | 1.201 | Phúc Khí: May mắn +7,5%. / Thần Ân: 5% cơ hội thu hoạch gấp đôi. / Thiên Mệnh: 11,2% cơ hội thu hoạch gấp đôi. |
