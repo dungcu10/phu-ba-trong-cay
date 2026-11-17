@@ -1,0 +1,30 @@
+{
+  "state": "done",
+  "done": 3,
+  "errors": [],
+  "device": "CPU",
+  "seconds": 92.1,
+  "pots": [
+    {
+      "id": 9,
+      "name": "Sushi Cá Hồi",
+      "category": "Đồ ăn",
+      "objects": 38,
+      "seconds": 37.7
+    },
+    {
+      "id": 35,
+      "name": "Rổ Tre Nón Lá",
+      "category": "Gốm Á Đông",
+      "objects": 41,
+      "seconds": 25.7
+    },
+    {
+      "id": 47,
+      "name": "Đèn Thần",
+      "category": "Thần thoại",
+      "objects": 10,
+      "seconds": 28.3
+    }
+  ]
+}
