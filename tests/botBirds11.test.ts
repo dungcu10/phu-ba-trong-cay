@@ -24,17 +24,30 @@ test('40 BOT × 7 ngày: BOT đủ cấp đều thuê chim, chim bắt được 
   }
 });
 
-test('số bọ chim BOT bắt mỗi ngày trong khoảng ±20% chim của người chơi vừa (2 giờ/lần)', () => {
+test('số bọ BOT có mỗi ngày trong khoảng ±20% người chơi vừa cùng tầm cấp (2 giờ/lần)', () => {
+  // Chỉ thị 11 D1, after the economy pass (bugs ×1/20, the player's hand and bird share one pool):
+  // compare all the bugs a neighbour gets (its own catching + its bird) with all the bugs an average
+  // player gets (by hand + bird) on days 4–7, among neighbours at the player's levels on those days.
   const { days } = simulateProgression(content, 120, 7);
-  // The player's bird from day 5 on (after its first days on 60-second Cúc, which draw almost no bugs).
-  const late = days.slice(4).filter((d) => d.birds > 0);
-  const player = late.reduce((a, d) => a + d.birdBugs, 0) / late.length;
+  const late = days.slice(3);
+  const player = late.reduce((a, d) => a + Object.values(d.bugsByRarity).reduce((x, q) => x + q, 0), 0) / late.length;
+  const lo = Math.min(...late.map((d) => d.level));
+  const hi = Math.max(...late.map((d) => d.level));
   const s = newGame(content, { level: 20 }, 42);
   simulateNeighbors(content, s, T0 + 7 * DAY);
-  const withBirds = Object.values(s.neighbors).filter((b) => bugsOf(b) > 0);
-  const bot = withBirds.reduce((a, b) => a + bugsOf(b), 0) / withBirds.length / 7;
-  assert.ok(player > 0, 'chim người chơi không bắt được bọ');
-  assert.ok(Math.abs(bot - player) / player <= 0.2, `BOT ${bot.toFixed(1)}/ngày, người chơi ${player.toFixed(1)}/ngày`);
+  const peers = Object.values(s.neighbors).filter((b) => b.level >= lo && b.level <= hi);
+  assert.ok(peers.length >= 5, `chỉ ${peers.length} BOT cấp ${lo}–${hi}`);
+  const bot = peers.reduce((a, b) => a + bugsOf(b), 0) / peers.length / 7;
+  assert.ok(player > 0, 'người chơi không có bọ');
+  assert.ok(Math.abs(bot - player) / player <= 0.2, `BOT ${bot.toFixed(1)}/ngày, người chơi ${player.toFixed(1)}/ngày (cấp ${lo}–${hi})`);
+});
+
+test('chim BOT có bắt bọ (phần chim trong tổng bọ của BOT)', () => {
+  const s = newGame(content, { level: 20 }, 42);
+  let birdCaught = 0;
+  simulateNeighbors(content, s, T0 + 7 * DAY);
+  for (const b of Object.values(s.neighbors)) birdCaught += b.birds.reduce((a, x) => a + x.caught, 0);
+  assert.ok(birdCaught > 0);
 });
 
 test('tất định: mô phỏng liên tục hay mở lại sau 7 ngày cho cùng chim và bọ của BOT', () => {

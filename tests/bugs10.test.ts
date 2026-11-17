@@ -44,8 +44,9 @@ test('Đom Đóm Sao không xuất hiện ban ngày, có xuất hiện ban đêm
   while (!(!isNight(content, day) && !isNight(content, day + 3 * HOUR))) day += HOUR;
   let night = T0;
   while (!(isNight(content, night) && isNight(content, night + 3 * HOUR))) night += HOUR;
-  const d = kindsFor(20, day, 'base:crop.sky-carrot', 60);
-  const n = kindsFor(20, night, 'base:crop.sky-carrot', 60);
+  // 12 TỔNG B6: bugs are rarer now, so the sample is larger (golden-gerbera, 2 hours a cycle).
+  const d = kindsFor(20, day, 'base:crop.golden-gerbera', 800);
+  const n = kindsFor(20, night, 'base:crop.golden-gerbera', 800);
   assert.equal(d.get(FIREFLY) ?? 0, 0, 'ban ngày có Đom Đóm Sao');
   assert.ok((n.get(FIREFLY) ?? 0) > 0, 'ban đêm không có Đom Đóm Sao');
 });
@@ -64,18 +65,23 @@ test('cây trồng từ save cũ (không có bugLevel) chỉ ra Bọ Rùa', () =
 });
 
 test('Sổ Sâu Bọ: lần đầu bắt một loại có sự kiện "Bọ mới!", lần sau không', () => {
-  const s = newGame(content, { level: 20, coins: 99999 }, 7);
+  // 12 TỔNG B6: bugs are rarer, so several saves are played until bugs have been caught.
   const at = { floor: 0, slot: 0 };
-  dispatch(content, s, { type: 'plant', cropId: 'base:crop.golden-gerbera', ...at }, T0);
-  const seen = new Set<string>();
-  for (let t = T0; t < T0 + 3 * HOUR; t += MIN) {
-    const r = dispatch(content, s, { type: 'catchBug', ...at }, t);
-    if (!r.ok) continue;
-    const ev = r.events.find((e) => e.type === 'bugCaught') as { itemId: string };
-    const isNew = r.events.some((e) => e.type === 'newBug');
-    assert.equal(isNew, !seen.has(ev.itemId));
-    seen.add(ev.itemId);
+  let caughtAny = 0;
+  for (let entropy = 7; entropy < 120 && caughtAny < 3; entropy++) {
+    const s = newGame(content, { level: 20, coins: 99999 }, entropy);
+    dispatch(content, s, { type: 'plant', cropId: 'base:crop.golden-gerbera', ...at }, T0);
+    const seen = new Set<string>();
+    for (let t = T0; t < T0 + 3 * HOUR; t += MIN) {
+      const r = dispatch(content, s, { type: 'catchBug', ...at }, t);
+      if (!r.ok) continue;
+      const ev = r.events.find((e) => e.type === 'bugCaught') as { itemId: string };
+      const isNew = r.events.some((e) => e.type === 'newBug');
+      assert.equal(isNew, !seen.has(ev.itemId));
+      seen.add(ev.itemId);
+      caughtAny++;
+    }
+    for (const id of seen) assert.ok(s.collections.bugs[id]!.count >= 1);
   }
-  assert.ok(seen.size >= 1);
-  for (const id of seen) assert.ok(s.collections.bugs[id]!.count >= 1);
+  assert.ok(caughtAny >= 1);
 });

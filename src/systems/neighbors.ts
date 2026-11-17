@@ -11,7 +11,7 @@ import type { BotDef, ContentPack } from '../core/content.ts';
 import type { BotListing, BotState, GameState } from '../core/state.ts';
 import { randomFor } from '../core/rng.ts';
 import { xpToNextLevel } from './economy.ts';
-import { advanceBotBirds, botKeepBirds } from './botBirds.ts';
+import { advanceBotBirds, botCatchBugs, botKeepBirds } from './botBirds.ts';
 
 export type NeighborEvent =
   | { type: 'stallSold'; botId: string; itemId: string; qty: number; coins: number }
@@ -249,7 +249,9 @@ export function simulateNeighbors(content: ContentPack, state: GameState, now: n
     for (const { bot, s } of active) {
       if (s.simulatedTo >= at) continue;
       // Its birds work up to this session in time order (shared runBirds), then the session runs.
-      advanceBotBirds(content, state, bot, s, at);
+      const birdTook = advanceBotBirds(content, state, bot, s, at).filter((e) => e.type === 'birdCaught').length;
+      // The bugs that landed in this window and the bird did not take: the neighbour catches them.
+      botCatchBugs(content, state, bot, s, Math.max(s.simulatedTo, at - step), at, birdTook);
       session(content, state, bot, s, index, at, events);
       s.simulatedTo = at;
     }

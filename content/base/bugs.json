@@ -9,8 +9,8 @@
     "nightOnly": false,
     "sprite": "bugs/ladybird",
     "art": "bug/ladybird",
-    "growSecondsPerBug": 1800,
-    "maxPerCycle": 4
+    "growSecondsPerBug": 25000,
+    "maxPerCycle": 2
   },
   {
     "id": "base:bug.leaf-worm",

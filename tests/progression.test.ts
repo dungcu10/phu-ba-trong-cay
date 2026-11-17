@@ -143,10 +143,11 @@ for (const st of STYLES) {
         assert.ok(d.level >= days[i - 1]!.level && d.floors >= days[i - 1]!.floors, `ngày ${d.day}: không lùi`);
       }
       gap = d.milestones > 0 ? 0 : gap + 1;
-      assert.ok(gap <= 10, `ngày ${d.day}: ${gap} ngày liền không có mốc mới`);
-      // Coins: at most 72 hours of income, or 1.5× the next floor the player is saving for.
-      const next = floorAtIndex(content.floors, content.floorList, d.floors);
-      assert.ok(d.coins <= Math.max(72 * d.unit, 1.5 * next.unlockCost), `ngày ${d.day}: ôm ${d.coins} xu`);
+      // After half a year the base content runs thin until the next content pack (GAME_SYSTEMS § 10).
+      assert.ok(gap <= (d.day <= 180 ? 10 : 20), `ngày ${d.day}: ${gap} ngày liền không có mốc mới`);
+      // Coins held: moved to the `npm run check` metric Xu/U (GAME_SYSTEMS § 6). It warns until the
+      // coin sinks of 12 TỔNG (chợ đặt lại, nhà, Dinh) exist, then it blocks. CTO 18/11.
+      void floorAtIndex;
     }
     const late = days.slice(-30);
     const gemsPerDay = late.reduce((a, d) => a + d.gemsEarned, 0) / late.length;
@@ -154,9 +155,10 @@ for (const st of STYLES) {
     assert.ok(days.at(-1)!.level > days.at(-31)!.level, '30 ngày cuối vẫn lên cấp');
     if (st.minutes === 120) {
       const at = (n: number) => days[n - 1]!;
-      assert.ok(at(7).level >= 20 && at(7).level <= 45, `ngày 7 cấp ${at(7).level}`);
-      assert.ok(at(30).level >= 40 && at(30).level <= 70, `ngày 30 cấp ${at(30).level}`);
-      assert.ok(at(7).floors >= 4, `ngày 7 có ${at(7).floors} tầng`);
+      // 12 TỔNG A1 targets (day 7: 13–15, day 30: 25–28), with a little room.
+      assert.ok(at(7).level >= 12 && at(7).level <= 17, `ngày 7 cấp ${at(7).level}`);
+      assert.ok(at(30).level >= 23 && at(30).level <= 30, `ngày 30 cấp ${at(30).level}`);
+      assert.ok(at(7).floors >= 2, `ngày 7 có ${at(7).floors} tầng`);
     }
   });
 }
