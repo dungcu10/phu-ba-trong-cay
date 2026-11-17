@@ -37,7 +37,7 @@ step('build', 'npx', ['vite', 'build', '--logLevel', 'error']);
 
 const content = await loadBase();
 const t = Date.now();
-const { days } = simulateProgression(content, metrics.visitMinutes, metrics.days);
+const { days, coinFlow } = simulateProgression(content, metrics.visitMinutes, metrics.days);
 console.log(`✓ mô phỏng ${metrics.days} ngày, ${metrics.visitMinutes} phút/lần (${Math.round((Date.now() - t) / 1000)} s)\n`);
 
 const at = (n: number) => days[Math.min(n, days.length) - 1]!;
@@ -49,6 +49,11 @@ const value: Record<string, () => number[]> = {
   level30: () => [at(30).level],
   milestonesPerDay: () => span(10, 30).map((d) => d.milestones),
   coinsPerUnit: () => days.map((d) => d.coins / d.unit),
+  storageSpendShare: () => {
+    const spent = Object.values(coinFlow).filter((v) => v < 0).reduce((a, v) => a - v, 0);
+    return [spent > 0 ? -(coinFlow.upgradeStorage ?? 0) / spent : 0];
+  },
+  coinsDaysIncome: () => span(3, 30).map((d) => d.coins / Math.max(1, d.income)),
   commonBugsPerDay: () => span(7, 30).map((d) => d.bugsByRarity.common ?? 0),
   commonBugsPerPot: () => [avg(span(7, 30).map((d) => d.commonBugsPerPot))],
   bugStockDays: () => [at(30).bugStock / Math.max(1, avg(span(24, 30).map((d) => Object.values(d.bugsByRarity).reduce((a, q) => a + q, 0))))],

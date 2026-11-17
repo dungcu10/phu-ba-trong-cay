@@ -29,6 +29,13 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] CTO — A3: đo xu đúng theo chỉ thị, tìm ra chỗ tiêu xu thật
+- Sửa chỉ số: "Xu/U" lấy U là thu nhập 1 GIỜ, trong khi 12 TỔNG A3 đòi xu giữ 1–5 lần thu nhập 1 NGÀY. Chỉ số mới "Xu đang giữ / thu nhập 1 ngày" (ngày 3–30): 0,27–2,12, bật chặn tối đa 5.
+- Bot mô phỏng ghi `coinFlow` (xu vào/ra theo lệnh) và `income` mỗi ngày.
+- Phát hiện: 59% xu tiêu vào nâng kho (bot nâng kho khi dư xu, nhiệm vụ thưởng việc nâng kho). Thử cho bot chỉ nâng kho khi gần đầy thì xu phình 10 triệu ở ngày 60 (22 ngày thu nhập). Kho đang là chỗ tiêu xu chính và chán. Thêm cảnh báo "Phần xu tiêu vào nâng kho" ≤ 40%.
+- Mốc tiến bộ: đếm thêm lên cấp, chậu đúc, sao máy, quà Sổ Tay. Vẫn có ngày 0–1 mốc ở ngày 25–30.
+- Cổng XANH, 191/191 test.
+- Trạng thái nghiệm thu: Chờ
 ### [2026-11-18] Chỉ thị 10 M7 phần 1 — Đúc Chậu (tag `m-10-m7a`)
 - Loại: Thêm
 - Mô tả: Lò Gốm có nút "Đúc Chậu" (mở từ cấp 12): đúc chậu nhóm crafted bằng xu + vật liệu (đồng, đá mây, ngọc mài, bạc, bụi vàng, ngọc thô) theo bậc hiếm. Mỗi lần đúc có 10% "đúc hoàn hảo" → chậu +1 sao; mỗi sao +4% chỉ số chậu. Kết quả xác định từ seed. Bảng hiện nguyên liệu có/cần và nguồn rơi.
