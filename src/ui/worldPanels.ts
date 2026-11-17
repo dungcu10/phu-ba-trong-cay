@@ -5,7 +5,9 @@ import { itemIcon } from './icons.ts';
 import { svgIcon } from './icons.ts';
 import type { GameSession } from '../app/session.ts';
 import { canDeliver } from '../systems/orders.ts';
-import { botWealth, playerWealth, valuation } from '../systems/neighbors.ts';
+import { lockedForPlayer, playerPrice, rankings, valuation } from '../systems/neighbors.ts';
+import { localDay } from '../systems/missions.ts';
+import { botAvatar } from './avatar.ts';
 import { nextMilestone } from '../systems/surprises.ts';
 import { sellPrice } from '../systems/economy.ts';
 import { itemFrame } from '../render/assets.ts';
@@ -21,6 +23,7 @@ export interface WorldActions {
   rushOrder(slot: number): void;
   listItem(itemId: string, qty: number, price: number): void;
   cancelListing(id: number): void;
+  buyFromNeighbor(botId: string, itemId: string, qty: number): void;
   claimJournal(cropId: string): void;
 }
 
@@ -90,22 +93,120 @@ export class OrdersPanel extends Panel {
   }
 }
 
-/** "Sạp Phú Bà": the player's own stall; neighbours drop by and buy what is fairly priced. */
+export type MarketTab = 'mine' | 'market';
+type MarketFilter = 'all' | 'produce' | 'other' | 'orders';
+
+/** "Chợ Mây" (chỉ thị 07): my own stall, and every Phú Bà's stall to buy from. */
 export class StallPanel extends Panel {
   private itemId: string | null = null;
   private qty = 1;
   private price = 1;
+  private filter: MarketFilter = 'all';
 
   constructor(
     private readonly session: GameSession,
     private readonly actions: WorldActions,
+    private tab: MarketTab = 'mine',
+    private focusBot: string | null = null,
   ) {
-    super('Sạp Phú Bà', 'stall-panel', 'win-seed');
+    super('Chợ Mây', 'stall-panel', 'win-wide');
     this.render();
   }
 
   render(): void {
     clear(this.body);
+    const tabs = h('div', { class: 'tabs', role: 'tablist' });
+    for (const [id, name] of [['mine', 'Sạp của tôi'], ['market', 'Đi chợ']] as const) {
+      tabs.append(
+        h('button', { class: `tab${this.tab === id ? ' on' : ''}`, role: 'tab', 'aria-selected': this.tab === id ? 'true' : 'false', 'data-test': `market-tab-${id}`, onclick: () => ((this.tab = id), (this.focusBot = null), this.render()) }, name),
+      );
+    }
+    this.body.append(h('div', { class: 'filters' }, tabs));
+    if (this.tab === 'market') this.renderMarket();
+    else this.renderMine();
+  }
+
+  /** Items still missing for the open balloon orders. */
+  private orderNeeds(): Set<string> {
+    const { state } = this.session;
+    const need = new Set<string>();
+    for (const sl of state.orders.slots) {
+      for (const [id, q] of Object.entries(sl.order?.items ?? {})) if ((state.inventory[id] ?? 0) < q) need.add(id);
+    }
+    return need;
+  }
+
+  private renderMarket(): void {
+    const { content, state } = this.session;
+    const m = content.neighbors.market;
+    const day = localDay(content, this.session.now());
+    const used = state.market.day === day ? state.market.buys : 0;
+    const need = this.orderNeeds();
+    const chips = h('div', { class: 'chips' });
+    const filters: Array<[MarketFilter, string]> = [
+      ['all', 'Tất cả'],
+      ['produce', 'Nông sản'],
+      ['other', 'Bọ và nguyên liệu'],
+      ['orders', `Tìm món cho đơn hàng${need.size ? ` · ${need.size}` : ''}`],
+    ];
+    for (const [id, name] of filters) {
+      chips.append(h('button', { class: `chip${this.filter === id ? ' on' : ''}`, 'data-test': `market-filter-${id}`, onclick: () => ((this.filter = id), this.render()) }, name));
+    }
+    this.body.append(h('div', { class: 'market-head' }, chips, h('span', { class: 'market-quota' }, `Lượt mua hôm nay ${used}/${m.buysPerDay}`)));
+    const keep = (itemId: string): boolean => {
+      const item = content.items.get(itemId);
+      if (this.filter === 'produce') return item?.kind === 'produce';
+      if (this.filter === 'other') return item?.kind !== 'produce';
+      if (this.filter === 'orders') return need.has(itemId);
+      return true;
+    };
+    const focus = this.focusBot;
+    const bots = [...content.bots.values()]
+      .filter((b) => (state.neighbors[b.id]?.stall ?? []).some((l) => keep(l.itemId)))
+      .sort((a, b) => (a.id === focus ? -1 : b.id === focus ? 1 : 0) || state.neighbors[b.id]!.friendship - state.neighbors[a.id]!.friendship);
+    if (bots.length === 0) {
+      this.body.append(
+        h('p', { class: 'note' }, this.filter === 'orders' ? 'Chưa ai bày món đơn hàng đang cần. Hàng xóm bày hàng mới mỗi nửa giờ, quay lại sau nhé.' : 'Chợ đang vãn. Hàng xóm bày hàng mới mỗi nửa giờ.'),
+      );
+      return;
+    }
+    const grid = h('div', { class: 'market-grid' });
+    for (const bot of bots) {
+      const s = state.neighbors[bot.id]!;
+      const wares = h('div', { class: 'wares' });
+      for (const l of s.stall.filter((x) => keep(x.itemId))) {
+        const price = playerPrice(content, state, l);
+        const locked = lockedForPlayer(content, state, l.itemId);
+        wares.append(
+          h(
+            'div',
+            { class: `ware${need.has(l.itemId) ? ' wanted' : ''}`, 'data-test': `ware-${bot.id}-${l.itemId}` },
+            itemIcon(content, l.itemId, 44),
+            h('span', { class: 'ware-name' }, content.items.get(l.itemId)?.name.vi ?? l.itemId),
+            h('span', { class: 'ware-meta' }, `×${l.qty}`, locked && h('span', { class: 'ware-flag', title: 'Bạn chưa mở khóa cây này nên giá cao hơn' }, 'hiếm')),
+            h('span', { class: 'tag' }, coin(14), formatNumber(price)),
+            h(
+              'span',
+              { class: 'ware-buy' },
+              h('button', { class: 'candy small gold', 'data-test': `buy-${bot.id}-${l.itemId}`, onclick: () => this.actions.buyFromNeighbor(bot.id, l.itemId, 1) }, 'Mua 1'),
+              l.qty > 1 && h('button', { class: 'candy small', onclick: () => this.actions.buyFromNeighbor(bot.id, l.itemId, l.qty) }, `Mua hết · ${formatNumber(price * l.qty)}`),
+            ),
+          ),
+        );
+      }
+      grid.append(
+        h(
+          'section',
+          { class: `market-stall${bot.id === focus ? ' focus' : ''}` },
+          h('header', {}, botAvatar(bot.id, 44), h('span', { class: 'who' }, h('strong', {}, bot.name.vi), h('span', {}, `${bot.title?.vi ?? ''} · cấp ${s.level}`))),
+          wares,
+        ),
+      );
+    }
+    this.body.append(grid);
+  }
+
+  private renderMine(): void {
     const { content, state } = this.session;
     const cfg = content.neighbors;
     const shelf = h('div', { class: 'stall-shelf' });
@@ -186,11 +287,16 @@ export class StallPanel extends Panel {
   }
 }
 
-/** "Bảng Phú Bà": everyone's wealth, with what each neighbour is up to and why. */
+type BoardTab = 'all' | 'near' | 'friends';
+
+/** "Bảng Phú Bà" (chỉ thị 07): 40 neighbours + you; whole region, around me, close friends. */
 export class NeighborsPanel extends Panel {
+  private tab: BoardTab = 'all';
+
   constructor(
     private readonly session: GameSession,
     private readonly visit: (botId: string) => void,
+    private readonly openStall: (botId: string) => void = () => {},
   ) {
     super('Bảng Phú Bà', 'neighbors-panel', 'win-wide');
     this.render();
@@ -199,35 +305,63 @@ export class NeighborsPanel extends Panel {
   render(): void {
     clear(this.body);
     const { content, state } = this.session;
-    type Row = { id: string; name: string; level: number; wealth: number; you: boolean; friendship: number; doing: string; likes: string; helps: number };
     const now = this.session.now();
-    const rows: Row[] = [{ id: '', name: 'Bạn', level: state.player.level, wealth: playerWealth(content, state), you: true, friendship: 0, doing: '', likes: '', helps: 0 }];
-    for (const bot of content.bots.values()) {
-      const s = state.neighbors[bot.id];
-      if (!s) continue;
-      rows.push({ id: bot.id, name: bot.name.vi, level: s.level, wealth: botWealth(s), you: false, friendship: s.friendship, doing: s.lastAction?.reason ?? 'Mới dọn đến', likes: FAMILY_TEXT[bot.likes] ?? bot.likes, helps: helpsLeft(content, s, now) });
+    const order = rankings(content, state);
+    const myRank = order.findIndex((r) => r.id === '') + 1;
+    const tabs = h('div', { class: 'tabs', role: 'tablist' });
+    const names: Array<[BoardTab, string]> = [
+      ['all', `Toàn vùng · ${order.length}`],
+      ['near', 'Quanh tôi'],
+      ['friends', 'Bạn thân'],
+    ];
+    for (const [id, name] of names) {
+      tabs.append(
+        h('button', { class: `tab${this.tab === id ? ' on' : ''}`, role: 'tab', 'aria-selected': this.tab === id ? 'true' : 'false', 'data-test': `board-tab-${id}`, onclick: () => ((this.tab = id), this.render()) }, name),
+      );
     }
-    rows.sort((a, b) => b.wealth - a.wealth);
+    this.body.append(
+      h('div', { class: 'filters' }, tabs),
+      h('p', { class: 'lead' }, `Bạn đang hạng ${myRank}/${order.length}. Tài sản = xu + giá trị vườn và chậu. Ghé vườn giúp tưới cây, bắt bọ để nhận xu; mua bán ở sạp để thêm thân thiết.`),
+    );
+    let rows = order.map((r, i) => ({ ...r, rank: i + 1 }));
+    if (this.tab === 'near') rows = rows.filter((r) => Math.abs(r.rank - myRank) <= 5);
+    if (this.tab === 'friends') {
+      rows = rows
+        .filter((r) => r.id === '' || (state.neighbors[r.id]?.friendship ?? 0) >= 4)
+        .sort((a, b) => (state.neighbors[b.id]?.friendship ?? 999) - (state.neighbors[a.id]?.friendship ?? 999));
+    }
     const list = h('div', { class: 'rank-list' });
-    rows.forEach((r, i) => {
+    for (const r of rows) {
+      const you = r.id === '';
+      const bot = content.bots.get(r.id);
+      const s = state.neighbors[r.id];
+      const prev = state.ranks.prev[r.id];
+      const move = prev ? prev - r.rank : 0;
+      const helps = s ? helpsLeft(content, s, now) : 0;
+      const moveText = move > 0 ? `▲${move}` : move < 0 ? `▼${-move}` : '–';
+      const moveLabel = move > 0 ? `lên ${move} hạng` : move < 0 ? `xuống ${-move} hạng` : 'giữ hạng';
       list.append(
         h(
           'div',
-          { class: `rank-row${r.you ? ' you' : ''}` },
-          h('span', { class: `medal m${Math.min(i + 1, 4)}` }, String(i + 1)),
+          { class: `rank-row${you ? ' you' : ''}`, 'data-test': `rank-${r.id || 'me'}` },
+          h('span', { class: `medal m${Math.min(r.rank, 4)}` }, String(r.rank)),
+          h('span', { class: `rank-move ${move > 0 ? 'up' : move < 0 ? 'down' : 'same'}`, 'aria-label': moveLabel }, moveText),
+          you || !bot ? h('span', { class: 'avatar me' }, 'Bạn') : botAvatar(r.id, 40),
           h(
             'span',
             { class: 'rank-main' },
-            h('strong', {}, `${r.name} · cấp ${r.level}`),
-            !r.you && h('span', { class: 'rank-doing' }, `${r.doing} · thích cây ${r.likes}`),
+            h('strong', {}, you || !bot || !s ? `Bạn · cấp ${state.player.level}` : `${bot.name.vi} · cấp ${s.level}`),
+            !you && bot && s && h('span', { class: 'rank-doing' }, `${bot.title?.vi ?? ''} · thích cây ${FAMILY_TEXT[bot.likes] ?? bot.likes} · ${s.lastAction?.reason ?? 'Mới dọn đến'}`),
           ),
-          !r.you && h('span', { class: 'hearts', title: 'Thân thiết' }, '♥'.repeat(Math.min(5, Math.floor(r.friendship / 2))) || '♡'),
+          !you && s && h('span', { class: 'hearts', title: 'Thân thiết' }, '♥'.repeat(Math.min(5, Math.floor(s.friendship / 2))) || '♡'),
           h('span', { class: 'tag' }, coin(16), formatNumber(r.wealth)),
-          !r.you && h('button', { class: `candy small ${r.helps > 0 ? 'gold' : ''}`, 'data-test': `visit-${r.id}`, onclick: () => this.visit(r.id) }, r.helps > 0 ? `Ghé vườn · ${r.helps}` : 'Ghé vườn'),
+          !you && s && s.stall.length > 0 && h('button', { class: 'candy small', 'data-test': `stall-of-${r.id}`, onclick: () => this.openStall(r.id) }, `Ghé sạp · ${s.stall.length}`),
+          !you && h('button', { class: `candy small ${helps > 0 ? 'gold' : ''}`, 'data-test': `visit-${r.id}`, onclick: () => this.visit(r.id) }, helps > 0 ? `Ghé vườn · ${helps}` : 'Ghé vườn'),
         ),
       );
-    });
-    this.body.append(h('p', { class: 'lead' }, 'Tài sản = xu + giá trị vườn. Ghé vườn hàng xóm tưới cây, bắt bọ giúp để nhận xu; giao đơn và bán sạp để thêm thân thiết.'), list);
+    }
+    if (this.tab === 'friends' && rows.length <= 1) list.append(h('p', { class: 'note' }, 'Chưa có bạn thân. Giao đơn, mua bán và ghé vườn để thân hơn nhé.'));
+    this.body.append(list);
   }
 }
 

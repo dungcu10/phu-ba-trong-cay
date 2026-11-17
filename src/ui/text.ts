@@ -40,6 +40,7 @@ export const ERROR_TEXT: Record<ErrorCode, string> = {
   nothing_growing: 'Không có cây nào đang lớn trên tầng này.',
   unknown_quest: 'Không tìm thấy nhiệm vụ này.',
   quest_not_ready: 'Nhiệm vụ chưa xong.',
+  market_limit: 'Hôm nay bạn đã mua đủ 20 lượt ở chợ. Mai quay lại nhé!',
 };
 
 const numberFormat = new Intl.NumberFormat('vi-VN');

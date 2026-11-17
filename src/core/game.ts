@@ -15,7 +15,7 @@ import { slotBonus } from '../systems/modifiers.ts';
 import { createFloorState } from './state.ts';
 import { canDeliver, refillOrders } from '../systems/orders.ts';
 import { coinGiftAmount, nextMilestone, recordHarvest, rollGift, rollMutation, type Gift } from '../systems/surprises.ts';
-import { simulateNeighbors, type NeighborEvent } from '../systems/neighbors.ts';
+import { playerPrice, simulateNeighbors, snapshotRanks, type NeighborEvent } from '../systems/neighbors.ts';
 import { expandCost, nextStar } from '../systems/floors.ts';
 import { allMissionsClaimed, ensureMissions, localDay, missionDef, recordMissions } from '../systems/missions.ts';
 import { ensureQuestPeriods, questActive, questClaims, questReward, questView, recordQuests } from '../systems/quests.ts';
@@ -41,6 +41,7 @@ export type Command =
   | { type: 'rushOrder'; slot: number }
   | { type: 'claimJournal'; cropId: string }
   | { type: 'listItem'; itemId: string; qty: number; price: number }
+  | { type: 'buyFromNeighbor'; botId: string; itemId: string; qty: number }
   | { type: 'cancelListing'; listingId: number }
   | { type: 'readNotices' }
   /** Opens one more pot slot on a floor (REDESIGN_V2 2.1). */
@@ -74,6 +75,7 @@ export type GameEvent =
   | { type: 'orderSkipped'; slot: number }
   | { type: 'journalClaimed'; cropId: string; gems: number; harvests: number }
   | { type: 'itemListed'; listingId: number; itemId: string; qty: number; price: number }
+  | { type: 'boughtFromNeighbor'; botId: string; itemId: string; qty: number; coins: number }
   | { type: 'listingCancelled'; listingId: number }
   | NeighborEvent
   | { type: 'sold'; itemId: string; qty: number; coins: number }
@@ -135,7 +137,8 @@ export type ErrorCode =
   | 'not_obtainable'
   | 'nothing_growing'
   | 'unknown_quest'
-  | 'quest_not_ready';
+  | 'quest_not_ready'
+  | 'market_limit';
 
 export type Result = { ok: true; events: GameEvent[] } | { ok: false; error: ErrorCode };
 
@@ -163,6 +166,7 @@ export function updateWorld(content: ContentPack, state: GameState, now: number)
   const events: GameEvent[] = [];
   const arrived = refillOrders(content, state, now);
   if (arrived.length > 0) events.push({ type: 'ordersArrived', slots: arrived });
+  snapshotRanks(content, state, localDay(content, now));
   events.push(...simulateNeighbors(content, state, now));
   return events;
 }
@@ -219,6 +223,8 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
       return claimJournal(content, state, cmd.cropId);
     case 'listItem':
       return listItem(content, state, cmd.itemId, cmd.qty, cmd.price);
+    case 'buyFromNeighbor':
+      return buyFromNeighbor(content, state, cmd.botId, cmd.itemId, cmd.qty, now);
     case 'cancelListing':
       return cancelListing(content, state, cmd.listingId);
     case 'readNotices':
@@ -670,6 +676,30 @@ function listItem(content: ContentPack, state: GameState, itemId: string, qty: n
   const listingId = state.nextId++;
   state.stall.push({ id: listingId, itemId, qty, price });
   return { ok: true, events: [{ type: 'itemListed', listingId, itemId, qty, price }] };
+}
+
+/** Chợ Mây (chỉ thị 07): buys from a neighbour's stall. Price ≥ 1,25 × shop price, ≤ 20 buys a day. */
+function buyFromNeighbor(content: ContentPack, state: GameState, botId: string, itemId: string, qty: number, now: number): Result {
+  const bot = state.neighbors[botId];
+  if (!bot || !content.bots.has(botId)) return fail('unknown_neighbor');
+  const listing = bot.stall.find((l) => l.itemId === itemId);
+  if (!listing) return fail('unknown_listing');
+  if (!Number.isInteger(qty) || qty <= 0 || qty > listing.qty) return fail('bad_quantity');
+  const m = content.neighbors.market;
+  const day = localDay(content, now);
+  if (state.market.day !== day) state.market = { day, buys: 0 };
+  if (state.market.buys >= m.buysPerDay) return fail('market_limit');
+  const coins = playerPrice(content, state, listing) * qty;
+  if (state.player.coins < coins) return fail('not_enough_coins');
+  if (content.items.get(itemId)?.countsTowardStorage && storageFree(content, state) < qty) return fail('storage_full');
+  state.player.coins -= coins;
+  bot.coins += coins;
+  bot.friendship += m.friendship;
+  addItem(state, itemId, qty);
+  listing.qty -= qty;
+  if (listing.qty === 0) bot.stall.splice(bot.stall.indexOf(listing), 1);
+  state.market.buys += 1;
+  return { ok: true, events: [{ type: 'boughtFromNeighbor', botId, itemId, qty, coins }] };
 }
 
 function cancelListing(content: ContentPack, state: GameState, listingId: number): Result {

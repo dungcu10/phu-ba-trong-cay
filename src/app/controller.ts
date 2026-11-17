@@ -56,7 +56,7 @@ export class Controller implements PanelActions, PotShopActions, WorldActions, G
       openSettings: () => this.openSettings(),
       openOrders: () => this.open(new OrdersPanel(this.session, this)),
       openStall: () => this.open(new StallPanel(this.session, this)),
-      openNeighbors: () => this.open(new NeighborsPanel(this.session, (botId) => this.visit(botId))),
+      openNeighbors: () => this.open(new NeighborsPanel(this.session, (botId) => this.visit(botId), (botId) => this.open(new StallPanel(this.session, this, 'market', botId)))),
       openMissions: () => this.openQuests(TODAY),
       openQuests: (track) => this.openQuests(track ?? TODAY),
       claimQuest: (id) => this.claimQuest(id),
@@ -126,7 +126,7 @@ export class Controller implements PanelActions, PotShopActions, WorldActions, G
     const go: Record<string, () => void> = {
       orders: () => this.open(new OrdersPanel(this.session, this)),
       stall: () => this.open(new StallPanel(this.session, this)),
-      neighbors: () => this.open(new NeighborsPanel(this.session, (botId) => this.visit(botId))),
+      neighbors: () => this.open(new NeighborsPanel(this.session, (botId) => this.visit(botId), (botId) => this.open(new StallPanel(this.session, this, 'market', botId)))),
       journal: () => this.open(new JournalPanel(this.session, this)),
       event: () => this.open(new EventPanel(this.session, this)),
       shop: () => this.openShop(),
@@ -169,6 +169,10 @@ export class Controller implements PanelActions, PotShopActions, WorldActions, G
 
   rushOrder(slot: number): void {
     this.run({ type: 'rushOrder', slot });
+  }
+
+  buyFromNeighbor(botId: string, itemId: string, qty: number): void {
+    this.run({ type: 'buyFromNeighbor', botId, itemId, qty });
   }
 
   listItem(itemId: string, qty: number, price: number): void {
@@ -604,6 +608,10 @@ export class Controller implements PanelActions, PotShopActions, WorldActions, G
       case 'itemListed':
         this.sfx.play('tap');
         this.toasts.show('Đã bày lên Sạp Phú Bà. Hàng xóm sẽ ghé mua.', 'info', 2000);
+        break;
+      case 'boughtFromNeighbor':
+        this.sfx.play('coin');
+        this.toasts.show(`Đã mua ${e.qty} ${content.items.get(e.itemId)?.name.vi ?? ''} của ${content.bots.get(e.botId)?.name.vi ?? 'hàng xóm'}: −${formatNumber(e.coins)} xu`, 'success', 2400);
         break;
       case 'stallSold':
         this.sfx.play('coin');

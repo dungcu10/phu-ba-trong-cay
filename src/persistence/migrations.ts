@@ -97,6 +97,14 @@ export const MIGRATIONS: Record<number, Migration> = {
     delete data.tutorials;
     return data;
   },
+  // 10 -> 11 (chỉ thị 07): Chợ Mây. Every neighbour starts with an empty stall; new neighbours
+  // (40 instead of 8) are added by reconcile, which has the content. Friendship and history kept.
+  10: (data) => {
+    for (const bot of Object.values((data.neighbors as Record<string, Record<string, unknown>> | undefined) ?? {})) bot.stall = [];
+    data.market = { day: -1, buys: 0 };
+    data.ranks = { day: -1, prev: {} };
+    return data;
+  },
 };
 
 export function migrate(

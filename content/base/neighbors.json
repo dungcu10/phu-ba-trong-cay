@@ -7,7 +7,7 @@
   ],
   "sessionMinutes": 30,
   "catchUpDays": 14,
-  "giftChance": 0.06,
+  "giftChance": 0.015,
   "visitFriendship": 1,
   "orderFriendship": 2,
   "bots": [
@@ -24,7 +24,10 @@
       },
       "likes": "flower",
       "startLevel": 6,
-      "startCoins": 1800
+      "startCoins": 1800,
+      "title": {
+        "vi": "Phú Bà Chợ Mây"
+      }
     },
     {
       "id": "base:bot.be-bap",
@@ -39,7 +42,10 @@
       },
       "likes": "herb",
       "startLevel": 3,
-      "startCoins": 400
+      "startCoins": 400,
+      "title": {
+        "vi": "Tiểu Thư Vườn Rau"
+      }
     },
     {
       "id": "base:bot.co-ngoc",
@@ -54,7 +60,10 @@
       },
       "likes": "flower",
       "startLevel": 12,
-      "startCoins": 9000
+      "startCoins": 9000,
+      "title": {
+        "vi": "Phú Bà Ngọc Bích"
+      }
     },
     {
       "id": "base:bot.ong-sau",
@@ -69,7 +78,10 @@
       },
       "likes": "fruit",
       "startLevel": 9,
-      "startCoins": 3200
+      "startCoins": 3200,
+      "title": {
+        "vi": "Ông Chủ Rổ Tre"
+      }
     },
     {
       "id": "base:bot.be-na",
@@ -84,7 +96,10 @@
       },
       "likes": "flower",
       "startLevel": 2,
-      "startCoins": 250
+      "startCoins": 250,
+      "title": {
+        "vi": "Tiểu Thư Búi Tóc"
+      }
     },
     {
       "id": "base:bot.chu-loc",
@@ -99,7 +114,10 @@
       },
       "likes": "fruit",
       "startLevel": 14,
-      "startCoins": 15000
+      "startCoins": 15000,
+      "title": {
+        "vi": "Đại Gia Bàn Tính"
+      }
     },
     {
       "id": "base:bot.chi-thu",
@@ -114,7 +132,10 @@
       },
       "likes": "herb",
       "startLevel": 7,
-      "startCoins": 2200
+      "startCoins": 2200,
+      "title": {
+        "vi": "Học Giả Vườn Mây"
+      }
     },
     {
       "id": "base:bot.di-hoa",
@@ -129,7 +150,586 @@
       },
       "likes": "fruit",
       "startLevel": 5,
-      "startCoins": 1200
+      "startCoins": 1200,
+      "title": {
+        "vi": "Huấn Luyện Viên Mây"
+      }
+    },
+    {
+      "id": "base:bot.ba-nam-ho-tay",
+      "name": {
+        "vi": "Bà Năm Hồ Tây"
+      },
+      "title": {
+        "vi": "Phú Bà Hồ Tây"
+      },
+      "portrait": "N1",
+      "traits": {
+        "diligence": 0.81,
+        "trader": 0.92,
+        "collector": 0.3
+      },
+      "likes": "flower",
+      "startLevel": 20,
+      "startCoins": 9240
+    },
+    {
+      "id": "base:bot.co-ba-sai-gon",
+      "name": {
+        "vi": "Cô Ba Sài Gòn"
+      },
+      "title": {
+        "vi": "Bà Chủ Vườn Lan"
+      },
+      "portrait": "N2",
+      "traits": {
+        "diligence": 0.89,
+        "trader": 0.31,
+        "collector": 0.74
+      },
+      "likes": "fruit",
+      "startLevel": 10,
+      "startCoins": 3060
+    },
+    {
+      "id": "base:bot.di-ut-miet-vuon",
+      "name": {
+        "vi": "Dì Út Miệt Vườn"
+      },
+      "title": {
+        "vi": "Nữ Hoàng Sầu Riêng"
+      },
+      "portrait": "N3",
+      "traits": {
+        "diligence": 0.84,
+        "trader": 0.78,
+        "collector": 0.59
+      },
+      "likes": "herb",
+      "startLevel": 15,
+      "startCoins": 5685
+    },
+    {
+      "id": "base:bot.chi-hang-pho-co",
+      "name": {
+        "vi": "Chị Hằng Phố Cổ"
+      },
+      "title": {
+        "vi": "Phú Bà Hàng Đào"
+      },
+      "portrait": "N4",
+      "traits": {
+        "diligence": 0.95,
+        "trader": 0.15,
+        "collector": 0.74
+      },
+      "likes": "flower",
+      "startLevel": 14,
+      "startCoins": 4480
+    },
+    {
+      "id": "base:bot.ba-ca-kim-hoan",
+      "name": {
+        "vi": "Bà Cả Kim Hoàn"
+      },
+      "title": {
+        "vi": "Đại Gia Vàng Bạc"
+      },
+      "portrait": "N5",
+      "traits": {
+        "diligence": 0.86,
+        "trader": 0.55,
+        "collector": 0.73
+      },
+      "likes": "fruit",
+      "startLevel": 29,
+      "startCoins": 191922
+    },
+    {
+      "id": "base:bot.co-thu-da-lat",
+      "name": {
+        "vi": "Cô Thu Đà Lạt"
+      },
+      "title": {
+        "vi": "Bà Chủ Đồi Chè"
+      },
+      "portrait": "N6",
+      "traits": {
+        "diligence": 0.6,
+        "trader": 0.85,
+        "collector": 0.59
+      },
+      "likes": "herb",
+      "startLevel": 8,
+      "startCoins": 3352
+    },
+    {
+      "id": "base:bot.chi-mai-ben-thanh",
+      "name": {
+        "vi": "Chị Mai Bến Thành"
+      },
+      "title": {
+        "vi": "Nữ Hoàng Chợ Lớn"
+      },
+      "portrait": "N7",
+      "traits": {
+        "diligence": 0.26,
+        "trader": 0.9,
+        "collector": 0.45
+      },
+      "likes": "flower",
+      "startLevel": 11,
+      "startCoins": 5049
+    },
+    {
+      "id": "base:bot.ba-tu-lua-ha-dong",
+      "name": {
+        "vi": "Bà Tư Lụa Hà Đông"
+      },
+      "title": {
+        "vi": "Phú Bà Tơ Lụa"
+      },
+      "portrait": "N8",
+      "traits": {
+        "diligence": 0.81,
+        "trader": 0.79,
+        "collector": 0.83
+      },
+      "likes": "fruit",
+      "startLevel": 6,
+      "startCoins": 3594
+    },
+    {
+      "id": "base:bot.co-kieu-sen-hong",
+      "name": {
+        "vi": "Cô Kiều Sen Hồng"
+      },
+      "title": {
+        "vi": "Bà Chủ Đầm Sen"
+      },
+      "portrait": "N9",
+      "traits": {
+        "diligence": 0.48,
+        "trader": 0.14,
+        "collector": 0.69
+      },
+      "likes": "herb",
+      "startLevel": 2,
+      "startCoins": 942
+    },
+    {
+      "id": "base:bot.chi-vy-ca-phe",
+      "name": {
+        "vi": "Chị Vy Cà Phê"
+      },
+      "title": {
+        "vi": "Phú Bà Phố Núi"
+      },
+      "portrait": "N10",
+      "traits": {
+        "diligence": 0.92,
+        "trader": 0.42,
+        "collector": 0.71
+      },
+      "likes": "flower",
+      "startLevel": 13,
+      "startCoins": 3575
+    },
+    {
+      "id": "base:bot.di-bay-banh-mi",
+      "name": {
+        "vi": "Dì Bảy Bánh Mì"
+      },
+      "title": {
+        "vi": "Bà Chủ Lò Bánh"
+      },
+      "portrait": "N11",
+      "traits": {
+        "diligence": 0.29,
+        "trader": 0.28,
+        "collector": 0.26
+      },
+      "likes": "fruit",
+      "startLevel": 14,
+      "startCoins": 5208
+    },
+    {
+      "id": "base:bot.ba-chin-ngoc-trai",
+      "name": {
+        "vi": "Bà Chín Ngọc Trai"
+      },
+      "title": {
+        "vi": "Đại Gia Hạ Long"
+      },
+      "portrait": "N12",
+      "traits": {
+        "diligence": 0.4,
+        "trader": 0.77,
+        "collector": 0.21
+      },
+      "likes": "herb",
+      "startLevel": 31,
+      "startCoins": 193378
+    },
+    {
+      "id": "base:bot.co-diep-tra-xanh",
+      "name": {
+        "vi": "Cô Diệp Trà Xanh"
+      },
+      "title": {
+        "vi": "Phú Bà Thái Nguyên"
+      },
+      "portrait": "N1",
+      "traits": {
+        "diligence": 0.69,
+        "trader": 0.88,
+        "collector": 0.32
+      },
+      "likes": "flower",
+      "startLevel": 6,
+      "startCoins": 2268
+    },
+    {
+      "id": "base:bot.chi-nguyet-trang-ram",
+      "name": {
+        "vi": "Chị Nguyệt Trăng Rằm"
+      },
+      "title": {
+        "vi": "Bà Chủ Đèn Lồng"
+      },
+      "portrait": "N2",
+      "traits": {
+        "diligence": 0.88,
+        "trader": 0.59,
+        "collector": 0.28
+      },
+      "likes": "fruit",
+      "startLevel": 12,
+      "startCoins": 3576
+    },
+    {
+      "id": "base:bot.ba-sau-mam-ruoc",
+      "name": {
+        "vi": "Bà Sáu Mắm Ruốc"
+      },
+      "title": {
+        "vi": "Nữ Hoàng Miền Tây"
+      },
+      "portrait": "N3",
+      "traits": {
+        "diligence": 0.76,
+        "trader": 0.4,
+        "collector": 0.45
+      },
+      "likes": "herb",
+      "startLevel": 2,
+      "startCoins": 550
+    },
+    {
+      "id": "base:bot.co-loan-gom-su",
+      "name": {
+        "vi": "Cô Loan Gốm Sứ"
+      },
+      "title": {
+        "vi": "Phú Bà Bát Tràng"
+      },
+      "portrait": "N4",
+      "traits": {
+        "diligence": 0.67,
+        "trader": 0.72,
+        "collector": 0.31
+      },
+      "likes": "flower",
+      "startLevel": 10,
+      "startCoins": 4920
+    },
+    {
+      "id": "base:bot.chi-quyen-hoa-giay",
+      "name": {
+        "vi": "Chị Quyên Hoa Giấy"
+      },
+      "title": {
+        "vi": "Bà Chủ Vườn Hồng"
+      },
+      "portrait": "N5",
+      "traits": {
+        "diligence": 0.22,
+        "trader": 0.58,
+        "collector": 0.63
+      },
+      "likes": "fruit",
+      "startLevel": 4,
+      "startCoins": 1992
+    },
+    {
+      "id": "base:bot.ba-hai-don-dien",
+      "name": {
+        "vi": "Bà Hai Đồn Điền"
+      },
+      "title": {
+        "vi": "Đại Gia Cao Su"
+      },
+      "portrait": "N6",
+      "traits": {
+        "diligence": 0.75,
+        "trader": 0.92,
+        "collector": 0.55
+      },
+      "likes": "herb",
+      "startLevel": 32,
+      "startCoins": 255552
+    },
+    {
+      "id": "base:bot.co-thao-moc-lan",
+      "name": {
+        "vi": "Cô Thảo Mộc Lan"
+      },
+      "title": {
+        "vi": "Phú Bà Lan Phi Điệp"
+      },
+      "portrait": "N7",
+      "traits": {
+        "diligence": 0.35,
+        "trader": 0.31,
+        "collector": 0.18
+      },
+      "likes": "flower",
+      "startLevel": 14,
+      "startCoins": 4802
+    },
+    {
+      "id": "base:bot.chi-ngan-chung-khoan",
+      "name": {
+        "vi": "Chị Ngân Chứng Khoán"
+      },
+      "title": {
+        "vi": "Nữ Hoàng Sàn Mây"
+      },
+      "portrait": "N8",
+      "traits": {
+        "diligence": 0.24,
+        "trader": 0.93,
+        "collector": 0.31
+      },
+      "likes": "fruit",
+      "startLevel": 5,
+      "startCoins": 1790
+    },
+    {
+      "id": "base:bot.di-tu-nuoc-mam",
+      "name": {
+        "vi": "Dì Tư Nước Mắm"
+      },
+      "title": {
+        "vi": "Phú Bà Phú Quốc"
+      },
+      "portrait": "N9",
+      "traits": {
+        "diligence": 0.24,
+        "trader": 0.89,
+        "collector": 0.13
+      },
+      "likes": "herb",
+      "startLevel": 12,
+      "startCoins": 4932
+    },
+    {
+      "id": "base:bot.ba-muoi-gao-thom",
+      "name": {
+        "vi": "Bà Mười Gạo Thơm"
+      },
+      "title": {
+        "vi": "Đại Gia Lúa Gạo"
+      },
+      "portrait": "N10",
+      "traits": {
+        "diligence": 0.69,
+        "trader": 0.44,
+        "collector": 0.11
+      },
+      "likes": "flower",
+      "startLevel": 11,
+      "startCoins": 4158
+    },
+    {
+      "id": "base:bot.co-uyen-ao-dai",
+      "name": {
+        "vi": "Cô Uyên Áo Dài"
+      },
+      "title": {
+        "vi": "Bà Chủ Nhà May"
+      },
+      "portrait": "N11",
+      "traits": {
+        "diligence": 0.68,
+        "trader": 0.31,
+        "collector": 0.5
+      },
+      "likes": "fruit",
+      "startLevel": 4,
+      "startCoins": 2112
+    },
+    {
+      "id": "base:bot.chi-linh-hai-san",
+      "name": {
+        "vi": "Chị Linh Hải Sản"
+      },
+      "title": {
+        "vi": "Phú Bà Vũng Tàu"
+      },
+      "portrait": "N12",
+      "traits": {
+        "diligence": 0.32,
+        "trader": 0.35,
+        "collector": 0.67
+      },
+      "likes": "herb",
+      "startLevel": 10,
+      "startCoins": 5440
+    },
+    {
+      "id": "base:bot.ba-ba-bat-dong-san",
+      "name": {
+        "vi": "Bà Ba Bất Động Sản"
+      },
+      "title": {
+        "vi": "Đại Gia Đất Mây"
+      },
+      "portrait": "N1",
+      "traits": {
+        "diligence": 0.49,
+        "trader": 0.51,
+        "collector": 0.52
+      },
+      "likes": "flower",
+      "startLevel": 33,
+      "startCoins": 277233
+    },
+    {
+      "id": "base:bot.co-hanh-yen-sao",
+      "name": {
+        "vi": "Cô Hạnh Yến Sào"
+      },
+      "title": {
+        "vi": "Phú Bà Nha Trang"
+      },
+      "portrait": "N2",
+      "traits": {
+        "diligence": 0.53,
+        "trader": 0.92,
+        "collector": 0.69
+      },
+      "likes": "fruit",
+      "startLevel": 20,
+      "startCoins": 11400
+    },
+    {
+      "id": "base:bot.chi-tram-my-pham",
+      "name": {
+        "vi": "Chị Trâm Mỹ Phẩm"
+      },
+      "title": {
+        "vi": "Nữ Hoàng Son Phấn"
+      },
+      "portrait": "N3",
+      "traits": {
+        "diligence": 0.44,
+        "trader": 0.26,
+        "collector": 0.36
+      },
+      "likes": "herb",
+      "startLevel": 9,
+      "startCoins": 4473
+    },
+    {
+      "id": "base:bot.di-sau-hot-xoan",
+      "name": {
+        "vi": "Dì Sáu Hột Xoàn"
+      },
+      "title": {
+        "vi": "Đại Gia Kim Cương"
+      },
+      "portrait": "N4",
+      "traits": {
+        "diligence": 0.63,
+        "trader": 0.46,
+        "collector": 0.81
+      },
+      "likes": "flower",
+      "startLevel": 26,
+      "startCoins": 217542
+    },
+    {
+      "id": "base:bot.co-phuong-thanh-long",
+      "name": {
+        "vi": "Cô Phương Thanh Long"
+      },
+      "title": {
+        "vi": "Bà Chủ Bình Thuận"
+      },
+      "portrait": "N5",
+      "traits": {
+        "diligence": 0.33,
+        "trader": 0.92,
+        "collector": 0.25
+      },
+      "likes": "fruit",
+      "startLevel": 12,
+      "startCoins": 6552
+    },
+    {
+      "id": "base:bot.chi-yen-nem-chua",
+      "name": {
+        "vi": "Chị Yến Nem Chua"
+      },
+      "title": {
+        "vi": "Phú Bà Thanh Hóa"
+      },
+      "portrait": "N6",
+      "traits": {
+        "diligence": 0.33,
+        "trader": 0.93,
+        "collector": 0.23
+      },
+      "likes": "herb",
+      "startLevel": 12,
+      "startCoins": 5256
+    },
+    {
+      "id": "base:bot.ba-ut-tram-huong",
+      "name": {
+        "vi": "Bà Út Trầm Hương"
+      },
+      "title": {
+        "vi": "Đại Gia Trầm Kỳ"
+      },
+      "portrait": "N7",
+      "traits": {
+        "diligence": 0.54,
+        "trader": 0.18,
+        "collector": 0.14
+      },
+      "likes": "flower",
+      "startLevel": 15,
+      "startCoins": 6480
+    },
+    {
+      "id": "base:bot.co-tuyet-may-trang",
+      "name": {
+        "vi": "Cô Tuyết Mây Trắng"
+      },
+      "title": {
+        "vi": "Tiên Nữ Đỉnh Mây"
+      },
+      "portrait": "N8",
+      "traits": {
+        "diligence": 0.91,
+        "trader": 0.86,
+        "collector": 0.52
+      },
+      "likes": "fruit",
+      "startLevel": 2,
+      "startCoins": 696
     }
   ],
   "help": {
@@ -138,5 +738,19 @@
     "coinsPerLevel": 1.5,
     "xp": 3,
     "friendship": 1
+  },
+  "market": {
+    "perSession": 4,
+    "markup": 1.25,
+    "lockedMarkup": 1.6,
+    "buysPerDay": 20,
+    "maxQty": 10,
+    "friendship": 1,
+    "restockChance": 0.55,
+    "values": {
+      "base:bug.ladybird": 30,
+      "base:mat.cloud-clay": 90,
+      "base:mat.merit-seal": 420
+    }
   }
 }

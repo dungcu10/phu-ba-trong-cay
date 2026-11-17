@@ -8,7 +8,7 @@
 // hours at once or minute by minute gives the same result, and it all runs without drawing.
 
 import type { BotDef, ContentPack } from '../core/content.ts';
-import type { BotState, GameState } from '../core/state.ts';
+import type { BotListing, BotState, GameState } from '../core/state.ts';
 import { randomFor } from '../core/rng.ts';
 import { xpToNextLevel } from './economy.ts';
 
@@ -107,6 +107,7 @@ function session(content: ContentPack, state: GameState, bot: BotDef, s: BotStat
   options.sort((a, b) => b.score - a.score);
   const chosen = options[0]!;
   s.lastAction = { kind: chosen.kind, reason: chosen.run(), at };
+  restock(content, bot, s, r);
 
   // Independently: drop by the player's garden with a small gift (more often when friends).
   if (r('visit') < content.neighbors.giftChance * (1 + s.friendship * 0.05)) {
@@ -124,6 +125,94 @@ function session(content: ContentPack, state: GameState, bot: BotDef, s: BotStat
       addNotice(state, at, `${bot.name.vi} ghé vườn, để lại ${amount} xu làm quà`);
     }
   }
+}
+
+// ------------------------------------------------------------------ Chợ Mây (chỉ thị 07) ---
+
+/** Reference value of an item: what the shop pays, or the configured value for bugs/materials. */
+export function marketValue(content: ContentPack, itemId: string): number {
+  const item = content.items.get(itemId);
+  if (item && item.sellPrice !== null) return item.sellPrice;
+  return content.neighbors.market.values[itemId] ?? 0;
+}
+
+/** A neighbour's asking price: never below markup × value, cheaper from traders. */
+export function askingPrice(content: ContentPack, bot: BotDef, itemId: string): number {
+  const m = content.neighbors.market;
+  const item = content.items.get(itemId);
+  const collector = item?.mutation ? 0.5 * bot.traits.collector : 0;
+  return Math.max(1, Math.ceil(marketValue(content, itemId) * m.markup * (1 + 0.35 * (1 - bot.traits.trader) + collector)));
+}
+
+/** True when the item is a crop the player cannot grow yet (costs more at the market). */
+export function lockedForPlayer(content: ContentPack, state: GameState, itemId: string): boolean {
+  const base = content.items.get(itemId)?.baseItem ?? itemId;
+  const crop = content.cropList.find((c) => c.produce.id === base);
+  return !!crop && crop.unlockLevel > state.player.level;
+}
+
+/** What the player pays per item for a listing right now. */
+export function playerPrice(content: ContentPack, state: GameState, listing: BotListing): number {
+  return lockedForPlayer(content, state, listing.itemId) ? Math.ceil(listing.price * content.neighbors.market.lockedMarkup) : listing.price;
+}
+
+/** Things a neighbour may lay out: crops it can grow (favourite family first), bugs, clay, seals. */
+function marketPool(content: ContentPack, bot: BotDef, s: BotState): Array<{ id: string; w: number; max: number }> {
+  const pool: Array<{ id: string; w: number; max: number }> = [];
+  const m = content.neighbors.market;
+  for (const crop of content.cropList) {
+    if (crop.unlockLevel > s.level) continue;
+    pool.push({ id: crop.produce.id, w: crop.family === bot.likes ? 3 : 1, max: m.maxQty });
+    if (bot.traits.collector > 0.5) {
+      for (const it of content.items.values()) {
+        if (it.baseItem === crop.produce.id) pool.push({ id: it.id, w: 0.25 * bot.traits.collector, max: 2 });
+      }
+    }
+  }
+  for (const id of Object.keys(m.values)) {
+    if (!content.items.has(id)) continue;
+    const seal = id.includes('merit');
+    pool.push({ id, w: seal ? 0.15 * bot.traits.collector : 0.8, max: seal ? 1 : 4 });
+  }
+  return pool;
+}
+
+/** After its main action, a neighbour may refresh its stall. Deterministic per (save, bot, session). */
+function restock(content: ContentPack, bot: BotDef, s: BotState, r: (k: string) => number): void {
+  const m = content.neighbors.market;
+  if (!Array.isArray(s.stall)) s.stall = [];
+  // Unsold goods are sometimes taken back (keeps stalls changing).
+  if (s.stall.length > 0 && r('unlist') < 0.2) s.stall.shift();
+  if (r('restock') > m.restockChance * (0.5 + bot.traits.trader)) return;
+  const want = Math.max(1, Math.min(m.perSession, Math.round(m.perSession * (0.3 + 0.7 * bot.traits.trader) * (0.5 + 0.5 * bot.traits.diligence))));
+  const pool = marketPool(content, bot, s).filter((p) => !s.stall.some((l) => l.itemId === p.id));
+  let k = 0;
+  while (s.stall.length < want && pool.length > 0) {
+    const total = pool.reduce((a, p) => a + p.w, 0);
+    let pick = r(`pick${k}`) * total;
+    let i = 0;
+    while (i < pool.length - 1 && pick > pool[i]!.w) pick -= pool[i++]!.w;
+    const p = pool.splice(i, 1)[0]!;
+    const qty = Math.max(1, Math.round(p.max * (0.3 + 0.7 * r(`qty${k}`))));
+    s.stall.push({ itemId: p.id, qty, price: askingPrice(content, bot, p.id) });
+    k += 1;
+  }
+}
+
+/** Everyone on the Phú Bà board, richest first. The player's id is "". */
+export function rankings(content: ContentPack, state: GameState): Array<{ id: string; wealth: number }> {
+  const rows = [{ id: '', wealth: playerWealth(content, state) }];
+  for (const bot of content.bots.values()) {
+    const s = state.neighbors[bot.id];
+    if (s) rows.push({ id: bot.id, wealth: botWealth(s) });
+  }
+  return rows.sort((a, b) => b.wealth - a.wealth || a.id.localeCompare(b.id));
+}
+
+/** Keeps yesterday's ranks for the board's up/down arrows (taken at the first update of a day). */
+export function snapshotRanks(content: ContentPack, state: GameState, day: number): void {
+  if (state.ranks.day === day) return;
+  state.ranks = { day, prev: Object.fromEntries(rankings(content, state).map((r, i) => [r.id, i + 1])) };
 }
 
 /**

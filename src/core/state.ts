@@ -4,7 +4,7 @@ import type { ContentPack, FloorDef } from './content.ts';
 import { newSeed } from './rng.ts';
 import { emptyQuestState, type QuestState } from '../systems/quests.ts';
 
-export const SAVE_VERSION = 10;
+export const SAVE_VERSION = 11;
 
 export interface Planting {
   /** Unique per planting, used as a key for deterministic randomness. */
@@ -94,6 +94,15 @@ export interface BotState {
   lastAction: { kind: string; reason: string; at: number } | null;
   /** Pots the player helped in this neighbour's garden today (local day number, pot keys). */
   help: { day: number; pots: string[] };
+  /** Chợ Mây (save 11): what this neighbour has laid out for the player to buy. */
+  stall: BotListing[];
+}
+
+export interface BotListing {
+  itemId: string;
+  qty: number;
+  /** Asking price per item before the "not unlocked yet" factor. */
+  price: number;
 }
 
 export interface Listing {
@@ -148,6 +157,10 @@ export interface GameState {
   quests: QuestState;
   /** Tutorials already shown (save 10). */
   tutorials: string[];
+  /** Chợ Mây (save 11): purchases from neighbours on local day `day`. */
+  market: { day: number; buys: number };
+  /** Phú Bà board (save 11): everyone's rank at the start of local day `day`, for the arrows. */
+  ranks: { day: number; prev: Record<string, number> };
 }
 
 /** Builds a floor with its starting pots (used for the first floor and every unlocked one). */
@@ -195,13 +208,15 @@ export function createNewGame(content: ContentPack, now: number, entropy = now):
     budget: { day: -1, giftGems: 0 },
     quests: emptyQuestState(),
     tutorials: [],
+    market: { day: -1, buys: 0 },
+    ranks: { day: -1, prev: {} },
   };
 }
 
 export function newNeighbors(content: ContentPack, now: number): Record<string, BotState> {
   const out: Record<string, BotState> = {};
   for (const b of content.bots.values()) {
-    out[b.id] = { level: b.startLevel, xp: 0, coins: b.startCoins, gardenValue: b.startCoins, friendship: 0, simulatedTo: now, lastAction: null, help: { day: -1, pots: [] } };
+    out[b.id] = { level: b.startLevel, xp: 0, coins: b.startCoins, gardenValue: b.startCoins, friendship: 0, simulatedTo: now, lastAction: null, help: { day: -1, pots: [] }, stall: [] };
   }
   return out;
 }

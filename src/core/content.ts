@@ -302,6 +302,8 @@ export interface SurprisesConfig {
 export interface BotDef {
   id: string;
   name: LocalizedText;
+  /** Nickname shown under the name on the Phú Bà board (chỉ thị 07). */
+  title?: LocalizedText;
   portrait: string;
   traits: { diligence: number; trader: number; collector: number };
   likes: string;
@@ -320,7 +322,25 @@ export interface NeighborsConfig {
   orderFriendship: number;
   /** Helping in a neighbour's garden (water, catch a bug) while visiting. */
   help: { perBotPerDay: number; coinsBase: number; coinsPerLevel: number; xp: number; friendship: number };
+  /** Chợ Mây (chỉ thị 07): neighbours' own stalls the player can buy from. */
+  market: MarketConfig;
   bots: BotDef[];
+}
+
+export interface MarketConfig {
+  /** Most items one neighbour lays out at a time. */
+  perSession: number;
+  /** Asking price = value × markup × (1 + 0.35 × (1 − trader)); ≥ 1.25 so buying to resell loses. */
+  markup: number;
+  /** Extra factor on crops the player has not unlocked yet. */
+  lockedMarkup: number;
+  buysPerDay: number;
+  maxQty: number;
+  friendship: number;
+  /** Chance per active session that a neighbour restocks (traders more often). */
+  restockChance: number;
+  /** Reference value of items the shop does not buy (bugs, materials). */
+  values: Record<string, number>;
 }
 
 export interface MaterialDef {
@@ -605,6 +625,8 @@ export function buildContentPack(raw: RawContent): ContentPack {
   }
   const neighbors = raw.neighbors as NeighborsConfig;
   checkFields('neighbors', neighbors, ['stallSlots', 'maxListingQty', 'sessionMinutes', 'catchUpDays', 'giftChance'], [], problems);
+  checkFields('neighbors.market', neighbors?.market, ['perSession', 'markup', 'lockedMarkup', 'buysPerDay', 'maxQty', 'friendship', 'restockChance'], [], problems);
+  if (neighbors?.market && neighbors.market.markup < 1.25) problems.push('neighbors.market.markup phải ≥ 1,25 (không cho mua về bán lại có lãi)');
   const bots = new Map<string, BotDef>();
   asArray('neighbors.bots', neighbors?.bots, problems).forEach((b, i) => {
     if (checkFields(`neighbors.bots[${i}]`, b, ['startLevel', 'startCoins'], ['id', 'portrait', 'likes'], problems)) addUnique(bots, b as unknown as BotDef, `neighbors.bots[${i}]`, problems);

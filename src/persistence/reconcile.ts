@@ -174,9 +174,14 @@ function reconcileWorld(state: GameState, content: ContentPack, c: Checker): voi
   for (const id of content.bots.keys()) {
     const bot = state.neighbors?.[id] ?? fresh[id]!;
     if (!bot.help || typeof bot.help.day !== 'number' || !Array.isArray(bot.help.pots)) bot.help = { day: -1, pots: [] };
+    bot.stall = (Array.isArray(bot.stall) ? bot.stall : [])
+      .filter((l) => l && content.items.has(l.itemId) && Number.isInteger(l.qty) && l.qty > 0 && Number.isFinite(l.price) && l.price > 0)
+      .slice(0, content.neighbors.market.perSession);
     neighbors[id] = bot;
   }
   state.neighbors = neighbors;
+  if (!state.market || typeof state.market.day !== 'number' || typeof state.market.buys !== 'number') state.market = { day: -1, buys: 0 };
+  if (!state.ranks || typeof state.ranks.day !== 'number' || typeof state.ranks.prev !== 'object' || state.ranks.prev === null) state.ranks = { day: -1, prev: {} };
 
   // Pot collection and event progress (POT_SYSTEM 8).
   if (!state.potBook || typeof state.potBook !== 'object') state.potBook = {};
