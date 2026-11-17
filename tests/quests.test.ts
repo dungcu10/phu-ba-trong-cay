@@ -154,6 +154,19 @@ test('nhiệm vụ tuần đổi đúng 0 giờ thứ Hai, tháng đổi đúng 
   assert.equal(s.quests.periods['monthly']!.picks.length, content.questTracks.get('monthly')!.pick);
 });
 
+test('người chơi cấp thấp bốc thăm thiếu nhiệm vụ tháng thì được bù khi lên cấp, không đổi nhiệm vụ đã có', () => {
+  const s = newGame(content, { level: 1 });
+  dispatch(content, s, { type: 'tick' }, VN('2026-11-18T10:00:00'));
+  const first = [...s.quests.periods['monthly']!.picks];
+  const pick = content.questTracks.get('monthly')!.pick!;
+  assert.ok(first.length < pick, `cấp 1 chỉ có ${first.length}`);
+  s.player.level = 10;
+  dispatch(content, s, { type: 'tick' }, VN('2026-11-19T10:00:00'));
+  const after = s.quests.periods['monthly']!.picks;
+  assert.equal(after.length, pick);
+  assert.deepEqual(after.slice(0, first.length), first);
+});
+
 test('thành tựu nhiều bậc: mục tiêu tăng, nhận lần lượt từng bậc', () => {
   const s = newGame(content);
   const q = content.quests.get('achievement.harvest')!;
@@ -268,6 +281,7 @@ test('người mới chỉ làm theo ô nhiệm vụ: đi hết chuỗi tân th�
   assert.deepEqual(r.claimed, newbie, `xong ${r.claimed.length}/${newbie.length}; kẹt ở ${trackedQuest(content, s)?.def.id}`);
   assert.deepEqual([...new Set(r.blocked)], [], 'bước nào cũng có tính năng đã mở');
   assert.ok(r.minutes < 6 * 60, `mất ${r.minutes} phút`);
+  if (process.env.REPORT) console.log(`tân thủ xong sau ${r.minutes} phút game, cấp ${s.player.level}, ${s.floors.length} tầng, ${s.player.coins} xu`);
   assert.ok(s.player.level >= 5 && s.floors.length >= 2);
   void HOUR;
 });

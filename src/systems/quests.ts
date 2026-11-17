@@ -61,18 +61,22 @@ export function ensureQuestPeriods(content: ContentPack, state: GameState, now: 
   for (const track of content.questTracks.values()) {
     if (!track.reset) continue;
     const key = periodKey(content, track, now);
-    if (state.quests.periods[track.id]?.key === key) continue;
+    const order = (qs: QuestDef[]) => qs.map((q) => ({ q, k: randomFor(state.seed, 'quest', track.id, key, q.id) })).sort((a, b) => a.k - b.k).map(({ q }) => q.id);
     const pool = content.questList.filter((q) => q.track === track.id && (q.minLevel ?? 1) <= state.player.level);
+    const cur = state.quests.periods[track.id];
+    if (cur?.key === key) {
+      // Same period: a low-level player who drew fewer than `pick` gets more as levels open them;
+      // quests already drawn are never swapped.
+      const room = (track.pick ?? 0) - cur.picks.length;
+      if (room > 0) cur.picks.push(...order(pool.filter((q) => !cur.picks.includes(q.id))).slice(0, room));
+      continue;
+    }
     for (const q of content.questList) {
       if (q.track !== track.id) continue;
       delete state.quests.progress[q.id];
       delete state.quests.claims[q.id];
     }
-    const picks = pool
-      .map((q) => ({ q, k: randomFor(state.seed, 'quest', track.id, key, q.id) }))
-      .sort((a, b) => a.k - b.k)
-      .slice(0, track.pick ?? 0)
-      .map(({ q }) => q.id);
+    const picks = order(pool).slice(0, track.pick ?? 0);
     state.quests.periods[track.id] = { key, picks, level: state.player.level };
   }
 }
