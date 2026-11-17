@@ -212,7 +212,13 @@ export class Art {
       if (b.art && b.sprite === b.art) need.push(b.art);
       else need.push(`${b.sprite}/0`, `${b.sprite}/1`);
     }
-    for (const id of content.items.keys()) if (!content.materials.has(id)) need.push(itemFrame(content, id));
+    for (const id of content.items.keys()) {
+      if (content.materials.has(id)) continue;
+      // Chỉ thị 10 § 3.5: processed goods use an approved icon ("art:<frame>").
+      const good = content.goods?.get(id);
+      if (good) need.push(good.icon.startsWith('art:') ? good.icon.slice(4) : good.icon);
+      else need.push(itemFrame(content, id));
+    }
     return need.filter((n) => !this.frames[n]);
   }
 }

@@ -15,6 +15,7 @@ import { potLook } from '../systems/pots.ts';
 import { SettingsPanel } from '../ui/settings.ts';
 import { FloorPanel, PotShopPanel, type PotShopActions } from '../ui/potPanels.ts';
 import { BirdsPanel, type BirdActions } from '../ui/birdPanels.ts';
+import { WorkshopPanel, type WorkshopActions } from '../ui/workshopPanel.ts';
 import { rentEndsSoon } from '../systems/birds.ts';
 import { JournalPanel, LettersPanel, NeighborsPanel, OrdersPanel, StallPanel, type WorldActions } from '../ui/worldPanels.ts';
 import { FeatureTutorialPanel, QuestCenterPanel, TODAY } from '../ui/questPanels.ts';
@@ -32,7 +33,7 @@ import type { Sfx } from './sfx.ts';
 /** How often the world is advanced while the game is open (orders return, neighbours act). */
 const TICK_MS = 5000;
 
-export class Controller implements BirdActions, PanelActions, PotShopActions, WorldActions, GardenActions, SeedTrayActions, PotSystemActions {
+export class Controller implements WorkshopActions, BirdActions, PanelActions, PotShopActions, WorldActions, GardenActions, SeedTrayActions, PotSystemActions {
   readonly toasts = new Toasts();
   readonly hud: Hud;
   private panel: Panel | null = null;
@@ -66,6 +67,7 @@ export class Controller implements BirdActions, PanelActions, PotShopActions, Wo
       toggleTray: () => this.toggleTray(),
       openJournal: () => this.open(new JournalPanel(this.session, this)),
       openBirds: () => this.open(new BirdsPanel(this.session, this)),
+      openWorkshop: () => this.openWorkshop(),
       openLetters: () => {
         this.open(new LettersPanel(this.session));
         this.run({ type: 'readNotices' }, true);
@@ -86,7 +88,7 @@ export class Controller implements BirdActions, PanelActions, PotShopActions, Wo
     setInterval(() => {
       this.hud.update();
       // Countdowns on the order board move every second.
-      if (this.panel instanceof OrdersPanel || this.panel instanceof MissionsPanel || this.panel instanceof QuestCenterPanel || this.panel instanceof BirdsPanel) this.panel.render();
+      if (this.panel instanceof OrdersPanel || this.panel instanceof MissionsPanel || this.panel instanceof QuestCenterPanel || this.panel instanceof BirdsPanel || this.panel instanceof WorkshopPanel) this.panel.render();
       this.warnRent();
       this.visitBar?.update();
       // A feature that just opened is introduced once nothing else is on screen.
@@ -135,6 +137,7 @@ export class Controller implements BirdActions, PanelActions, PotShopActions, Wo
       event: () => this.open(new EventPanel(this.session, this)),
       shop: () => this.openShop(),
       birds: () => this.open(new BirdsPanel(this.session, this)),
+      workshop: () => this.openWorkshop(),
     };
     setTimeout(() => go[feature]?.(), 250);
   }
@@ -186,6 +189,25 @@ export class Controller implements BirdActions, PanelActions, PotShopActions, Wo
 
   cancelListing(listingId: number): void {
     this.run({ type: 'cancelListing', listingId });
+  }
+
+  // --- Xưởng Bọ (chỉ thị 10 § 3.5) ------------------------------------------------------------
+
+  /** Opens the Xưởng Bọ window (chỉ thị 11: the village house calls this same function). */
+  openWorkshop(): void {
+    this.open(new WorkshopPanel(this.session, this));
+  }
+
+  startJob(recipeId: string): void {
+    this.run({ type: 'startJob', recipeId });
+  }
+
+  upgradeMachine(machineId: string): void {
+    this.run({ type: 'upgradeMachine', machineId });
+  }
+
+  buyMachineSlot(machineId: string): void {
+    this.run({ type: 'buyMachineSlot', machineId });
   }
 
   // --- Birds (chỉ thị 10 § 3.3) -------------------------------------------------------------
@@ -541,6 +563,16 @@ export class Controller implements BirdActions, PanelActions, PotShopActions, Wo
         }, 700);
         break;
       }
+      case 'goodsMade':
+        this.toasts.show(`Xưởng Bọ làm xong: ${content.items.get(e.itemId)?.name.vi ?? ''}`, 'success', 2200);
+        break;
+      case 'jobStarted':
+        this.sfx.play('tap');
+        break;
+      case 'machineStar':
+        this.sfx.play('upgrade');
+        this.toasts.show(`${content.machines?.get(e.machine)?.name.vi ?? 'Máy'} lên ${e.stars} sao: làm nhanh hơn, đơn có hàng của máy thưởng nhiều hơn.`, 'level', 2600);
+        break;
       case 'birdLevelUp': {
         const b = this.session.state.birds.find((x) => x.id === e.birdId);
         this.toasts.show(`${content.birds?.get(b?.species ?? '')?.name.vi ?? 'Chim'} lên cấp ${e.level}: bắt nhanh hơn, no lâu hơn!`, 'level', 2600);
