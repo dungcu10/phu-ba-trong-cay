@@ -29,6 +29,15 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Chỉ thị 10 M6 (phần 2) — Đơn hàng khinh khí cầu, chim dẫn đường, nhờ hàng xóm; công thức Xưởng cho 14 cây (tag `m-10-m6`)
+- Loại: Thêm / Thay đổi
+- Mô tả: gửi đơn thì hàng đi ngay, XP cộng ngay (lời cảm ơn của khách), khinh khí cầu bay đi `refillSeconds` rồi mang xu/ngọc/vật phẩm về (tắt game vẫn đúng). Chim dẫn đường (cấp 11): đi cùng tới khi về, không bắt sâu khi đi, cộng thưởng theo loài. Đơn có hàng chế biến (thưởng thêm theo sao máy), đơn hiếm có hạn và vật phẩm thưởng, thêm ô đơn theo cấp, nhờ hàng xóm góp hàng mỗi ngày 1 lần (cấp 13). Bảng Đơn: ô đang bay, hàng chọn chim, nút "Nhờ góp", hạn đơn quý. Ô số lượng đọc được trên giao diện tối (lỗi cũ). Xưởng: công thức cho cây mới của CTO (Hồng Mây, Hướng Dương, Táo, Đào Tiên, Cải Mây) và Máy Mài Ngọc nhận Hoa Trăng Non / Cỏ Sao Băng.
+- **Cho CTO — 4 núm kinh tế mới trong `orders.json` để trung tính** (code và test đã đủ, test dùng số riêng): `goodsShare` 0 (đề xuất 0,4; cần bot mô phỏng biết dùng Xưởng — bật lên thì bot bỏ đơn có hàng chế biến, bọ người chơi 40 → 27/ngày); `rareHours` chưa đặt (đề xuất 24; bật lên đổi chuỗi đơn, Bọ Rất hiếm 0,21 → 0,13 — chỉ số này dựa trên ~6 con/30 ngày nên rất nhạy); `extraSlots` [] (đề xuất 7/8/9 ô ở cấp 10/15/20; bật lên đơn/ngày ~23); `rareItems` [] (đề xuất Sợi Mây Kết, Giọt Sương Trời; bật lên cấp ngày 7 = 16).
+- File/Module: `src/systems/orders.ts`, `src/core/{game,state,content}.ts`, `src/persistence/reconcile.ts`, `src/ui/worldPanels.ts`, `src/app/controller.ts`, `content/base/{orders,workshop}.json`, `tools/make-workshop.py`
+- Ảnh hưởng save: Không đổi phiên bản. Ô đơn và khinh khí cầu đang bay được giữ khi đọc save (trước đây bước đọc save cắt về 6 ô — đã sửa, có test).
+- Kiểm thử: `tests/orders10.test.ts` (7 bài), `tests/world.test.ts` cập nhật (xu về cùng khinh khí cầu). `npm run check` XANH.
+- Trạng thái nghiệm thu: Chờ
+
 ### [2026-11-18] Gộp A6 dữ liệu (CTO) + D1: chỉnh tỉ lệ bọ BOT, sửa BOT thuê chim sai họ
 - Loại: Sửa lỗi (P2) / Thay đổi
 - Mô tả: BOT chỉ thuê loài chim có họ cây đang trồng trong vườn (hoặc không giới hạn họ), mỗi phiên dời chim tới tầng có nhiều cây hợp họ nhất trong ngày (vườn dựng đổi cây mỗi ngày) — trước đó chim có thể bắt 0 bọ. `birds.json` `rules.bots.growingShare` 0,35 → 0,45 theo nền 14 cây: BOT cấp 11–15 38,5 bọ/ngày, người chơi 40,0 (tỉ lệ 0,96). Không sửa crops/config.
