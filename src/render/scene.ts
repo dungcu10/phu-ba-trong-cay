@@ -18,6 +18,10 @@ import { homeGarden, type GardenFloor, type GardenModel } from './garden.ts';
 import { SLOT_GEOM, SlotView } from './slotView.ts';
 import { ease, Tweens } from './tween.ts';
 import { PET_SPECIES, PetActor } from './worldArt.ts';
+import { BirdActor } from './birdActors.ts';
+import { foodAt } from '../systems/birds.ts';
+import { isNight } from '../systems/growth.ts';
+import { WORLD10 } from './world10.ts';
 import { buildVine, floorArtId, floorPicture, hasWorld10, pedestalSprite, ringSprites, slotXs, type Swayer } from './world10.ts';
 
 /** Giao diện fantasy (chỉ thị 06): night glass + thin gold for the canvas signs too. */
@@ -119,6 +123,9 @@ export class GameView {
   private readonly trunkLayer = new Container();
   /** Chỉ thị 10 § 2.3: back halves of the cloud rings, behind the vine. */
   private readonly ringBackLayer = new Container();
+  /** Chỉ thị 10 § 3.3: birds on their perches (above the floors, so a flight passes in front). */
+  private readonly birdLayer = new Container();
+  private birds = new Map<string, BirdActor>();
   private swayers: Swayer[] = [];
   private readonly sky: Sprite;
   private readonly ambience: Ambience;
@@ -157,7 +164,7 @@ export class GameView {
     this.ambience = new Ambience(this.glow);
     app.stage.addChild(this.sky, this.ambience.back);
     // Chỉ thị 10 § 2.3 layer order: ring backs, vine, floors (ring fronts, pedestals, pots inside), effects.
-    this.world.addChild(this.ringBackLayer, this.trunkLayer, this.floorsLayer, this.effects);
+    this.world.addChild(this.ringBackLayer, this.trunkLayer, this.floorsLayer, this.birdLayer, this.effects);
     app.stage.addChild(this.world, this.ambience.front);
     this.source = () => homeGarden(session.content, session.state, session.now());
     this.model = this.source();
@@ -633,8 +640,48 @@ export class GameView {
   }
 
   /** Re-reads every pot from the model. Cheap: a few pure function calls. */
+  /** Perch of a bird in floor coordinates: the right edge of the floor, branch 2 a little inward and higher. */
+  private perchOffset(fi: number, branch: number): { x: number; y: number } {
+    const right = hasWorld10(this.art) ? WORLD10.floors[floorArtId(fi)]!.right : 560;
+    return branch === 0 ? { x: right - 165, y: -60 } : { x: right - 100, y: -175 };
+  }
+
+  /** Brings the bird actors in line with the save (own garden only; neighbours' birds come later). */
+  private syncBirds(): void {
+    const { content, state } = this.session;
+    const now = this.session.now();
+    const want = this.model.mode === 'home' ? state.birds.filter((b) => b.floor !== null && b.floor < this.floors.length && !(b.escort && now < b.escort.until)) : [];
+    const keep = new Set(want.map((b) => b.id));
+    for (const [id, a] of this.birds) {
+      if (keep.has(id)) continue;
+      a.destroy();
+      this.birds.delete(id);
+    }
+    for (const b of want) {
+      let a = this.birds.get(b.id);
+      if (!a) {
+        if (!BirdActor.canShow(this.art, b.species)) continue;
+        a = new BirdActor(this.art, b.id, b.species, b.id.length * 97 + b.caught);
+        this.birds.set(b.id, a);
+        this.birdLayer.addChild(a.root);
+      }
+      const def = content.birds?.get(b.species);
+      a.sleeping = foodAt(content, b, now) <= 0 || (!!def?.nightOnly && !isNight(content, now));
+    }
+  }
+
+  /** Plays a bird's catch: flight to the pot's bug, peck, flight back. */
+  birdCatch(birdId: string, floor: number, slot: number): void {
+    const a = this.birds.get(birdId);
+    const view = this.floors[floor]?.slots[slot];
+    if (!a || !view) return;
+    const p = this.world.toLocal(view.toGlobal(SLOT_GEOM.bugOffset));
+    a.catchAt(p.x + 20, p.y + 30);
+  }
+
   refresh(): void {
     this.model = this.source();
+    this.syncBirds();
     if (this.model.floors.length !== this.floors.length || this.model.floors.some((f, i) => this.floors[i]?.key !== this.floorKey(f))) {
       this.syncFloors();
       return;
@@ -790,6 +837,17 @@ export class GameView {
       // Pets only move while their floor is drawn.
       for (const p of fv.pets) p.update(dt, fv.container.visible);
     });
+    for (const b of this.session.state.birds) {
+      const a = this.birds.get(b.id);
+      const fv = b.floor !== null ? this.floors[b.floor] : undefined;
+      if (!a || !fv) continue;
+      const o = this.perchOffset(b.floor!, b.branch);
+      a.homeX = fv.container.x + o.x;
+      a.homeY = fv.container.y + o.y;
+      a.root.alpha = fv.container.alpha;
+      a.root.visible = fv.container.visible;
+      a.update(dt, fv.container.visible);
+    }
     // Leaves and lanterns sway, only around the floor in view (the one in view and its neighbours).
     // Visible band: from the camera floor up through the zoomed-out floors above it.
     const viewBottom = -this.scroll + WORLD.floorGap * 1.6;

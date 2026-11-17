@@ -734,3 +734,12 @@ html, body {
 .avatar.me{width:40px;height:40px;align-items:center;justify-content:center;background:var(--gold,#F3D27E);color:#3B2A12;font-size:12px;font-weight:800}
 .rank-move{min-width:30px;font-size:12px;font-weight:800;text-align:center}
 .rank-move.up{color:#4FC08D}.rank-move.down{color:#FF8A70}.rank-move.same{opacity:.5}
+/* Chỉ thị 10 § 3.3: Bảng chim */
+.bird-tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3); }
+.bird-millet { display: inline-flex; align-items: center; gap: var(--space-1); font-weight: 700; margin-right: auto; }
+.bird-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: var(--space-3); }
+.bird-card.hungry { outline: 2px dashed var(--color-ui-danger); }
+.bird-card .note-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-1); }
+.bird-floors { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; }
+.bird-floors .chip { min-height: 32px; padding: 0 10px; font-size: 12px; }
+.bird-head { margin: var(--space-4) 0 var(--space-2); font-family: var(--font-display), serif; }

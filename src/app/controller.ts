@@ -14,6 +14,8 @@ import { potIcon } from '../ui/potPanels.ts';
 import { potLook } from '../systems/pots.ts';
 import { SettingsPanel } from '../ui/settings.ts';
 import { FloorPanel, PotShopPanel, type PotShopActions } from '../ui/potPanels.ts';
+import { BirdsPanel, type BirdActions } from '../ui/birdPanels.ts';
+import { rentEndsSoon } from '../systems/birds.ts';
 import { JournalPanel, LettersPanel, NeighborsPanel, OrdersPanel, StallPanel, type WorldActions } from '../ui/worldPanels.ts';
 import { FeatureTutorialPanel, QuestCenterPanel, TODAY } from '../ui/questPanels.ts';
 import { pendingTutorial } from '../systems/quests.ts';
@@ -30,7 +32,7 @@ import type { Sfx } from './sfx.ts';
 /** How often the world is advanced while the game is open (orders return, neighbours act). */
 const TICK_MS = 5000;
 
-export class Controller implements PanelActions, PotShopActions, WorldActions, GardenActions, SeedTrayActions, PotSystemActions {
+export class Controller implements BirdActions, PanelActions, PotShopActions, WorldActions, GardenActions, SeedTrayActions, PotSystemActions {
   readonly toasts = new Toasts();
   readonly hud: Hud;
   private panel: Panel | null = null;
@@ -63,6 +65,7 @@ export class Controller implements PanelActions, PotShopActions, WorldActions, G
       openEvent: () => this.open(new EventPanel(this.session, this)),
       toggleTray: () => this.toggleTray(),
       openJournal: () => this.open(new JournalPanel(this.session, this)),
+      openBirds: () => this.open(new BirdsPanel(this.session, this)),
       openLetters: () => {
         this.open(new LettersPanel(this.session));
         this.run({ type: 'readNotices' }, true);
@@ -83,7 +86,8 @@ export class Controller implements PanelActions, PotShopActions, WorldActions, G
     setInterval(() => {
       this.hud.update();
       // Countdowns on the order board move every second.
-      if (this.panel instanceof OrdersPanel || this.panel instanceof MissionsPanel || this.panel instanceof QuestCenterPanel) this.panel.render();
+      if (this.panel instanceof OrdersPanel || this.panel instanceof MissionsPanel || this.panel instanceof QuestCenterPanel || this.panel instanceof BirdsPanel) this.panel.render();
+      this.warnRent();
       this.visitBar?.update();
       // A feature that just opened is introduced once nothing else is on screen.
       if (++this.idleTicks % 3 === 0) this.maybeTutorial();
@@ -181,6 +185,41 @@ export class Controller implements PanelActions, PotShopActions, WorldActions, G
 
   cancelListing(listingId: number): void {
     this.run({ type: 'cancelListing', listingId });
+  }
+
+  // --- Birds (chỉ thị 10 § 3.3) -------------------------------------------------------------
+
+  obtainBird(species: string, how: 'rent' | 'buy'): void {
+    this.run({ type: 'obtainBird', species, how });
+  }
+
+  feedBird(birdId: string, itemId: string): void {
+    this.run({ type: 'feedBird', birdId, itemId });
+  }
+
+  feedAllBirds(): void {
+    this.run({ type: 'feedAllBirds' });
+  }
+
+  placeBird(birdId: string, floor: number, branch: number): void {
+    this.run({ type: 'placeBird', birdId, floor, branch });
+  }
+
+  buyMillet(qty: number): void {
+    this.run({ type: 'buyMillet', qty });
+  }
+
+  private readonly rentWarned = new Set<string>();
+
+  /** A rented bird flies home within the hour: say so once (no dialog). */
+  private warnRent(): void {
+    const { content, state } = this.session;
+    const now = this.session.now();
+    for (const b of state.birds) {
+      if (this.rentWarned.has(b.id) || !rentEndsSoon(content, b, now)) continue;
+      this.rentWarned.add(b.id);
+      this.toasts.show(`${content.birds?.get(b.species)?.name.vi ?? 'Chim'} thuê sắp hết hạn, còn dưới 1 giờ nữa sẽ bay về.`, 'info', 3200);
+    }
   }
 
   claimJournal(cropId: string): void {
@@ -490,6 +529,32 @@ export class Controller implements PanelActions, PotShopActions, WorldActions, G
         fx.floatText(`+1 ${content.items.get(e.itemId)?.name.vi ?? ''}`, p.x, p.y - 20, hex(TOKENS.color.brand.peach));
         break;
       }
+      case 'birdCaught': {
+        // Only a catch happening now is animated; ones from time away were summed up already.
+        if (this.session.now() - e.at > 15_000) break;
+        const p = this.view.slotView(e.floor, e.slot).bugPoint();
+        this.view.birdCatch(e.birdId, e.floor, e.slot);
+        setTimeout(() => {
+          this.sfx.play('bug');
+          fx.floatText(`+1 ${content.items.get(e.itemId)?.name.vi ?? ''}${e.better ? ' (hiếm hơn!)' : ''}`, p.x, p.y - 20, hex(TOKENS.color.brand.peach));
+        }, 700);
+        break;
+      }
+      case 'birdLevelUp': {
+        const b = this.session.state.birds.find((x) => x.id === e.birdId);
+        this.toasts.show(`${content.birds?.get(b?.species ?? '')?.name.vi ?? 'Chim'} lên cấp ${e.level}: bắt nhanh hơn, no lâu hơn!`, 'level', 2600);
+        break;
+      }
+      case 'birdLeft':
+        this.toasts.show(`${content.birds?.get(e.species)?.name.vi ?? 'Chim'} thuê đã hết hạn và bay về. Bọ nó bắt vẫn ở trong Rương.`, 'info', 3200);
+        break;
+      case 'birdObtained':
+        this.sfx.play('upgrade');
+        this.toasts.show(`${content.birds?.get(e.species)?.name.vi ?? 'Chim'} đã đậu lên cành!`, 'level', 2200);
+        break;
+      case 'birdFed':
+        this.sfx.play('water');
+        break;
       case 'newBug': {
         // Chỉ thị 10 § 3.2: first catch of a kind goes into the Sổ Sâu Bọ.
         this.sfx.play('upgrade');

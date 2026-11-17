@@ -11,7 +11,7 @@ import { nextMilestone } from '../systems/surprises.ts';
 import { missionsReady } from '../systems/missions.ts';
 import { featureOpen, questsReady, trackedQuest } from '../systems/quests.ts';
 import { claimableMilestones, visibleEvents } from '../systems/events.ts';
-import { h } from './dom.ts';
+import { h, icon } from './dom.ts';
 import { nextHint } from './hint.ts';
 import { formatNumber, formatTimeLeft } from './text.ts';
 
@@ -24,6 +24,7 @@ export interface HudActions {
   openStall(): void;
   openNeighbors(): void;
   openJournal(): void;
+  openBirds(): void;
   openLetters(): void;
   openMissions(): void;
   openEvent(): void;
@@ -111,6 +112,7 @@ export class Hud {
       side('Sạp', 'open-stall', lineIcon('stall', 26), this.stallBadge, () => actions.openStall(), 'stall'),
       side('Phú Bà', 'open-neighbors', lineIcon('crown', 26), null, () => actions.openNeighbors(), 'neighbors'),
       side('Sổ Tay', 'open-journal', lineIcon('journal', 26), this.journalBadge, () => actions.openJournal(), 'journal'),
+      side('Chim', 'open-birds', icon('bird/sky-sparrow/perch', 30), null, () => actions.openBirds(), 'birds'),
     );
     this.gated.push({ feature: 'shop', el: shop });
     // Quest tracker (đợt 2): the quest to do next, its progress, and a claim button when ready.
