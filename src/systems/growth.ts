@@ -33,7 +33,8 @@ export function cycleDurationMs(content: ContentPack, state: GameState, slot: Sl
   const pot = state.pots[slot.potInstanceId];
   if (!pot) throw new Error(`Không có chậu ${slot.potInstanceId}`);
   const base = planting.harvestsDone === 0 || crop.regrowSeconds === null ? crop.growSeconds : crop.regrowSeconds;
-  const speed = Math.min(slotBonus(content, state, slot, crop, 'speed'), 0.9);
+  // Capped by config.bonusCaps.speed (plan A4), so a crop is never instant from stats alone.
+  const speed = Math.min(slotBonus(content, state, slot, crop, 'speed'), 0.95);
   return base * 1000 * (1 - speed);
 }
 

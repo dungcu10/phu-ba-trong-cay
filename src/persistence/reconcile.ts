@@ -49,6 +49,10 @@ export function reconcile(input: GameState, content: ContentPack, mode: Reconcil
   state.player.gems = c.num('Ngọc Mây', state.player.gems, { min: 0, int: true, fallback: 0 });
   if (!state.upgrades || typeof state.upgrades !== 'object') state.upgrades = { storage: 0 };
   state.upgrades.storage = c.num('bậc Rương Mây', state.upgrades.storage, { min: 0, int: true, fallback: 0 });
+  // Bản thử 9ef65c4 wrote save 9 without the gift budget: fill it in.
+  if (!state.budget || typeof state.budget !== 'object') state.budget = { day: -1, giftGems: 0 };
+  state.budget.day = c.num('ngày ngân sách quà', state.budget.day, { min: -1, int: true, fallback: -1 });
+  state.budget.giftGems = c.num('ngọc quà trong ngày', state.budget.giftGems, { min: 0, int: true, fallback: 0 });
   state.player.xp = c.num('kinh nghiệm', state.player.xp, { min: 0, int: true, fallback: 0 });
   state.maxSeenAt = c.num('mốc thời gian', state.maxSeenAt, { min: 0, fallback: state.createdAt || 0 });
   state.clockOffsetMs = c.num('độ lệch đồng hồ', state.clockOffsetMs, { fallback: 0 });

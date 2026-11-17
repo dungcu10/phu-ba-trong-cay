@@ -10,6 +10,8 @@ import { cropStatus } from '../src/systems/growth.ts';
 import { SaveManager } from '../src/persistence/saveManager.ts';
 import { MemoryStore } from '../src/persistence/store.ts';
 import { simulateProgression } from '../tools/progression.ts';
+import { floorAtIndex } from '../src/core/floorgen.ts';
+import { slotBonus } from '../src/systems/modifiers.ts';
 import { DAISY, HOUR, loadBase, MIN, newGame, T0 } from './helpers.ts';
 
 const content = await loadBase();
@@ -125,14 +127,81 @@ test('Mưa Mây: tốn ngọc theo thời gian còn lại, làm chín cả tần
   void HOUR;
 });
 
-test('nhịp tiến trình: người chơi ghé 2 giờ/lần luôn có tầng mới để hướng tới, không lên cấp vọt', () => {
-  const { days } = simulateProgression(content, 120, 21);
-  const at = (d: number) => days[d - 1]!;
-  // First week: new floors keep coming; the 4th floor (first generated) within the week.
-  assert.ok(at(7).floors >= 4, `ngày 7 có ${at(7).floors} tầng`);
-  assert.ok(at(7).level >= 20 && at(7).level <= 45, `ngày 7 cấp ${at(7).level}`);
-  // Later weeks: still progressing, but slower (no level 100 in three weeks).
-  assert.ok(at(21).level > at(14).level && at(14).level > at(7).level);
-  assert.ok(at(21).level <= 70, `ngày 21 cấp ${at(21).level}`);
-  assert.ok(at(21).floors > at(7).floors);
+// Plan A5: long runs through the real command processor, three play styles.
+const STYLES = [
+  { minutes: 15, days: 90, label: 'ghé 15 phút/lần' },
+  { minutes: 120, days: 365, label: 'ghé 2 giờ/lần' },
+  { minutes: 480, days: 365, label: 'ghé 8 giờ/lần' },
+];
+for (const st of STYLES) {
+  test(`mô phỏng ${st.days} ngày, ${st.label}: tiến đều, không quá 10 ngày thiếu mốc, không ôm xu/ngọc`, () => {
+    const { days } = simulateProgression(content, st.minutes, st.days);
+    let gap = 0;
+    for (const [i, d] of days.entries()) {
+      if (i > 0) {
+        assert.ok(d.level >= days[i - 1]!.level && d.floors >= days[i - 1]!.floors, `ngày ${d.day}: không lùi`);
+      }
+      gap = d.milestones > 0 ? 0 : gap + 1;
+      assert.ok(gap <= 10, `ngày ${d.day}: ${gap} ngày liền không có mốc mới`);
+      // Coins: at most 72 hours of income, or 1.5× the next floor the player is saving for.
+      const next = floorAtIndex(content.floors, content.floorList, d.floors);
+      assert.ok(d.coins <= Math.max(72 * d.unit, 1.5 * next.unlockCost), `ngày ${d.day}: ôm ${d.coins} xu`);
+    }
+    const late = days.slice(-30);
+    const gemsPerDay = late.reduce((a, d) => a + d.gemsEarned, 0) / late.length;
+    assert.ok(gemsPerDay <= content.surprises.giftGemsPerDay + 6, `ngọc mỗi ngày ${gemsPerDay}`);
+    assert.ok(days.at(-1)!.level > days.at(-31)!.level, '30 ngày cuối vẫn lên cấp');
+    if (st.minutes === 120) {
+      const at = (n: number) => days[n - 1]!;
+      assert.ok(at(7).level >= 20 && at(7).level <= 45, `ngày 7 cấp ${at(7).level}`);
+      assert.ok(at(30).level >= 40 && at(30).level <= 70, `ngày 30 cấp ${at(30).level}`);
+      assert.ok(at(7).floors >= 4, `ngày 7 có ${at(7).floors} tầng`);
+    }
+  });
+}
+
+test('số học: cấp 1→10 000, tầng 1→1 000, Rương Mây 10 000 bậc đều hữu hạn, nguyên, tăng dần', () => {
+  let last = 0;
+  for (let lv = 1; lv <= 10_000; lv++) {
+    const xp = xpToNextLevel(content, lv);
+    assert.ok(Number.isSafeInteger(xp) && xp > last, `XP cấp ${lv}: ${xp}`);
+    last = xp;
+  }
+  let u = 0;
+  for (let lv = 1; lv <= 10_000; lv += 7) {
+    const v = content.income.unit(lv);
+    assert.ok(Number.isFinite(v) && v >= u, `U(${lv}) = ${v}`);
+    u = v;
+    const r = levelUpReward(content, lv);
+    assert.ok(Number.isSafeInteger(r.coins) && r.coins >= 0);
+  }
+  let prev = content.floorList.at(-1)!;
+  for (let n = content.floorList.length + 1; n <= 1000; n++) {
+    const f = content.floors.get(`${GEN_PREFIX}${n}`)!;
+    assert.ok(Number.isSafeInteger(f.unlockCost) && f.unlockCost > prev.unlockCost, `tầng ${n}: ${f.unlockCost}`);
+    assert.ok(Number.isSafeInteger(f.unlockLevel) && f.unlockLevel > prev.unlockLevel, `tầng ${n}: cấp ${f.unlockLevel}`);
+    for (const c of [...f.expandCosts, ...f.stars.map((x) => x.coins)]) assert.ok(Number.isSafeInteger(c));
+    prev = f;
+  }
+  const s = newGame(content);
+  let cost = 0;
+  for (const tier of [0, 10, 100, 1000, 10_000]) {
+    s.upgrades.storage = tier;
+    const c = storageUpgradeCost(content, s);
+    assert.ok(Number.isSafeInteger(c) && c > cost, `Rương bậc ${tier}: ${c}`);
+    cost = c;
+  }
+});
+
+test('trần chỉ số: cộng mọi nguồn cũng không vượt config.bonusCaps', () => {
+  const pumped = structuredClone(content.config);
+  pumped.floorStarBonus = { speed: 5, yield: 5, xp: 5, luck: 5, attract: 5, care: 5 };
+  const c2 = { ...content, config: pumped };
+  const s = newGame(c2, { level: 50 });
+  s.floors[0]!.stars = 3;
+  const slot = s.floors[0]!.slots[0]!;
+  const crop = content.crops.get(DAISY)!;
+  for (const stat of ['speed', 'yield', 'xp', 'luck', 'attract', 'care'] as const) {
+    assert.equal(slotBonus(c2, s, slot, crop, stat), content.config.bonusCaps![stat], stat);
+  }
 });

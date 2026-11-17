@@ -6,23 +6,27 @@ export type PotStatName = 'speed' | 'yield' | 'xp' | 'attract' | 'luck' | 'care'
 export const POT_STATS: PotStatName[] = ['speed', 'yield', 'xp', 'attract', 'luck', 'care'];
 
 import { FloorMap, type FloorGenConfig } from './floorgen.ts';
+import { IncomeModel, type IncomeConfig } from './income.ts';
 
 export interface GameConfig {
   startingCoins: number;
   startingLevel: number;
   /** Rương Mây capacity before any upgrade. */
   storageCapacity: number;
-  /** Rương Mây upgrades (no cap): each tier adds perTier slots, tier t costs firstCost × costGrowth^t coins. */
-  storageUpgrade: { perTier: number; firstCost: number; costGrowth: number };
+  /** Rương Mây upgrades (no cap): each tier adds perTier slots; tier t costs firstCost × (t+1)^costExponent coins. */
+  storageUpgrade: { perTier: number; firstCost: number; costExponent: number };
   /** Mưa Mây: ripens every growing crop on a floor for gems, ceil(minutes left / minutesPerGem) per pot. */
   cloudRain: { minutesPerGem: number; minGemsPerPot: number };
   /**
    * Player levels have no cap (owner decision 2026-11-17). XP to go from level L to L+1 is
    * xpBase × L^xpExponent × xpGrowth^(L−1): the compounding term makes each level a bit harder
-   * than the last, so more floors (more income) do not make levels fly by. Every level-up pays coinsBase + coinsPerLevel × L; `milestones` add
+   * than the last up to xpGrowthUntil; after that the extra factor grows linearly
+   * (1 + xpLinearAfter × levels past it), so numbers stay finite and exact (plan A2). Every level-up pays coinsBase + coinsPerLevel × L; `milestones` add
    * gems and items every `every` levels (all that match apply).
    */
-  levels: { xpBase: number; xpExponent: number; xpGrowth?: number; levelUp: LevelUpConfig };
+  levels: { xpBase: number; xpExponent: number; xpGrowth: number; xpGrowthUntil: number; xpLinearAfter: number; levelUp: LevelUpConfig };
+  /** Income unit model (plan A1). */
+  income: IncomeConfig;
   /** Floors above the hand-made ones (owner decision 2026-11-17: no top floor). */
   floorGen: FloorGenConfig;
   water: { remainingTimeReduction: number };
@@ -41,8 +45,8 @@ export interface GameConfig {
 }
 
 export interface LevelUpConfig {
-  coinsBase: number;
-  coinsPerLevel: number;
+  /** Coins on reaching level L = coinsHours × U(L). */
+  coinsHours: number;
   milestones: Array<{ every: number; gems?: number; items?: Record<string, number> }>;
 }
 
@@ -287,6 +291,8 @@ export interface SurprisesConfig {
   /** Chance of a gift per 10 minutes of (unmodified) growing time, like Bọ Mây (R2). */
   giftChancePer10Min: number;
   giftChanceMax: number;
+  /** Gems surprise gifts may give per local day; past it a gem gift becomes a coin gift (plan C: gift budget). */
+  giftGemsPerDay: number;
   gifts: Array<{ kind: 'coins' | 'gems' | 'bug'; weight: number; perLevel?: number; min?: number; max?: number }>;
   mutations: MutationDef[];
   journal: { milestones: number[]; gems: number[] };
@@ -369,6 +375,8 @@ export interface ContentPack {
   cropList: CropDef[];
   /** Floors in the order they unlock (bottom to top). */
   floorList: FloorDef[];
+  /** U(L), coins per hour of diligent play at level L (plan A1). */
+  income: IncomeModel;
   potList: PotDef[];
   orders: OrdersConfig;
   surprises: SurprisesConfig;
@@ -463,8 +471,8 @@ export function buildContentPack(raw: RawContent): ContentPack {
   const problems: string[] = [];
   const config = raw.config as GameConfig;
   checkFields('config', config, ['startingCoins', 'startingLevel', 'storageCapacity', 'potAffinityBonus'], ['startFloor'], problems);
-  if (!isObj(config.levels) || !isNum(config.levels.xpBase) || !isNum(config.levels.xpExponent)) problems.push('config.levels: cần xpBase và xpExponent');
-  else if (!isObj(config.levels.levelUp) || !isNum(config.levels.levelUp.coinsBase) || !isNum(config.levels.levelUp.coinsPerLevel) || !Array.isArray(config.levels.levelUp.milestones)) problems.push('config.levels.levelUp: cần coinsBase, coinsPerLevel, milestones');
+  if (!isObj(config.levels) || !['xpBase', 'xpExponent', 'xpGrowth', 'xpGrowthUntil', 'xpLinearAfter'].every((k) => isNum((config.levels as unknown as Record<string, unknown>)[k]))) problems.push('config.levels: cần xpBase, xpExponent, xpGrowth, xpGrowthUntil, xpLinearAfter');
+  else if (!isObj(config.levels.levelUp) || !isNum(config.levels.levelUp.coinsHours) || !Array.isArray(config.levels.levelUp.milestones)) problems.push('config.levels.levelUp: cần coinsHours, milestones');
   else config.levels.levelUp.milestones.forEach((m, i) => { if (!isNum(m.every) || m.every < 1) problems.push(`config.levels.levelUp.milestones[${i}].every: phải >= 1`); });
 
   const floors = new Map<string, FloorDef>();
@@ -570,7 +578,7 @@ export function buildContentPack(raw: RawContent): ContentPack {
   const orders = raw.orders as OrdersConfig;
   checkFields('orders', orders, ['slots', 'refillSeconds', 'skipSeconds', 'skipNowGems', 'maxLines', 'xpPerCoin', 'rareChance', 'rareMultiplier', 'rareGems'], [], problems);
   const surprises = raw.surprises as SurprisesConfig;
-  checkFields('surprises', surprises, ['startingGems', 'giftChancePer10Min', 'giftChanceMax'], [], problems);
+  checkFields('surprises', surprises, ['startingGems', 'giftChancePer10Min', 'giftChanceMax', 'giftGemsPerDay'], [], problems);
   for (const m of surprises?.mutations ?? []) {
     for (const crop of crops.values()) {
       addUnique(
@@ -646,12 +654,14 @@ export function buildContentPack(raw: RawContent): ContentPack {
     }
   }
 
-  if (!isObj(config.storageUpgrade) || !isNum(config.storageUpgrade.perTier) || !isNum(config.storageUpgrade.firstCost) || !isNum(config.storageUpgrade.costGrowth)) problems.push('config.storageUpgrade: cần perTier, firstCost, costGrowth');
+  if (!isObj(config.storageUpgrade) || !isNum(config.storageUpgrade.perTier) || !isNum(config.storageUpgrade.firstCost) || !isNum(config.storageUpgrade.costExponent)) problems.push('config.storageUpgrade: cần perTier, firstCost, costExponent');
+  if (!isObj(config.income) || !(config.income.visitMinutes > 0) || !(config.income.potsPerFloor > 0) || !isNum(config.income.potBonus)) problems.push('config.income: cần visitMinutes > 0, potsPerFloor > 0, potBonus');
+  for (const st of POT_STATS) if (!isNum(config.bonusCaps?.[st])) problems.push(`config.bonusCaps.${st}: cần trần cho mọi chỉ số (kế hoạch A4)`);
   if (!isObj(config.cloudRain) || !isNum(config.cloudRain.minutesPerGem) || config.cloudRain.minutesPerGem <= 0 || !isNum(config.cloudRain.minGemsPerPot)) problems.push('config.cloudRain: cần minutesPerGem > 0, minGemsPerPot');
   const fg = config.floorGen as FloorGenConfig | undefined;
   if (!isObj(fg)) problems.push('config.floorGen: thiếu quy tắc sinh tầng');
   else {
-    for (const k of ['firstLevel', 'levelStep', 'levelStepGrowth', 'firstCost', 'costGrowth', 'slotCount', 'maxSlots'] as const) if (!isNum(fg[k])) problems.push(`config.floorGen.${k}: phải là số`);
+    for (const k of ['firstLevel', 'levelStep', 'levelStepGrowth', 'costHours', 'costHoursPerFloor', 'slotCount', 'maxSlots'] as const) if (!isNum(fg[k])) problems.push(`config.floorGen.${k}: phải là số`);
     for (const k of ['names', 'sprites', 'tints', 'traits', 'expandFactors', 'stars'] as const) if (!Array.isArray(fg[k]) || fg[k].length === 0) problems.push(`config.floorGen.${k}: cần danh sách`);
     if (fg.maxSlots < fg.slotCount || (fg.expandFactors?.length ?? 0) < fg.maxSlots - fg.slotCount) problems.push('config.floorGen.expandFactors: thiếu giá cho các ô thêm');
     if (!pots.has(fg.startingPot)) problems.push(`config.floorGen.startingPot: chậu "${fg.startingPot}" không tồn tại`);
@@ -661,10 +671,13 @@ export function buildContentPack(raw: RawContent): ContentPack {
   }
 
   if (problems.length > 0) throw new ContentError(problems);
+  const handFloors = [...floors.values()].sort((a, b) => a.unlockLevel - b.unlockLevel);
+  const income = new IncomeModel(config.income, [...crops.values()], handFloors, config.floorGen);
   return {
     contentVersion: raw.contentVersion,
     config,
-    floors: new FloorMap(floors, config.floorGen, floors.size, [...crops.values()]),
+    floors: new FloorMap(floors, config.floorGen, floors.size, [...crops.values()], income),
+    income,
     pots,
     crops,
     bugs,

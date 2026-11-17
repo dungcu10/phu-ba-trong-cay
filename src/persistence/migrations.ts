@@ -87,6 +87,7 @@ export const MIGRATIONS: Record<number, Migration> = {
   // generated floors need no data change.
   8: (data) => {
     data.upgrades = { storage: 0 };
+    data.budget = { day: -1, giftGems: 0 };
     return data;
   },
 };

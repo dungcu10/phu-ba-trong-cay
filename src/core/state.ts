@@ -141,6 +141,8 @@ export interface GameState {
   missions: { day: number; list: MissionState[]; bonusClaimed: boolean };
   /** Bought upgrades (save 9): Rương Mây tiers. */
   upgrades: { storage: number };
+  /** Daily budgets (save 9): gems given by surprise gifts on local day `day`. */
+  budget: { day: number; giftGems: number };
 }
 
 /** Builds a floor with its starting pots (used for the first floor and every unlocked one). */
@@ -185,6 +187,7 @@ export function createNewGame(content: ContentPack, now: number, entropy = now):
     potBookClaimed: 0,
     events: {},
     upgrades: { storage: 0 },
+    budget: { day: -1, giftGems: 0 },
   };
 }
 

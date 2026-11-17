@@ -14,7 +14,7 @@ import { activeEvents, eventPointsFor } from '../systems/events.ts';
 import { slotBonus } from '../systems/modifiers.ts';
 import { createFloorState } from './state.ts';
 import { canDeliver, refillOrders } from '../systems/orders.ts';
-import { nextMilestone, recordHarvest, rollGift, rollMutation, type Gift } from '../systems/surprises.ts';
+import { coinGiftAmount, nextMilestone, recordHarvest, rollGift, rollMutation, type Gift } from '../systems/surprises.ts';
 import { simulateNeighbors, type NeighborEvent } from '../systems/neighbors.ts';
 import { expandCost, nextStar } from '../systems/floors.ts';
 import { allMissionsClaimed, ensureMissions, localDay, missionDef, recordMissions } from '../systems/missions.ts';
@@ -434,6 +434,18 @@ function harvest(content: ContentPack, state: GameState, ref: SlotRef, now: numb
   const hm = content.config.harvestMaterial;
   if (hm && randomFor(state.seed, 'clay', planting.id, planting.harvestsDone) < hm.chance * (1 + luck)) found.push({ itemId: hm.item, qty: 1 });
   for (const f of found) addItem(state, f.itemId, f.qty);
+  if (gift?.kind === 'gems') {
+    // Daily gem budget for surprise gifts (plan C): past it the gift is coins instead, so big
+    // gardens do not flood the game with gems.
+    const day = localDay(content, now);
+    if (state.budget.day !== day) state.budget = { day, giftGems: 0 };
+    const room = content.surprises.giftGemsPerDay - state.budget.giftGems;
+    if (room <= 0) Object.assign(gift, { kind: 'coins', amount: coinGiftAmount(content, state) });
+    else {
+      gift.amount = Math.min(gift.amount, room);
+      state.budget.giftGems += gift.amount;
+    }
+  }
   if (gift) {
     if (gift.kind === 'coins') state.player.coins += gift.amount;
     else if (gift.kind === 'gems') state.player.gems += gift.amount;

@@ -8,6 +8,9 @@
 // the same object is returned every time (the renderer compares floors by identity).
 
 import type { CropDef, FloorDef, PotStatName } from './content.ts';
+import { generatedFloorLevel, tidy, type IncomeModel } from './income.ts';
+
+export { tidy };
 
 export interface FloorGenConfig {
   /** Name stems, used in order; after the list runs out a cycle number is appended ("… II"). */
@@ -21,9 +24,10 @@ export interface FloorGenConfig {
   firstLevel: number;
   levelStep: number;
   levelStepGrowth: number;
-  /** Coins to unlock: firstCost × costGrowth^k, rounded to a tidy number. */
-  firstCost: number;
-  costGrowth: number;
+  /** Coins to unlock: U(unlock level) × (costHours + costHoursPerFloor × k), tidied (plan A3).
+   *  Prices follow income, so they never run away from what the player can earn. */
+  costHours: number;
+  costHoursPerFloor: number;
   slotCount: number;
   maxSlots: number;
   /** Each extra slot costs this fraction of the floor's unlock cost. */
@@ -38,13 +42,6 @@ export const GEN_PREFIX = 'base:floor.gen-';
 
 const ROMAN = ['', ' II', ' III', ' IV', ' V', ' VI', ' VII', ' VIII', ' IX', ' X'];
 
-/** Rounds to 2 significant figures so prices read well (12 345 → 12 000). */
-export function tidy(n: number): number {
-  if (n < 100) return Math.round(n);
-  const p = Math.pow(10, Math.floor(Math.log10(n)) - 1);
-  return Math.round(n / p) * p;
-}
-
 /** Floor number (1-based) of a generated id, or null. */
 export function genFloorNumber(id: string): number | null {
   if (!id.startsWith(GEN_PREFIX)) return null;
@@ -52,13 +49,13 @@ export function genFloorNumber(id: string): number | null {
   return Number.isInteger(n) && n >= 1 ? n : null;
 }
 
-export function makeGeneratedFloor(gen: FloorGenConfig, handCount: number, crops: CropDef[], number: number): FloorDef {
+export function makeGeneratedFloor(gen: FloorGenConfig, handCount: number, crops: CropDef[], income: IncomeModel, number: number): FloorDef {
   const k = number - handCount - 1;
   const cycle = Math.floor(k / gen.names.length);
   const stem = gen.names[k % gen.names.length]!;
   const name = cycle === 0 ? stem : `${stem}${ROMAN[cycle] ?? ` ${cycle + 1}`}`;
-  const unlockLevel = Math.round(gen.firstLevel + gen.levelStep * k + (gen.levelStepGrowth * k * (k - 1)) / 2);
-  const unlockCost = tidy(gen.firstCost * Math.pow(gen.costGrowth, k));
+  const unlockLevel = generatedFloorLevel(gen, k);
+  const unlockCost = tidy(income.unit(unlockLevel) * (gen.costHours + gen.costHoursPerFloor * k));
   const trait = gen.traits[k % gen.traits.length]!;
   const newestBy = (level: number) => [...crops].filter((c) => c.unlockLevel <= level).sort((a, b) => b.unlockLevel - a.unlockLevel);
   return {
@@ -92,6 +89,7 @@ export class FloorMap extends Map<string, FloorDef> {
     private readonly gen: FloorGenConfig,
     private readonly handCount: number,
     private readonly crops: CropDef[],
+    private readonly income: IncomeModel,
   ) {
     super(entries);
   }
@@ -101,7 +99,7 @@ export class FloorMap extends Map<string, FloorDef> {
     if (hit) return hit;
     const n = genFloorNumber(id);
     if (n === null || n <= this.handCount) return undefined;
-    const def = makeGeneratedFloor(this.gen, this.handCount, this.crops, n);
+    const def = makeGeneratedFloor(this.gen, this.handCount, this.crops, this.income, n);
     super.set(id, def);
     return def;
   }

@@ -78,3 +78,18 @@ test('save đang ở đời hiện tại thì không tạo bản sao nâng cấp
   await s2.load();
   assert.deepEqual(await s2.upgradeBackups(), []);
 });
+
+test('save đời 9 của bản thử nháp 9ef65c4 (chưa có ngân sách quà) vẫn tải được, giữ tiến trình', async () => {
+  const raw = await readFile(join(import.meta.dirname, 'fixtures', 'save-v9-9ef65c4.json'), 'utf8');
+  const old = JSON.parse(raw) as { data: { saveVersion: number; player: { level: number; coins: number; xp: number }; budget?: unknown } };
+  assert.equal(old.data.saveVersion, 9);
+  assert.equal(old.data.budget, undefined);
+  const store = new MemoryStore();
+  await store.put('slot-a', raw);
+  const r = await new SaveManager(store, content).load();
+  assert.equal(r.kind, 'loaded');
+  if (r.kind !== 'loaded') return;
+  assert.deepEqual(r.state.player, old.data.player);
+  assert.deepEqual(r.state.budget, { day: -1, giftGems: 0 });
+  assert.deepEqual(r.state.upgrades, { storage: 0 });
+});

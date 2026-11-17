@@ -29,9 +29,15 @@ export function rollGift(content: ContentPack, state: GameState, planting: Plant
   const g = cfg.gifts.find((x) => (pick -= x.weight) < 0) ?? cfg.gifts[0]!;
   const span = (g.max ?? 1) - (g.min ?? 1) + 1;
   const n = (g.min ?? 1) + Math.floor(r('amount') * span);
-  if (g.kind === 'coins') return { kind: 'coins', amount: (g.perLevel ?? 10) * state.player.level };
+  if (g.kind === 'coins') return { kind: 'coins', amount: coinGiftAmount(content, state) };
   if (g.kind === 'gems') return { kind: 'gems', amount: n };
   return { kind: 'bug', amount: n, itemId: content.bugList[0]?.id ?? '' };
+}
+
+/** Coins in a coin gift: perLevel × level from the coins entry of the gift table. */
+export function coinGiftAmount(content: ContentPack, state: GameState): number {
+  const g = content.surprises.gifts.find((x) => x.kind === 'coins');
+  return (g?.perLevel ?? 10) * state.player.level;
 }
 
 export function recordHarvest(state: GameState, crop: CropDef, mutation: string | null): void {

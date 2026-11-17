@@ -6,9 +6,10 @@
     "xpBase": 10,
     "xpExponent": 1.6,
     "xpGrowth": 1.06,
+    "xpGrowthUntil": 49,
+    "xpLinearAfter": 0.02,
     "levelUp": {
-      "coinsBase": 10,
-      "coinsPerLevel": 10,
+      "coinsHours": 0.25,
       "milestones": [
         {
           "every": 5,
@@ -37,9 +38,9 @@
     "xp": 0.05
   },
   "bonusCaps": {
-    "speed": 0.6,
-    "yield": 1.0,
-    "xp": 1.0,
+    "speed": 0.75,
+    "yield": 2.0,
+    "xp": 1.5,
     "luck": 1.0,
     "attract": 1.0,
     "care": 1.5
@@ -128,17 +129,15 @@
       "max": 0.3
     },
     "firstLevel": 16,
-    "levelStep": 4,
-    "levelStepGrowth": 0.5,
-    "firstCost": 20000,
-    "costGrowth": 2.0,
+    "levelStep": 3,
+    "levelStepGrowth": 0,
     "slotCount": 6,
     "maxSlots": 10,
     "expandFactors": [
-      0.15,
-      0.3,
+      0.25,
       0.5,
-      0.8
+      0.75,
+      1.0
     ],
     "startingPot": "base:pot.terracotta",
     "stars": [
@@ -160,15 +159,22 @@
         "qty": 30,
         "qtyPerFloor": 8
       }
-    ]
+    ],
+    "costHours": 4,
+    "costHoursPerFloor": 5
   },
   "storageUpgrade": {
     "perTier": 20,
     "firstCost": 300,
-    "costGrowth": 1.45
+    "costExponent": 2.2
   },
   "cloudRain": {
-    "minutesPerGem": 30,
+    "minutesPerGem": 15,
     "minGemsPerPot": 1
+  },
+  "income": {
+    "visitMinutes": 30,
+    "potsPerFloor": 8,
+    "potBonus": 0.3
   }
 }

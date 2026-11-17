@@ -6,8 +6,9 @@
 // keeping a seed reserve. Used by tests/progression.test.ts and printed by
 // `npx tsx tools/progression.ts [visitMinutes] [days]`.
 
-import type { ContentPack, CropDef } from '../src/core/content.ts';
-import { dispatch, nextFloor, type Command } from '../src/core/game.ts';
+import { isSoldInShop, type ContentPack, type CropDef } from '../src/core/content.ts';
+import { cloudRainCost, dispatch, nextFloor, type Command } from '../src/core/game.ts';
+import { storageUpgradeCost } from '../src/systems/economy.ts';
 import { createNewGame, type GameState } from '../src/core/state.ts';
 import { canDeliver } from '../src/systems/orders.ts';
 import { expandCost } from '../src/systems/floors.ts';
@@ -19,17 +20,42 @@ export interface DayReport {
   level: number;
   coins: number;
   gems: number;
+  /** Gems earned this day (before spending). */
+  gemsEarned: number;
+  /** U(level) at the end of the day. */
+  unit: number;
   floors: number;
   pots: number;
   harvests: number;
+  /** Progress moments this day: a floor opened, a slot added, a floor star, a new crop, a new pot
+   *  line bought, a pot reaching a milestone level, a Rương Mây tier. */
+  milestones: number;
 }
 
 const T0 = Date.parse('2026-11-17T08:00:00+07:00');
 const RESERVE = 300;
 
-export function simulateProgression(content: ContentPack, visitMinutes: number, days: number, seed = 42): { days: DayReport[]; state: GameState } {
+export function simulateProgression(content: ContentPack, visitMinutes: number, days: number, seed = 42): { days: DayReport[]; state: GameState; gemSources: Record<string, number> } {
   const s = createNewGame(content, T0, seed);
-  const run = (cmd: Command, t: number) => dispatch(content, s, cmd, t);
+  let milestones = 0;
+  let gemsEarned = 0;
+  const gemSources: Record<string, number> = {};
+  const run = (cmd: Command, t: number) => {
+    const gems = s.player.gems;
+    const r = dispatch(content, s, cmd, t);
+    if (r.ok) {
+      if (s.player.gems > gems) {
+        gemsEarned += s.player.gems - gems;
+        gemSources[cmd.type] = (gemSources[cmd.type] ?? 0) + s.player.gems - gems;
+      }
+      for (const e of r.events) {
+        if (e.type === 'floorUnlocked' || e.type === 'floorExpanded' || e.type === 'floorStarred') milestones++;
+        if (e.type === 'potBought' || (e.type === 'potUpgraded' && e.milestone) || e.type === 'storageUpgraded') milestones++;
+        if (e.type === 'levelUp' && content.cropList.some((c) => c.unlockLevel === e.level)) milestones++;
+      }
+    }
+    return r;
+  };
   const gap = visitMinutes * 60;
   const score = (c: CropDef) => {
     const first = Math.max(c.growSeconds, gap);
@@ -61,6 +87,18 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
       for (const c of content.cropList) run({ type: 'claimJournal', cropId: c.id }, t);
       const best = () =>
         content.cropList.filter((c) => c.unlockLevel <= s.player.level && c.seedPrice <= s.player.coins).sort((a, b) => score(b) - score(a))[0];
+      // Better pots: when coins are plentiful, buy a shop pot the player does not own yet and put it
+      // in place of a starting Chậu Đất Nung on an empty slot (a real coin sink in the late game).
+      s.floors.forEach((f, floor) =>
+        f.slots.forEach((sl, slot) => {
+          if (sl.planting || s.pots[sl.potInstanceId]?.potId !== content.config.floorGen.startingPot) return;
+          const owned = new Set(Object.values(s.pots).map((p) => p.potId));
+          const pick = content.potList
+            .filter((d) => isSoldInShop(d) && d.unlockLevel <= s.player.level && !owned.has(d.id) && d.price * 3 <= s.player.coins - RESERVE)
+            .sort((a, b) => (b.price ?? 0) - (a.price ?? 0))[0];
+          if (pick && run({ type: 'buyPot', potId: pick.id }, t).ok) run({ type: 'placePot', potInstanceId: s.potStock.at(-1)!, floor, slot }, t);
+        }),
+      );
       s.floors.forEach((f, floor) =>
         f.slots.forEach((sl, slot) => {
           if (sl.planting) run({ type: 'water', floor, slot }, t);
@@ -77,7 +115,13 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
         if (c !== null && s.player.coins - RESERVE >= c) run({ type: 'expandFloor', floor }, t);
         run({ type: 'upgradeFloorStar', floor }, t);
       });
-      if (s.player.coins - RESERVE > 4 * (content.config.storageUpgrade.firstCost * Math.pow(content.config.storageUpgrade.costGrowth, s.upgrades.storage))) run({ type: 'upgradeStorage' }, t);
+      if (s.player.coins - RESERVE > 2 * storageUpgradeCost(content, s)) run({ type: 'upgradeStorage' }, t);
+      // Mưa Mây on the first visit of the day when it costs at most half the gems held.
+      if (m === 0) {
+        const fi = s.floors.length - 1;
+        const c = cloudRainCost(content, s, fi, t);
+        if (c.pots > 0 && c.gems <= s.player.gems) run({ type: 'cloudRain', floor: fi }, t);
+      }
       for (let k = 0; k < 20; k++) {
         const id = Object.keys(s.pots).find((pid) => {
           const c = nextUpgradeCost(content, s.pots[pid]!);
@@ -86,9 +130,11 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
         if (!id || !run({ type: 'upgradePot', potInstanceId: id }, t).ok) break;
       }
     }
-    out.push({ day: day + 1, level: s.player.level, coins: s.player.coins, gems: s.player.gems, floors: s.floors.length, pots: Object.keys(s.pots).length, harvests: s.stats.harvests });
+    out.push({ day: day + 1, level: s.player.level, coins: s.player.coins, gems: s.player.gems, gemsEarned, unit: content.income.unit(s.player.level), floors: s.floors.length, pots: Object.keys(s.pots).length, harvests: s.stats.harvests, milestones });
+    milestones = 0;
+    gemsEarned = 0;
   }
-  return { days: out, state: s };
+  return { days: out, state: s, gemSources };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
@@ -96,6 +142,12 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const content = await loadBase();
   const visit = Number(process.argv[2] ?? 120);
   const days = Number(process.argv[3] ?? 30);
-  console.log(`| Ngày | Cấp | Tầng | Xu | Ngọc | Thu hoạch |\n|---|---|---|---|---|---|`);
-  for (const d of simulateProgression(content, visit, days).days) console.log(`| ${d.day} | ${d.level} | ${d.floors} | ${d.coins} | ${d.gems} | ${d.harvests} |`);
+  const every = Number(process.argv[4] ?? 1);
+  console.log(`| Ngày | Cấp | Tầng | Xu | U(cấp) | Xu/U | Ngọc | Ngọc kiếm | Mốc | Thu hoạch |\n|---|---|---|---|---|---|---|---|---|---|`);
+  const result = simulateProgression(content, visit, days);
+  console.error('ngọc theo nguồn', result.gemSources);
+  for (const d of result.days) {
+    if (d.day % every !== 0 && d.day !== 1) continue;
+    console.log(`| ${d.day} | ${d.level} | ${d.floors} | ${d.coins} | ${Math.round(d.unit)} | ${(d.coins / d.unit).toFixed(1)} | ${d.gems} | ${d.gemsEarned} | ${d.milestones} | ${d.harvests} |`);
+  }
 }

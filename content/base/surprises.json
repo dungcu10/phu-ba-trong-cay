@@ -54,5 +54,6 @@
     ]
   },
   "giftChancePer10Min": 0.04,
-  "giftChanceMax": 0.25
+  "giftChanceMax": 0.25,
+  "giftGemsPerDay": 6
 }
