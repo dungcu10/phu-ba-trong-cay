@@ -17,6 +17,7 @@ import { Ambience } from './ambience.ts';
 import { homeGarden, type GardenFloor, type GardenModel } from './garden.ts';
 import { SLOT_GEOM, SlotView } from './slotView.ts';
 import { ease, Tweens } from './tween.ts';
+import { buildVine, cloudCat, floorArt, hasWorldArt, pedestal } from './worldArt.ts';
 
 /** Giao diện fantasy (chỉ thị 06): night glass + thin gold for the canvas signs too. */
 const FX = { night: '#161A2E', gold: '#F3D27E', ivory: '#FFF8EA' } as const;
@@ -117,7 +118,9 @@ export class GameView {
     this.sky.anchor.set(0.5);
     this.ambience = new Ambience(this.glow);
     app.stage.addChild(this.sky, this.ambience.back);
-    this.world.addChild(this.floorsLayer, this.trunkLayer, this.effects);
+    // Chỉ thị 08: the vine is drawn behind the floors; each floor picture has a cut where the vine
+    // passes behind its cloud, so the vine goes through the floor edge.
+    this.world.addChild(this.trunkLayer, this.floorsLayer, this.effects);
     app.stage.addChild(this.world, this.ambience.front);
     this.source = () => homeGarden(session.content, session.state, session.now());
     this.model = this.source();
@@ -230,6 +233,12 @@ export class GameView {
     this.refresh();
   }
 
+  /** Floor picture: the Blender cloud floor (chỉ thị 08) when the world art is there, else the old one. */
+  private floorPicture(def: FloorDef, fi: number): Container {
+    if (hasWorldArt(this.art)) return floorArt(this.art, fi);
+    return this.cloudSprite(def);
+  }
+
   private cloudSprite(def: FloorDef): Sprite {
     const start = this.session.content.floors.get(this.session.content.config.startFloor)!;
     const look = this.art.floor(def.sprite, def.tint, start.sprite);
@@ -308,18 +317,37 @@ export class GameView {
   private buildFloor(f: GardenFloor, fi: number): FloorView {
     const container = new Container();
     container.position.set(WORLD.floorCenterX, this.floorY(fi));
-    container.addChild(this.cloudSprite(f.def));
+    container.addChild(this.floorPicture(f.def, fi));
     const positions = f.pots.length + (f.expandCost !== null ? 1 : 0);
     const scale = Math.min(WORLD.potScaleMax, WORLD.potScale10 + (10 - positions) * WORLD.potScaleStep);
     const spacing = positions > 1 ? WORLD.potRowSpan / (positions - 1) : 0;
     const x = (i: number) => -WORLD.potRowSpan / 2 + i * spacing;
     const slots: SlotView[] = [];
     // Pots of the whole floor sit in one layer under all plants and markers (directive 03 step 4).
+    const pedLayer = new Container();
     const potLayer = new Container();
-    container.addChild(potLayer);
+    container.addChild(pedLayer, potLayer);
+    const world = hasWorldArt(this.art);
+    if (world && fi === 0) {
+      // Mèo Mây sits between the vine and the first pot (decoration; pets come in đợt 5).
+      const cat = cloudCat(this.art);
+      if (cat) {
+        cat.position.set(-WORLD.potRowSpan / 2 - 78, 2);
+        pedLayer.addChild(cat);
+      }
+    }
     f.pots.forEach((_, i) => {
       const view = new SlotView(fi, i, this.art, this.tweens, this.dot, this.glow);
-      view.position.set(x(i), 4);
+      let lift = 0;
+      if (world) {
+        // Chỉ thị 08: each pot stands on a stone pedestal; the pot is raised by the stone's height.
+        const p = pedestal(this.art, fi, i);
+        p.sprite.position.set(x(i), 4);
+        p.sprite.scale.set(p.sprite.scale.x * scale, scale);
+        pedLayer.addChild(p.sprite);
+        lift = p.lift * scale;
+      }
+      view.position.set(x(i), 4 - lift);
       view.scale.set(scale);
       slots.push(view);
       potLayer.addChild(view.back);
@@ -349,7 +377,16 @@ export class GameView {
 
   /** The vine: its base under the first floor, middle sections repeated up to the top floor. */
   private buildTrunk(): void {
-    this.trunkLayer.removeChildren().forEach((c) => c.destroy());
+    this.trunkLayer.removeChildren().forEach((c) => c.destroy({ children: true }));
+    if (hasWorldArt(this.art)) {
+      // One band of decoration per floor (plus the locked one above), the vine continuing past the top.
+      const n = this.floors.length + (this.model.locked ? 1 : 0);
+      const bands = Array.from({ length: n }, (_, i) => ({ top: this.floorY(i) - WORLD.floorGap, bottom: this.floorY(i) }));
+      const bottom = this.floorY(0) + 900;
+      const top = this.floorY(n) - 120;
+      this.trunkLayer.addChild(buildVine(this.art, WORLD.trunk.x, bottom, top, bands));
+      return;
+    }
     const full = this.art.get('trunk');
     const base = new Sprite(full);
     base.anchor.copyFrom(full.defaultAnchor ?? { x: 0.5, y: 1 });
@@ -379,7 +416,7 @@ export class GameView {
     if (!def) return;
     const container = new Container();
     container.position.set(WORLD.floorCenterX, this.floorY(this.floors.length));
-    const cloud = this.cloudSprite(def);
+    const cloud = this.floorPicture(def, this.floors.length);
     cloud.alpha = 0.5;
     // A signboard sits on the faded cloud, low enough to stay clear of the HUD and the hint line.
     const g = new Graphics();
