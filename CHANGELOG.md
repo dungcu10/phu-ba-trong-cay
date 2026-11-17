@@ -38,6 +38,11 @@ Phân loại:
 - Kiểm thử: `npm run check` XANH.
 - Trạng thái nghiệm thu: Chờ
 
+### [2026-11-18] CTO — B6: đo bọ theo chậu và đo bọ tồn trong túi (chủ dự án duyệt)
+- Thay chỉ số "Bọ Thường mỗi ngày 40–70" (không thể đạt vì bọ tăng theo số chậu) bằng 2 chỉ số: Bọ Thường mỗi chậu mỗi ngày 1–2 (chặn, đo được 1,39) và Bọ tồn trong túi ngày 30 tính bằng số ngày bắt, tối đa 5 (cảnh báo, đo được 20,6).
+- Bot mô phỏng nâng sao Xưởng Bọ khi dư xu. Ngày ghi thêm `bugStock`, `commonBugsPerPot`.
+- File: `tools/progression.ts`, `tools/check-metrics.json`, `tools/check.ts` (thêm 2 dòng đo, không sửa phần khác).
+- Phát hiện: bọ tồn tăng ~250 con/ngày (ngày 30: 3.536, ngày 60: 11.931). Chỗ tiêu bọ hiện chỉ là nâng sao máy (dùng 1 lần). Cần chỗ tiêu bọ lặp lại, xem chỉ thị cho luồng thực thi.
 ### [2026-11-18] Chỉ thị 10 M6 (phần 2) — Đơn hàng khinh khí cầu, chim dẫn đường, nhờ hàng xóm; công thức Xưởng cho 14 cây (tag `m-10-m6`)
 - Loại: Thêm / Thay đổi
 - Mô tả: gửi đơn thì hàng đi ngay, XP cộng ngay (lời cảm ơn của khách), khinh khí cầu bay đi `refillSeconds` rồi mang xu/ngọc/vật phẩm về (tắt game vẫn đúng). Chim dẫn đường (cấp 11): đi cùng tới khi về, không bắt sâu khi đi, cộng thưởng theo loài. Đơn có hàng chế biến (thưởng thêm theo sao máy), đơn hiếm có hạn và vật phẩm thưởng, thêm ô đơn theo cấp, nhờ hàng xóm góp hàng mỗi ngày 1 lần (cấp 13). Bảng Đơn: ô đang bay, hàng chọn chim, nút "Nhờ góp", hạn đơn quý. Ô số lượng đọc được trên giao diện tối (lỗi cũ). Xưởng: công thức cho cây mới của CTO (Hồng Mây, Hướng Dương, Táo, Đào Tiên, Cải Mây) và Máy Mài Ngọc nhận Hoa Trăng Non / Cỏ Sao Băng.

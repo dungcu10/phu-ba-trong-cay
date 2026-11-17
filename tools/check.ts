@@ -50,6 +50,8 @@ const value: Record<string, () => number[]> = {
   milestonesPerDay: () => span(10, 30).map((d) => d.milestones),
   coinsPerUnit: () => days.map((d) => d.coins / d.unit),
   commonBugsPerDay: () => span(7, 30).map((d) => d.bugsByRarity.common ?? 0),
+  commonBugsPerPot: () => [avg(span(7, 30).map((d) => d.commonBugsPerPot))],
+  bugStockDays: () => [at(30).bugStock / Math.max(1, avg(span(24, 30).map((d) => Object.values(d.bugsByRarity).reduce((a, q) => a + q, 0))))],
   epicBugsPerDay: () => [avg(span(7, 30).map((d) => d.bugsByRarity.epic ?? 0))],
   signaturePots30: () => [at(30).signaturePots],
   storageFullShare: () => [avg(days.map((d) => d.storageFullShare))],
