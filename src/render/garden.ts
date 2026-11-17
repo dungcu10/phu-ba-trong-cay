@@ -48,7 +48,7 @@ export function homeGarden(content: ContentPack, state: GameState, now: number):
     return {
       def,
       stars: floor.stars,
-      expandCost: expandCost(def, floor),
+      expandCost: expandCost(def, floor, content, state.player.level),
       setName: best ? best.set.name.vi : null,
       pots: floor.slots.map((slot) => {
         const inst = state.pots[slot.potInstanceId]!;

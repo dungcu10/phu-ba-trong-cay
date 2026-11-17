@@ -56,7 +56,7 @@ export class FloorInfoPanel extends Panel {
     if (def.trait) this.body.append(h('div', { class: 'trait' }, `Đặc tính tầng: cây ${FAMILY_TEXT[def.trait.family] ?? def.trait.family} ${STAT_TEXT[def.trait.stat] ?? def.trait.stat} +${formatPercent(def.trait.value)}`));
 
     // Expansion.
-    const cost = expandCost(def, floor);
+    const cost = expandCost(def, floor, content, p.level);
     const exp = h('section', { class: 'card' }, h('h3', {}, `Vị trí chậu ${floor.slots.length}/${def.maxSlots}`));
     if (cost === null) exp.append(h('p', { class: 'note' }, 'Tầng đã mở rộng hết.'));
     else {

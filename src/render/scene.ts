@@ -6,6 +6,7 @@
 // state and reports input; it never changes state itself.
 
 import { canOpenFloor, floorItemNeeds } from '../systems/floors.ts';
+import { floorUnlockCost } from '../systems/coinSinks.ts';
 import { Application, Container, Graphics, Point, Rectangle, Sprite, Text, Texture, type FederatedPointerEvent } from 'pixi.js';
 import type { FloorDef } from '../core/content.ts';
 import type { SlotRef } from '../core/game.ts';
@@ -541,9 +542,9 @@ export class GameView {
     if (!this.locked) return;
     const { def, info } = this.locked;
     const p = this.session.state.player;
-    const ready = canOpenFloor(def, this.session.state);
+    const ready = canOpenFloor(def, this.session.state, this.session.content);
     const items = floorItemNeeds(def, this.session.state.inventory).map((n) => `${n.need} ${this.session.content.items.get(n.itemId)?.name.vi ?? ''}`);
-    const text = ready ? 'Chạm để mở tầng mới!' : [`Cấp ${def.unlockLevel}`, `${formatNumber(def.unlockCost)} xu`, ...items].join(' · ');
+    const text = ready ? 'Chạm để mở tầng mới!' : [`Cấp ${def.unlockLevel}`, `${formatNumber(floorUnlockCost(this.session.content, def, p.level))} xu`, ...items].join(' · ');
     if (info.text !== text) info.text = text;
   }
 

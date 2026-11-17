@@ -501,6 +501,48 @@ export interface CastingRules {
   sources: Record<string, string>;
 }
 
+/** Chỉ thị 12 TỔNG B2: the Sạp Săn Hàng (8 slots, free refresh, paid reroll, Vận May pity). */
+export type BazaarRarity = 'common' | 'good' | 'rare' | 'epic' | 'legendary';
+export const BAZAAR_RARITIES: BazaarRarity[] = ['common', 'good', 'rare', 'epic', 'legendary'];
+export interface BazaarEntry {
+  pick: 'produce' | 'bug' | 'item' | 'pot';
+  weight: number;
+  /** item: its id. bug: its rarity. pot: which pot rarities, signature pots only. */
+  id?: string;
+  rarity?: string;
+  rarities?: string[];
+  signature?: boolean;
+  qty?: [number, number];
+  /** produce: crops up to this many levels above the player (for orders) may show up. */
+  levelAhead?: number;
+  priceFactor?: number;
+  currency?: 'coins' | 'gems';
+  gems?: number;
+}
+export interface BazaarRules {
+  unlockLevel: number;
+  slots: number;
+  refreshHours: number;
+  reroll: { baseU: number; growth: number; minCoins: number };
+  pity: Array<{ rarity: BazaarRarity; at: number }>;
+  wantedChance: number;
+  wantedRarity: BazaarRarity;
+  rarities: Array<{ id: BazaarRarity; weight: number; priceU: number }>;
+  pools: Record<BazaarRarity, BazaarEntry[]>;
+}
+/** Chỉ thị 12 TỔNG A3: coins added on top of a price, as a factor of U(player level). 0 = old price. */
+export interface LevelPricing {
+  floorUnlockU: number;
+  floorExpandU: number;
+  machineStarU: number;
+  machineSlotU: number;
+  castingU: Record<string, number>;
+}
+export interface MarketRules {
+  bazaar?: BazaarRules;
+  levelPricing?: LevelPricing;
+}
+
 export interface WorkshopRules {
   slotsStart: number;
   slotsMax: number;
@@ -541,6 +583,7 @@ export interface ContentPack {
   workshopRules?: WorkshopRules;
   cropExtras?: CropExtras;
   casting?: CastingRules;
+  market?: MarketRules;
   missions: MissionsConfig;
   materials: Map<string, MaterialDef>;
   events: EventDef[];
@@ -574,6 +617,7 @@ export interface RawContent {
   workshop?: unknown;
   cropExtras?: unknown;
   casting?: unknown;
+  market?: unknown;
 }
 
 export class ContentError extends Error {
@@ -589,7 +633,7 @@ type ReadJson = (relativePath: string) => Promise<unknown>;
 export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> {
   const manifest = (await readJson('manifest.json')) as {
     contentVersion: number;
-    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions' | 'materials' | 'events' | 'quests' | 'features' | 'tutorials', string> & Partial<Record<'birds' | 'workshop' | 'cropExtras' | 'casting', string>>;
+    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions' | 'materials' | 'events' | 'quests' | 'features' | 'tutorials', string> & Partial<Record<'birds' | 'workshop' | 'cropExtras' | 'casting' | 'market', string>>;
   };
   const raw: RawContent = {
     contentVersion: manifest.contentVersion,
@@ -612,6 +656,7 @@ export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> 
     workshop: manifest.files.workshop ? await readJson(manifest.files.workshop) : undefined,
     cropExtras: manifest.files.cropExtras ? await readJson(manifest.files.cropExtras) : undefined,
     casting: manifest.files.casting ? await readJson(manifest.files.casting) : undefined,
+    market: manifest.files.market ? await readJson(manifest.files.market) : undefined,
   };
   return buildContentPack(raw);
 }
@@ -953,6 +998,33 @@ export function buildContentPack(raw: RawContent): ContentPack {
     if (!isNum(casting.perfectChance) || casting.perfectChance < 0 || casting.perfectChance > 1) problems.push('casting.perfectChance: 0–1');
   }
 
+  let market: MarketRules | undefined;
+  if (isObj(raw.market)) {
+    market = raw.market as unknown as MarketRules;
+    const b = market.bazaar;
+    if (b) {
+      if (!(b.slots > 0) || !(b.refreshHours > 0) || !isNum(b.unlockLevel)) problems.push('market.bazaar: cần slots > 0, refreshHours > 0, unlockLevel');
+      if (!isObj(b.reroll) || !isNum(b.reroll.baseU) || !(b.reroll.growth >= 1) || !isNum(b.reroll.minCoins)) problems.push('market.bazaar.reroll: cần baseU, growth ≥ 1, minCoins');
+      if (!Array.isArray(b.rarities) || b.rarities.length === 0 || b.rarities.some((r) => !BAZAAR_RARITIES.includes(r.id) || !(r.weight >= 0) || !isNum(r.priceU))) problems.push('market.bazaar.rarities: id, weight ≥ 0, priceU');
+      for (const p of b.pity ?? []) if (!BAZAAR_RARITIES.includes(p.rarity) || !(p.at > 0)) problems.push('market.bazaar.pity: rarity và at > 0');
+      for (const [rar, list] of Object.entries(b.pools ?? {})) {
+        if (!BAZAAR_RARITIES.includes(rar as BazaarRarity)) problems.push(`market.bazaar.pools: độ hiếm "${rar}" không hợp lệ`);
+        for (const e of list) {
+          const where = `market.bazaar.pools.${rar}`;
+          if (!(e.weight > 0)) problems.push(`${where}: weight > 0`);
+          if (e.pick === 'item' && (!e.id || !items.has(e.id))) problems.push(`${where}: món "${e.id}" không tồn tại`);
+          if (e.pick === 'bug' && !['common', 'good', 'rare', 'epic'].includes(e.rarity ?? '')) problems.push(`${where}: bọ cần rarity`);
+          if (e.pick === 'pot' && !(Array.isArray(e.rarities) && e.rarities.length > 0)) problems.push(`${where}: chậu cần rarities`);
+          if (!['produce', 'bug', 'item', 'pot'].includes(e.pick)) problems.push(`${where}: pick không hợp lệ`);
+          if (e.currency === 'gems' && !(e.gems! > 0)) problems.push(`${where}: trả ngọc cần gems > 0`);
+          if (e.qty && !(e.qty[0] >= 1 && e.qty[1] >= e.qty[0])) problems.push(`${where}: qty [min, max]`);
+        }
+      }
+    }
+    const lp = market.levelPricing;
+    if (lp && (['floorUnlockU', 'floorExpandU', 'machineStarU', 'machineSlotU'] as const).some((k) => !isNum(lp[k]) || lp[k] < 0)) problems.push('market.levelPricing: hệ số ≥ 0');
+  }
+
   if (problems.length > 0) throw new ContentError(problems);
   const handFloors = [...floors.values()].sort((a, b) => a.unlockLevel - b.unlockLevel);
   const income = new IncomeModel(config.income, [...crops.values()], handFloors, config.floorGen);
@@ -981,6 +1053,7 @@ export function buildContentPack(raw: RawContent): ContentPack {
     workshopRules,
     cropExtras,
     casting,
+    market,
     potSets,
     missions,
     materials,

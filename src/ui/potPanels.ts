@@ -2,6 +2,7 @@
 
 import { itemIcon, svgIcon } from './icons.ts';
 import { floorItemNeeds } from '../systems/floors.ts';
+import { floorUnlockCost } from '../systems/coinSinks.ts';
 import type { GameSession } from '../app/session.ts';
 import { isSoldInShop, type FloorDef, type PotDef, type PotLevelDef } from '../core/content.ts';
 import { atlasData, potFrame } from '../render/assets.ts';
@@ -124,7 +125,8 @@ export class FloorPanel extends Panel {
     const items = floorItemNeeds(d, this.session.state.inventory);
     const short: string[] = [];
     if (player.level < d.unlockLevel) short.push(`cần cấp ${d.unlockLevel}`);
-    if (player.coins < d.unlockCost) short.push(`thiếu ${formatNumber(d.unlockCost - player.coins)} xu`);
+    const unlockCost = floorUnlockCost(this.session.content, d, player.level);
+    if (player.coins < unlockCost) short.push(`thiếu ${formatNumber(unlockCost - player.coins)} xu`);
     for (const n of items) if (n.have < n.need) short.push(`thiếu ${n.need - n.have} ${this.session.content.items.get(n.itemId)?.name.vi ?? ''}`);
     const ok = short.length === 0;
     const btn = h('button', { class: `candy ${ok ? 'primary' : 'blocked'}`, 'data-test': 'unlock-floor', onclick: () => (ok ? this.actions.unlockFloor(d.id) : shake(btn)) }, 'Mở tầng');
@@ -132,7 +134,7 @@ export class FloorPanel extends Panel {
       h('p', { class: 'lead' }, d.name.vi),
       h('div', { class: 'trait' }, trait),
       h('p', { class: 'note' }, `${d.slotCount} vị trí chậu, có sẵn chậu đất nung.`),
-      h('div', { class: 'needs' }, h('span', { class: `need${player.coins < d.unlockCost ? ' short' : ''}` }, coin(22), formatNumber(d.unlockCost)), h('span', { class: `need${player.level < d.unlockLevel ? ' short' : ''}` }, `Cấp ${d.unlockLevel}`), ...items.map((n) => h('span', { class: `need${n.have < n.need ? ' short' : ''}` }, itemIcon(this.session.content, n.itemId, 26), `${Math.min(n.have, n.need)}/${n.need}`))),
+      h('div', { class: 'needs' }, h('span', { class: `need${player.coins < unlockCost ? ' short' : ''}` }, coin(22), formatNumber(unlockCost)), h('span', { class: `need${player.level < d.unlockLevel ? ' short' : ''}` }, `Cấp ${d.unlockLevel}`), ...items.map((n) => h('span', { class: `need${n.have < n.need ? ' short' : ''}` }, itemIcon(this.session.content, n.itemId, 26), `${Math.min(n.have, n.need)}/${n.need}`))),
       h('div', { class: 'candy-wrap' }, btn, h('span', { class: 'reason' }, ok ? '' : `Chưa mở được: ${short.join(', ')}`)),
     );
   }

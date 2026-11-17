@@ -772,3 +772,26 @@ html, body {
 .cast-need { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 4px 0; }
 .cast-need.done strong { color: #9BE3B5; }
 .cast-recipe .pack-name { display: flex; align-items: center; gap: 8px; }
+
+/* Chỉ thị 12 B2: Sạp Săn Hàng (Chợ Mây › Săn hàng hiếm). Rarity shown by chip text + marks, not colour alone. */
+.hunt-head{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:8px 0 12px}
+.luck-bars{display:flex;flex-direction:column;gap:4px;flex:1 1 260px}
+.luck{display:grid;grid-template-columns:150px 1fr auto;align-items:center;gap:8px;font-size:var(--font-size-caption);font-weight:700}
+.luck-track{height:10px;border-radius:5px;background:rgba(255,255,255,.18);overflow:hidden}
+.luck-fill{display:block;height:100%;border-radius:5px;background:var(--color-rarity-rare);transition:width .4s}
+.luck.epic .luck-fill{background:var(--color-rarity-epic)}
+.hunt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.hunt-slot{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 8px;border-radius:14px;border:3px solid var(--color-rarity-common);background:#FFF8EA;color:var(--color-ui-secondaryText,#4A3423);text-align:center}
+.hunt-slot.rar-good{border-color:var(--color-rarity-good)}
+.hunt-slot.rar-rare{border-color:var(--color-rarity-rare)}
+.hunt-slot.rar-epic{border-color:var(--color-rarity-epic);box-shadow:0 0 10px rgba(148,114,207,.45)}
+.hunt-slot.rar-legendary{border-color:var(--color-rarity-legendary,#D6913F);box-shadow:0 0 16px rgba(214,145,63,.7)}
+.hunt-slot.rar-legendary::after{content:"";position:absolute;inset:0;border-radius:11px;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,240,190,.55) 50%,transparent 65%);background-size:250% 100%;animation:hunt-shine 2.4s linear infinite}
+.hunt-slot.sold{opacity:.5;filter:grayscale(.6)}
+.hunt-slot.sold::after{display:none}
+.hunt-slot.jackpot{animation:hunt-shake .5s ease-in-out 2}
+.hunt-slot.wanted{outline:2px dashed var(--color-brand-peach,#f0a070);outline-offset:2px}
+.hunt-seller{display:inline-flex;align-items:center;gap:4px;font-size:var(--font-size-caption);opacity:.8}
+@keyframes hunt-shine{from{background-position:150% 0}to{background-position:-100% 0}}
+@keyframes hunt-shake{0%,100%{transform:rotate(0)}25%{transform:rotate(-3deg) scale(1.04)}75%{transform:rotate(3deg) scale(1.04)}}
+@media (prefers-reduced-motion: reduce){.hunt-slot.jackpot,.hunt-slot.rar-legendary::after{animation:none}}

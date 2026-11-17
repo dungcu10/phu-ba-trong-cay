@@ -99,7 +99,7 @@ export interface PotInstance {
   level: number;
   /** Game time it was obtained (POT_SYSTEM 8), and how. */
   obtainedAt?: number;
-  source?: 'start' | 'shop' | 'floor' | 'exchange' | 'event' | 'old-save' | 'quest' | 'cast';
+  source?: 'start' | 'shop' | 'floor' | 'exchange' | 'event' | 'old-save' | 'quest' | 'cast' | 'bazaar';
   /** Every level reached, with the time (kept small: one entry per level, at most 50). */
   history?: Array<{ level: number; at: number }>;
   /** Pot stars (chỉ thị 10 § 3.8 "Hoàn Mỹ", chỉ thị 12 B7.2): each star raises every stat a little. */
@@ -234,6 +234,8 @@ export interface GameState {
   tutorials: string[];
   /** Chợ Mây (save 11): purchases from neighbours on local day `day`. */
   market: { day: number; buys: number };
+  /** Chỉ thị 12 B2: the Sạp Săn Hàng board (optional; rolled when first opened). */
+  bazaar?: BazaarState;
   /** Phú Bà board (save 11): everyone's rank at the start of local day `day`, for the arrows. */
   ranks: { day: number; prev: Record<string, number> };
   /** Chỉ thị 10 (save 12): bug-catching birds. */
@@ -319,4 +321,30 @@ export function newNeighbors(content: ContentPack, now: number): Record<string, 
     out[b.id] = { level: b.startLevel, xp: 0, coins: b.startCoins, gardenValue: b.startCoins, friendship: 0, simulatedTo: now, lastAction: null, help: { day: -1, pots: [] }, stall: [], birds: [], bugs: {} };
   }
   return out;
+}
+
+/** Chỉ thị 12 B2: one slot of the Sạp Săn Hàng, bought once. */
+export interface BazaarSlot {
+  rarity: 'common' | 'good' | 'rare' | 'epic' | 'legendary';
+  kind: 'item' | 'pot';
+  id: string;
+  qty: number;
+  currency: 'coins' | 'gems';
+  price: number;
+  /** The Phú Bà (bot id) who laid it out; the coins go to them. */
+  seller: string;
+  sold?: boolean;
+}
+
+export interface BazaarState {
+  /** Free-refresh window the board belongs to. */
+  window: number;
+  /** Boards laid so far (the random key). */
+  roll: number;
+  slots: BazaarSlot[];
+  /** Paid rerolls on local day `day`. */
+  day: number;
+  rerolls: number;
+  /** Vận May counter per pity rarity. */
+  luck: Record<string, number>;
 }

@@ -2,12 +2,16 @@
 
 import type { ContentPack, FloorDef, PotSetDef, PotStatName } from '../core/content.ts';
 import type { FloorState, GameState } from '../core/state.ts';
+import { floorUnlockCost, levelCoins } from './coinSinks.ts';
 
-/** Coins to open the next pot slot on this floor, or null when it is fully expanded. */
-export function expandCost(def: FloorDef, floor: FloorState): number | null {
+/** Coins to open the next pot slot on this floor, or null when it is fully expanded. With content and
+ *  the player's level it adds the level part (chỉ thị 12 A3). */
+export function expandCost(def: FloorDef, floor: FloorState, content?: ContentPack, level?: number): number | null {
   const i = floor.slots.length - def.slotCount;
   if (floor.slots.length >= def.maxSlots || i < 0) return null;
-  return def.expandCosts[i] ?? null;
+  const base = def.expandCosts[i];
+  if (base === undefined) return null;
+  return content && level !== undefined ? base + levelCoins(content, 'floorExpandU', level) : base;
 }
 
 /** Chỉ thị 10 § 3.1: the items a floor asks to open, with how many the player has. */
@@ -16,8 +20,9 @@ export function floorItemNeeds(def: FloorDef, inventory: Record<string, number>)
 }
 
 /** Level, coins and items all there to open this floor. */
-export function canOpenFloor(def: FloorDef, state: GameState): boolean {
-  return state.player.level >= def.unlockLevel && state.player.coins >= def.unlockCost && floorItemNeeds(def, state.inventory).every((n) => n.have >= n.need);
+export function canOpenFloor(def: FloorDef, state: GameState, content?: ContentPack): boolean {
+  const cost = content ? floorUnlockCost(content, def, state.player.level) : def.unlockCost;
+  return state.player.level >= def.unlockLevel && state.player.coins >= cost && floorItemNeeds(def, state.inventory).every((n) => n.have >= n.need);
 }
 
 /** Items asked with the coins for the next slot (Sợi Mây Kết), or none. */

@@ -8,6 +8,7 @@
 import type { ContentPack, MachineDef, RecipeDef } from '../core/content.ts';
 import type { GameState, MachineState } from '../core/state.ts';
 import { addItem, removeItem, storageFree } from './economy.ts';
+import { levelCoins } from './coinSinks.ts';
 
 const MIN = 60_000;
 
@@ -88,9 +89,10 @@ export function collectWorkshop(content: ContentPack, state: GameState, now: num
 }
 
 /** Next star's cost (coins + the machine's worker bug), or null at 5 stars. */
-export function nextStarCost(content: ContentPack, machine: MachineDef, m: MachineState): { coins: number; items: Record<string, number> } | null {
+export function nextStarCost(content: ContentPack, machine: MachineDef, m: MachineState, level?: number): { coins: number; items: Record<string, number> } | null {
   const step = rules(content).stars[m.stars - 1];
-  return step ? { coins: step.coins, items: { [machine.worker]: step.bugs } } : null;
+  const extra = level === undefined ? 0 : levelCoins(content, 'machineStarU', level);
+  return step ? { coins: step.coins + extra, items: { [machine.worker]: step.bugs } } : null;
 }
 
 export function upgradeMachine(content: ContentPack, state: GameState, machineId: string): WorkshopError | WorkshopEvent {
@@ -98,7 +100,7 @@ export function upgradeMachine(content: ContentPack, state: GameState, machineId
   if (!machine) return 'unknown_machine';
   if (state.player.level < machine.unlockLevel) return 'locked';
   const m = machineState(content, state, machineId);
-  const cost = nextStarCost(content, machine, m);
+  const cost = nextStarCost(content, machine, m, state.player.level);
   if (!cost) return 'max_stars';
   if (state.player.coins < cost.coins) return 'not_enough_coins';
   for (const [id, q] of Object.entries(cost.items)) if ((state.inventory[id] ?? 0) < q) return 'not_enough_items';
@@ -109,9 +111,11 @@ export function upgradeMachine(content: ContentPack, state: GameState, machineId
 }
 
 /** Coins for the next queue slot, or null at the maximum. */
-export function nextSlotCost(content: ContentPack, m: MachineState): number | null {
+export function nextSlotCost(content: ContentPack, m: MachineState, level?: number): number | null {
   const r = rules(content);
-  return m.slots >= r.slotsMax ? null : (r.slotCost[m.slots - r.slotsStart] ?? null);
+  const base = m.slots >= r.slotsMax ? undefined : r.slotCost[m.slots - r.slotsStart];
+  if (base === undefined) return null;
+  return level === undefined ? base : base + levelCoins(content, 'machineSlotU', level);
 }
 
 export function buyMachineSlot(content: ContentPack, state: GameState, machineId: string): WorkshopError | WorkshopEvent {
@@ -119,7 +123,7 @@ export function buyMachineSlot(content: ContentPack, state: GameState, machineId
   if (!machine) return 'unknown_machine';
   if (state.player.level < machine.unlockLevel) return 'locked';
   const m = machineState(content, state, machineId);
-  const cost = nextSlotCost(content, m);
+  const cost = nextSlotCost(content, m, state.player.level);
   if (cost === null) return 'max_slots';
   if (state.player.coins < cost) return 'not_enough_coins';
   state.player.coins -= cost;

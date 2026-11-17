@@ -81,7 +81,7 @@ function orderShortfall(content: ContentPack, s: GameState): Map<CropDef, number
   return need;
 }
 
-export function simulateProgression(content: ContentPack, visitMinutes: number, days: number, seed = 42): { days: DayReport[]; state: GameState; gemSources: Record<string, number> } {
+export function simulateProgression(content: ContentPack, visitMinutes: number, days: number, seed = 42): { days: DayReport[]; state: GameState; gemSources: Record<string, number>; coinFlow: Record<string, number> } {
   const s = createNewGame(content, T0, seed);
   let milestones = 0;
   let gemsEarned = 0;

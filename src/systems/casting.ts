@@ -8,14 +8,17 @@ import type { GameState } from '../core/state.ts';
 import { randomFor } from '../core/rng.ts';
 import { grantPot } from './pots.ts';
 import { removeItem } from './economy.ts';
+import { levelCoins } from './coinSinks.ts';
 
 export type CastError = 'level_not_open' | 'unknown_pot' | 'not_castable' | 'locked' | 'not_enough_coins' | 'not_enough_items';
 
-/** The recipe tier for a pot (null when it cannot be cast). */
-export function castRecipe(content: ContentPack, def: PotDef): { coins: number; items: Record<string, number> } | null {
+/** The recipe tier for a pot (null when it cannot be cast); with the player's level, coins include
+ *  the level part (chỉ thị 12 A3). */
+export function castRecipe(content: ContentPack, def: PotDef, level?: number): { coins: number; items: Record<string, number> } | null {
   if (!content.casting || def.group !== 'crafted') return null;
   const t = content.casting.tiers.find((x) => x.rarity === def.rarity);
-  return t ? { coins: t.coins, items: t.items } : null;
+  const extra = level === undefined ? 0 : levelCoins(content, { casting: def.rarity }, level);
+  return t ? { coins: t.coins + extra, items: t.items } : null;
 }
 
 /** Pots the player can cast now (crafted group, unlocked by level). */
@@ -28,7 +31,7 @@ export function castPot(content: ContentPack, state: GameState, potId: string, n
   if (!rules || state.player.level < rules.unlockLevel) return 'level_not_open';
   const def = content.pots.get(potId);
   if (!def) return 'unknown_pot';
-  const recipe = castRecipe(content, def);
+  const recipe = castRecipe(content, def, state.player.level);
   if (!recipe) return 'not_castable';
   if (def.unlockLevel > state.player.level) return 'locked';
   if (state.player.coins < recipe.coins) return 'not_enough_coins';
