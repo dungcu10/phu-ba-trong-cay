@@ -1,19 +1,8 @@
 // Boot: content → saved game (never overwritten on read errors) → PixiJS view → HTML UI.
 
 import { makeDemo } from './app/demo.ts';
-import '@fontsource/baloo-2/latin-700.css';
-import '@fontsource/baloo-2/latin-ext-700.css';
-import '@fontsource/baloo-2/vietnamese-700.css';
-import '@fontsource/baloo-2/latin-800.css';
-import '@fontsource/baloo-2/latin-ext-800.css';
-import '@fontsource/baloo-2/vietnamese-800.css';
-import '@fontsource/nunito/latin-600.css';
-import '@fontsource/nunito/latin-ext-600.css';
-import '@fontsource/nunito/vietnamese-600.css';
-import '@fontsource/nunito/latin-800.css';
-import '@fontsource/nunito/latin-ext-800.css';
-import '@fontsource/nunito/vietnamese-800.css';
 import './styles.css';
+import './theme-fantasy.css';
 
 import { systemClock, type Clock } from './core/clock.ts';
 import { createNewGame } from './core/state.ts';
@@ -90,6 +79,8 @@ async function boot(): Promise<void> {
   const missing = art.missingFor(content);
   if (missing.length > 0) throw new Error(`Thiếu hình cho nội dung: ${missing.join(', ')}`);
 
+  // Giao diện fantasy: make sure the faces used by the canvas text are loaded before drawing.
+  await Promise.all(['500 16px "Be Vietnam Pro"', '700 16px "Be Vietnam Pro"', '700 16px "Cormorant Garamond"'].map((f) => document.fonts.load(f))).catch(() => undefined);
   await document.fonts.ready;
   const preference: RendererPreference = new URLSearchParams(location.search).get('renderer') === 'webgl' ? 'webgl' : 'webgpu';
   const host = document.getElementById('game')!;

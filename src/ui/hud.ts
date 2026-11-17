@@ -3,6 +3,7 @@
 // (top-right), main buttons in a thumb arc (bottom-right). Under 15% of the screen.
 
 import { svgIcon } from './icons.ts';
+import { lineIcon } from './lineIcons.ts';
 import type { GameSession } from '../app/session.ts';
 import { storageCapacity, storageUsed, xpToNextLevel } from '../systems/economy.ts';
 import { canDeliver } from '../systems/orders.ts';
@@ -35,6 +36,8 @@ export interface HudActions {
 export class Hud {
   readonly el: HTMLElement;
   private readonly level = h('span', { class: 'flower', 'data-test': 'level' });
+  private readonly ring = h('span', { class: 'lvl-ring' }, this.level);
+  private readonly pct = h('span', { class: 'lvl-pct' });
   private readonly vineFill = h('span', { class: 'vine-fill' });
   private readonly xpText = h('span', { class: 'xp-text' });
   private readonly coins = h('span', {});
@@ -70,20 +73,31 @@ export class Hud {
     actions: HudActions,
   ) {
     const { content } = session;
-    this.pouch = h('div', { class: 'plaque pouch', 'data-test': 'coins' }, svgIcon('coin', 40), this.coins);
-    this.gemPouch = h('div', { class: 'plaque pouch gems', 'data-test': 'gems' }, svgIcon('gem', 36), this.gems);
-    const levelBox = h('div', { class: 'plaque' }, this.level, h('span', { class: 'vine' }, this.vineFill, this.xpText));
-    const letters = h('button', { class: 'knob icon-knob', 'aria-label': 'Thư Mây', 'data-test': 'open-letters', onclick: () => actions.openLetters() }, svgIcon('letter', 38), this.letterBadge);
-    const gear = h('button', { class: 'knob icon-knob', 'aria-label': 'Cài đặt', onclick: () => actions.openSettings() }, svgIcon('gear', 36));
-    const seeds = (this.seeds = h('button', { class: 'round-big seeds', 'aria-label': 'Hạt giống', 'data-test': 'open-seeds', onclick: () => actions.toggleTray() }, svgIcon('seeds', 62), h('span', { class: 'round-label' }, 'Hạt giống')));
+    this.pouch = h('div', { class: 'plaque pouch', 'data-test': 'coins' }, svgIcon('coin', 26), this.coins);
+    this.gemPouch = h('div', { class: 'plaque pouch gems', 'data-test': 'gems' }, svgIcon('gem', 24), this.gems);
+    // Giao diện Fantasy cao cấp: level ring + name, thin XP line underneath.
+    const levelBox = h(
+      'div',
+      { class: 'plaque profile' },
+      this.ring,
+      h('span', { class: 'profile-text' }, h('strong', { class: 'profile-name' }, 'Vườn Trên Mây'), this.pct, h('span', { class: 'vine' }, this.vineFill, this.xpText)),
+    );
+    const letters = h('button', { class: 'knob icon-knob', 'aria-label': 'Thư Mây', 'data-test': 'open-letters', onclick: () => actions.openLetters() }, lineIcon('letter', 22), this.letterBadge);
+    const gear = h('button', { class: 'knob icon-knob', 'aria-label': 'Cài đặt', onclick: () => actions.openSettings() }, lineIcon('gear', 22));
+    const seeds = (this.seeds = h(
+      'button',
+      { class: 'round-big seeds', 'aria-label': 'Hạt giống', 'data-test': 'open-seeds', onclick: () => actions.toggleTray() },
+      h('span', { class: 'seeds-orb' }, svgIcon('seeds', 34)),
+      h('span', { class: 'round-label' }, 'Gieo hạt'),
+    ));
     this.storageButton = h(
       'button',
       { class: 'round-big', 'aria-label': 'Rương Mây', 'data-test': 'open-storage', onclick: () => actions.openStorage() },
-      svgIcon('chest', 60),
+      lineIcon('chest', 26),
       h('span', { class: 'round-label' }, 'Rương Mây'),
       this.storageBadge,
     );
-    const shop = h('button', { class: 'round-big', 'aria-label': 'Lò Gốm', 'data-test': 'open-shop', onclick: () => actions.openShop() }, svgIcon('kiln', 62), h('span', { class: 'round-label' }, 'Lò Gốm'));
+    const shop = h('button', { class: 'round-big', 'aria-label': 'Lò Gốm', 'data-test': 'open-shop', onclick: () => actions.openShop() }, lineIcon('kiln', 26), h('span', { class: 'round-label' }, 'Lò Gốm'));
     const side = (label: string, test: string, art: Element, badge: HTMLElement | null, run: () => void, feature?: string) => {
       const b = h('button', { class: 'side-btn', 'aria-label': label, 'data-test': test, onclick: run }, art, h('span', { class: 'side-label' }, label), badge);
       if (feature) this.gated.push({ feature, el: b });
@@ -92,11 +106,11 @@ export class Hud {
     const services = h(
       'div',
       { class: 'hud-side' },
-      side('Nhiệm vụ', 'open-missions', svgIcon('missions', 46), this.missionBadge, () => actions.openMissions()),
-      side('Đơn hàng', 'open-orders', svgIcon('orders', 46), this.orderBadge, () => actions.openOrders(), 'orders'),
-      side('Sạp', 'open-stall', svgIcon('stall', 46), this.stallBadge, () => actions.openStall(), 'stall'),
-      side('Phú Bà', 'open-neighbors', svgIcon('crown', 46), null, () => actions.openNeighbors(), 'neighbors'),
-      side('Sổ Tay', 'open-journal', svgIcon('journal', 46), this.journalBadge, () => actions.openJournal(), 'journal'),
+      side('Nhiệm vụ', 'open-missions', lineIcon('missions', 26), this.missionBadge, () => actions.openMissions()),
+      side('Đơn hàng', 'open-orders', lineIcon('orders', 26), this.orderBadge, () => actions.openOrders(), 'orders'),
+      side('Sạp', 'open-stall', lineIcon('stall', 26), this.stallBadge, () => actions.openStall(), 'stall'),
+      side('Phú Bà', 'open-neighbors', lineIcon('crown', 26), null, () => actions.openNeighbors(), 'neighbors'),
+      side('Sổ Tay', 'open-journal', lineIcon('journal', 26), this.journalBadge, () => actions.openJournal(), 'journal'),
     );
     this.gated.push({ feature: 'shop', el: shop });
     // Quest tracker (đợt 2): the quest to do next, its progress, and a claim button when ready.
@@ -107,7 +121,7 @@ export class Hud {
       h('span', { class: 'qt-main' }, this.trackerTrack, this.trackerName, h('span', { class: 'bar' }, this.trackerBar), this.trackerCount),
       this.trackerClaim,
     );
-    this.eventBtn = h('button', { class: 'side-btn event-btn', 'aria-label': 'Lễ Hội', 'data-test': 'open-event', onclick: () => actions.openEvent() }, svgIcon('moon', 50), h('span', { class: 'side-label' }, 'Lễ Hội'), this.eventTime, this.eventBadge);
+    this.eventBtn = h('button', { class: 'side-btn event-btn', 'aria-label': 'Lễ Hội', 'data-test': 'open-event', onclick: () => actions.openEvent() }, lineIcon('moon', 26), h('span', { class: 'side-label' }, 'Lễ Hội'), this.eventTime, this.eventBadge);
     this.el = h(
       'div',
       { class: 'hud' },
@@ -115,7 +129,7 @@ export class Hud {
       h('div', { class: 'hud-top' }, levelBox, h('div', { class: 'pouches' }, this.pouch, this.gemPouch), letters, gear),
       this.hint,
       services,
-      h('div', { class: 'hud-arc' }, seeds, this.storageButton, shop),
+      h('div', { class: 'hud-arc' }, this.storageButton, seeds, shop),
       this.tracker,
     );
     this.gated.push({ feature: 'event', el: this.eventBtn });
@@ -145,6 +159,9 @@ export class Hud {
     this.level.textContent = String(p.level);
     this.vineFill.style.width = `${Math.min(100, (p.xp / need) * 100)}%`;
     this.xpText.textContent = `${formatNumber(p.xp)}/${formatNumber(need)}`;
+    const share = Math.min(100, Math.floor((p.xp / need) * 100));
+    this.ring.style.setProperty('--p', `${share}`);
+    this.pct.textContent = `Cấp ${p.level} · ${share}%`;
     if (p.coins !== this.last.coins) {
       if (this.last.coins >= 0 && p.coins > this.last.coins) this.bump(this.pouch);
       this.last.coins = p.coins;
