@@ -24,7 +24,8 @@ export class Toasts {
     const last = this.el.lastElementChild;
     if (last?.textContent === t.textContent) last.remove();
     this.el.append(t);
-    while (this.el.children.length > 3) this.el.firstElementChild?.remove();
+    // At most two at once so they never cover the floor signs (nâng cấp v3 đợt 1).
+    while (this.el.children.length > 2) this.el.firstElementChild?.remove();
     if (!action) setTimeout(() => t.classList.add('out'), durationMs);
     if (!action) setTimeout(() => t.remove(), durationMs + 300);
   }
