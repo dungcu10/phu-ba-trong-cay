@@ -20,6 +20,7 @@ import { expandCost, nextStar } from '../systems/floors.ts';
 import { allMissionsClaimed, ensureMissions, localDay, missionDef, recordMissions } from '../systems/missions.ts';
 import { ensureQuestPeriods, questActive, questClaims, questReward, questView, recordQuests } from '../systems/quests.ts';
 import { botGarden, helpReward, helpsLeft, helpToday, type HelpKind } from '../systems/visit.ts';
+import { advanceBirds, buyMillet, feedBird, obtainBird, placeBird, type BirdError, type BirdEvent } from '../systems/birds.ts';
 
 export type SlotRef = { floor: number; slot: number };
 
@@ -62,12 +63,20 @@ export type Command =
   /** Claims the next tier of a quest (đợt 2). */
   | { type: 'claimQuest'; questId: string }
   /** Marks a tutorial as shown so it never comes back. */
-  | { type: 'seeTutorial'; tutorialId: string };
+  | { type: 'seeTutorial'; tutorialId: string }
+  /** Chỉ thị 10 § 3.3: rent (coins) or buy (gems) a bug-catching bird. */
+  | { type: 'obtainBird'; species: string; how: 'rent' | 'buy' }
+  | { type: 'feedBird'; birdId: string; itemId: string }
+  | { type: 'placeBird'; birdId: string; floor: number; branch: number }
+  | { type: 'buyMillet'; qty: number };
 
 export type GameEvent =
   | { type: 'planted'; slot: SlotRef; cropId: string; cost: number }
   | { type: 'watered'; slot: SlotRef; savedMs: number }
   | { type: 'bugCaught'; slot: SlotRef; itemId: string }
+  | BirdEvent
+  | { type: 'birdObtained'; birdId: string; species: string; rented: boolean }
+  | { type: 'birdFed'; birdId: string; food: number }
   | { type: 'newBug'; itemId: string }
   | { type: 'harvested'; slot: SlotRef; itemId: string; qty: number; xp: number; cleared: boolean; mutation: string | null; doubled?: boolean }
   | { type: 'giftFound'; slot: SlotRef; gift: Gift }
@@ -139,7 +148,8 @@ export type ErrorCode =
   | 'nothing_growing'
   | 'unknown_quest'
   | 'quest_not_ready'
-  | 'market_limit';
+  | 'market_limit'
+  | BirdError;
 
 export type Result = { ok: true; events: GameEvent[] } | { ok: false; error: ErrorCode };
 
@@ -176,8 +186,12 @@ export function dispatch(content: ContentPack, state: GameState, cmd: Command, r
   const now = advanceTime(state, realNow);
   ensureMissions(content, state, now);
   ensureQuestPeriods(content, state, now);
-  const result = run(content, state, cmd, now);
-  if (result.ok) {
+  // Birds work in time order up to now, before the player acts, with the player's own catchBug.
+  const birdEvents = runBirds(content, state, now);
+  const ran = run(content, state, cmd, now);
+  // Bird catches count for missions even when the player's command itself fails.
+  const result: Result = ran.ok ? { ok: true, events: [...birdEvents, ...ran.events] } : { ok: true, events: birdEvents };
+  if (result.events.length > 0) {
     for (const index of recordMissions(content, state, result.events)) result.events.push({ type: 'missionDone', index, missionId: state.missions.list[index]!.id });
     for (const questId of recordQuests(content, state, result.events, now)) result.events.push({ type: 'questDone', questId });
     // Event points come from what just happened, only while an event runs (POT_SYSTEM 3).
@@ -189,7 +203,24 @@ export function dispatch(content: ContentPack, state: GameState, cmd: Command, r
       result.events.push({ type: 'eventPoints', eventId: ev.id, points: pts, total: e.points });
     }
   }
-  return result;
+  return ran.ok ? result : ran;
+}
+
+function runBirds(content: ContentPack, state: GameState, now: number): GameEvent[] {
+  const events: GameEvent[] = [];
+  const birdEvents = advanceBirds(content, state, now, (floor, slot, at) => {
+    const r = catchBug(content, state, { floor, slot }, at);
+    if (!r.ok) return { ok: false };
+    // Only the "new bug" note is kept; the catch itself is reported as the bird's.
+    for (const e of r.events) if (e.type === 'newBug') events.push(e);
+    const caught = r.events.find((e) => e.type === 'bugCaught');
+    return { ok: true, itemId: caught?.type === 'bugCaught' ? caught.itemId : undefined };
+  });
+  return [...birdEvents, ...events];
+}
+
+function birdResult(r: BirdError | null | object, ok: GameEvent[]): Result {
+  return typeof r === 'string' ? fail(r) : { ok: true, events: ok };
 }
 
 function run(content: ContentPack, state: GameState, cmd: Command, now: number): Result {
@@ -200,6 +231,18 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
       return water(content, state, cmd, now);
     case 'catchBug':
       return catchBug(content, state, cmd, now);
+    case 'obtainBird': {
+      const b = obtainBird(content, state, cmd.species, cmd.how, now);
+      return typeof b === 'string' ? fail(b) : { ok: true, events: [{ type: 'birdObtained', birdId: b.id, species: b.species, rented: cmd.how === 'rent' }] };
+    }
+    case 'feedBird': {
+      const r = feedBird(content, state, cmd.birdId, cmd.itemId, now);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'birdFed', birdId: cmd.birdId, food: r.food }] };
+    }
+    case 'placeBird':
+      return birdResult(placeBird(content, state, cmd.birdId, cmd.floor, cmd.branch), []);
+    case 'buyMillet':
+      return birdResult(buyMillet(content, state, cmd.qty), []);
     case 'harvest':
       return harvest(content, state, cmd, now);
     case 'sell':
