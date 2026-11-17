@@ -259,13 +259,33 @@ function reconcilePlanting(state: GameState, content: ContentPack, slot: SlotSta
   p.caughtBugs = caught;
 }
 
+const obj = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v);
+
+/** Birds as stored: unknown species dropped, every number clamped, a perch past the last floor cleared. */
+function cleanBirds(content: ContentPack, input: unknown, floors: number, at: number, c: Checker): GameState['birds'] {
+  const birdSpecies = content.birds;
+  const list = (Array.isArray(input) ? input : []).filter((b) => obj(b) && typeof b.id === 'string' && (!birdSpecies || (typeof b.species === 'string' && birdSpecies.has(b.species)))) as GameState['birds'];
+  for (const b of list) {
+    b.level = c.num('cấp chim', b.level, { min: 1, max: 10, int: true, fallback: 1 });
+    b.caught = c.num('số bọ chim đã bắt', b.caught, { min: 0, int: true, fallback: 0 });
+    b.food = c.num('độ no của chim', b.food, { min: 0, max: 100, fallback: 0 });
+    b.fedAt = c.num('lúc cho chim ăn', b.fedAt, { min: 0, fallback: at });
+    b.simulatedTo = c.num('mốc chim', b.simulatedTo, { min: 0, fallback: at });
+    b.branch = c.num('cành đậu', b.branch, { min: 0, max: 1, int: true, fallback: 0 });
+    if (b.floor !== null && !(Number.isInteger(b.floor) && b.floor >= 0 && b.floor < floors)) b.floor = null;
+    if (b.rentUntil !== null && typeof b.rentUntil !== 'number') b.rentUntil = null;
+    if (!obj(b.today) || typeof b.today.day !== 'number' || typeof b.today.count !== 'number') b.today = { day: -1, count: 0 };
+    if (b.escort !== null && !(obj(b.escort) && typeof b.escort.slot === 'number' && typeof b.escort.until === 'number')) b.escort = null;
+  }
+  return list;
+}
+
 /**
  * Save 12 (chỉ thị 10): birds, Xưởng Bọ, Biển Mây, energy, fishing, collections, floor decor.
  * Missing parts get their defaults; unknown ids are dropped; numbers are clamped.
  */
 function reconcileV12(state: GameState, content: ContentPack, c: Checker): void {
   const d = emptyV12Parts(state.maxSeenAt || state.createdAt || 0);
-  const obj = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v);
   for (const f of state.floors) {
     const decor = Array.isArray(f.decor) ? f.decor : [];
     f.decor = [0, 1].map((i) => {
@@ -273,20 +293,11 @@ function reconcileV12(state: GameState, content: ContentPack, c: Checker): void 
       return typeof id === 'string' && content.items.has(id) ? id : null;
     });
   }
-  if (!Array.isArray(state.birds)) state.birds = d.birds;
-  const birdSpecies = content.birds;
-  state.birds = state.birds.filter((b) => obj(b) && typeof b.id === 'string' && (!birdSpecies || birdSpecies.has(b.species)));
-  for (const b of state.birds) {
-    b.level = c.num('cấp chim', b.level, { min: 1, max: 10, int: true, fallback: 1 });
-    b.caught = c.num('số bọ chim đã bắt', b.caught, { min: 0, int: true, fallback: 0 });
-    b.food = c.num('độ no của chim', b.food, { min: 0, max: 100, fallback: 0 });
-    b.fedAt = c.num('lúc cho chim ăn', b.fedAt, { min: 0, fallback: state.maxSeenAt });
-    b.simulatedTo = c.num('mốc chim', b.simulatedTo, { min: 0, fallback: state.maxSeenAt });
-    b.branch = c.num('cành đậu', b.branch, { min: 0, max: 1, int: true, fallback: 0 });
-    if (b.floor !== null && !(Number.isInteger(b.floor) && b.floor >= 0 && b.floor < state.floors.length)) b.floor = null;
-    if (b.rentUntil !== null && typeof b.rentUntil !== 'number') b.rentUntil = null;
-    if (!obj(b.today) || typeof b.today.day !== 'number' || typeof b.today.count !== 'number') b.today = { day: -1, count: 0 };
-    if (b.escort !== null && !(obj(b.escort) && typeof b.escort.slot === 'number' && typeof b.escort.until === 'number')) b.escort = null;
+  state.birds = cleanBirds(content, state.birds, state.floors.length, state.maxSeenAt, c);
+  // Chỉ thị 11 D1: neighbours' birds and bugs (saves from before have none).
+  for (const bot of Object.values(state.neighbors)) {
+    bot.birds = cleanBirds(content, bot.birds, Math.max(1, content.floorList.length), state.maxSeenAt, c);
+    bot.bugs = obj(bot.bugs) ? Object.fromEntries(Object.entries(bot.bugs).filter(([id, q]) => content.bugs.has(id) && Number.isInteger(q) && q > 0)) : {};
   }
   if (!obj(state.workshop)) state.workshop = d.workshop;
   for (const [id, m] of Object.entries(state.workshop)) {

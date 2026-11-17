@@ -14,6 +14,12 @@ const MIN = 60_000;
 
 export function makeDemo(session: GameSession, view: GameView, controller: Controller, clock: OffsetClock): (step: string) => boolean {
   const run = (cmd: Parameters<GameSession['run']>[0]) => {
+    // Chỉ thị 10 § 3.1: opening a floor also takes Sợi Mây Kết + Giọt Sương Trời; the showcase hands
+    // them over first (dev tool only), like it hands over coins.
+    if (cmd.type === 'unlockFloor') {
+      const def = session.content.floors.get(cmd.floorId);
+      for (const [id, q] of Object.entries(def?.unlockItems ?? {})) session.state.inventory[id] = Math.max(session.state.inventory[id] ?? 0, q);
+    }
     const r = session.run(cmd);
     if (!r.ok) console.warn('demo', cmd.type, r.error);
     return r.ok;
@@ -169,7 +175,7 @@ export function makeDemo(session: GameSession, view: GameView, controller: Contr
         state.player.level = 20;
         state.player.coins = Math.max(state.player.coins, 500_000);
         for (const f of content.floorList.slice(1, 2)) if (!state.floors.some((x) => x.floorId === f.id)) run({ type: 'unlockFloor', floorId: f.id });
-        for (let fi = 0; fi < 2; fi++) while (state.floors[fi]!.slots.length < 10) if (!run({ type: 'expandFloor', floor: fi })) break;
+        for (let fi = 0; fi < Math.min(2, state.floors.length); fi++) while (state.floors[fi]!.slots.length < 10) if (!run({ type: 'expandFloor', floor: fi })) break;
         const plan0: Array<[string, number]> = [
           ['base:pot.phoenix', 1], ['base:pot.phoenix', 20], ['base:pot.phoenix', 35], ['base:pot.phoenix', 50], ['base:pot.01-dat-nung-phuong-hoang', 50],
           ['base:pot.17-tho-ren-huyen-thoai', 1], ['base:pot.33-bi-ngo-phu-thuy', 50], ['base:pot.terracotta', 1], ['base:pot.02-mam-xanh-co-thu', 50], ['base:pot.50-thanh-vat-khoi-nguyen-vip', 50],
@@ -199,7 +205,7 @@ export function makeDemo(session: GameSession, view: GameView, controller: Contr
         state.player.level = 20;
         state.player.coins = Math.max(state.player.coins, 500_000);
         for (const f of content.floorList.slice(1, 2)) if (!state.floors.some((x) => x.floorId === f.id)) run({ type: 'unlockFloor', floorId: f.id });
-        for (let fi = 0; fi < 2; fi++) while (state.floors[fi]!.slots.length < 10) if (!run({ type: 'expandFloor', floor: fi })) break;
+        for (let fi = 0; fi < Math.min(2, state.floors.length); fi++) while (state.floors[fi]!.slots.length < 10) if (!run({ type: 'expandFloor', floor: fi })) break;
         const sig = (n: number) => content.potList.find((p) => p.sprite === `pots/sig/${String(n).padStart(2, '0')}`)?.id ?? 'base:pot.phoenix';
         const plans = [
           [1, 9, 11, 16, 22, 26, 38, 39, 47, 48],

@@ -403,11 +403,17 @@ export class GameView {
     const gap = frontN > 1 ? (xs[frontN - 1]! - xs[0]!) / (frontN - 1) : 0;
     // Back pots sit in the gaps between front pots (offsets in gaps from the row centre), symmetric:
     // 1 → centre, 2 → ±1, 3 → −2, 0, +2, 4 → ±1, ±2. Never straight behind a front pot.
-    const BACK_GAPS: Record<number, number[]> = { 1: [0], 2: [-1, 1], 3: [-2, 0, 2], 4: [-2, -1, 1, 2] };
+    const BACK_GAPS: Record<number, number[]> = { 1: [0], 2: [-1, 1], 3: [-1, 0, 1], 4: [-2, -1, 1, 2] };
     const centre = (xs[0]! + xs[frontN - 1]!) / 2;
+    // The "Thêm chậu" button, when it falls in the back row, takes the most central back spot so it
+    // always stands on the lawn (never out at the cloud edge); the pots fill the others left to right.
+    const backOffs = BACK_GAPS[backN] ?? [];
+    const ghostInBack = f.expandCost !== null && backN > 0;
+    const ghostOff = ghostInBack ? [...backOffs].sort((a, b) => Math.abs(a) - Math.abs(b) || a - b)[0]! : null;
+    const potOffs = ghostOff === null ? backOffs : backOffs.filter((o, j) => j !== backOffs.indexOf(ghostOff));
     const place = (i: number) => {
       if (i < frontN) return { x: xs[i]!, y: 4, k: scale, back: false };
-      const off = BACK_GAPS[backN]?.[i - frontN] ?? 0;
+      const off = i === f.pots.length && ghostOff !== null ? ghostOff : (potOffs[i - frontN] ?? 0);
       return { x: centre + off * gap, y: 4 - WORLD.backRowLift, k: scale * WORLD.backRowScale, back: true };
     };
     const slots: SlotView[] = [];

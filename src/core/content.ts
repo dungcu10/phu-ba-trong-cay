@@ -441,6 +441,8 @@ export interface BirdRules {
   betterBugChance: number;
   rentWarnMinutes: number;
   maxRarity: { default: BugRarity; nightOnly: BugRarity };
+  /** Chỉ thị 11 D1: how BOTs keep birds (same rules, generated garden). */
+  bots?: { growingShare: number; feedBelow: number; rentWhenCoinsTimes: number };
 }
 
 /** Chỉ thị 10 § 3.5: a Xưởng Bọ machine. */

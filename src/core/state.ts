@@ -148,6 +148,9 @@ export interface BotState {
   help: { day: number; pots: string[] };
   /** Chợ Mây (save 11): what this neighbour has laid out for the player to buy. */
   stall: BotListing[];
+  /** Chỉ thị 11 D1: the neighbour's birds (same rules as the player's) and the bugs they caught. */
+  birds: BirdState[];
+  bugs: Record<string, number>;
 }
 
 export interface BotListing {
@@ -293,7 +296,7 @@ export function createNewGame(content: ContentPack, now: number, entropy = now):
 export function newNeighbors(content: ContentPack, now: number): Record<string, BotState> {
   const out: Record<string, BotState> = {};
   for (const b of content.bots.values()) {
-    out[b.id] = { level: b.startLevel, xp: 0, coins: b.startCoins, gardenValue: b.startCoins, friendship: 0, simulatedTo: now, lastAction: null, help: { day: -1, pots: [] }, stall: [] };
+    out[b.id] = { level: b.startLevel, xp: 0, coins: b.startCoins, gardenValue: b.startCoins, friendship: 0, simulatedTo: now, lastAction: null, help: { day: -1, pots: [] }, stall: [], birds: [], bugs: {} };
   }
   return out;
 }
