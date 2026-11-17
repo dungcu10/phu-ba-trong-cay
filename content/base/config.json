@@ -3,10 +3,10 @@
   "startingLevel": 1,
   "storageCapacity": 60,
   "levels": {
-    "xpBase": 10,
-    "xpExponent": 1.6,
+    "xpBase": 3,
+    "xpExponent": 2.8,
     "xpGrowth": 1.06,
-    "xpGrowthUntil": 49,
+    "xpGrowthUntil": 25,
     "xpLinearAfter": 0.02,
     "levelUp": {
       "coinsHours": 0.25,

@@ -22,7 +22,8 @@ const line = JSON.parse(await readFile(join(ROOT, 'tools/potgen/lines/signature_
 const sig = content.potList.filter((d) => d.id.startsWith('base:pot.sig-'));
 const old = content.potList.filter((d) => d.sprite.startsWith('pots/catalog/'));
 const nn = (d: PotDef) => Number(/\/(\d+)$/.exec(d.sprite)![1]);
-const ECONOMY = ['rarity', 'price', 'unlockLevel', 'favoredFamily', 'set', 'group'] as const;
+// 12 TỔNG B7: price and group left the list: signature pots are no longer sold for coins.
+const ECONOMY = ['rarity', 'unlockLevel', 'favoredFamily', 'set'] as const;
 
 test('atlas pots_signature: WebP, 50 khung cấp 50 có anchor và soil, trang ≤ 4096', () => {
   assert.equal(atlas.meta.image, 'pots_signature.webp');
@@ -57,6 +58,8 @@ test('chậu mới số N giữ độ hiếm, giá, cấp mở, họ cây ưa, b
     const o = old.find((x) => nn(x) === nn(d))!;
     for (const k of ECONOMY) assert.deepEqual(d[k], o[k], `${d.id}.${k}`);
     assert.equal(d.levels.length, 50, `${d.id}: 50 cấp`);
+    assert.equal(d.group, 'crafted', `${d.id}: không bán bằng xu (12 TỔNG B7)`);
+    assert.ok(d.exchange, `${d.id}: có cách đổi bằng vật liệu`);
   }
 });
 
@@ -68,11 +71,13 @@ test('50 chậu cũ: giữ id, đánh dấu retired, không bán, không có tro
   }
   const shop = content.potList.filter(isSoldInShop);
   assert.ok(shop.every((d) => !d.retired));
-  assert.equal(shop.filter((d) => d.id.startsWith('base:pot.sig-')).length, 50);
+  // 12 TỔNG B7: no signature pot is sold for coins; they are traded for materials.
+  assert.equal(shop.filter((d) => d.id.startsWith('base:pot.sig-')).length, 0);
   const s = newGame(content, { level: 60, coins: 10_000_000 });
-  const r = dispatch(content, s, { type: 'buyPot', potId: old[0]!.id }, T0);
-  assert.equal(r.ok, false);
-  assert.ok(dispatch(content, s, { type: 'buyPot', potId: sig[0]!.id }, T0).ok);
+  assert.equal(dispatch(content, s, { type: 'buyPot', potId: old[0]!.id }, T0).ok, false);
+  assert.equal(dispatch(content, s, { type: 'buyPot', potId: sig[0]!.id }, T0).ok, false);
+  for (const [id, q] of Object.entries(sig[0]!.exchange!.items)) s.inventory[id] = q;
+  assert.ok(dispatch(content, s, { type: 'obtainPot', potId: sig[0]!.id }, T0).ok);
 });
 
 test('save cũ có chậu base:pot.NN-… vẫn tải được, chậu vẫn trồng và thu hoạch', async () => {

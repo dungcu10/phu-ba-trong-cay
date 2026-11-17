@@ -83,13 +83,14 @@ test('người chơi mới đạt cấp 2 trong vòng 5 phút với 4 chậu Cú
 test('bắt Bọ Mây: có bọ mới bắt được, mỗi lần bắt bớt đúng 1 con; dùng bọ để nâng chậu', () => {
   const at = { floor: 0, slot: 0 };
   let total = 0;
-  let s = newGame(content, { level: 3, coins: 500 }, 0);
-  for (let entropy = 0; entropy < 10; entropy++) {
-    s = newGame(content, { level: 3, coins: 500 }, entropy);
-    dispatch(content, s, { type: 'plant', cropId: 'base:crop.cloud-mint', ...at }, T0);
+  let s = newGame(content, { level: 9, coins: 5000 }, 0);
+  // 12 TỔNG B6: bugs are rarer now; a 2-hour crop over 40 saves still brings several.
+  for (let entropy = 0; entropy < 40; entropy++) {
+    s = newGame(content, { level: 9, coins: 5000 }, entropy);
+    dispatch(content, s, { type: 'plant', cropId: 'base:crop.golden-gerbera', ...at }, T0);
     const slot = s.floors[0]!.slots[0]!;
     let caught = 0;
-    for (let t = T0; t < T0 + 20 * MIN; t += 15 * SEC) {
+    for (let t = T0; t < T0 + 130 * MIN; t += MIN) {
       const st = cropStatus(content, s, slot, t);
       const r = dispatch(content, s, { type: 'catchBug', ...at }, t);
       assert.equal(r.ok, Boolean(st?.bug));
@@ -104,7 +105,7 @@ test('bắt Bọ Mây: có bọ mới bắt được, mỗi lần bắt bớt đ
     assert.equal(bagged, caught);
     total += caught;
   }
-  assert.ok(total >= 5, `10 vụ bạc hà chỉ có ${total} bọ`);
+  assert.ok(total >= 5, `40 vụ đồng tiền chỉ có ${total} bọ`);
   const slot = s.floors[0]!.slots[0]!;
   s.inventory[BUG] = 2;
   assert.ok(dispatch(content, s, { type: 'upgradePot', potInstanceId: slot.potInstanceId }, T0).ok);

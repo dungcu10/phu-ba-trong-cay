@@ -1,7 +1,7 @@
 {
   "slots": 6,
-  "refillSeconds": 45,
-  "skipSeconds": 300,
+  "refillSeconds": 1800,
+  "skipSeconds": 3600,
   "skipNowGems": 1,
   "maxLines": 3,
   "rewardMultiplier": [
@@ -9,7 +9,7 @@
     1.7
   ],
   "xpPerCoin": 0.35,
-  "rareChance": 0.12,
+  "rareChance": 0.05,
   "rareMultiplier": 2.0,
-  "rareGems": 2
+  "rareGems": 1
 }

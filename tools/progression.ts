@@ -47,6 +47,32 @@ export interface DayReport {
 const T0 = Date.parse('2026-11-17T08:00:00+07:00');
 const RESERVE = 300;
 
+/** The crop whose produce is this item, if any. */
+function cropOf(content: ContentPack, itemId: string): CropDef | undefined {
+  return content.cropList.find((c) => c.produce.id === itemId);
+}
+
+/** How much of each crop the open orders still need, after the stock and what is already growing. */
+function orderShortfall(content: ContentPack, s: GameState): Map<CropDef, number> {
+  const need = new Map<CropDef, number>();
+  for (const sl of s.orders.slots) {
+    if (!sl.order) continue;
+    for (const [id, q] of Object.entries(sl.order.items)) {
+      const c = cropOf(content, id);
+      if (c) need.set(c, (need.get(c) ?? 0) + q);
+    }
+  }
+  for (const [c, n] of need) need.set(c, n - (s.inventory[c.produce.id] ?? 0));
+  for (const f of s.floors)
+    for (const sl of f.slots) {
+      const p = sl.planting;
+      if (!p) continue;
+      const c = content.crops.get(p.cropId);
+      if (c && need.has(c)) need.set(c, need.get(c)! - c.yield);
+    }
+  return need;
+}
+
 export function simulateProgression(content: ContentPack, visitMinutes: number, days: number, seed = 42): { days: DayReport[]; state: GameState; gemSources: Record<string, number> } {
   const s = createNewGame(content, T0, seed);
   let milestones = 0;
@@ -141,6 +167,16 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
         content.cropList.filter((c) => c.unlockLevel <= s.player.level && c.seedPrice <= s.player.coins).sort((a, b) => score(b) - score(a))[0];
       // Better pots: when coins are plentiful, buy a shop pot the player does not own yet and put it
       // in place of a starting Chậu Đất Nung on an empty slot (a real coin sink in the late game).
+      // CTO 18/11: rare pots are no longer sold for coins (chỉ thị 12 TỔNG B7); a player trades
+      // materials for at most one new one a day, the cheapest first.
+      if (m === 0) {
+        const owned = new Set(Object.values(s.pots).map((p) => p.potId));
+        const rank: Record<string, number> = { rare: 0, epic: 1, legendary: 2 };
+        const pick = content.potList
+          .filter((d) => d.group === 'crafted' && d.exchange && !owned.has(d.id) && d.unlockLevel <= s.player.level && canAfford(s, { coins: 0, items: d.exchange.items }))
+          .sort((a, b) => (rank[a.rarity] ?? 3) - (rank[b.rarity] ?? 3))[0];
+        if (pick) run({ type: 'obtainPot', potId: pick.id }, t);
+      }
       s.floors.forEach((f, floor) =>
         f.slots.forEach((sl, slot) => {
           if (sl.planting || s.pots[sl.potInstanceId]?.potId !== content.config.floorGen.startingPot) return;
@@ -151,15 +187,31 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
           if (pick && run({ type: 'buyPot', potId: pick.id }, t).ok) run({ type: 'placePot', potInstanceId: s.potStock.at(-1)!, floor, slot }, t);
         }),
       );
+      // CTO 18/11: a real player plants for the open orders first (an order needs several crops,
+      // and a bot that only ever plants the single best crop never delivers one), then the best crop.
+      const shortfall = orderShortfall(content, s);
       s.floors.forEach((f, floor) =>
         f.slots.forEach((sl, slot) => {
           if (sl.planting) run({ type: 'water', floor, slot }, t);
           else {
-            const c = best();
-            if (c) run({ type: 'plant', cropId: c.id, floor, slot }, t);
+            const want = [...shortfall.entries()]
+              .filter(([c, n]) => n > 0 && c.unlockLevel <= s.player.level && c.seedPrice <= s.player.coins && c.growSeconds <= Math.max(gap * 2, 4 * 3600))
+              .sort((a, b) => a[0].growSeconds - b[0].growSeconds)[0];
+            const c = want?.[0] ?? best();
+            if (c && run({ type: 'plant', cropId: c.id, floor, slot }, t).ok && want) shortfall.set(want[0], want[1] - c.yield * c.harvests);
           }
         }),
       );
+      // An order nobody can fill soon (it needs a crop the player cannot afford or that grows for
+      // more than a day of visits) is skipped, as a player would.
+      s.orders.slots.forEach((sl, i) => {
+        if (!sl.order) return;
+        const blocked = Object.keys(sl.order.items).some((id) => {
+          const c = cropOf(content, id);
+          return !c || c.growSeconds > 12 * 3600 || c.unlockLevel > s.player.level;
+        });
+        if (blocked) run({ type: 'skipOrder', slot: i }, t);
+      });
       const nf = nextFloor(content, s);
       if (nf && s.player.level >= nf.unlockLevel && s.player.coins - RESERVE >= nf.unlockCost) run({ type: 'unlockFloor', floorId: nf.id }, t);
       s.floors.forEach((f, floor) => {

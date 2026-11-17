@@ -1026,7 +1026,7 @@
     },
     "rarity": "epic",
     "sprite": "pots/cloud-puff",
-    "price": 6000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 14,
     "favoredFamily": "herb",
     "levelRule": {
@@ -1059,7 +1059,7 @@
       }
     },
     "set": "base:set.sky-treasure",
-    "group": "shop"
+    "group": "crafted"
   },
   {
     "id": "base:pot.golden-treasure",
@@ -1068,7 +1068,7 @@
     },
     "rarity": "legendary",
     "sprite": "pots/golden-treasure",
-    "price": 20000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "fruit",
     "levelRule": {
@@ -1101,7 +1101,7 @@
       }
     },
     "set": "base:set.sky-treasure",
-    "group": "shop"
+    "group": "crafted"
   },
   {
     "id": "base:pot.phoenix",
@@ -1110,7 +1110,7 @@
     },
     "rarity": "legendary",
     "sprite": "pots/phoenix",
-    "price": 30000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "flower",
     "art": {
@@ -1152,7 +1152,7 @@
       }
     },
     "set": null,
-    "group": "shop"
+    "group": "crafted"
   },
   {
     "id": "base:pot.01-dat-nung-phuong-hoang",
@@ -1941,7 +1941,7 @@
     },
     "rarity": "epic",
     "sprite": "pots/catalog/16",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "flower",
     "category": "Quest",
@@ -1983,7 +1983,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -1993,7 +1993,7 @@
     },
     "rarity": "epic",
     "sprite": "pots/catalog/17",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "fruit",
     "category": "Quest",
@@ -2035,7 +2035,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -2045,7 +2045,7 @@
     },
     "rarity": "epic",
     "sprite": "pots/catalog/18",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "herb",
     "category": "Quest",
@@ -2087,7 +2087,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -2097,7 +2097,7 @@
     },
     "rarity": "epic",
     "sprite": "pots/catalog/19",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "flower",
     "category": "Quest",
@@ -2139,7 +2139,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -2149,7 +2149,7 @@
     },
     "rarity": "epic",
     "sprite": "pots/catalog/20",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "fruit",
     "category": "Quest",
@@ -2191,7 +2191,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -2201,7 +2201,7 @@
     },
     "rarity": "epic",
     "sprite": "pots/catalog/21",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "herb",
     "category": "Quest",
@@ -2243,7 +2243,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -2253,7 +2253,7 @@
     },
     "rarity": "epic",
     "sprite": "pots/catalog/22",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "flower",
     "category": "Quest",
@@ -2295,7 +2295,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -2305,7 +2305,7 @@
     },
     "rarity": "epic",
     "sprite": "pots/catalog/23",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "fruit",
     "category": "Quest",
@@ -2347,7 +2347,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -2357,7 +2357,7 @@
     },
     "rarity": "epic",
     "sprite": "pots/catalog/24",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "herb",
     "category": "Quest",
@@ -2399,7 +2399,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -2409,7 +2409,7 @@
     },
     "rarity": "epic",
     "sprite": "pots/catalog/25",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "flower",
     "category": "Quest",
@@ -2451,7 +2451,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -2461,7 +2461,7 @@
     },
     "rarity": "epic",
     "sprite": "pots/catalog/26",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "fruit",
     "category": "Quest",
@@ -2503,7 +2503,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -2513,7 +2513,7 @@
     },
     "rarity": "epic",
     "sprite": "pots/catalog/27",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "herb",
     "category": "Quest",
@@ -2555,7 +2555,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -2565,7 +2565,7 @@
     },
     "rarity": "epic",
     "sprite": "pots/catalog/28",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "flower",
     "category": "Quest",
@@ -2607,7 +2607,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -2617,7 +2617,7 @@
     },
     "rarity": "epic",
     "sprite": "pots/catalog/29",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "fruit",
     "category": "Quest",
@@ -2659,7 +2659,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -2669,7 +2669,7 @@
     },
     "rarity": "epic",
     "sprite": "pots/catalog/30",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "herb",
     "category": "Quest",
@@ -2711,7 +2711,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -2721,7 +2721,7 @@
     },
     "rarity": "legendary",
     "sprite": "pots/catalog/31",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "flower",
     "category": "Event",
@@ -2763,7 +2763,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -2773,7 +2773,7 @@
     },
     "rarity": "legendary",
     "sprite": "pots/catalog/32",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "fruit",
     "category": "Event",
@@ -2815,7 +2815,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -2825,7 +2825,7 @@
     },
     "rarity": "legendary",
     "sprite": "pots/catalog/33",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "herb",
     "category": "Event",
@@ -2867,7 +2867,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -2877,7 +2877,7 @@
     },
     "rarity": "legendary",
     "sprite": "pots/catalog/34",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "flower",
     "category": "Event",
@@ -2919,7 +2919,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -2929,7 +2929,7 @@
     },
     "rarity": "legendary",
     "sprite": "pots/catalog/35",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "fruit",
     "category": "Event",
@@ -2971,7 +2971,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -2981,7 +2981,7 @@
     },
     "rarity": "legendary",
     "sprite": "pots/catalog/36",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "herb",
     "category": "Event",
@@ -3023,7 +3023,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -3033,7 +3033,7 @@
     },
     "rarity": "legendary",
     "sprite": "pots/catalog/37",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "flower",
     "category": "Event",
@@ -3075,7 +3075,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -3085,7 +3085,7 @@
     },
     "rarity": "legendary",
     "sprite": "pots/catalog/38",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "fruit",
     "category": "Event",
@@ -3127,7 +3127,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -3137,7 +3137,7 @@
     },
     "rarity": "legendary",
     "sprite": "pots/catalog/39",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "herb",
     "category": "Event",
@@ -3179,7 +3179,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -3189,7 +3189,7 @@
     },
     "rarity": "legendary",
     "sprite": "pots/catalog/40",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "flower",
     "category": "Event",
@@ -3231,7 +3231,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -3241,7 +3241,7 @@
     },
     "rarity": "legendary",
     "sprite": "pots/catalog/41",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "fruit",
     "category": "Event",
@@ -3283,7 +3283,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -3293,7 +3293,7 @@
     },
     "rarity": "legendary",
     "sprite": "pots/catalog/42",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "herb",
     "category": "Event",
@@ -3335,7 +3335,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -3345,7 +3345,7 @@
     },
     "rarity": "legendary",
     "sprite": "pots/catalog/43",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "flower",
     "category": "Event",
@@ -3387,7 +3387,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -3397,7 +3397,7 @@
     },
     "rarity": "legendary",
     "sprite": "pots/catalog/44",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "fruit",
     "category": "Event",
@@ -3439,7 +3439,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -3449,7 +3449,7 @@
     },
     "rarity": "legendary",
     "sprite": "pots/catalog/45",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "herb",
     "category": "Event",
@@ -3491,7 +3491,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -3501,7 +3501,7 @@
     },
     "rarity": "legendary",
     "sprite": "pots/catalog/46",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "flower",
     "category": "Event",
@@ -3543,7 +3543,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -3553,7 +3553,7 @@
     },
     "rarity": "legendary",
     "sprite": "pots/catalog/47",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "fruit",
     "category": "Event",
@@ -3595,7 +3595,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -3605,7 +3605,7 @@
     },
     "rarity": "legendary",
     "sprite": "pots/catalog/48",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "herb",
     "category": "Event",
@@ -3647,7 +3647,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -3657,7 +3657,7 @@
     },
     "rarity": "legendary",
     "sprite": "pots/catalog/49",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "flower",
     "category": "Event",
@@ -3699,7 +3699,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -3709,7 +3709,7 @@
     },
     "rarity": "legendary",
     "sprite": "pots/catalog/50",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "fruit",
     "category": "Event",
@@ -3751,7 +3751,7 @@
       }
     },
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "retired": true
   },
   {
@@ -3762,15 +3762,13 @@
     "sprite": "pots/sig/01",
     "theme": "Đồ ăn",
     "rarity": "rare",
-    "price": 5000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 40, "base:mat.merit-seal": 1 } },
     "unlockLevel": 12,
     "favoredFamily": "flower",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "yield",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -3937,15 +3935,13 @@
     "sprite": "pots/sig/02",
     "theme": "Đồ ăn",
     "rarity": "rare",
-    "price": 5000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 40, "base:mat.merit-seal": 1 } },
     "unlockLevel": 12,
     "favoredFamily": "fruit",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "yield",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -4112,15 +4108,13 @@
     "sprite": "pots/sig/03",
     "theme": "Đồ ăn",
     "rarity": "rare",
-    "price": 5000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 40, "base:mat.merit-seal": 1 } },
     "unlockLevel": 12,
     "favoredFamily": "herb",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "yield",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -4287,15 +4281,13 @@
     "sprite": "pots/sig/04",
     "theme": "Đồ ăn",
     "rarity": "rare",
-    "price": 5000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 40, "base:mat.merit-seal": 1 } },
     "unlockLevel": 12,
     "favoredFamily": "flower",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "yield",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -4462,15 +4454,13 @@
     "sprite": "pots/sig/05",
     "theme": "Đồ ăn",
     "rarity": "rare",
-    "price": 5000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 40, "base:mat.merit-seal": 1 } },
     "unlockLevel": 12,
     "favoredFamily": "fruit",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "yield",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -4637,15 +4627,13 @@
     "sprite": "pots/sig/06",
     "theme": "Đồ ăn",
     "rarity": "rare",
-    "price": 5000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 40, "base:mat.merit-seal": 1 } },
     "unlockLevel": 12,
     "favoredFamily": "herb",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "yield",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -4812,15 +4800,13 @@
     "sprite": "pots/sig/07",
     "theme": "Đồ ăn",
     "rarity": "rare",
-    "price": 5000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 40, "base:mat.merit-seal": 1 } },
     "unlockLevel": 12,
     "favoredFamily": "flower",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "yield",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -4987,15 +4973,13 @@
     "sprite": "pots/sig/08",
     "theme": "Đồ ăn",
     "rarity": "rare",
-    "price": 5000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 40, "base:mat.merit-seal": 1 } },
     "unlockLevel": 12,
     "favoredFamily": "fruit",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "yield",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -5162,15 +5146,13 @@
     "sprite": "pots/sig/09",
     "theme": "Đồ ăn",
     "rarity": "rare",
-    "price": 5000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 40, "base:mat.merit-seal": 1 } },
     "unlockLevel": 12,
     "favoredFamily": "herb",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "yield",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -5337,15 +5319,13 @@
     "sprite": "pots/sig/10",
     "theme": "Đồ ăn",
     "rarity": "rare",
-    "price": 5000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 40, "base:mat.merit-seal": 1 } },
     "unlockLevel": 12,
     "favoredFamily": "flower",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "yield",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -5512,15 +5492,13 @@
     "sprite": "pots/sig/11",
     "theme": "Linh vật",
     "rarity": "rare",
-    "price": 5000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 40, "base:mat.merit-seal": 1 } },
     "unlockLevel": 12,
     "favoredFamily": "fruit",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "xp",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -5688,15 +5666,13 @@
     "sprite": "pots/sig/12",
     "theme": "Linh vật",
     "rarity": "rare",
-    "price": 5000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 40, "base:mat.merit-seal": 1 } },
     "unlockLevel": 12,
     "favoredFamily": "herb",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "xp",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -5864,15 +5840,13 @@
     "sprite": "pots/sig/13",
     "theme": "Linh vật",
     "rarity": "rare",
-    "price": 5000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 40, "base:mat.merit-seal": 1 } },
     "unlockLevel": 12,
     "favoredFamily": "flower",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "xp",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -6040,15 +6014,13 @@
     "sprite": "pots/sig/14",
     "theme": "Linh vật",
     "rarity": "rare",
-    "price": 5000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 40, "base:mat.merit-seal": 1 } },
     "unlockLevel": 12,
     "favoredFamily": "fruit",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "xp",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -6216,15 +6188,13 @@
     "sprite": "pots/sig/15",
     "theme": "Linh vật",
     "rarity": "rare",
-    "price": 5000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 40, "base:mat.merit-seal": 1 } },
     "unlockLevel": 12,
     "favoredFamily": "herb",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "xp",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -6392,15 +6362,13 @@
     "sprite": "pots/sig/16",
     "theme": "Linh vật",
     "rarity": "epic",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "flower",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "xp",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -6568,15 +6536,13 @@
     "sprite": "pots/sig/17",
     "theme": "Linh vật",
     "rarity": "epic",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "fruit",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "xp",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -6744,15 +6710,13 @@
     "sprite": "pots/sig/18",
     "theme": "Linh vật",
     "rarity": "epic",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "herb",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "xp",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -6920,15 +6884,13 @@
     "sprite": "pots/sig/19",
     "theme": "Linh vật",
     "rarity": "epic",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "flower",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "xp",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -7096,15 +7058,13 @@
     "sprite": "pots/sig/20",
     "theme": "Linh vật",
     "rarity": "epic",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "fruit",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "xp",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -7272,15 +7232,13 @@
     "sprite": "pots/sig/21",
     "theme": "Thiên nhiên",
     "rarity": "epic",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "herb",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "speed",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -7452,15 +7410,13 @@
     "sprite": "pots/sig/22",
     "theme": "Thiên nhiên",
     "rarity": "epic",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "flower",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "speed",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -7632,15 +7588,13 @@
     "sprite": "pots/sig/23",
     "theme": "Thiên nhiên",
     "rarity": "epic",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "fruit",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "speed",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -7812,15 +7766,13 @@
     "sprite": "pots/sig/24",
     "theme": "Thiên nhiên",
     "rarity": "epic",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "herb",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "speed",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -7992,15 +7944,13 @@
     "sprite": "pots/sig/25",
     "theme": "Thiên nhiên",
     "rarity": "epic",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "flower",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "speed",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -8172,15 +8122,13 @@
     "sprite": "pots/sig/26",
     "theme": "Thiên nhiên",
     "rarity": "epic",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "fruit",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "speed",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -8352,15 +8300,13 @@
     "sprite": "pots/sig/27",
     "theme": "Thiên nhiên",
     "rarity": "epic",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "herb",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "speed",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -8532,15 +8478,13 @@
     "sprite": "pots/sig/28",
     "theme": "Thiên nhiên",
     "rarity": "epic",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "flower",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "speed",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -8712,15 +8656,13 @@
     "sprite": "pots/sig/29",
     "theme": "Thiên nhiên",
     "rarity": "epic",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "fruit",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "speed",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -8892,15 +8834,13 @@
     "sprite": "pots/sig/30",
     "theme": "Thiên nhiên",
     "rarity": "epic",
-    "price": 12000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 80, "base:mat.merit-seal": 3 } },
     "unlockLevel": 16,
     "favoredFamily": "herb",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "speed",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -9072,15 +9012,13 @@
     "sprite": "pots/sig/31",
     "theme": "Gốm Á Đông",
     "rarity": "legendary",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "flower",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "care",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -9251,15 +9189,13 @@
     "sprite": "pots/sig/32",
     "theme": "Gốm Á Đông",
     "rarity": "legendary",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "fruit",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "care",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -9430,15 +9366,13 @@
     "sprite": "pots/sig/33",
     "theme": "Gốm Á Đông",
     "rarity": "legendary",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "herb",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "care",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -9609,15 +9543,13 @@
     "sprite": "pots/sig/34",
     "theme": "Gốm Á Đông",
     "rarity": "legendary",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "flower",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "care",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -9788,15 +9720,13 @@
     "sprite": "pots/sig/35",
     "theme": "Gốm Á Đông",
     "rarity": "legendary",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "fruit",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "care",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -9967,15 +9897,13 @@
     "sprite": "pots/sig/36",
     "theme": "Gốm Á Đông",
     "rarity": "legendary",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "herb",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "care",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -10146,15 +10074,13 @@
     "sprite": "pots/sig/37",
     "theme": "Gốm Á Đông",
     "rarity": "legendary",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "flower",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "care",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -10325,15 +10251,13 @@
     "sprite": "pots/sig/38",
     "theme": "Gốm Á Đông",
     "rarity": "legendary",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "fruit",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "care",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -10504,15 +10428,13 @@
     "sprite": "pots/sig/39",
     "theme": "Gốm Á Đông",
     "rarity": "legendary",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "herb",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "care",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -10683,15 +10605,13 @@
     "sprite": "pots/sig/40",
     "theme": "Gốm Á Đông",
     "rarity": "legendary",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "flower",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "care",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -10862,15 +10782,13 @@
     "sprite": "pots/sig/41",
     "theme": "Thần thoại",
     "rarity": "legendary",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "fruit",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "luck",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -11044,15 +10962,13 @@
     "sprite": "pots/sig/42",
     "theme": "Thần thoại",
     "rarity": "legendary",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "herb",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "luck",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -11226,15 +11142,13 @@
     "sprite": "pots/sig/43",
     "theme": "Thần thoại",
     "rarity": "legendary",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "flower",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "luck",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -11408,15 +11322,13 @@
     "sprite": "pots/sig/44",
     "theme": "Thần thoại",
     "rarity": "legendary",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "fruit",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "luck",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -11590,15 +11502,13 @@
     "sprite": "pots/sig/45",
     "theme": "Thần thoại",
     "rarity": "legendary",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "herb",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "luck",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -11772,15 +11682,13 @@
     "sprite": "pots/sig/46",
     "theme": "Thần thoại",
     "rarity": "legendary",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "flower",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "luck",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -11954,15 +11862,13 @@
     "sprite": "pots/sig/47",
     "theme": "Thần thoại",
     "rarity": "legendary",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "fruit",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "luck",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -12136,15 +12042,13 @@
     "sprite": "pots/sig/48",
     "theme": "Thần thoại",
     "rarity": "legendary",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "herb",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "luck",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -12318,15 +12222,13 @@
     "sprite": "pots/sig/49",
     "theme": "Thần thoại",
     "rarity": "legendary",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "flower",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "luck",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,
@@ -12500,15 +12402,13 @@
     "sprite": "pots/sig/50",
     "theme": "Thần thoại",
     "rarity": "legendary",
-    "price": 25000,
+    "price": null, "exchange": { "items": { "base:mat.cloud-clay": 150, "base:mat.merit-seal": 6 } },
     "unlockLevel": 20,
     "favoredFamily": "fruit",
     "set": null,
-    "group": "shop",
+    "group": "crafted",
     "focus": "luck",
-    "source": {
-      "vi": "Mua ở Lò Gốm Bà Mây"
-    },
+    "source": { "vi": "Đổi bằng Đất Sét Mây và Ấn Công Trạng; sắp có ở Chợ Mây, đúc chậu, rương, sự kiện" },
     "growth": {
       "maxLevel": 50,
       "openTo": 10,

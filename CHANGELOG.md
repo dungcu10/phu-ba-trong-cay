@@ -29,6 +29,15 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] CTO — Luồng kinh tế G2 phần 1: bot mô phỏng, đường cấp, bọ, chậu hiếm, đơn (tag `m-cto-kinh-te-1`)
+- Loại: Thay đổi / Cân bằng (chỉ thị 12 TỔNG A1, B6, B7 phần số liệu; PHAN_CONG.md luồng CTO)
+- Mô tả: bot mô phỏng trồng theo đơn đang mở và bỏ đơn không làm được (trước: 0 đơn/ngày, nay ~19); đường cấp xpBase 3, xpExponent 2.8, xpGrowthUntil 25 (ngày 1/7/30 = cấp 5/15/27, vẫn lên cấp cả năm); bọ: growSecondsPerBug 25.000, tối đa 2 con/vụ, trọng số Khá 18, Bọ Hung 2,5, Đom Đóm 3, Ve Sầu 0,5 (Rất hiếm ~1 con/4 ngày); 88 chậu chữ ký + Sử Thi + Huyền Thoại thôi bán bằng xu, chuyển nhóm `crafted`, đổi bằng Đất Sét Mây + Ấn Công Trạng (12 chậu chữ ký ở ngày 30); khinh khí cầu về sau 30 phút, bỏ đơn chờ 60 phút; đơn hiếm 5%, thưởng 1 ngọc. Bật chặn 7 chỉ số trong check-metrics.json.
+- File/Module: `tools/progression.ts`, `tools/check-metrics.json`, `content/base/{config(levels),bugs,crops(bugs),pots,orders}.json`, test kinh tế (`progression`, `economy`, `bugs10`, `signature-pots`).
+- Ảnh hưởng save: Không. Chậu và bọ người chơi đang có giữ nguyên.
+- Kiểm thử: 164/164 test; validate-content xanh; mô phỏng 7/10 chỉ số đạt (Xu/U, bọ Thường đầu–cuối, mốc/ngày còn cảnh báo, chờ chỗ tiêu xu của 12 TỔNG và nội dung 11 TỔNG).
+- Ghi chú cho Claude thực thi: đúc chậu (M7) có thể thêm công thức riêng cho nhóm `crafted`; giữ nguyên `exchange` hiện có. Test "ôm xu" chuyển sang chỉ số Xu/U của npm run check.
+- Trạng thái nghiệm thu: Chờ
+
 ### [2026-11-18] Chỉ thị 11 đính chính D1 — BOT có chim (dùng chung luật chim), sửa 2 lỗi nhỏ (tag `m-10-d1`)
 - Loại: Thêm / Sửa lỗi (P3)
 - Mô tả: lõi chim tách thành `runBirds(owner)` dùng chung cho người chơi và BOT (lịch, đói/ngủ, lên cấp, hết hạn thuê, 5% bọ hiếm hơn, `newBird`, `addFood`); BOT thuê chim hợp họ cây thích, mua Hạt Kê và cho ăn; chim BOT bắt bọ trên vườn dựng theo tỉ lệ sinh bọ của luật đếm. Bot mô phỏng người chơi biết nuôi chim. Nút "Thêm chậu" ở hàng sau đứng giữa mặt cỏ; `demo('signature')` không lỗi khi chưa mở tầng 2.
