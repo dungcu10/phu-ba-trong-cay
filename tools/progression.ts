@@ -47,6 +47,8 @@ export interface DayReport {
    *  are too small), and common bugs caught per pot this day. */
   bugStock: number;
   commonBugsPerPot: number;
+  /** Coins earned this day (every gain, before spending): the "one day of income" of 12 TỔNG A3. */
+  income: number;
 }
 
 const T0 = Date.parse('2026-11-17T08:00:00+07:00');
@@ -86,9 +88,15 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
   let birdCaught = 0;
   let questsClaimed = 0;
   const gemSources: Record<string, number> = {};
+  /** Coins in (+) and out (−) by command over the whole run (A3: where the coins come from and go). */
+  const coinFlow: Record<string, number> = {};
+  let dayIncome = 0;
   const run = (cmd: Command, t: number) => {
     const gems = s.player.gems;
+    const coinsBefore = s.player.coins;
     const r = dispatch(content, s, cmd, t);
+    if (s.player.coins !== coinsBefore) coinFlow[cmd.type] = (coinFlow[cmd.type] ?? 0) + s.player.coins - coinsBefore;
+    if (s.player.coins > coinsBefore) dayIncome += s.player.coins - coinsBefore;
     if (r.ok) {
       if (s.player.gems > gems) {
         gemsEarned += s.player.gems - gems;
@@ -98,6 +106,8 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
         if (e.type === 'birdCaught') birdCaught += 1;
         if (e.type === 'floorUnlocked' || e.type === 'floorExpanded' || e.type === 'floorStarred') milestones++;
         if (e.type === 'potBought' || (e.type === 'potUpgraded' && e.milestone) || e.type === 'storageUpgraded') milestones++;
+        // Also progress a player sees: a level (often a new crop), a crafted pot, a machine star, a Sổ Tay reward.
+        if (e.type === 'levelUp' || e.type === 'potObtained' || e.type === 'machineStar' || e.type === 'journalClaimed') milestones++;
         if (e.type === 'questClaimed') {
           questsClaimed++;
           gemSources[`quest:${e.questId}`] = (gemSources[`quest:${e.questId}`] ?? 0) + e.gems;
@@ -268,13 +278,15 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
       birdBugs: birdCaught - birdBefore,
       birds: s.birds.length,
       bugStock: Object.entries(s.inventory).reduce((a, [id, q]) => a + (content.bugs.has(id) ? q : 0), 0),
-      commonBugsPerPot: (bugsByRarity.common ?? 0) / Math.max(1, Object.keys(s.pots).length),
+      commonBugsPerPot: (bugsByRarity.common ?? 0) / Math.max(1, s.floors.reduce((a, f) => a + f.slots.filter((x) => x.potInstanceId).length, 0)),
+      income: dayIncome,
     });
+    dayIncome = 0;
     milestones = 0;
     gemsEarned = 0;
     questsClaimed = 0;
   }
-  return { days: out, state: s, gemSources };
+  return { days: out, state: s, gemSources, coinFlow };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
