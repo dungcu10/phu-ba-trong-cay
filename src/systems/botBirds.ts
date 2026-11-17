@@ -176,23 +176,36 @@ export function botCatchBugs(content: ContentPack, state: GameState, bot: BotDef
   return caught;
 }
 
+/** How many of a floor's crops a bird species can work on (no family limit = every crop). */
+function fitting(def: BirdDef, floor: VisitFloor): number {
+  return def.families.length === 0 ? floor.pots.length : floor.pots.filter((p) => def.families.includes(p.crop.family)).length;
+}
+
 /**
- * A neighbour's bird care in one of its sessions: rents a bird of the family it likes once it can
- * afford it comfortably, and feeds Hạt Kê Mây (bought for the same price as the player) when low.
+ * A neighbour's bird care in one of its sessions: rents a bird only of a species that fits the crops
+ * in its garden (or has no family limit), once it can afford it comfortably; perches each bird on the
+ * floor with the most crops it can work on today (generated gardens change crops every day); feeds
+ * Hạt Kê Mây (bought for the same price as the player) when low.
  */
-export function botKeepBirds(content: ContentPack, bot: BotDef, s: BotState, at: number): void {
+export function botKeepBirds(content: ContentPack, state: GameState, bot: BotDef, s: BotState, at: number): void {
   const cfg = content.birdRules?.bots;
   const rules = content.birdRules;
   if (!cfg || !rules || !content.birds) return;
+  const garden = gardenOn(content, state, bot.id, at);
+  const best = (def: BirdDef) => garden.reduce((b, f, i) => (fitting(def, f) > b.n ? { i, n: fitting(def, f) } : b), { i: 0, n: 0 });
   if (s.birds.length === 0) {
-    const options = [...content.birds.values()].filter((d) => d.rent && d.unlockLevel <= s.level && s.coins >= d.rent.coins * cfg.rentWhenCoinsTimes);
-    const def = options.find((d) => d.families.includes(bot.likes)) ?? options[0];
+    const options = [...content.birds.values()]
+      .filter((d) => d.rent && d.unlockLevel <= s.level && s.coins >= d.rent.coins * cfg.rentWhenCoinsTimes && best(d).n > 0)
+      .sort((a, b) => best(b).n - best(a).n || (b.families.includes(bot.likes) ? 1 : 0) - (a.families.includes(bot.likes) ? 1 : 0));
+    const def = options[0];
     if (def?.rent) {
       s.coins -= def.rent.coins;
-      s.birds.push(newBird(content, `${bot.id}-bird-${at}`, def, 'rent', at, { floor: 0, branch: 0 }));
+      s.birds.push(newBird(content, `${bot.id}-bird-${at}`, def, 'rent', at, { floor: best(def).i, branch: 0 }));
     }
   }
   for (const b of s.birds) {
+    const def = content.birds.get(b.species);
+    if (def) b.floor = best(def).i;
     if (foodAt(content, b, at) >= cfg.feedBelow) continue;
     while (foodAt(content, b, at) < rules.foodMax - 0.5 && s.coins >= rules.millet.coins) {
       s.coins -= rules.millet.coins;

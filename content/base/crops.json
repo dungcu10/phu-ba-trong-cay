@@ -53,7 +53,7 @@
     "harvests": 2,
     "yield": 3,
     "sellPrice": 7,
-    "xp": 5,
+    "xp": 6,
     "stages": 5,
     "produce": {
       "id": "base:item.cherry-tomato",
@@ -94,7 +94,7 @@
     "harvests": 3,
     "yield": 3,
     "sellPrice": 7,
-    "xp": 9,
+    "xp": 11,
     "stages": 5,
     "produce": {
       "id": "base:item.cloud-mint",
@@ -257,7 +257,367 @@
       },
       {
         "id": "base:bug.jade-cicada",
-        "weight": 0.5
+        "weight": 0.25
+      }
+    ]
+  },
+  {
+    "id": "base:crop.cloud-rose",
+    "name": {
+      "vi": "Hồng Mây"
+    },
+    "family": "flower",
+    "unlockLevel": 5,
+    "seedPrice": 13,
+    "growSeconds": 600,
+    "regrowSeconds": 420,
+    "harvests": 2,
+    "yield": 2,
+    "sellPrice": 13,
+    "xp": 7,
+    "stages": 5,
+    "produce": {
+      "id": "base:item.cloud-rose",
+      "name": {
+        "vi": "Hồng Mây"
+      }
+    },
+    "sprite": "crops/cloud-rose",
+    "bugs": [
+      {
+        "id": "base:bug.ladybird",
+        "weight": 50
+      },
+      {
+        "id": "base:bug.leaf-worm",
+        "weight": 12
+      },
+      {
+        "id": "base:bug.pink-moth",
+        "weight": 18
+      },
+      {
+        "id": "base:bug.star-firefly",
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "id": "base:crop.sky-apple",
+    "name": {
+      "vi": "Táo Đỏ Mây"
+    },
+    "family": "fruit",
+    "unlockLevel": 7,
+    "seedPrice": 28,
+    "growSeconds": 1200,
+    "regrowSeconds": 840,
+    "harvests": 3,
+    "yield": 3,
+    "sellPrice": 19,
+    "xp": 12,
+    "stages": 5,
+    "produce": {
+      "id": "base:item.sky-apple",
+      "name": {
+        "vi": "Táo Đỏ Mây"
+      }
+    },
+    "sprite": "crops/sky-apple",
+    "bugs": [
+      {
+        "id": "base:bug.ladybird",
+        "weight": 50
+      },
+      {
+        "id": "base:bug.leaf-worm",
+        "weight": 12
+      },
+      {
+        "id": "base:bug.jade-beetle",
+        "weight": 18
+      },
+      {
+        "id": "base:bug.star-firefly",
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "id": "base:crop.cloud-bokchoy",
+    "name": {
+      "vi": "Cải Mây"
+    },
+    "family": "herb",
+    "unlockLevel": 8,
+    "seedPrice": 15,
+    "growSeconds": 480,
+    "regrowSeconds": null,
+    "harvests": 1,
+    "yield": 3,
+    "sellPrice": 10,
+    "xp": 7,
+    "stages": 5,
+    "produce": {
+      "id": "base:item.cloud-bokchoy",
+      "name": {
+        "vi": "Cải Mây"
+      }
+    },
+    "sprite": "crops/cloud-bokchoy",
+    "bugs": [
+      {
+        "id": "base:bug.leaf-worm",
+        "weight": 50
+      },
+      {
+        "id": "base:bug.ladybird",
+        "weight": 12
+      },
+      {
+        "id": "base:bug.dew-hopper",
+        "weight": 18
+      },
+      {
+        "id": "base:bug.star-firefly",
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "id": "base:crop.sun-sunflower",
+    "name": {
+      "vi": "Hướng Dương Nắng"
+    },
+    "family": "flower",
+    "unlockLevel": 11,
+    "seedPrice": 207,
+    "growSeconds": 10800,
+    "regrowSeconds": null,
+    "harvests": 1,
+    "yield": 3,
+    "sellPrice": 138,
+    "xp": 68,
+    "stages": 5,
+    "produce": {
+      "id": "base:item.sun-sunflower",
+      "name": {
+        "vi": "Hướng Dương Nắng"
+      }
+    },
+    "sprite": "crops/sun-sunflower",
+    "bugs": [
+      {
+        "id": "base:bug.ladybird",
+        "weight": 50
+      },
+      {
+        "id": "base:bug.leaf-worm",
+        "weight": 12
+      },
+      {
+        "id": "base:bug.pink-moth",
+        "weight": 18
+      },
+      {
+        "id": "base:bug.star-firefly",
+        "weight": 3
+      },
+      {
+        "id": "base:bug.gold-scarab",
+        "weight": 2.5
+      },
+      {
+        "id": "base:bug.jade-cicada",
+        "weight": 0.06
+      }
+    ]
+  },
+  {
+    "id": "base:crop.crescent-flower",
+    "name": {
+      "vi": "Hoa Trăng Non"
+    },
+    "family": "wonder",
+    "unlockLevel": 12,
+    "seedPrice": 345,
+    "growSeconds": 14400,
+    "regrowSeconds": 10800,
+    "harvests": 2,
+    "yield": 2,
+    "sellPrice": 310,
+    "xp": 88,
+    "stages": 5,
+    "produce": {
+      "id": "base:item.crescent-flower",
+      "name": {
+        "vi": "Hoa Trăng Non"
+      }
+    },
+    "sprite": "crops/crescent-flower",
+    "bugs": [
+      {
+        "id": "base:bug.ladybird",
+        "weight": 30
+      },
+      {
+        "id": "base:bug.leaf-worm",
+        "weight": 20
+      },
+      {
+        "id": "base:bug.star-firefly",
+        "weight": 12
+      },
+      {
+        "id": "base:bug.gold-scarab",
+        "weight": 2.5
+      },
+      {
+        "id": "base:bug.jade-cicada",
+        "weight": 0.25
+      }
+    ]
+  },
+  {
+    "id": "base:crop.golden-pumpkin",
+    "name": {
+      "vi": "Bí Ngô Vàng"
+    },
+    "family": "herb",
+    "unlockLevel": 14,
+    "seedPrice": 580,
+    "growSeconds": 28800,
+    "regrowSeconds": null,
+    "harvests": 1,
+    "yield": 2,
+    "sellPrice": 580,
+    "xp": 175,
+    "stages": 5,
+    "produce": {
+      "id": "base:item.golden-pumpkin",
+      "name": {
+        "vi": "Bí Ngô Vàng"
+      }
+    },
+    "sprite": "crops/golden-pumpkin",
+    "bugs": [
+      {
+        "id": "base:bug.leaf-worm",
+        "weight": 50
+      },
+      {
+        "id": "base:bug.ladybird",
+        "weight": 12
+      },
+      {
+        "id": "base:bug.dew-hopper",
+        "weight": 18
+      },
+      {
+        "id": "base:bug.star-firefly",
+        "weight": 3
+      },
+      {
+        "id": "base:bug.gold-scarab",
+        "weight": 2.5
+      },
+      {
+        "id": "base:bug.jade-cicada",
+        "weight": 0.06
+      }
+    ]
+  },
+  {
+    "id": "base:crop.shooting-star-grass",
+    "name": {
+      "vi": "Cỏ Sao Băng"
+    },
+    "family": "wonder",
+    "unlockLevel": 16,
+    "seedPrice": 602,
+    "growSeconds": 21600,
+    "regrowSeconds": null,
+    "harvests": 1,
+    "yield": 3,
+    "sellPrice": 401,
+    "xp": 128,
+    "stages": 5,
+    "produce": {
+      "id": "base:item.shooting-star-grass",
+      "name": {
+        "vi": "Cỏ Sao Băng"
+      }
+    },
+    "sprite": "crops/shooting-star-grass",
+    "bugs": [
+      {
+        "id": "base:bug.ladybird",
+        "weight": 30
+      },
+      {
+        "id": "base:bug.leaf-worm",
+        "weight": 20
+      },
+      {
+        "id": "base:bug.star-firefly",
+        "weight": 12
+      },
+      {
+        "id": "base:bug.gold-scarab",
+        "weight": 2.5
+      },
+      {
+        "id": "base:bug.jade-cicada",
+        "weight": 0.25
+      }
+    ]
+  },
+  {
+    "id": "base:crop.heaven-peach",
+    "name": {
+      "vi": "Đào Tiên"
+    },
+    "family": "fruit",
+    "unlockLevel": 20,
+    "seedPrice": 1086,
+    "growSeconds": 43200,
+    "regrowSeconds": 28920,
+    "harvests": 2,
+    "yield": 3,
+    "sellPrice": 820,
+    "xp": 310,
+    "stages": 5,
+    "produce": {
+      "id": "base:item.heaven-peach",
+      "name": {
+        "vi": "Đào Tiên"
+      }
+    },
+    "sprite": "crops/heaven-peach",
+    "bugs": [
+      {
+        "id": "base:bug.ladybird",
+        "weight": 50
+      },
+      {
+        "id": "base:bug.leaf-worm",
+        "weight": 12
+      },
+      {
+        "id": "base:bug.jade-beetle",
+        "weight": 18
+      },
+      {
+        "id": "base:bug.star-firefly",
+        "weight": 3
+      },
+      {
+        "id": "base:bug.gold-scarab",
+        "weight": 2.5
+      },
+      {
+        "id": "base:bug.jade-cicada",
+        "weight": 0.075
       }
     ]
   }
