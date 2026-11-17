@@ -1,0 +1,9 @@
+{
+ "floor-bridge": [[15, 15, 722, 215], {"drop_edge": true}],
+ "floor-house": [[15, 168, 725, 440], {"drop_edge": true}],
+ "floor-falls": [[25, 440, 712, 768], {"drop_edge": true}],
+ "cloud-cat_idle": [[1165, 15, 1365, 212], {"drop_edge": true, "close": 3}],
+ "cloud-cat_sleep": [[1150, 205, 1372, 382], {"drop_edge": true, "close": 3}],
+ "cloud-cat_run": [[1150, 378, 1372, 545], {"drop_edge": true, "close": 3}],
+ "cloud-cat_happy": [[1150, 548, 1372, 760], {"drop_edge": true, "close": 3}]
+}

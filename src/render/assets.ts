@@ -16,10 +16,14 @@ import catalogData from '../../assets/art/pots_catalog.json';
 import catalogWebp from '../../assets/art/pots_catalog.webp?url';
 import signatureData from '../../assets/art/pots_signature.json';
 import signatureWebp from '../../assets/art/pots_signature.webp?url';
-import worldFloorAData from '../../assets/art/world_floor_a.json';
-import worldFloorAWebp from '../../assets/art/world_floor_a.webp?url';
-import worldFloorBData from '../../assets/art/world_floor_b.json';
-import worldFloorBWebp from '../../assets/art/world_floor_b.webp?url';
+import worldHouseData from '../../assets/art/world_floor_house.json';
+import worldHouseWebp from '../../assets/art/world_floor_house.webp?url';
+import worldFallsData from '../../assets/art/world_floor_falls.json';
+import worldFallsWebp from '../../assets/art/world_floor_falls.webp?url';
+import worldBridgeData from '../../assets/art/world_floor_bridge.json';
+import worldBridgeWebp from '../../assets/art/world_floor_bridge.webp?url';
+import worldVineData from '../../assets/art/world_vine.json';
+import worldVineWebp from '../../assets/art/world_vine.webp?url';
 import worldMiscData from '../../assets/art/world_misc.json';
 import worldMiscWebp from '../../assets/art/world_misc.webp?url';
 
@@ -29,8 +33,10 @@ export const atlasUrls = {
   pots_phoenix: phoenixWebp,
   pots_catalog: catalogWebp,
   pots_signature: signatureWebp,
-  world_floor_a: worldFloorAWebp,
-  world_floor_b: worldFloorBWebp,
+  world_floor_house: worldHouseWebp,
+  world_floor_falls: worldFallsWebp,
+  world_floor_bridge: worldBridgeWebp,
+  world_vine: worldVineWebp,
   world_misc: worldMiscWebp,
 } as const;
 export const atlasData = {
@@ -39,9 +45,11 @@ export const atlasData = {
   pots_phoenix: phoenixData as unknown as SpritesheetData,
   pots_catalog: catalogData as unknown as SpritesheetData,
   pots_signature: signatureData as unknown as SpritesheetData,
-  // Chỉ thị 08: Blender world (vine, cloud floors, pedestals, Mèo Mây).
-  world_floor_a: worldFloorAData as unknown as SpritesheetData,
-  world_floor_b: worldFloorBData as unknown as SpritesheetData,
+  // The owner's concept art (cut out and upscaled by tools/concept): cloud floors, vine, pets.
+  world_floor_house: worldHouseData as unknown as SpritesheetData,
+  world_floor_falls: worldFallsData as unknown as SpritesheetData,
+  world_floor_bridge: worldBridgeData as unknown as SpritesheetData,
+  world_vine: worldVineData as unknown as SpritesheetData,
   world_misc: worldMiscData as unknown as SpritesheetData,
 };
 export type SheetName = keyof typeof atlasData;

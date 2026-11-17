@@ -17,7 +17,7 @@ import { Ambience } from './ambience.ts';
 import { homeGarden, type GardenFloor, type GardenModel } from './garden.ts';
 import { SLOT_GEOM, SlotView } from './slotView.ts';
 import { ease, Tweens } from './tween.ts';
-import { buildVine, cloudCat, floorArt, hasWorldArt, pedestal } from './worldArt.ts';
+import { buildVine, floorArt, hasWorldArt, lockedFloorArt, PET_SPECIES, PetActor } from './worldArt.ts';
 
 /** Giao diện fantasy (chỉ thị 06): night glass + thin gold for the canvas signs too. */
 const FX = { night: '#161A2E', gold: '#F3D27E', ivory: '#FFF8EA' } as const;
@@ -62,6 +62,8 @@ interface FloorView {
   phase: number;
   /** True while an animation drives the container position. */
   animating: boolean;
+  /** Pets living on this floor (decoration, chỉ thị 08). */
+  pets: PetActor[];
 }
 
 type Drag = {
@@ -120,6 +122,7 @@ export class GameView {
     app.stage.addChild(this.sky, this.ambience.back);
     // Chỉ thị 08: the vine is drawn behind the floors; each floor picture has a cut where the vine
     // passes behind its cloud, so the vine goes through the floor edge.
+    this.floorsLayer.sortableChildren = true;
     this.world.addChild(this.trunkLayer, this.floorsLayer, this.effects);
     app.stage.addChild(this.world, this.ambience.front);
     this.source = () => homeGarden(session.content, session.state, session.now());
@@ -317,6 +320,9 @@ export class GameView {
   private buildFloor(f: GardenFloor, fi: number): FloorView {
     const container = new Container();
     container.position.set(WORLD.floorCenterX, this.floorY(fi));
+    // Lower floors in front: a cloud island hangs far below its lawn, and must never hide the pots
+    // of the floor under it.
+    container.zIndex = -fi;
     container.addChild(this.floorPicture(f.def, fi));
     const positions = f.pots.length + (f.expandCost !== null ? 1 : 0);
     const scale = Math.min(WORLD.potScaleMax, WORLD.potScale10 + (10 - positions) * WORLD.potScaleStep);
@@ -328,26 +334,19 @@ export class GameView {
     const potLayer = new Container();
     container.addChild(pedLayer, potLayer);
     const world = hasWorldArt(this.art);
-    if (world && fi === 0) {
-      // Mèo Mây sits between the vine and the first pot (decoration; pets come in đợt 5).
-      const cat = cloudCat(this.art);
-      if (cat) {
-        cat.position.set(-WORLD.potRowSpan / 2 - 78, 2);
-        pedLayer.addChild(cat);
+    const pets: PetActor[] = [];
+    if (world && fi < PET_SPECIES.length) {
+      // One pet per floor for the first floors, wandering on the lawn in front of the pots
+      // (decoration; pet gameplay comes in đợt 5).
+      const pet = PetActor.create(this.art, PET_SPECIES[fi]!, 77 + fi * 31, -WORLD.potRowSpan / 2 - 90, WORLD.potRowSpan / 2);
+      if (pet) {
+        pet.sprite.position.set(-WORLD.potRowSpan / 2 - 60 + ((fi * 263) % 700), 30);
+        pets.push(pet);
       }
     }
     f.pots.forEach((_, i) => {
       const view = new SlotView(fi, i, this.art, this.tweens, this.dot, this.glow);
-      let lift = 0;
-      if (world) {
-        // Chỉ thị 08: each pot stands on a stone pedestal; the pot is raised by the stone's height.
-        const p = pedestal(this.art, fi, i);
-        p.sprite.position.set(x(i), 4);
-        p.sprite.scale.set(p.sprite.scale.x * scale, scale);
-        pedLayer.addChild(p.sprite);
-        lift = p.lift * scale;
-      }
-      view.position.set(x(i), 4 - lift);
+      view.position.set(x(i), 4);
       view.scale.set(scale);
       slots.push(view);
       potLayer.addChild(view.back);
@@ -361,8 +360,9 @@ export class GameView {
     }
     const sign = this.buildSign(f);
     container.addChild(sign);
+    for (const p of pets) container.addChild(p.sprite);
     this.floorsLayer.addChild(container);
-    return { key: this.floorKey(f), container, slots, ghost, sign, signKey: this.signKey(f), phase: fi * 1.7, animating: false };
+    return { key: this.floorKey(f), container, slots, ghost, sign, signKey: this.signKey(f), phase: fi * 1.7, animating: false, pets };
   }
 
   private popNewSlot(fv: FloorView, i: number): void {
@@ -381,10 +381,7 @@ export class GameView {
     if (hasWorldArt(this.art)) {
       // One band of decoration per floor (plus the locked one above), the vine continuing past the top.
       const n = this.floors.length + (this.model.locked ? 1 : 0);
-      const bands = Array.from({ length: n }, (_, i) => ({ top: this.floorY(i) - WORLD.floorGap, bottom: this.floorY(i) }));
-      const bottom = this.floorY(0) + 900;
-      const top = this.floorY(n) - 120;
-      this.trunkLayer.addChild(buildVine(this.art, WORLD.trunk.x, bottom, top, bands));
+      this.trunkLayer.addChild(buildVine(this.art, WORLD.trunk.x, this.floorY(0) + 900, this.floorY(n) - 900));
       return;
     }
     const full = this.art.get('trunk');
@@ -416,7 +413,8 @@ export class GameView {
     if (!def) return;
     const container = new Container();
     container.position.set(WORLD.floorCenterX, this.floorY(this.floors.length));
-    const cloud = this.floorPicture(def, this.floors.length);
+    container.zIndex = -this.floors.length;
+    const cloud = hasWorldArt(this.art) ? lockedFloorArt(this.art) : this.floorPicture(def, this.floors.length);
     cloud.alpha = 0.5;
     // A signboard sits on the faded cloud, low enough to stay clear of the HUD and the hint line.
     const g = new Graphics();
@@ -655,6 +653,11 @@ export class GameView {
       for (const s of fv.slots) s.animate(this.elapsed);
       if (fv.ghost) fv.ghost.alpha = 0.88 + 0.12 * Math.sin(t * 2.4 + fi);
       if (!fv.animating) fv.container.y = this.floorY(fi) + Math.sin((this.elapsed / bob.periodMs) * Math.PI * 2 + fv.phase) * bob.amplitude;
+      if (fv.pets.length) {
+        const sy = this.world.y + fv.container.y * this.scale;
+        const visible = sy > -320 * this.scale && sy < this.app.screen.height + 320 * this.scale;
+        for (const p of fv.pets) p.update(dt, visible);
+      }
     });
     if (!this.drag && Math.abs(this.scrollVelocity) > 0.5) {
       this.setScroll(this.scroll + this.scrollVelocity);

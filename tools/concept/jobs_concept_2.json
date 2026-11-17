@@ -1,0 +1,5 @@
+{
+ "floor-bridge": [[15, 15, 722, 215], {"drop_edge": true, "close": 1, "fill_holes": false}],
+ "vine-a": [[676, 0, 905, 768], {"close": 1, "fill_holes": false, "min_comp": 1500}],
+ "vine-b": [[880, 0, 1150, 768], {"close": 1, "fill_holes": false, "min_comp": 1500}]
+}

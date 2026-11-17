@@ -1,0 +1,14 @@
+{
+ "ember-fox_idle": ["out/pets_x4.png", [160, 4, 315, 162], "near"],
+ "ember-fox_run": ["out/pets_x4.png", [128, 172, 335, 292], "near"],
+ "ember-fox_sleep": ["out/pets_x4.png", [150, 296, 315, 392], "main"],
+ "ember-fox_happy": ["out/pets_x4.png", [126, 396, 292, 553], "near"],
+ "jade-dragon_idle": ["out/pets_x4.png", [460, 4, 610, 167], "near"],
+ "jade-dragon_run": ["out/pets_x4.png", [410, 168, 635, 285], "main"],
+ "jade-dragon_sleep": ["out/pets_x4.png", [425, 292, 620, 389], "main"],
+ "jade-dragon_happy": ["out/pets_x4.png", [450, 396, 620, 553], "near"],
+ "cloud-sparrow_idle": ["out/pets_x4.png", [780, 20, 925, 168], "main"],
+ "cloud-sparrow_run": ["out/pets_x4.png", [762, 172, 915, 290], "main"],
+ "cloud-sparrow_sleep": ["out/pets_x4.png", [770, 298, 905, 392], "main"],
+ "cloud-sparrow_happy": ["out/pets_x4.png", [770, 396, 960, 553], "near"]
+}
