@@ -5,7 +5,7 @@ import { dispatch } from '../src/core/game.ts';
 import { createNewGame } from '../src/core/state.ts';
 import { buildContentPack, loadBase, MIN, readRaw, T0 } from './helpers.ts';
 
-test('gói nội dung gốc hợp lệ: 4 tầng làm tay × 6–10 chậu, 7 dòng chậu gốc trở lên, 6 giống cây, 8 loại Bọ Mây (chỉ thị 10)', async () => {
+test('gói nội dung gốc hợp lệ: 4 tầng làm tay × 6–10 chậu, 7 dòng chậu gốc trở lên, 14 giống cây (chỉ thị 12 A6), 8 loại Bọ Mây (chỉ thị 10)', async () => {
   const c = await loadBase();
   assert.equal(c.floors.size, 4); // chỉ thị 10: tầng 4 Vườn Trăng Lơ Lửng làm tay
   for (const f of c.floorList) {
@@ -17,7 +17,7 @@ test('gói nội dung gốc hợp lệ: 4 tầng làm tay × 6–10 chậu, 7 d�
   for (const id of ['terracotta', 'porcelain', 'bronze-tripod', 'jade-lotus', 'rosewood', 'cloud-puff', 'golden-treasure']) assert.ok(c.pots.has(`base:pot.${id}`), id);
   assert.ok(c.pots.size >= 7);
   assert.deepEqual([...new Set(c.potList.map((p) => p.rarity))].sort(), ['common', 'epic', 'good', 'legendary', 'rare']);
-  assert.equal(c.crops.size, 6);
+  assert.equal(c.crops.size, 14);
   assert.equal(c.bugs.size, 8);
   for (const crop of c.cropList) assert.ok(crop.bugs.some((b) => c.bugs.get(b.id)?.rarity === 'common'), `${crop.id} cần bọ Thường`);
   for (const crop of c.cropList) assert.ok(crop.stages >= 4, `${crop.id} phải có >= 4 giai đoạn`);

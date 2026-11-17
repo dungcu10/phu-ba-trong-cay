@@ -208,7 +208,7 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
         if (!sl.order) return;
         const blocked = Object.keys(sl.order.items).some((id) => {
           const c = cropOf(content, id);
-          return !c || c.growSeconds > 12 * 3600 || c.unlockLevel > s.player.level;
+          return !c || c.growSeconds > Math.max(gap * 2, 4 * 3600) || c.unlockLevel > s.player.level;
         });
         if (blocked) run({ type: 'skipOrder', slot: i }, t);
       });

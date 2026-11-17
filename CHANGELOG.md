@@ -29,6 +29,15 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] CTO — Chỉ thị 12 A6 phần dữ liệu: 14 giống cây (tag `m-cto-cay-trong-1`)
+- Thêm 8 cây mới vào `content/base/crops.json`: Hồng Mây (5), Táo Trời (7), Cải Mây (8), Hướng Dương Nắng (11), Hoa Trăng Non (12, Kỳ Hoa), Bí Vàng (14), Cỏ Sao Băng (16, Kỳ Hoa), Đào Tiên (20). Giá trị theo công thức A6 (kL × t^0,75 × hệ họ).
+- Hình: cắt 8 bảng cây của chủ dự án thành 5 giai đoạn + biểu tượng, gói vào `assets/art/sprites.png/json` (atlas 2048×2304, 99 khung). Không vẽ thêm.
+- Cân bằng: mỗi kiểu chơi có cây tốt nhất riêng (ghé 1 phút Cà Chua Bi, 15 phút Dâu Mây, 2 giờ Đào Tiên). Ve Ngọc trên cây ≥ 3 giờ (0,06–0,25). XP đầu game tinh chỉnh; `xpExponent` 2,85.
+- Bot mô phỏng chỉ nhận đơn trồng kịp trong khoảng giữa 2 lần ghé. Chậu chữ ký hiếm đổi bằng 22 Đất Sét + 1 Ấn.
+- Cổng số liệu `npm run check`: XANH (cấp 5/15/27, Bọ Rất hiếm 0,21/ngày, chậu chữ ký 12, đơn 12,5/ngày, kho đầy 0).
+- Còn đỏ 2 test của luồng thực thi (`tests/botBirds11.test.ts`): BOT thuê chim không hợp họ cây trên tầng của nó nên chim bắt 0 bọ.
+- Trạng thái nghiệm thu: Chờ
+
 ### [2026-11-18] Gộp kinh tế G2 phần 1 của CTO vào main + chỉnh D1 theo nền bọ mới
 - Loại: Thay đổi
 - Mô tả: nhánh `feat/cto-kinh-te-1` gộp với Xưởng Bọ (PR #8) qua nhánh `feat/gop-cto-kinh-te-1` (merge, không ghi đè lịch sử). Sau khi bọ giảm ~20 lần, test "chim BOT ±20% chim người chơi" không còn đúng ý tiêu chí D1, vì chim người chơi tranh bọ với chính người chơi. D1 nay so **tổng bọ** của BOT (tự bắt + chim) với **tổng bọ** của người chơi vừa cùng tầm cấp: BOT thêm `botCatchBugs` (bắt phần bọ đậu trên vườn trong mỗi phiên mà chim chưa bắt, cùng tỉ lệ sinh bọ, cùng cách chọn loại); `birds.json` `rules.bots.growingShare` 0,6 → 0,35 (đo từ người chơi 2 giờ/lần). Kết quả: BOT cấp 11–15 26,8 bọ/ngày, người chơi 25,5 bọ/ngày. Bộ nhớ đệm vườn BOT nay theo cả cấp BOT (trước dùng chéo giữa hai ván cùng seed).
