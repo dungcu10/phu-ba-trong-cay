@@ -6,6 +6,7 @@
 // keeping a seed reserve. Used by tests/progression.test.ts and printed by
 // `npx tsx tools/progression.ts [visitMinutes] [days]`.
 
+import { machineState, nextStarCost } from '../src/systems/workshop.ts';
 import { isSoldInShop, type ContentPack, type CropDef } from '../src/core/content.ts';
 import { cloudRainCost, dispatch, nextFloor, type Command } from '../src/core/game.ts';
 import { storageFree, storageUpgradeCost } from '../src/systems/economy.ts';
@@ -42,6 +43,10 @@ export interface DayReport {
   /** Bugs the player's birds caught this day, and how many birds were working (chỉ thị 11 D1). */
   birdBugs: number;
   birds: number;
+  /** Bugs held in the bag at the end of the day (B6: a stock that keeps growing means the bug sinks
+   *  are too small), and common bugs caught per pot this day. */
+  bugStock: number;
+  commonBugsPerPot: number;
 }
 
 const T0 = Date.parse('2026-11-17T08:00:00+07:00');
@@ -226,6 +231,11 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
         const c = cloudRainCost(content, s, fi, t);
         if (c.pots > 0 && c.gems <= s.player.gems) run({ type: 'cloudRain', floor: fi }, t);
       }
+      // Xưởng Bọ: raise a machine's star whenever the coins allow (it costs the machine's worker bug).
+      for (const mc of content.recipes ? new Set([...content.recipes.values()].map((r) => r.machine)) : []) {
+        const c = nextStarCost(content, mc, machineState(content, s, mc.id));
+        if (c && s.player.level >= mc.unlockLevel && s.player.coins - c.coins >= RESERVE * 3) run({ type: 'upgradeMachine', machineId: mc.id }, t);
+      }
       for (let k = 0; k < 20; k++) {
         const id = Object.keys(s.pots).find((pid) => {
           const c = nextUpgradeCost(content, s.pots[pid]!);
@@ -242,6 +252,8 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
       bugsByRarity, signaturePots, storageFullShare: visits ? fullVisits / visits : 0, ordersDelivered: s.stats.ordersDone - ordersBefore,
       birdBugs: birdCaught - birdBefore,
       birds: s.birds.length,
+      bugStock: Object.entries(s.inventory).reduce((a, [id, q]) => a + (content.bugs.has(id) ? q : 0), 0),
+      commonBugsPerPot: (bugsByRarity.common ?? 0) / Math.max(1, Object.keys(s.pots).length),
     });
     milestones = 0;
     gemsEarned = 0;
