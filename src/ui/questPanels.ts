@@ -121,8 +121,13 @@ export class FeatureTutorialPanel extends Panel {
     private readonly onSeen: (tutorialId: string) => void,
   ) {
     super(session.content.tutorials.get(tutorialId)?.title.vi ?? 'Tính năng mới', 'feature-tutorial', 'win-small');
-    this.onClose = () => this.onSeen(this.tutorialId);
     this.render();
+  }
+
+  // The controller sets onClose for its own bookkeeping, so the "seen" mark goes here.
+  override close(): void {
+    this.onSeen(this.tutorialId);
+    super.close();
   }
 
   render(): void {
