@@ -29,6 +29,13 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] CTO — Bot mô phỏng dùng chỗ tiêu bọ mới (B6)
+- Bot chạy Xưởng mỗi lần ghé (ưu tiên hàng đơn đang cần), cuối ngày bán bọ dư quá 40 con mỗi loại cho thương lái.
+- Bọ tồn ngày 30: 22,6 → 1,4 ngày bắt; ngày 60 giữ ~250 con. Bật chặn chỉ số này.
+- Cổng XANH, 191/191 test.
+- Còn: Xu/U 2,8–57,6 (ngày 30 ôm ~700 nghìn xu). Bán bọ lấy xu làm xu càng dư; cần chỗ tiêu xu lặp lại.
+- Trạng thái nghiệm thu: Chờ
+
 ### [2026-11-18] CTO — Bật 3 núm A6.4–A6.5 và cân lại (tag `m-cto-cay-trong-2`)
 - Hoa Trăng Non lớn nhanh ×1,5 ban đêm (đề xuất ×2 làm nó lời nhất mọi kiểu chơi). Giá bán Hoa Trăng Non 260, XP 75.
 - Thông Thạo: ★1 +2% sản lượng, ★2 +3% XP, ★3 +3% may mắn, ★4 +3% sản lượng.
