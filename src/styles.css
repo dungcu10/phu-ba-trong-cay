@@ -762,3 +762,6 @@ html, body {
 .given-tag { position: absolute; top: -6px; right: -6px; padding: 0 5px; border-radius: 8px; background: #2E7D5B; color: #FFF8EA; font-size: 11px; font-weight: 800; }
 .note-card .note-actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px 10px; }
 .note-card .note-actions .candy, .note-card .note-actions .link-btn { white-space: nowrap; }
+/* Bổ sung A6.4–A6.5: hot crop tag, mastery stars */
+.hot-tag { position: absolute; top: 2px; left: 50%; transform: translateX(-50%); white-space: nowrap; padding: 0 6px; border-radius: 8px; background: #E5527A; color: #FFF8EA; font-size: 10px; font-weight: 800; }
+.mastery { font-size: 12px; color: #F3D27E; }

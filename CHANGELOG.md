@@ -29,6 +29,15 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Bổ sung A6.4–A6.5 phần code — Hoa Trăng Non ban đêm, Thông Thạo, Cây Hot (tag `m-12-a6-code`)
+- Loại: Thêm
+- Mô tả: `content/base/crop-extras.json` (file mới của luồng tính năng; `crops.json` là của CTO) + `src/systems/cropExtras.ts`. Cây lớn nhanh ban đêm (cộng với đặc tính đêm của Vườn Trăng, tắt game vẫn đúng); Thông Thạo 5 sao theo số lần thu hoạch, thưởng đi qua `slotBonus` nên chịu trần; Cây Hot mỗi ngày (theo seed và ngày): giá bán và đơn có cây Hot được cộng; khay hạt có nhãn "Hot hôm nay", Sổ Tay hiện sao Thông Thạo và số lần còn thiếu. Test A6.6 "mỗi cây ≥ 3 công dụng".
+- **Cho CTO — 3 núm để trung tính** (`crop-extras.json`, số đề xuất trong `_proposed`): bật riêng từng núm đã làm lệch cổng (Trăng Non đêm: cấp ngày 7 = 16, Rất hiếm 0,17; Thông Thạo: cấp ngày 1 = 4; Hot: Rất hiếm 0,04). Cổng hiện rất nhạy (lệch 1 cấp / vài con bọ là trượt) — đề nghị CTO cân lại khi bật.
+- File/Module: `content/base/crop-extras.json`, `src/systems/{cropExtras,growth,modifiers,economy,orders}.ts`, `src/ui/{gardenPanels,worldPanels}.ts`, `tests/cropExtras12.test.ts`
+- Ảnh hưởng save: Không.
+- Kiểm thử: `npm run check` XANH.
+- Trạng thái nghiệm thu: Chờ
+
 ### [2026-11-18] Chỉ thị 10 M6 (phần 2) — Đơn hàng khinh khí cầu, chim dẫn đường, nhờ hàng xóm; công thức Xưởng cho 14 cây (tag `m-10-m6`)
 - Loại: Thêm / Thay đổi
 - Mô tả: gửi đơn thì hàng đi ngay, XP cộng ngay (lời cảm ơn của khách), khinh khí cầu bay đi `refillSeconds` rồi mang xu/ngọc/vật phẩm về (tắt game vẫn đúng). Chim dẫn đường (cấp 11): đi cùng tới khi về, không bắt sâu khi đi, cộng thưởng theo loài. Đơn có hàng chế biến (thưởng thêm theo sao máy), đơn hiếm có hạn và vật phẩm thưởng, thêm ô đơn theo cấp, nhờ hàng xóm góp hàng mỗi ngày 1 lần (cấp 13). Bảng Đơn: ô đang bay, hàng chọn chim, nút "Nhờ góp", hạn đơn quý. Ô số lượng đọc được trên giao diện tối (lỗi cũ). Xưởng: công thức cho cây mới của CTO (Hồng Mây, Hướng Dương, Táo, Đào Tiên, Cải Mây) và Máy Mài Ngọc nhận Hoa Trăng Non / Cỏ Sao Băng.

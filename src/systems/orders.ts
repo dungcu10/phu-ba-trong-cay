@@ -14,6 +14,7 @@ import { randomFor } from '../core/rng.ts';
 import { addItem, addXp } from './economy.ts';
 import { machineOrderBonus } from './workshop.ts';
 import { localDay } from './missions.ts';
+import { hotCrop } from './cropExtras.ts';
 
 const HOUR = 3_600_000;
 
@@ -142,8 +143,11 @@ export function canDeliver(state: GameState, order: Order): boolean {
  * What the balloon will pay for an order when it comes back: the order's coins and XP, plus the
  * Xưởng machine star bonus for its goods (best machine among its lines), plus the escort's bonus.
  */
-export function flightFor(content: ContentPack, state: GameState, order: Order, birdSpecies: string | null): OrderFlight {
+export function flightFor(content: ContentPack, state: GameState, order: Order, birdSpecies: string | null, now: number): OrderFlight {
   let bonusCoins = 0;
+  // Bổ sung A6.5: an order carrying today's hot crop pays more coins.
+  const hot = hotCrop(content, state, state.player.level, now);
+  if (hot && order.items[hot.produce.id]) bonusCoins += content.cropExtras?.hot.orderBonus ?? 0;
   let bonusXp = 0;
   let machine = 0;
   for (const id of Object.keys(order.items)) {

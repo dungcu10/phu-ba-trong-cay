@@ -15,6 +15,7 @@ import { missionPotBox, type PotSystemActions } from './potSystemPanels.ts';
 import { potIcon, shake } from './potPanels.ts';
 import { FAMILY_TEXT, formatClock, formatNumber, formatPercent, STAT_TEXT } from './text.ts';
 import { coin, gem } from './worldPanels.ts';
+import { hotCrop } from '../systems/cropExtras.ts';
 
 export interface GardenActions {
   expandFloor(floor: number): void;
@@ -209,7 +210,8 @@ export class SeedTray {
 
   render(): void {
     const { content, state } = this.session;
-    const key = `${state.player.level}|${state.player.coins >= 0 ? content.cropList.map((c) => c.seedPrice <= state.player.coins).join() : ''}|${this.selected}`;
+    const hot = hotCrop(content, state, state.player.level, this.session.now());
+    const key = `${state.player.level}|${state.player.coins >= 0 ? content.cropList.map((c) => c.seedPrice <= state.player.coins).join() : ''}|${this.selected}|${hot?.id ?? ''}`;
     if (key === this.lastKey) return;
     this.lastKey = key;
     clear(this.row);
@@ -221,6 +223,8 @@ export class SeedTray {
         { class: `seed-chip${locked ? ' locked' : ''}${poor && !locked ? ' poor' : ''}${this.selected === crop.id ? ' on' : ''}`, 'data-test': `tray-${crop.id}`, 'aria-label': crop.name.vi },
         icon(`${crop.sprite}/${crop.stages - 1}`, 54),
         h('span', { class: 'chip-price' }, locked ? `Cấp ${crop.unlockLevel}` : crop.seedPrice === 0 ? 'Miễn phí' : formatNumber(crop.seedPrice)),
+        // Bổ sung A6.5: today's hot crop sells and delivers for more.
+        !locked && hot?.id === crop.id && h('span', { class: 'hot-tag' }, 'Hot hôm nay'),
       );
       if (!locked) chip.addEventListener('pointerdown', (e) => this.startDrag(e, crop.id, crop.sprite, crop.stages));
       this.row.append(chip);

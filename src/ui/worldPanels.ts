@@ -16,6 +16,7 @@ import { Panel } from './panel.ts';
 import { helpsLeft } from '../systems/visit.ts';
 import { shake } from './potPanels.ts';
 import { formatDuration, formatNumber, FAMILY_TEXT } from './text.ts';
+import { masteryStars, nextMastery } from '../systems/cropExtras.ts';
 
 export interface WorldActions {
   deliverOrder(slot: number, birdId?: string): void;
@@ -433,6 +434,8 @@ export class JournalPanel extends Panel {
           icon(`${crop.sprite}/${crop.stages - 1}`, 72, 'sprites'),
           h('strong', {}, known ? crop.name.vi : '? ? ?'),
           h('span', { class: 'pack-info' }, known ? `Đã thu ${formatNumber(e!.harvests)} lần` : `Mở ở cấp ${crop.unlockLevel}`),
+          // Bổ sung A6.4: Thông Thạo stars and the harvests left to the next one.
+          known && h('span', { class: 'mastery' }, `Thông Thạo ${'★'.repeat(masteryStars(content, state, crop.id))}${'☆'.repeat(Math.max(0, (content.cropExtras?.mastery.length ?? 0) - masteryStars(content, state, crop.id)))}`, (() => { const n = nextMastery(content, state, crop.id); return n ? ` · còn ${formatNumber(n - (e?.harvests ?? 0))} lần` : ''; })()),
           h('span', { class: 'muts' }, ...muts),
           h('span', { class: 'vine small' }, h('span', { class: 'vine-fill', style: `width:${pct}%` }), h('span', { class: 'xp-text' }, target ? `${e?.harvests ?? 0}/${target}` : 'Hoàn thành')),
           m && h('button', { class: 'candy gold small', 'data-test': `claim-${crop.id}`, onclick: () => this.actions.claimJournal(crop.id) }, gem(16), `Nhận ${m.gems}`),

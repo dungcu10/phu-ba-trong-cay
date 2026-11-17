@@ -728,7 +728,7 @@ function deliverOrder(content: ContentPack, state: GameState, index: number, now
   if (friend) friend.friendship += content.neighbors.orderFriendship;
   slot.order = null;
   slot.readyAt = now + content.orders.refillSeconds * 1000;
-  slot.flight = flightFor(content, state, order, bird?.species ?? null);
+  slot.flight = flightFor(content, state, order, bird?.species ?? null, now);
   if (bird) bird.escort = { slot: index, until: slot.readyAt };
   // XP now (the customer's thanks); coins, gems and items come back with the balloon.
   const xp = slot.flight.xp;
