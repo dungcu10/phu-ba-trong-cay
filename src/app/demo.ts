@@ -3,6 +3,9 @@
 // materials first — never available outside dev mode.
 
 import type { OffsetClock } from '../core/clock.ts';
+import { isSoldInShop } from '../core/content.ts';
+import { grantPot } from '../systems/pots.ts';
+import { nextFloor } from '../core/game.ts';
 import type { GameView } from '../render/scene.ts';
 import type { Controller } from './controller.ts';
 import type { GameSession } from './session.ts';
@@ -29,8 +32,11 @@ export function makeDemo(session: GameSession, view: GameView, controller: Contr
     run({ type: 'expandFloor', floor: 0 });
     // Floor 1: six Gốm Sứ Cung Đình pots (set tier 2), some upgraded to Tinh / Thần.
     const buyPlace = (potId: string, floor: number, slot: number, levels: number) => {
-      if (!run({ type: 'buyPot', potId })) return;
-      const id = state.potStock.at(-1)!;
+      // Event and mission pots are not sold: the demo hands them over like a reward would.
+      const def = content.pots.get(potId);
+      if (!def) return;
+      const id = isSoldInShop(def) ? (run({ type: 'buyPot', potId }) ? state.potStock.at(-1)! : null) : grantPot(state, potId, 'event', session.now());
+      if (!id) return;
       run({ type: 'placePot', potInstanceId: id, floor, slot });
       for (let i = 0; i < levels; i++) run({ type: 'upgradePot', potInstanceId: id });
     };
@@ -78,6 +84,34 @@ export function makeDemo(session: GameSession, view: GameView, controller: Contr
       case 'floor2':
         controller.toggleTray(false);
         view.focusFloor(1, 1);
+        return true;
+      case 'endless': {
+        // Nâng cấp v3 đợt 1: floors above the hand-made three, the next locked one, Mưa Mây.
+        const { state, content } = session;
+        state.player.level = Math.max(state.player.level, 34);
+        state.player.coins = Math.max(state.player.coins, 3_000_000);
+        state.player.gems = Math.max(state.player.gems, 120);
+        for (let i = 0; i < 5; i++) {
+          const nf = nextFloor(content, state);
+          if (!nf || state.floors.length >= 5 || !run({ type: 'unlockFloor', floorId: nf.id })) break;
+        }
+        const crops = content.cropList.map((c) => c.id);
+        state.floors.forEach((f, fi) => {
+          while (f.slots.length < 8 && run({ type: 'expandFloor', floor: fi }));
+          f.slots.forEach((sl, i) => {
+            if (!sl.planting) run({ type: 'plant', cropId: crops[(i + fi) % crops.length]!, floor: fi, slot: i });
+          });
+        });
+        clock.advance(25 * MIN);
+        controller.resync();
+        view.focusFloor(state.floors.length - 1, 1);
+        return true;
+      }
+      case 'endless-info':
+        controller.openFloorInfo(session.state.floors.length - 1);
+        return true;
+      case 'storage':
+        controller.openStorage();
         return true;
       case 'floor-info':
         view.focusFloor(0, 1);

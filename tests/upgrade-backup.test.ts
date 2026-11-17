@@ -16,6 +16,7 @@ const content = await loadBase();
 const FIXTURES = [
   { file: 'save-v4-d7c9ded.json', version: 4, note: 'bản thử d7c9ded — đời save của chủ dự án' },
   { file: 'save-v7-27159a0.json', version: 7, note: 'bản 27159a0' },
+  { file: 'save-v8-e17dd05.json', version: 8, note: 'bản thử e17dd05 (Chỉ thị 04)' },
 ];
 
 for (const fx of FIXTURES) {
@@ -36,6 +37,7 @@ for (const fx of FIXTURES) {
     assert.equal(r.state.player.xp, old.data.player.xp);
     assert.equal(Object.keys(r.state.pots).length, Object.keys(old.data.pots).length, 'không mất chậu');
     for (const [id, q] of Object.entries(old.data.inventory)) assert.equal(r.state.inventory[id], q, `giữ ${id}`);
+    assert.deepEqual(r.state.upgrades, { storage: 0 }, 'save 9: Rương Mây bắt đầu ở bậc 0');
 
     // The untouched copy exists before any write, byte for byte.
     assert.equal(await store.get(upgradeBackupKey(fx.version)), raw);

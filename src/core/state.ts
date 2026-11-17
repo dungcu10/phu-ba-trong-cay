@@ -3,7 +3,7 @@
 import type { ContentPack, FloorDef } from './content.ts';
 import { newSeed } from './rng.ts';
 
-export const SAVE_VERSION = 8;
+export const SAVE_VERSION = 9;
 
 export interface Planting {
   /** Unique per planting, used as a key for deterministic randomness. */
@@ -139,6 +139,8 @@ export interface GameState {
   events: Record<string, { points: number; claimed: number }>;
   /** Today's missions (day = local day number, -1 = not rolled yet). */
   missions: { day: number; list: MissionState[]; bonusClaimed: boolean };
+  /** Bought upgrades (save 9): Rương Mây tiers. */
+  upgrades: { storage: number };
 }
 
 /** Builds a floor with its starting pots (used for the first floor and every unlocked one). */
@@ -182,6 +184,7 @@ export function createNewGame(content: ContentPack, now: number, entropy = now):
     potBook: Object.fromEntries([...new Set(Object.values(pots).map((p) => p.potId))].map((id) => [id, { firstAt: now, bestLevel: 1 }])),
     potBookClaimed: 0,
     events: {},
+    upgrades: { storage: 0 },
   };
 }
 

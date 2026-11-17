@@ -6,7 +6,7 @@ import { svgIcon } from './icons.ts';
 import type { GameSession } from '../app/session.ts';
 import type { SlotRef } from '../core/game.ts';
 import { itemFrame } from '../render/assets.ts';
-import { sellPrice, storageUsed } from '../systems/economy.ts';
+import { sellPrice, storageCapacity, storageUpgradeCost, storageUsed } from '../systems/economy.ts';
 import { cropStatus } from '../systems/growth.ts';
 import { canAfford, nextUpgradeCost, potLevelDef } from '../systems/pots.ts';
 export { Panel } from './panel.ts';
@@ -22,6 +22,7 @@ export interface PanelActions {
   upgradePot(potInstanceId: string): void;
   placePot(slot: SlotRef, potInstanceId: string): void;
   openBench(slot: SlotRef): void;
+  upgradeStorage(): void;
 }
 
 const coin = (size = 22) => svgIcon('coin', size + 4);
@@ -91,7 +92,7 @@ export class StoragePanel extends Panel {
   render(): void {
     clear(this.body);
     const { content, state } = this.session;
-    const cap = content.config.storageCapacity;
+    const cap = storageCapacity(content, state);
     const used = storageUsed(content, state);
     const baskets = h('span', { class: 'baskets' });
     const per = cap / 10;
@@ -99,7 +100,17 @@ export class StoragePanel extends Panel {
       const fill = Math.max(0, Math.min(1, (used - i * per) / per));
       baskets.append(h('span', { class: `basket${fill >= 1 ? ' full' : fill > 0 ? ' half' : ''}` }));
     }
-    this.body.append(h('div', { class: 'cap-row' }, baskets, h('span', { class: 'cap-text' }, `${used}/${cap}`)));
+    // Rương Mây upgrade (nâng cấp v3 đợt 1): always one more tier, each dearer.
+    const upCost = storageUpgradeCost(content, state);
+    const canUp = state.player.coins >= upCost;
+    const upBtn = h(
+      'button',
+      { class: `candy small ${canUp ? 'primary' : 'blocked'}`, 'data-test': 'upgrade-storage', onclick: () => (canUp ? this.actions.upgradeStorage() : shake(upBtn)) },
+      `Nâng rương +${content.config.storageUpgrade.perTier} ô · `,
+      coin(18),
+      formatNumber(upCost),
+    );
+    this.body.append(h('div', { class: 'cap-row' }, baskets, h('span', { class: 'cap-text' }, `${used}/${cap}`), upBtn));
 
     const entries = Object.entries(state.inventory).filter(([, q]) => q > 0);
     if (entries.length === 0) {

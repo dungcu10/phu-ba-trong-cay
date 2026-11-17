@@ -37,6 +37,7 @@ export const ERROR_TEXT: Record<ErrorCode, string> = {
   help_limit: 'Hôm nay đã giúp nhà này đủ rồi. Mai ghé tiếp nhé!',
   level_not_open: 'Các cấp tiếp theo của dòng chậu này sẽ mở ở bản cập nhật sau.',
   not_obtainable: 'Chậu này không đổi được bằng vật phẩm.',
+  nothing_growing: 'Không có cây nào đang lớn trên tầng này.',
 };
 
 const numberFormat = new Intl.NumberFormat('vi-VN');
@@ -57,6 +58,15 @@ export function formatDuration(ms: number): string {
 }
 
 /** Short form for labels under pots: "45s", "4:05", "1:20:00". */
+/** Short countdown for badges: "26 ngày", "1 ngày 5 giờ", "5:07" (h:mm under a day). */
+export function formatTimeLeft(ms: number): string {
+  const days = Math.floor(ms / 86_400_000);
+  const hours = Math.floor((ms % 86_400_000) / 3_600_000);
+  if (days >= 2) return `${days} ngày`;
+  if (days === 1) return hours > 0 ? `1 ngày ${hours} giờ` : '1 ngày';
+  return formatClock(ms).replace(/:\d\d$/, '');
+}
+
 export function formatClock(ms: number): string {
   const total = Math.max(0, Math.ceil(ms / 1000));
   const h = Math.floor(total / 3600);

@@ -5,8 +5,24 @@
   "levels": {
     "xpBase": 10,
     "xpExponent": 1.6,
-    "maxLevel": 30,
-    "levelUpCoins": 10
+    "xpGrowth": 1.06,
+    "levelUp": {
+      "coinsBase": 10,
+      "coinsPerLevel": 10,
+      "milestones": [
+        {
+          "every": 5,
+          "gems": 2
+        },
+        {
+          "every": 10,
+          "gems": 3,
+          "items": {
+            "base:mat.cloud-clay": 3
+          }
+        }
+      ]
+    }
   },
   "water": {
     "remainingTimeReduction": 0.1
@@ -53,5 +69,106 @@
       "lines": 7,
       "gems": 10
     }
-  ]
+  ],
+  "floorGen": {
+    "names": [
+      "Đảo Mây Hồng",
+      "Thung Lũng Sương Bạc",
+      "Vườn Trăng Lơ Lửng",
+      "Đồi Cầu Vồng",
+      "Hồ Sen Mây",
+      "Rừng Tre Gió",
+      "Cung Mây Pha Lê",
+      "Bến Mây Hoàng Hôn"
+    ],
+    "sprites": [
+      "floors/cloud-meadow",
+      "floors/tea-mist",
+      "floors/golden-terrace"
+    ],
+    "tints": [
+      "#F6C9D8",
+      "#D5DDF0",
+      "#E6D9F7",
+      "#FBE3B8",
+      "#CFEDE6",
+      "#D8EBC4",
+      "#D9F0FA",
+      "#F7D2BC"
+    ],
+    "traits": [
+      {
+        "family": "flower",
+        "stat": "yield"
+      },
+      {
+        "family": "herb",
+        "stat": "speed"
+      },
+      {
+        "family": "fruit",
+        "stat": "xp"
+      },
+      {
+        "family": "flower",
+        "stat": "luck"
+      },
+      {
+        "family": "herb",
+        "stat": "yield"
+      },
+      {
+        "family": "fruit",
+        "stat": "speed"
+      }
+    ],
+    "traitValue": {
+      "base": 0.12,
+      "perFloor": 0.01,
+      "max": 0.3
+    },
+    "firstLevel": 16,
+    "levelStep": 4,
+    "levelStepGrowth": 0.5,
+    "firstCost": 20000,
+    "costGrowth": 2.0,
+    "slotCount": 6,
+    "maxSlots": 10,
+    "expandFactors": [
+      0.15,
+      0.3,
+      0.5,
+      0.8
+    ],
+    "startingPot": "base:pot.terracotta",
+    "stars": [
+      {
+        "levelOffset": 1,
+        "costFactor": 0.5,
+        "qty": 15,
+        "qtyPerFloor": 5
+      },
+      {
+        "levelOffset": 4,
+        "costFactor": 1,
+        "qty": 20,
+        "qtyPerFloor": 5
+      },
+      {
+        "levelOffset": 8,
+        "costFactor": 2,
+        "qty": 30,
+        "qtyPerFloor": 8
+      }
+    ]
+  },
+  "storageUpgrade": {
+    "perTier": 20,
+    "firstCost": 300,
+    "costGrowth": 1.45
+  },
+  "cloudRain": {
+    "minutesPerGem": 30,
+    "minGemsPerPot": 1
+  }
 }

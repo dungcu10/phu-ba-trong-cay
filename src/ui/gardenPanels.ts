@@ -6,6 +6,7 @@ import type { GameSession } from '../app/session.ts';
 import type { MissionDef } from '../core/content.ts';
 import { itemFrame } from '../render/assets.ts';
 import { expandCost, floorSets, nextStar } from '../systems/floors.ts';
+import { cloudRainCost } from '../core/game.ts';
 import { allMissionsClaimed, dayEndsAt, missionDef } from '../systems/missions.ts';
 import { helpReward, helpsLeft } from '../systems/visit.ts';
 import { clear, h, icon } from './dom.ts';
@@ -18,6 +19,7 @@ import { coin, gem } from './worldPanels.ts';
 export interface GardenActions {
   expandFloor(floor: number): void;
   upgradeFloorStar(floor: number): void;
+  cloudRain(floor: number): void;
   claimMission(index: number): void;
   claimMissionBonus(): void;
 }
@@ -97,7 +99,19 @@ export class FloorInfoPanel extends Panel {
       const tiers = set.tiers.map((t) => h('span', { class: `set-tier${count >= t.count ? ' on' : ''}` }, `${t.count} chậu: ${statText(t.stats)}`));
       setCard.append(h('div', { class: `set-row${count > 0 ? ' active' : ''}` }, h('span', { class: 'set-pots' }, ...members.map((m) => potIcon(m, 1, 40))), h('span', { class: 'set-main' }, h('strong', {}, `${set.name.vi} · ${count} chậu`), ...tiers)));
     }
-    this.body.append(h('div', { class: 'cards' }, exp, starCard), setCard);
+    // Mưa Mây (nâng cấp v3 đợt 1): gems ripen everything growing on this floor now.
+    const rain = cloudRainCost(content, state, this.floor, this.session.now());
+    const rainCard = h('section', { class: 'card rain-card' }, h('h3', {}, 'Mưa Mây'));
+    if (rain.pots === 0) rainCard.append(h('p', { class: 'note' }, 'Không có cây nào đang lớn trên tầng này. Gieo hạt rồi gọi Mưa Mây để cây chín ngay.'));
+    else {
+      const ok = p.gems >= rain.gems;
+      const btn = h('button', { class: `candy ${ok ? 'primary' : 'blocked'}`, 'data-test': 'cloud-rain', onclick: () => (ok ? this.actions.cloudRain(this.floor) : shake(btn)) }, `Làm chín ${rain.pots} cây`);
+      rainCard.append(
+        h('p', { class: 'note' }, `Mây ngọc tưới cả tầng: mọi cây đang lớn chín ngay. Cây còn lâu tốn nhiều ngọc hơn (${content.config.cloudRain.minutesPerGem} phút còn lại = 1 ngọc).`),
+        h('div', { class: 'candy-wrap' }, h('span', { class: `need${ok ? '' : ' short'}` }, gem(22), formatNumber(rain.gems)), btn, h('span', { class: 'reason' }, ok ? '' : `Thiếu ${formatNumber(rain.gems - p.gems)} Ngọc Mây`)),
+      );
+    }
+    this.body.append(h('div', { class: 'cards' }, exp, starCard), rainCard, setCard);
   }
 }
 

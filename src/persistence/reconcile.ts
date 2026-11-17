@@ -42,12 +42,13 @@ class Checker {
 export function reconcile(input: GameState, content: ContentPack, mode: ReconcileMode): Reconciled {
   const state = structuredClone(input);
   const c = new Checker(mode);
-  const maxLevel = content.config.levels.maxLevel;
 
   state.seed = c.num('hạt giống', state.seed, { min: 0, int: true, fallback: 1 });
-  state.player.level = c.num('cấp người chơi', state.player.level, { min: 1, max: maxLevel, int: true, fallback: 1 });
+  state.player.level = c.num('cấp người chơi', state.player.level, { min: 1, int: true, fallback: 1 });
   state.player.coins = c.num('số xu', state.player.coins, { min: 0, int: true, fallback: 0 });
   state.player.gems = c.num('Ngọc Mây', state.player.gems, { min: 0, int: true, fallback: 0 });
+  if (!state.upgrades || typeof state.upgrades !== 'object') state.upgrades = { storage: 0 };
+  state.upgrades.storage = c.num('bậc Rương Mây', state.upgrades.storage, { min: 0, int: true, fallback: 0 });
   state.player.xp = c.num('kinh nghiệm', state.player.xp, { min: 0, int: true, fallback: 0 });
   state.maxSeenAt = c.num('mốc thời gian', state.maxSeenAt, { min: 0, fallback: state.createdAt || 0 });
   state.clockOffsetMs = c.num('độ lệch đồng hồ', state.clockOffsetMs, { fallback: 0 });

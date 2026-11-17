@@ -380,13 +380,13 @@ export class GameView {
     container.position.set(WORLD.floorCenterX, this.floorY(this.floors.length));
     const cloud = this.cloudSprite(def);
     cloud.alpha = 0.5;
-    // A signboard sits on the faded cloud, low enough to stay clear of the HUD.
+    // A signboard sits on the faded cloud, low enough to stay clear of the HUD and the hint line.
     const g = new Graphics();
-    g.roundRect(-230, 30, 460, 112, 24).fill({ color: hex(C.ui.wood), alpha: 0.92 }).stroke({ color: hex(C.ui.number), width: 3 });
-    const name = this.text(def.name.vi, TOKENS.font.size.window);
-    name.position.set(0, 64);
+    g.roundRect(-230, 72, 460, 112, 24).fill({ color: hex(C.ui.wood), alpha: 0.92 }).stroke({ color: hex(C.ui.number), width: 3 });
+    const name = this.text(`Tầng ${this.floors.length + 1} · ${def.name.vi}`, TOKENS.font.size.window);
+    name.position.set(0, 106);
     const info = this.text('', TOKENS.font.size.label, C.brand.cream);
-    info.position.set(0, 112);
+    info.position.set(0, 154);
     container.addChild(cloud, g, name, info);
     this.floorsLayer.addChild(container);
     this.locked = { container, def, info };

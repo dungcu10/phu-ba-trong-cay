@@ -7,19 +7,34 @@ import { randomFor } from '../core/rng.ts';
 const DAY_MS = 86_400_000;
 
 export function xpToNextLevel(content: ContentPack, level: number): number {
-  const { xpBase, xpExponent } = content.config.levels;
-  return Math.round(xpBase * Math.pow(level, xpExponent));
+  const { xpBase, xpExponent, xpGrowth = 1 } = content.config.levels;
+  return Math.round(xpBase * Math.pow(level, xpExponent) * Math.pow(xpGrowth, level - 1));
 }
 
-/** Adds XP and applies every level-up it causes. Returns the levels gained. */
+/** What reaching `level` pays (owner decision 2026-11-17: grows with the level, no cap). */
+export function levelUpReward(content: ContentPack, level: number): { coins: number; gems: number; items: Record<string, number> } {
+  const cfg = content.config.levels.levelUp;
+  const items: Record<string, number> = {};
+  let gems = 0;
+  for (const m of cfg.milestones) {
+    if (level % m.every !== 0) continue;
+    gems += m.gems ?? 0;
+    for (const [id, q] of Object.entries(m.items ?? {})) items[id] = (items[id] ?? 0) + q;
+  }
+  return { coins: Math.round(cfg.coinsBase + cfg.coinsPerLevel * level), gems, items };
+}
+
+/** Adds XP and applies every level-up it causes, paying each level's reward. Returns the levels gained. */
 export function addXp(content: ContentPack, state: GameState, amount: number): number[] {
   const gained: number[] = [];
-  const { maxLevel, levelUpCoins } = content.config.levels;
   state.player.xp += amount;
-  while (state.player.level < maxLevel && state.player.xp >= xpToNextLevel(content, state.player.level)) {
+  while (state.player.xp >= xpToNextLevel(content, state.player.level)) {
     state.player.xp -= xpToNextLevel(content, state.player.level);
     state.player.level += 1;
-    state.player.coins += levelUpCoins;
+    const r = levelUpReward(content, state.player.level);
+    state.player.coins += r.coins;
+    state.player.gems += r.gems;
+    for (const [id, q] of Object.entries(r.items)) addItem(state, id, q);
     gained.push(state.player.level);
   }
   return gained;
@@ -33,8 +48,25 @@ export function storageUsed(content: ContentPack, state: GameState): number {
   return used;
 }
 
+/** Rương Mây capacity with the bought upgrade tiers. */
+export function storageCapacity(content: ContentPack, state: GameState): number {
+  return content.config.storageCapacity + content.config.storageUpgrade.perTier * (state.upgrades?.storage ?? 0);
+}
+
+/** Coins for the next Rương Mây tier (there is always a next one). */
+export function storageUpgradeCost(content: ContentPack, state: GameState): number {
+  const u = content.config.storageUpgrade;
+  return tidyCoins(u.firstCost * Math.pow(u.costGrowth, state.upgrades?.storage ?? 0));
+}
+
+function tidyCoins(n: number): number {
+  if (n < 100) return Math.round(n);
+  const p = Math.pow(10, Math.floor(Math.log10(n)) - 1);
+  return Math.round(n / p) * p;
+}
+
 export function storageFree(content: ContentPack, state: GameState): number {
-  return content.config.storageCapacity - storageUsed(content, state);
+  return storageCapacity(content, state) - storageUsed(content, state);
 }
 
 /** Day number used for daily price variation (UTC days). */

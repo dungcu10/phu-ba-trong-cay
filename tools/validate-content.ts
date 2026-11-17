@@ -8,7 +8,7 @@ const dir = join(import.meta.dirname, '..', 'content', 'base');
 try {
   const pack = await loadContentPack(async (f) => JSON.parse(await readFile(join(dir, f), 'utf8')));
   process.stdout.write(
-    `Gói nội dung hợp lệ (v${pack.contentVersion}): ${pack.floors.size} tầng, ${pack.pots.size} loại chậu, ${pack.crops.size} giống cây, ${pack.bugs.size} loại bọ.\n`,
+    `Gói nội dung hợp lệ (v${pack.contentVersion}): ${pack.floorList.length} tầng thiết kế sẵn + tầng sinh tự động không giới hạn, ${pack.pots.size} loại chậu, ${pack.crops.size} giống cây, ${pack.bugs.size} loại bọ.\n`,
   );
 } catch (e) {
   if (e instanceof ContentError) {

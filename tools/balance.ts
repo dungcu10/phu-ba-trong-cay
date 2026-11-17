@@ -40,7 +40,7 @@ export function simulate(fullContent: ContentPack, crop: CropDef, style: PlaySty
   let bugs = 0;
   for (const seed of seeds) {
     const s = createNewGame(content, T0, seed);
-    s.player.level = content.config.levels.maxLevel;
+    s.player.level = 99; // every crop unlocked (levels have no cap)
     s.player.coins = 1_000_000;
     // Crops only: neighbours' gifts and surprise gifts would blur the comparison.
     s.neighbors = {};

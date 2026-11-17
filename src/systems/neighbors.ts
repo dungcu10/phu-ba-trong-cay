@@ -35,9 +35,8 @@ export function addNotice(state: GameState, at: number, text: string): void {
 }
 
 function botLevelUps(content: ContentPack, s: BotState): void {
-  const max = content.config.levels.maxLevel;
-  // Neighbours level more slowly than the player (×3 XP per level).
-  while (s.level < max && s.xp >= xpToNextLevel(content, s.level) * 3) {
+  // Neighbours level more slowly than the player (×3 XP per level). No cap, like the player.
+  while (s.xp >= xpToNextLevel(content, s.level) * 3) {
     s.xp -= xpToNextLevel(content, s.level) * 3;
     s.level += 1;
   }

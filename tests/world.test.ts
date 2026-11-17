@@ -102,7 +102,8 @@ test('quà bất ngờ tính theo thời gian sinh trưởng: cây ngắn ít qu
     if (rollGift(content, s, p, 7200, 0)) long++;
   }
   assert.ok(short < 60, `cúc 1 phút: ${short}/5000`);
-  assert.ok(long > 1500, `hoa 2 giờ: ${long}/5000`);
+  // Capped at giftChanceMax (0.25 since nâng cấp v3 đợt 1, so gems do not flood big gardens).
+  assert.ok(long > 1000 && long < 1500, `hoa 2 giờ: ${long}/5000`);
 });
 
 test('thu hoạch ghi Sổ Tay; mốc đầu tiên nhận Ngọc Mây, nhận hai lần bị từ chối', () => {

@@ -83,6 +83,12 @@ export const MIGRATIONS: Record<number, Migration> = {
     data.events = {};
     return data;
   },
+  // 8 -> 9 (nâng cấp v3, đợt 1): Rương Mây upgrades start at tier 0. Levels above 30 and
+  // generated floors need no data change.
+  8: (data) => {
+    data.upgrades = { storage: 0 };
+    return data;
+  },
 };
 
 export function migrate(

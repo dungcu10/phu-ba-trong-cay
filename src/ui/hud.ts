@@ -4,14 +4,14 @@
 
 import { svgIcon } from './icons.ts';
 import type { GameSession } from '../app/session.ts';
-import { storageUsed, xpToNextLevel } from '../systems/economy.ts';
+import { storageCapacity, storageUsed, xpToNextLevel } from '../systems/economy.ts';
 import { canDeliver } from '../systems/orders.ts';
 import { nextMilestone } from '../systems/surprises.ts';
 import { missionsReady } from '../systems/missions.ts';
 import { claimableMilestones, visibleEvents } from '../systems/events.ts';
 import { h } from './dom.ts';
 import { nextHint } from './hint.ts';
-import { formatClock, formatNumber } from './text.ts';
+import { formatNumber, formatTimeLeft } from './text.ts';
 
 export interface HudActions {
   openSeeds(): void;
@@ -113,10 +113,9 @@ export class Hud {
     const { content, state } = this.session;
     const p = state.player;
     const need = xpToNextLevel(content, p.level);
-    const maxed = p.level >= content.config.levels.maxLevel;
     this.level.textContent = String(p.level);
-    this.vineFill.style.width = maxed ? '100%' : `${Math.min(100, (p.xp / need) * 100)}%`;
-    this.xpText.textContent = maxed ? 'Tối đa' : `${formatNumber(p.xp)}/${formatNumber(need)}`;
+    this.vineFill.style.width = `${Math.min(100, (p.xp / need) * 100)}%`;
+    this.xpText.textContent = `${formatNumber(p.xp)}/${formatNumber(need)}`;
     if (p.coins !== this.last.coins) {
       if (this.last.coins >= 0 && p.coins > this.last.coins) this.bump(this.pouch);
       this.last.coins = p.coins;
@@ -128,8 +127,9 @@ export class Hud {
       this.gems.textContent = formatNumber(p.gems);
     }
     const used = storageUsed(content, state);
-    this.storageBadge.textContent = `${used}/${content.config.storageCapacity}`;
-    this.storageBadge.classList.toggle('full', used >= content.config.storageCapacity);
+    const cap = storageCapacity(content, state);
+    this.storageBadge.textContent = `${used}/${cap}`;
+    this.storageBadge.classList.toggle('full', used >= cap);
     this.badge(this.orderBadge, state.orders.slots.filter((s) => s.order && canDeliver(state, s.order)).length);
     this.badge(this.stallBadge, state.stall.length);
     this.badge(this.journalBadge, content.cropList.filter((c) => nextMilestone(content, state, c.id)).length);
@@ -140,7 +140,7 @@ export class Hud {
     this.eventBtn.classList.toggle('hidden', evs.length === 0);
     if (evs.length > 0) {
       const ev = evs[0]!;
-      this.eventTime.textContent = now < ev.end ? formatClock(ev.end - now).replace(/:\d\d$/, '') : 'Hết hạn';
+      this.eventTime.textContent = now < ev.end ? formatTimeLeft(ev.end - now) : 'Hết hạn';
       this.badge(this.eventBadge, evs.reduce((n, e) => n + claimableMilestones(state, e), 0));
     }
     const hint = nextHint(content, state, this.session.now());

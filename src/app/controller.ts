@@ -1,7 +1,9 @@
 // Connects player input to game commands, and game events to feedback (effects, sound, HUD).
 
 import type { Command, GameEvent, Result, SlotRef } from '../core/game.ts';
+import { nextFloor } from '../core/game.ts';
 import { cropStatus } from '../systems/growth.ts';
+import { levelUpReward } from '../systems/economy.ts';
 import type { GameView } from '../render/scene.ts';
 import { itemFrame } from '../render/assets.ts';
 import type { Art } from '../render/assets.ts';
@@ -364,6 +366,14 @@ export class Controller implements PanelActions, PotShopActions, WorldActions, G
     this.run({ type: 'sell', itemId, qty });
   }
 
+  upgradeStorage(): void {
+    this.run({ type: 'upgradeStorage' });
+  }
+
+  cloudRain(floor: number): void {
+    this.run({ type: 'cloudRain', floor });
+  }
+
   upgradePot(potInstanceId: string): void {
     this.run({ type: 'upgradePot', potInstanceId });
   }
@@ -489,6 +499,15 @@ export class Controller implements PanelActions, PotShopActions, WorldActions, G
         this.sfx.play('coin');
         if (!e.pot) this.toasts.show('Đã nhận quà lễ hội!', 'success', 2000);
         break;
+      case 'storageUpgraded':
+        this.sfx.play('upgrade');
+        this.toasts.show(`Rương Mây chứa được ${formatNumber(e.capacity)} món!`, 'success', 2400);
+        break;
+      case 'cloudRained':
+        this.sfx.play('levelUp');
+        this.view.refresh();
+        this.toasts.show(`Mưa Mây! ${e.pots} cây chín ngay (−${e.gems} Ngọc Mây).`, 'level', 2600);
+        break;
       case 'bookRewardClaimed':
         this.sfx.play('coin');
         this.toasts.show(`Bộ sưu tập ${e.lines} dòng chậu: +${e.gems} Ngọc Mây`, 'level', 2600);
@@ -577,14 +596,16 @@ export class Controller implements PanelActions, PotShopActions, WorldActions, G
       }
       case 'levelUp': {
         this.sfx.play('levelUp');
-        const bonus = content.config.levels.levelUpCoins;
+        const reward = levelUpReward(content, e.level);
+        const gift = [`+${formatNumber(reward.coins)} xu`, reward.gems > 0 ? `+${reward.gems} Ngọc Mây` : '', ...Object.entries(reward.items).map(([id, q]) => `+${q} ${content.items.get(id)?.name.vi ?? id}`)].filter(Boolean).join(', ');
         const unlocked = content.cropList.filter((c) => c.unlockLevel === e.level).map((c) => c.name.vi);
         const extra = unlocked.length > 0 ? ` Mở khóa: ${unlocked.join(', ')}.` : '';
-        const floor = content.floorList.find((f) => f.unlockLevel === e.level);
+        const nf = nextFloor(content, this.session.state);
+        const floor = nf && nf.unlockLevel === e.level ? nf : null;
         const more = floor ? ` Có thể mở ${floor.name.vi}.` : '';
         const pots = content.potList.filter((p) => p.unlockLevel === e.level && p.price !== null && !p.retired).map((p) => p.name.vi);
         const potText = pots.length > 0 ? ` Lò Gốm có ${pots.join(', ')}.` : '';
-        this.celebrate(`Lên cấp ${e.level}!`, `+${formatNumber(bonus)} xu thưởng.${extra}${more}${potText}`);
+        this.celebrate(`Lên cấp ${e.level}!`, `Quà lên cấp: ${gift}.${extra}${more}${potText}`);
         for (let i = 0; i < 4; i++) {
           const p = this.view.slotView(0, (i * 3) % this.session.state.floors[0]!.slots.length).feedbackPoint();
           fx.burst(this.view.dot, p.x, p.y - 60, 6, { scale: 0.5, speed: 360, tint: hex(TOKENS.color.brand.gold) });

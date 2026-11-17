@@ -1,12 +1,13 @@
 // Command processor. Every change to the game goes through dispatch(): the command is validated
 // first, and only applied if valid. The player UI and (later) BOTs use exactly this entry point.
 
-import { isSoldInShop, type ContentPack } from './content.ts';
+import { isSoldInShop, type ContentPack, type FloorDef } from './content.ts';
+import { floorAtIndex } from './floorgen.ts';
 import type { GameState, SlotState } from './state.ts';
 import { adjustedOffset, gameTime } from './clock.ts';
 import { stochasticRound } from './rng.ts';
 import { cropStatus } from '../systems/growth.ts';
-import { addItem, addXp, removeItem, sellPrice, storageFree } from '../systems/economy.ts';
+import { addItem, addXp, removeItem, sellPrice, storageCapacity, storageFree, storageUpgradeCost } from '../systems/economy.ts';
 import { canAfford, doubleYieldChance, grantPot, isMilestone, mutationMultiplier, nextUpgradeCost, noteInBook, upgradeBlock } from '../systems/pots.ts';
 import { randomFor } from './rng.ts';
 import { activeEvents, eventPointsFor } from '../systems/events.ts';
@@ -51,7 +52,11 @@ export type Command =
   /** Gets a non-shop pot by exchanging items (mission seals). */
   | { type: 'obtainPot'; potId: string }
   | { type: 'claimEventMilestone'; eventId: string }
-  | { type: 'claimBookReward' };
+  | { type: 'claimBookReward' }
+  /** Buys the next Rương Mây tier for coins (no cap). */
+  | { type: 'upgradeStorage' }
+  /** Mưa Mây: spends gems to ripen every growing crop on one floor now. */
+  | { type: 'cloudRain'; floor: number };
 
 export type GameEvent =
   | { type: 'planted'; slot: SlotRef; cropId: string; cost: number }
@@ -82,7 +87,9 @@ export type GameEvent =
   | { type: 'potObtained'; potInstanceId: string; potId: string; source: 'exchange' | 'event' }
   | { type: 'eventPoints'; eventId: string; points: number; total: number }
   | { type: 'eventMilestoneClaimed'; eventId: string; index: number; coins: number; gems: number; items: Record<string, number>; pot: string | null }
-  | { type: 'bookRewardClaimed'; lines: number; gems: number };
+  | { type: 'bookRewardClaimed'; lines: number; gems: number }
+  | { type: 'storageUpgraded'; tier: number; capacity: number; cost: number }
+  | { type: 'cloudRained'; floor: number; pots: number; gems: number };
 
 export type ErrorCode =
   | 'bad_slot'
@@ -118,7 +125,8 @@ export type ErrorCode =
   | 'no_help_needed'
   | 'help_limit'
   | 'level_not_open'
-  | 'not_obtainable';
+  | 'not_obtainable'
+  | 'nothing_growing';
 
 export type Result = { ok: true; events: GameEvent[] } | { ok: false; error: ErrorCode };
 
@@ -219,6 +227,10 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
       return obtainPot(content, state, cmd.potId, now);
     case 'claimEventMilestone':
       return claimEventMilestone(content, state, cmd.eventId, now);
+    case 'upgradeStorage':
+      return upgradeStorage(content, state);
+    case 'cloudRain':
+      return cloudRain(content, state, cmd.floor, now);
     case 'claimBookReward':
       return claimBookReward(content, state);
   }
@@ -479,10 +491,45 @@ function upgradePot(content: ContentPack, state: GameState, potInstanceId: strin
   return { ok: true, events: [{ type: 'potUpgraded', potInstanceId, level: pot.level, milestone: isMilestone(def, pot.level), skills }] };
 }
 
+function upgradeStorage(content: ContentPack, state: GameState): Result {
+  const cost = storageUpgradeCost(content, state);
+  if (state.player.coins < cost) return fail('not_enough_coins');
+  state.player.coins -= cost;
+  state.upgrades.storage += 1;
+  return { ok: true, events: [{ type: 'storageUpgraded', tier: state.upgrades.storage, capacity: storageCapacity(content, state), cost }] };
+}
+
+/** Gems Mưa Mây would cost on a floor now, and how many pots it would ripen. */
+export function cloudRainCost(content: ContentPack, state: GameState, floor: number, now: number): { gems: number; pots: number } {
+  const cfg = content.config.cloudRain;
+  let gems = 0;
+  let pots = 0;
+  for (const slot of state.floors[floor]?.slots ?? []) {
+    const st = cropStatus(content, state, slot, now);
+    if (!st || st.ripe) continue;
+    pots += 1;
+    gems += Math.max(cfg.minGemsPerPot, Math.ceil(st.remainingMs / 60_000 / cfg.minutesPerGem));
+  }
+  return { gems, pots };
+}
+
+function cloudRain(content: ContentPack, state: GameState, floor: number, now: number): Result {
+  if (!state.floors[floor]) return fail('bad_slot');
+  const { gems, pots } = cloudRainCost(content, state, floor, now);
+  if (pots === 0) return fail('nothing_growing');
+  if (state.player.gems < gems) return fail('not_enough_gems');
+  state.player.gems -= gems;
+  for (const slot of state.floors[floor]!.slots) {
+    const st = cropStatus(content, state, slot, now);
+    if (st && !st.ripe && slot.planting) slot.planting.bonusMs += st.remainingMs + 1;
+  }
+  return { ok: true, events: [{ type: 'cloudRained', floor, pots, gems }] };
+}
+
 /** The next floor that can be unlocked (floors open bottom to top, in content order). */
-export function nextFloor(content: ContentPack, state: GameState) {
-  const have = new Set(state.floors.map((f) => f.floorId));
-  return content.floorList.find((f) => !have.has(f.id)) ?? null;
+export function nextFloor(content: ContentPack, state: GameState): FloorDef | null {
+  // Floors open bottom to top and there is no top floor (owner decision 2026-11-17).
+  return floorAtIndex(content.floors, content.floorList, state.floors.length);
 }
 
 function unlockFloor(content: ContentPack, state: GameState, floorId: string): Result {
