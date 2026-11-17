@@ -11,6 +11,7 @@ import type { BotDef, ContentPack } from '../core/content.ts';
 import type { BotListing, BotState, GameState } from '../core/state.ts';
 import { randomFor } from '../core/rng.ts';
 import { xpToNextLevel } from './economy.ts';
+import { advanceBotBirds, botKeepBirds } from './botBirds.ts';
 
 export type NeighborEvent =
   | { type: 'stallSold'; botId: string; itemId: string; qty: number; coins: number }
@@ -50,6 +51,9 @@ function session(content: ContentPack, state: GameState, bot: BotDef, s: BotStat
     s.lastAction = { kind: 'rest', reason: 'Nghỉ ngơi phiên này (ít chăm chỉ)', at };
     return;
   }
+
+  // Chỉ thị 11 D1: an active neighbour looks after its birds (same rules as the player).
+  botKeepBirds(content, bot, s, at);
 
   // Score each option from personality and the current world.
   const options: Array<{ kind: string; score: number; run: () => string }> = [];
@@ -244,6 +248,8 @@ export function simulateNeighbors(content: ContentPack, state: GameState, now: n
     const at = index * step;
     for (const { bot, s } of active) {
       if (s.simulatedTo >= at) continue;
+      // Its birds work up to this session in time order (shared runBirds), then the session runs.
+      advanceBotBirds(content, state, bot, s, at);
       session(content, state, bot, s, index, at, events);
       s.simulatedTo = at;
     }

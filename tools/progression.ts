@@ -39,6 +39,9 @@ export interface DayReport {
   signaturePots: number;
   storageFullShare: number;
   ordersDelivered: number;
+  /** Bugs the player's birds caught this day, and how many birds were working (chỉ thị 11 D1). */
+  birdBugs: number;
+  birds: number;
 }
 
 const T0 = Date.parse('2026-11-17T08:00:00+07:00');
@@ -48,6 +51,7 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
   const s = createNewGame(content, T0, seed);
   let milestones = 0;
   let gemsEarned = 0;
+  let birdCaught = 0;
   let questsClaimed = 0;
   const gemSources: Record<string, number> = {};
   const run = (cmd: Command, t: number) => {
@@ -59,6 +63,7 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
         gemSources[cmd.type] = (gemSources[cmd.type] ?? 0) + s.player.gems - gems;
       }
       for (const e of r.events) {
+        if (e.type === 'birdCaught') birdCaught += 1;
         if (e.type === 'floorUnlocked' || e.type === 'floorExpanded' || e.type === 'floorStarred') milestones++;
         if (e.type === 'potBought' || (e.type === 'potUpgraded' && e.milestone) || e.type === 'storageUpgraded') milestones++;
         if (e.type === 'questClaimed') {
@@ -88,12 +93,29 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
   for (let day = 0; day < days; day++) {
     const bugsBefore = bookCount();
     const ordersBefore = s.stats.ordersDone;
+    const birdBefore = birdCaught;
     let visits = 0;
     let fullVisits = 0;
     for (let m = 0; m <= 14 * 60; m += visitMinutes) {
       const t = T0 + day * 86_400_000 + m * 60_000;
       run({ type: 'tick' }, t);
       visits++;
+      // Birds (chỉ thị 10 § 3.3): rent one of the family most planted once comfortably affordable
+      // (same rule as the BOTs), keep Hạt Kê Mây in stock and feed every bird.
+      const birdCfg = content.birdRules?.bots;
+      if (birdCfg && content.birds && s.birds.length === 0) {
+        const owned = new Map<string, number>();
+        for (const f of s.floors) for (const sl of f.slots) if (sl.planting) owned.set(content.crops.get(sl.planting.cropId)!.family, (owned.get(content.crops.get(sl.planting.cropId)!.family) ?? 0) + 1);
+        const fam = [...owned.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];
+        const opts = [...content.birds.values()].filter((d) => d.rent && d.unlockLevel <= s.player.level && s.player.coins >= d.rent.coins * birdCfg.rentWhenCoinsTimes);
+        const pick = opts.find((d) => fam && d.families.includes(fam));
+        if (pick) run({ type: 'obtainBird', species: pick.id, how: 'rent' }, t);
+      }
+      if (s.birds.length > 0 && content.birdRules) {
+        const millet = content.birdRules.millet.item;
+        if ((s.inventory[millet] ?? 0) < 2 * s.birds.length) run({ type: 'buyMillet', qty: 2 * s.birds.length }, t);
+        run({ type: 'feedAllBirds' }, t);
+      }
       if (storageFree(content, s) <= 0) fullVisits++;
       s.floors.forEach((f, floor) =>
         f.slots.forEach((_, slot) => {
@@ -166,6 +188,8 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
     out.push({
       day: day + 1, level: s.player.level, coins: s.player.coins, gems: s.player.gems, quests: questsClaimed, gemsEarned, unit: content.income.unit(s.player.level), floors: s.floors.length, pots: Object.keys(s.pots).length, harvests: s.stats.harvests, milestones,
       bugsByRarity, signaturePots, storageFullShare: visits ? fullVisits / visits : 0, ordersDelivered: s.stats.ordersDone - ordersBefore,
+      birdBugs: birdCaught - birdBefore,
+      birds: s.birds.length,
     });
     milestones = 0;
     gemsEarned = 0;
