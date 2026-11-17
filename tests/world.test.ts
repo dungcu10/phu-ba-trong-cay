@@ -7,6 +7,7 @@ import { SAVE_VERSION, type GameState } from '../src/core/state.ts';
 import { sellPrice } from '../src/systems/economy.ts';
 import { simulateNeighbors, valuation } from '../src/systems/neighbors.ts';
 import { rollGift, rollMutation } from '../src/systems/surprises.ts';
+import { flightFor } from '../src/systems/orders.ts';
 import { migrate } from '../src/persistence/migrations.ts';
 import { reconcile } from '../src/persistence/reconcile.ts';
 import { DAISY, HOUR, loadBase, MIN, newGame, SEC, T0, TOMATO } from './helpers.ts';
@@ -46,6 +47,7 @@ test('giao đơn: cần đủ hàng, thưởng nhiều hơn bán lẻ, khinh kh�
     shopValue += sellPrice(content, s, id, T0)! * qty;
   }
   const coins = s.player.coins;
+  const pays = flightFor(content, s, order, null, T0).coins; // order coins + today's Cây Hot bonus
   const r = dispatch(content, s, { type: 'deliverOrder', slot: 0 }, T0);
   assert.ok(r.ok);
   assert.ok(order.coins > shopValue, `đơn ${order.coins} xu > bán lẻ ${shopValue} xu`);
@@ -55,7 +57,7 @@ test('giao đơn: cần đủ hàng, thưởng nhiều hơn bán lẻ, khinh kh�
   tick(s, T0 + (content.orders.refillSeconds - 1) * SEC);
   assert.equal(s.orders.slots[0]!.order, null);
   const back = dispatch(content, s, { type: 'tick' }, T0 + content.orders.refillSeconds * SEC);
-  assert.ok(back.ok && back.events.some((e) => e.type === 'balloonBack' && e.slot === 0 && e.coins === order.coins));
+  assert.ok(back.ok && back.events.some((e) => e.type === 'balloonBack' && e.slot === 0 && e.coins === pays));
   assert.ok(s.orders.slots[0]!.order);
   assert.equal(s.stats.ordersDone, 1);
   assert.ok(s.neighbors[order.customer]!.friendship > 0, 'khách quen hơn sau khi giao đơn');
