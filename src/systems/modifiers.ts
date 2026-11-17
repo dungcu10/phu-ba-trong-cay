@@ -6,6 +6,7 @@ import type { ContentPack, CropDef, PotStatName } from '../core/content.ts';
 import type { FloorState, GameState, SlotState } from '../core/state.ts';
 import { potStat } from './pots.ts';
 import { floorBonus } from './floors.ts';
+import { masteryBonus } from './cropExtras.ts';
 
 export function floorOfSlot(state: GameState, slot: SlotState): FloorState | undefined {
   return state.floors.find((f) => f.slots.includes(slot));
@@ -23,6 +24,8 @@ export function slotBonus(content: ContentPack, state: GameState, slot: SlotStat
   const trait = floor ? content.floors.get(floor.floorId)?.trait : null;
   if (trait && trait.family === crop.family && trait.stat === stat) bonus += trait.value;
   if (floor) bonus += floorBonus(content, state, floor, stat);
+  // Bổ sung A6.4: Thông Thạo — the crop's mastery stars (under the same cap).
+  bonus += masteryBonus(content, state, crop, stat);
   // Every source adds up, then the total is capped (POT_SYSTEM 5: no endless stacking).
   const cap = content.config.bonusCaps?.[stat];
   return cap === undefined ? bonus : Math.min(bonus, cap);

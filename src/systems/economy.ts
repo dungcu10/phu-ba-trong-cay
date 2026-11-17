@@ -4,6 +4,7 @@ import type { ContentPack } from '../core/content.ts';
 import type { GameState } from '../core/state.ts';
 import { randomFor } from '../core/rng.ts';
 import { tidy } from '../core/income.ts';
+import { hotSellFactor } from './cropExtras.ts';
 
 const DAY_MS = 86_400_000;
 
@@ -81,7 +82,8 @@ export function sellPrice(content: ContentPack, state: GameState, itemId: string
   if (!item || item.sellPrice === null) return null;
   const amp = content.config.market.dailyPriceVariation;
   const factor = 1 + amp * (randomFor(state.seed, 'price', itemId, dayIndex(now)) * 2 - 1);
-  return Math.max(1, Math.round(item.sellPrice * factor));
+  // Bổ sung A6.5: today's hot crop sells for more.
+  return Math.max(1, Math.round(item.sellPrice * factor * hotSellFactor(content, state, itemId, now)));
 }
 
 export function addItem(state: GameState, itemId: string, qty: number): void {

@@ -5,6 +5,7 @@ import type { BugDef, ContentPack, CropDef } from '../core/content.ts';
 import type { GameState, Planting, SlotState } from '../core/state.ts';
 import { randomFor, stochasticRound } from '../core/rng.ts';
 import { floorOfSlot, slotBonus } from './modifiers.ts';
+import { cropNightGrowth } from './cropExtras.ts';
 
 /** In a regrow cycle the crop restarts from this stage (the "grown, no fruit" stage). */
 export const REGROW_FROM_STAGE = 2;
@@ -200,7 +201,8 @@ export function cropStatus(content: ContentPack, state: GameState, slot: SlotSta
     const f = floorOfSlot(state, slot);
     return f ? content.floors.get(f.floorId) : undefined;
   })();
-  const nightSpeed = floorDef?.nightSpeed ?? 0;
+  // Floor (Vườn Trăng) and crop (Hoa Trăng Non, A6.1) night bonuses add up.
+  const nightSpeed = (floorDef?.nightSpeed ?? 0) + cropNightGrowth(content, crop.id);
   const floorBoost = floorDef?.bugBoost;
   if (!boost && floorBoost) boost = (id) => floorBoost[id] ?? 1;
   // Real time already covers the cycle: ripe, no need to count the night bonus (it can only add).

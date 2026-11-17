@@ -480,6 +480,13 @@ export interface GoodDef {
   machine: string;
 }
 
+/** Bổ sung A6.4–A6.5: night growth of some crops, crop mastery stars, the daily hot crop. */
+export interface CropExtras {
+  nightGrowth: Record<string, number>;
+  mastery: Array<{ harvests: number; stat: PotStatName | null; value: number }>;
+  hot: { sellBonus: number; orderBonus: number };
+}
+
 export interface WorkshopRules {
   slotsStart: number;
   slotsMax: number;
@@ -518,6 +525,7 @@ export interface ContentPack {
   goods?: Map<string, GoodDef>;
   recipes?: Map<string, { machine: MachineDef; recipe: RecipeDef }>;
   workshopRules?: WorkshopRules;
+  cropExtras?: CropExtras;
   missions: MissionsConfig;
   materials: Map<string, MaterialDef>;
   events: EventDef[];
@@ -549,6 +557,7 @@ export interface RawContent {
   tutorials: unknown;
   birds?: unknown;
   workshop?: unknown;
+  cropExtras?: unknown;
 }
 
 export class ContentError extends Error {
@@ -564,7 +573,7 @@ type ReadJson = (relativePath: string) => Promise<unknown>;
 export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> {
   const manifest = (await readJson('manifest.json')) as {
     contentVersion: number;
-    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions' | 'materials' | 'events' | 'quests' | 'features' | 'tutorials', string> & Partial<Record<'birds' | 'workshop', string>>;
+    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions' | 'materials' | 'events' | 'quests' | 'features' | 'tutorials', string> & Partial<Record<'birds' | 'workshop' | 'cropExtras', string>>;
   };
   const raw: RawContent = {
     contentVersion: manifest.contentVersion,
@@ -585,6 +594,7 @@ export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> 
     tutorials: await readJson(manifest.files.tutorials),
     birds: manifest.files.birds ? await readJson(manifest.files.birds) : undefined,
     workshop: manifest.files.workshop ? await readJson(manifest.files.workshop) : undefined,
+    cropExtras: manifest.files.cropExtras ? await readJson(manifest.files.cropExtras) : undefined,
   };
   return buildContentPack(raw);
 }
@@ -910,6 +920,14 @@ export function buildContentPack(raw: RawContent): ContentPack {
     if (!workshopRules || !isNum(workshopRules.slotsStart) || !Array.isArray(workshopRules.stars) || workshopRules.stars.length !== 4) problems.push('workshop.rules: thiếu hoặc sai (stars cần 4 mốc cho sao 2–5)');
   }
 
+  let cropExtras: CropExtras | undefined;
+  if (isObj(raw.cropExtras)) {
+    cropExtras = raw.cropExtras as unknown as CropExtras;
+    for (const id of Object.keys(cropExtras.nightGrowth ?? {})) if (!crops.has(id)) problems.push(`crop-extras.nightGrowth: cây "${id}" không tồn tại`);
+    if (!Array.isArray(cropExtras.mastery) || cropExtras.mastery.some((m, i) => !isNum(m.harvests) || (i > 0 && m.harvests <= cropExtras!.mastery[i - 1]!.harvests))) problems.push('crop-extras.mastery: mốc thu hoạch phải tăng dần');
+    if (!isObj(cropExtras.hot) || !isNum(cropExtras.hot.sellBonus) || !isNum(cropExtras.hot.orderBonus)) problems.push('crop-extras.hot: cần sellBonus, orderBonus');
+  }
+
   if (problems.length > 0) throw new ContentError(problems);
   const handFloors = [...floors.values()].sort((a, b) => a.unlockLevel - b.unlockLevel);
   const income = new IncomeModel(config.income, [...crops.values()], handFloors, config.floorGen);
@@ -936,6 +954,7 @@ export function buildContentPack(raw: RawContent): ContentPack {
     goods,
     recipes,
     workshopRules,
+    cropExtras,
     potSets,
     missions,
     materials,

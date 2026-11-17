@@ -18,6 +18,7 @@
     "features": "features.json",
     "tutorials": "tutorials.json",
     "birds": "birds.json",
-    "workshop": "workshop.json"
+    "workshop": "workshop.json",
+    "cropExtras": "crop-extras.json"
   }
 }
