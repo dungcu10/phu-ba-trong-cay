@@ -68,6 +68,7 @@ export type GameEvent =
   | { type: 'planted'; slot: SlotRef; cropId: string; cost: number }
   | { type: 'watered'; slot: SlotRef; savedMs: number }
   | { type: 'bugCaught'; slot: SlotRef; itemId: string }
+  | { type: 'newBug'; itemId: string }
   | { type: 'harvested'; slot: SlotRef; itemId: string; qty: number; xp: number; cleared: boolean; mutation: string | null; doubled?: boolean }
   | { type: 'giftFound'; slot: SlotRef; gift: Gift }
   | { type: 'ordersArrived'; slots: number[] }
@@ -395,6 +396,7 @@ function plant(content: ContentPack, state: GameState, ref: SlotRef, cropId: str
     bonusMs: 0,
     wateredStages: [],
     caughtBugs: {},
+    bugLevel: state.player.level,
   };
   return { ok: true, events: [{ type: 'planted', slot: ref, cropId, cost: crop.seedPrice }] };
 }
@@ -421,9 +423,15 @@ function catchBug(content: ContentPack, state: GameState, ref: SlotRef, now: num
   if (!status.bug) return fail('no_bug');
   const bugId = status.bug.bug.id;
   slot.planting.caughtBugs[bugId] = (slot.planting.caughtBugs[bugId] ?? 0) + 1;
-  addItem(state, status.bug.bug.id, 1);
+  addItem(state, bugId, 1);
   state.stats.bugsCaught += 1;
-  return { ok: true, events: [{ type: 'bugCaught', slot: ref, itemId: status.bug.bug.id }] };
+  // Chỉ thị 10 § 3.2: Sổ Sâu Bọ — the first catch of a kind is a "Bọ mới!".
+  const book = state.collections.bugs;
+  const first = !book[bugId];
+  book[bugId] = { firstAt: book[bugId]?.firstAt ?? now, count: (book[bugId]?.count ?? 0) + 1 };
+  const events: GameEvent[] = [{ type: 'bugCaught', slot: ref, itemId: bugId }];
+  if (first) events.push({ type: 'newBug', itemId: bugId });
+  return { ok: true, events };
 }
 
 function harvest(content: ContentPack, state: GameState, ref: SlotRef, now: number): Result {

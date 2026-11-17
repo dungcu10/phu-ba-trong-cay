@@ -4,7 +4,7 @@ import type { ContentPack, FloorDef } from './content.ts';
 import { newSeed } from './rng.ts';
 import { emptyQuestState, type QuestState } from '../systems/quests.ts';
 
-export const SAVE_VERSION = 11;
+export const SAVE_VERSION = 12;
 
 export interface Planting {
   /** Unique per planting, used as a key for deterministic randomness. */
@@ -22,6 +22,11 @@ export interface Planting {
   wateredStages: number[];
   /** Bọ Mây caught in this cycle, per bug id. */
   caughtBugs: Record<string, number>;
+  /**
+   * Chỉ thị 10 (save 12): player level when planted. Its presence means the bugs of this planting are
+   * of several kinds (§ 3.2); plantings from older saves keep attracting only Bọ Rùa Mây.
+   */
+  bugLevel?: number;
 }
 
 export interface SlotState {
@@ -34,6 +39,53 @@ export interface FloorState {
   slots: SlotState[];
   /** Floor stars earned (0–3, REDESIGN_V2 2.1). */
   stars: number;
+  /** Chỉ thị 10 § 3.10 (save 12): decoration item ids in the floor's 2 decor slots (null = empty). */
+  decor: Array<string | null>;
+}
+
+/** Chỉ thị 10 § 3.3 (save 12): a bird that catches bugs. */
+export interface BirdState {
+  /** Instance id ("bird-3"). */
+  id: string;
+  species: string;
+  level: number;
+  /** Bugs caught in its whole life (drives its level). */
+  caught: number;
+  /** Fullness 0–100 at `fedAt`; it drains over time from there. */
+  food: number;
+  fedAt: number;
+  /** Floor index it perches on and which branch (0 or 1), or null while not placed. */
+  floor: number | null;
+  branch: number;
+  /** Rented birds fly away at this time; null = owned. */
+  rentUntil: number | null;
+  /** Game time up to which its catching has been simulated. */
+  simulatedTo: number;
+  /** Bugs caught on local day `day` (bird panel). */
+  today: { day: number; count: number };
+  /** Order slot index it is escorting (§ 3.6), with the time it comes back; null = at home. */
+  escort: { slot: number; until: number } | null;
+}
+
+/** Chỉ thị 10 § 3.5 (save 12): one machine of the Xưởng Bọ. */
+export interface MachineState {
+  stars: number;
+  /** Open queue slots (2–4). */
+  slots: number;
+  /** Jobs in order; each starts when the previous one ends. Finished jobs wait to be collected. */
+  queue: Array<{ recipe: string; endsAt: number }>;
+}
+
+/** Chỉ thị 10 § 3.7 (save 12): the Biển Mây map of the current day. */
+export interface SeaMapState {
+  /** Map number (a new map after one is cleared) and the local day it belongs to. */
+  day: number;
+  index: number;
+  /** Cells blown open (row-major 6×8 = 48 cells). */
+  open: number[];
+  /** Chest cells already opened. */
+  chests: number[];
+  cleared: boolean;
 }
 
 export interface MissionState {
@@ -161,6 +213,30 @@ export interface GameState {
   market: { day: number; buys: number };
   /** Phú Bà board (save 11): everyone's rank at the start of local day `day`, for the arrows. */
   ranks: { day: number; prev: Record<string, number> };
+  /** Chỉ thị 10 (save 12): bug-catching birds. */
+  birds: BirdState[];
+  /** Chỉ thị 10 (save 12): Xưởng Bọ machines by id (only unlocked ones are present). */
+  workshop: Record<string, MachineState>;
+  /** Chỉ thị 10 (save 12): Biển Mây map. */
+  seaMap: SeaMapState;
+  /** Chỉ thị 10 (save 12): Năng Lượng Gió (value at `at`), and the day the free daily 10 were given. */
+  energy: { value: number; at: number; dailyDay: number };
+  /** Chỉ thị 10 (save 12): fishing — the day the free bait was taken. */
+  fishing: { freeBaitDay: number };
+  /** Chỉ thị 10 (save 12): Sổ Sâu Bọ / Sổ Cá — first catch time and count per id, rewards claimed. */
+  collections: { bugs: Record<string, { firstAt: number; count: number }>; fish: Record<string, { firstAt: number; count: number }>; claimed: string[] };
+}
+
+/** Save 12 defaults for the chỉ thị 10 parts (new games and old saves alike). */
+export function emptyV12Parts(now: number): Pick<GameState, 'birds' | 'workshop' | 'seaMap' | 'energy' | 'fishing' | 'collections'> {
+  return {
+    birds: [],
+    workshop: {},
+    seaMap: { day: -1, index: 0, open: [], chests: [], cleared: false },
+    energy: { value: 30, at: now, dailyDay: -1 },
+    fishing: { freeBaitDay: -1 },
+    collections: { bugs: {}, fish: {}, claimed: [] },
+  };
 }
 
 /** Builds a floor with its starting pots (used for the first floor and every unlocked one). */
@@ -171,7 +247,7 @@ export function createFloorState(floorDef: FloorDef, pots: Record<string, PotIns
     pots[potInstanceId] = { potId: floorDef.startingPot, level: 1, source: floorIndex === 0 ? 'start' : 'floor', history: [] };
     slots.push({ potInstanceId, planting: null });
   }
-  return { floorId: floorDef.id, slots, stars: 0 };
+  return { floorId: floorDef.id, slots, stars: 0, decor: [null, null] };
 }
 
 /** A brand-new profile built entirely from content data. */
@@ -210,6 +286,7 @@ export function createNewGame(content: ContentPack, now: number, entropy = now):
     tutorials: [],
     market: { day: -1, buys: 0 },
     ranks: { day: -1, prev: {} },
+    ...emptyV12Parts(now),
   };
 }
 

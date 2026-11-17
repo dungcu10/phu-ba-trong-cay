@@ -9,7 +9,7 @@
 
 import { adoptQuestsForOldSave, emptyQuestState } from '../systems/quests.ts';
 import type { ContentPack } from '../core/content.ts';
-import { newNeighbors, type GameState, type Planting, type SlotState } from '../core/state.ts';
+import { emptyV12Parts, newNeighbors, type GameState, type Planting, type SlotState } from '../core/state.ts';
 import { SaveFormatError } from './serializer.ts';
 
 export type ReconcileMode = 'import' | 'local';
@@ -77,6 +77,7 @@ export function reconcile(input: GameState, content: ContentPack, mode: Reconcil
   reconcileFloors(state, content, c);
   reconcileStock(state);
   reconcileWorld(state, content, c);
+  reconcileV12(state, content, c);
 
   // nextId must stay above every planting id so new plantings never reuse random keys.
   for (const f of state.floors) for (const s of f.slots) if (s.planting) state.nextId = Math.max(state.nextId, s.planting.id + 1);
@@ -251,4 +252,78 @@ function reconcilePlanting(state: GameState, content: ContentPack, slot: SlotSta
     caught[bugId] = c.num(`số bọ đã bắt ở ${where}`, n, { min: 0, int: true, fallback: 0 });
   }
   p.caughtBugs = caught;
+}
+
+/**
+ * Save 12 (chỉ thị 10): birds, Xưởng Bọ, Biển Mây, energy, fishing, collections, floor decor.
+ * Missing parts get their defaults; unknown ids are dropped; numbers are clamped.
+ */
+function reconcileV12(state: GameState, content: ContentPack, c: Checker): void {
+  const d = emptyV12Parts(state.maxSeenAt || state.createdAt || 0);
+  const obj = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v);
+  for (const f of state.floors) {
+    const decor = Array.isArray(f.decor) ? f.decor : [];
+    f.decor = [0, 1].map((i) => {
+      const id = decor[i];
+      return typeof id === 'string' && content.items.has(id) ? id : null;
+    });
+  }
+  if (!Array.isArray(state.birds)) state.birds = d.birds;
+  const birdSpecies = content.birds;
+  state.birds = state.birds.filter((b) => obj(b) && typeof b.id === 'string' && (!birdSpecies || birdSpecies.has(b.species)));
+  for (const b of state.birds) {
+    b.level = c.num('cấp chim', b.level, { min: 1, max: 10, int: true, fallback: 1 });
+    b.caught = c.num('số bọ chim đã bắt', b.caught, { min: 0, int: true, fallback: 0 });
+    b.food = c.num('độ no của chim', b.food, { min: 0, max: 100, fallback: 0 });
+    b.fedAt = c.num('lúc cho chim ăn', b.fedAt, { min: 0, fallback: state.maxSeenAt });
+    b.simulatedTo = c.num('mốc chim', b.simulatedTo, { min: 0, fallback: state.maxSeenAt });
+    b.branch = c.num('cành đậu', b.branch, { min: 0, max: 1, int: true, fallback: 0 });
+    if (b.floor !== null && !(Number.isInteger(b.floor) && b.floor >= 0 && b.floor < state.floors.length)) b.floor = null;
+    if (b.rentUntil !== null && typeof b.rentUntil !== 'number') b.rentUntil = null;
+    if (!obj(b.today) || typeof b.today.day !== 'number' || typeof b.today.count !== 'number') b.today = { day: -1, count: 0 };
+    if (b.escort !== null && !(obj(b.escort) && typeof b.escort.slot === 'number' && typeof b.escort.until === 'number')) b.escort = null;
+  }
+  if (!obj(state.workshop)) state.workshop = d.workshop;
+  for (const [id, m] of Object.entries(state.workshop)) {
+    if ((content.machines && !content.machines.has(id)) || !obj(m)) {
+      delete state.workshop[id];
+      continue;
+    }
+    m.stars = c.num('sao máy', m.stars, { min: 1, max: 5, int: true, fallback: 1 });
+    m.slots = c.num('khe máy', m.slots, { min: 2, max: 4, int: true, fallback: 2 });
+    m.queue = (Array.isArray(m.queue) ? m.queue : []).filter((j) => obj(j) && typeof j.recipe === 'string' && typeof j.endsAt === 'number').slice(0, m.slots);
+  }
+  const sm = state.seaMap;
+  if (!obj(sm) || typeof sm.day !== 'number' || !Array.isArray(sm.open) || !Array.isArray(sm.chests)) state.seaMap = d.seaMap;
+  else {
+    sm.open = [...new Set(sm.open.filter((i) => Number.isInteger(i) && i >= 0 && i < 48))];
+    sm.chests = [...new Set(sm.chests.filter((i) => Number.isInteger(i) && i >= 0 && i < 48))];
+    sm.index = c.num('bản đồ Biển Mây', sm.index, { min: 0, int: true, fallback: 0 });
+    sm.cleared = sm.cleared === true;
+  }
+  if (!obj(state.energy)) state.energy = d.energy;
+  state.energy.value = c.num('Năng Lượng Gió', state.energy.value, { min: 0, max: 30 + 10, fallback: 30 });
+  state.energy.at = c.num('mốc Năng Lượng Gió', state.energy.at, { min: 0, fallback: state.maxSeenAt });
+  state.energy.dailyDay = c.num('ngày năng lượng', state.energy.dailyDay, { min: -1, int: true, fallback: -1 });
+  if (!obj(state.fishing) || typeof state.fishing.freeBaitDay !== 'number') state.fishing = d.fishing;
+  if (!obj(state.collections)) state.collections = d.collections;
+  const col = state.collections;
+  for (const k of ['bugs', 'fish'] as const) {
+    if (!obj(col[k])) col[k] = {};
+    for (const [id, e] of Object.entries(col[k])) {
+      if (!obj(e)) delete col[k][id];
+      else {
+        e.firstAt = c.num('sổ sưu tầm', e.firstAt, { min: 0, fallback: 0 });
+        e.count = c.num('sổ sưu tầm', e.count, { min: 0, int: true, fallback: 0 });
+      }
+    }
+  }
+  for (const id of Object.keys(col.bugs)) if (!content.bugs.has(id)) delete col.bugs[id];
+  if (!Array.isArray(col.claimed)) col.claimed = [];
+  col.claimed = col.claimed.filter((x) => typeof x === 'string');
+  // A save from before the Sổ Sâu Bọ: bugs already in the bag (or ever caught) count as seen.
+  for (const b of content.bugList) {
+    const have = (state.inventory[b.id] ?? 0) > 0;
+    if (have && !col.bugs[b.id]) col.bugs[b.id] = { firstAt: state.maxSeenAt, count: state.inventory[b.id] ?? 0 };
+  }
 }

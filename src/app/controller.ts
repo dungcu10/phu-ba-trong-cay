@@ -490,6 +490,12 @@ export class Controller implements PanelActions, PotShopActions, WorldActions, G
         fx.floatText(`+1 ${content.items.get(e.itemId)?.name.vi ?? ''}`, p.x, p.y - 20, hex(TOKENS.color.brand.peach));
         break;
       }
+      case 'newBug': {
+        // Chỉ thị 10 § 3.2: first catch of a kind goes into the Sổ Sâu Bọ.
+        this.sfx.play('upgrade');
+        this.toasts.show(`Bọ mới! ${content.items.get(e.itemId)?.name.vi ?? ''} đã vào Sổ Sâu Bọ`, 'level', 2400);
+        break;
+      }
       case 'harvested': {
         this.sfx.play('harvest');
         const p = at(e.slot);

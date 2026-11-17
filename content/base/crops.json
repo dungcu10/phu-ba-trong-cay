@@ -1,7 +1,9 @@
 [
   {
     "id": "base:crop.cotton-daisy",
-    "name": { "vi": "Cúc Bông Gòn" },
+    "name": {
+      "vi": "Cúc Bông Gòn"
+    },
     "family": "flower",
     "unlockLevel": 1,
     "seedPrice": 0,
@@ -12,12 +14,37 @@
     "sellPrice": 1,
     "xp": 2,
     "stages": 5,
-    "produce": { "id": "base:item.cotton-daisy", "name": { "vi": "Bông Cúc Bông Gòn" } },
-    "sprite": "crops/cotton-daisy"
+    "produce": {
+      "id": "base:item.cotton-daisy",
+      "name": {
+        "vi": "Bông Cúc Bông Gòn"
+      }
+    },
+    "sprite": "crops/cotton-daisy",
+    "bugs": [
+      {
+        "id": "base:bug.ladybird",
+        "weight": 50
+      },
+      {
+        "id": "base:bug.leaf-worm",
+        "weight": 12
+      },
+      {
+        "id": "base:bug.pink-moth",
+        "weight": 24
+      },
+      {
+        "id": "base:bug.star-firefly",
+        "weight": 7
+      }
+    ]
   },
   {
     "id": "base:crop.cherry-tomato",
-    "name": { "vi": "Cà Chua Bi Ngọt" },
+    "name": {
+      "vi": "Cà Chua Bi Ngọt"
+    },
     "family": "fruit",
     "unlockLevel": 2,
     "seedPrice": 6,
@@ -28,12 +55,37 @@
     "sellPrice": 7,
     "xp": 5,
     "stages": 5,
-    "produce": { "id": "base:item.cherry-tomato", "name": { "vi": "Cà Chua Bi" } },
-    "sprite": "crops/cherry-tomato"
+    "produce": {
+      "id": "base:item.cherry-tomato",
+      "name": {
+        "vi": "Cà Chua Bi"
+      }
+    },
+    "sprite": "crops/cherry-tomato",
+    "bugs": [
+      {
+        "id": "base:bug.ladybird",
+        "weight": 50
+      },
+      {
+        "id": "base:bug.leaf-worm",
+        "weight": 12
+      },
+      {
+        "id": "base:bug.jade-beetle",
+        "weight": 24
+      },
+      {
+        "id": "base:bug.star-firefly",
+        "weight": 7
+      }
+    ]
   },
   {
     "id": "base:crop.cloud-mint",
-    "name": { "vi": "Bạc Hà Mây" },
+    "name": {
+      "vi": "Bạc Hà Mây"
+    },
     "family": "herb",
     "unlockLevel": 3,
     "seedPrice": 12,
@@ -44,12 +96,37 @@
     "sellPrice": 7,
     "xp": 9,
     "stages": 5,
-    "produce": { "id": "base:item.cloud-mint", "name": { "vi": "Lá Bạc Hà Mây" } },
-    "sprite": "crops/cloud-mint"
+    "produce": {
+      "id": "base:item.cloud-mint",
+      "name": {
+        "vi": "Lá Bạc Hà Mây"
+      }
+    },
+    "sprite": "crops/cloud-mint",
+    "bugs": [
+      {
+        "id": "base:bug.leaf-worm",
+        "weight": 50
+      },
+      {
+        "id": "base:bug.ladybird",
+        "weight": 12
+      },
+      {
+        "id": "base:bug.dew-hopper",
+        "weight": 24
+      },
+      {
+        "id": "base:bug.star-firefly",
+        "weight": 7
+      }
+    ]
   },
   {
     "id": "base:crop.sky-carrot",
-    "name": { "vi": "Cà Rốt Mây" },
+    "name": {
+      "vi": "Cà Rốt Mây"
+    },
     "family": "herb",
     "unlockLevel": 4,
     "seedPrice": 20,
@@ -60,12 +137,41 @@
     "sellPrice": 12,
     "xp": 18,
     "stages": 5,
-    "produce": { "id": "base:item.sky-carrot", "name": { "vi": "Cà Rốt Mây" } },
-    "sprite": "crops/sky-carrot"
+    "produce": {
+      "id": "base:item.sky-carrot",
+      "name": {
+        "vi": "Cà Rốt Mây"
+      }
+    },
+    "sprite": "crops/sky-carrot",
+    "bugs": [
+      {
+        "id": "base:bug.leaf-worm",
+        "weight": 50
+      },
+      {
+        "id": "base:bug.ladybird",
+        "weight": 12
+      },
+      {
+        "id": "base:bug.dew-hopper",
+        "weight": 24
+      },
+      {
+        "id": "base:bug.gold-scarab",
+        "weight": 7
+      },
+      {
+        "id": "base:bug.star-firefly",
+        "weight": 7
+      }
+    ]
   },
   {
     "id": "base:crop.cloud-strawberry",
-    "name": { "vi": "Dâu Tây Mây" },
+    "name": {
+      "vi": "Dâu Tây Mây"
+    },
     "family": "fruit",
     "unlockLevel": 6,
     "seedPrice": 40,
@@ -76,12 +182,41 @@
     "sellPrice": 32,
     "xp": 25,
     "stages": 5,
-    "produce": { "id": "base:item.cloud-strawberry", "name": { "vi": "Dâu Tây Mây" } },
-    "sprite": "crops/cloud-strawberry"
+    "produce": {
+      "id": "base:item.cloud-strawberry",
+      "name": {
+        "vi": "Dâu Tây Mây"
+      }
+    },
+    "sprite": "crops/cloud-strawberry",
+    "bugs": [
+      {
+        "id": "base:bug.ladybird",
+        "weight": 50
+      },
+      {
+        "id": "base:bug.leaf-worm",
+        "weight": 12
+      },
+      {
+        "id": "base:bug.jade-beetle",
+        "weight": 24
+      },
+      {
+        "id": "base:bug.gold-scarab",
+        "weight": 7
+      },
+      {
+        "id": "base:bug.star-firefly",
+        "weight": 7
+      }
+    ]
   },
   {
     "id": "base:crop.golden-gerbera",
-    "name": { "vi": "Hoa Đồng Tiền Vàng" },
+    "name": {
+      "vi": "Hoa Đồng Tiền Vàng"
+    },
     "family": "flower",
     "unlockLevel": 9,
     "seedPrice": 120,
@@ -92,7 +227,38 @@
     "sellPrice": 70,
     "xp": 70,
     "stages": 5,
-    "produce": { "id": "base:item.golden-gerbera", "name": { "vi": "Hoa Đồng Tiền Vàng" } },
-    "sprite": "crops/golden-gerbera"
+    "produce": {
+      "id": "base:item.golden-gerbera",
+      "name": {
+        "vi": "Hoa Đồng Tiền Vàng"
+      }
+    },
+    "sprite": "crops/golden-gerbera",
+    "bugs": [
+      {
+        "id": "base:bug.ladybird",
+        "weight": 50
+      },
+      {
+        "id": "base:bug.leaf-worm",
+        "weight": 12
+      },
+      {
+        "id": "base:bug.pink-moth",
+        "weight": 24
+      },
+      {
+        "id": "base:bug.gold-scarab",
+        "weight": 7
+      },
+      {
+        "id": "base:bug.star-firefly",
+        "weight": 7
+      },
+      {
+        "id": "base:bug.jade-cicada",
+        "weight": 3
+      }
+    ]
   }
 ]

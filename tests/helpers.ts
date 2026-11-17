@@ -28,6 +28,7 @@ export async function readRaw(): Promise<RawContent> {
     events: await read(manifest.files.events!),
     quests: await read(manifest.files.quests!),
     features: await read(manifest.files.features!),
+    birds: manifest.files.birds ? await read(manifest.files.birds) : undefined,
     tutorials: await read(manifest.files.tutorials!),
   };
 }

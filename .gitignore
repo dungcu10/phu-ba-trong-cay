@@ -7,3 +7,5 @@ dist/
 __pycache__/
 tmp/
 tools/potgen/out/
+tools/art/weights/
+tools/art/out/

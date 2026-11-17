@@ -1,9 +1,92 @@
 [
   {
     "id": "base:bug.ladybird",
-    "name": { "vi": "Bọ Rùa Mây" },
+    "name": {
+      "vi": "Bọ Rùa Mây"
+    },
+    "rarity": "common",
+    "unlockLevel": 1,
+    "nightOnly": false,
+    "sprite": "bugs/ladybird",
+    "art": "bug/ladybird",
     "growSecondsPerBug": 1800,
-    "maxPerCycle": 4,
-    "sprite": "bugs/ladybird"
+    "maxPerCycle": 4
+  },
+  {
+    "id": "base:bug.leaf-worm",
+    "name": {
+      "vi": "Sâu Lá Non"
+    },
+    "rarity": "common",
+    "unlockLevel": 2,
+    "nightOnly": false,
+    "sprite": "bug/leaf-worm",
+    "art": "bug/leaf-worm"
+  },
+  {
+    "id": "base:bug.pink-moth",
+    "name": {
+      "vi": "Bướm Phấn Hồng"
+    },
+    "rarity": "good",
+    "unlockLevel": 3,
+    "nightOnly": false,
+    "sprite": "bug/pink-moth",
+    "art": "bug/pink-moth"
+  },
+  {
+    "id": "base:bug.jade-beetle",
+    "name": {
+      "vi": "Cánh Cam Ngọc"
+    },
+    "rarity": "good",
+    "unlockLevel": 7,
+    "nightOnly": false,
+    "sprite": "bug/jade-beetle",
+    "art": "bug/jade-beetle"
+  },
+  {
+    "id": "base:bug.dew-hopper",
+    "name": {
+      "vi": "Châu Chấu Sương"
+    },
+    "rarity": "good",
+    "unlockLevel": 5,
+    "nightOnly": false,
+    "sprite": "bug/dew-hopper",
+    "art": "bug/dew-hopper"
+  },
+  {
+    "id": "base:bug.gold-scarab",
+    "name": {
+      "vi": "Bọ Hung Vàng"
+    },
+    "rarity": "rare",
+    "unlockLevel": 9,
+    "nightOnly": false,
+    "sprite": "bug/gold-scarab",
+    "art": "bug/gold-scarab"
+  },
+  {
+    "id": "base:bug.star-firefly",
+    "name": {
+      "vi": "Đom Đóm Sao"
+    },
+    "rarity": "rare",
+    "unlockLevel": 12,
+    "nightOnly": true,
+    "sprite": "bug/star-firefly",
+    "art": "bug/star-firefly"
+  },
+  {
+    "id": "base:bug.jade-cicada",
+    "name": {
+      "vi": "Ve Sầu Ngọc"
+    },
+    "rarity": "epic",
+    "unlockLevel": 15,
+    "nightOnly": false,
+    "sprite": "bug/jade-cicada",
+    "art": "bug/jade-cicada"
   }
 ]

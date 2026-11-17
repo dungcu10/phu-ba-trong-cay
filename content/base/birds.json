@@ -1,0 +1,62 @@
+{
+  "species": [
+    {
+      "id": "base:bird.sky-sparrow",
+      "name": { "vi": "Sẻ Mây" },
+      "sprite": "bird/sky-sparrow",
+      "unlockLevel": 3,
+      "families": ["flower"],
+      "nightOnly": false,
+      "rent": { "days": 3, "coins": 300 },
+      "gems": 15,
+      "escort": { "coins": 0.05, "xp": 0 }
+    },
+    {
+      "id": "base:bird.leaf-robin",
+      "name": { "vi": "Chích Chòe Lá" },
+      "sprite": "bird/leaf-robin",
+      "unlockLevel": 5,
+      "families": ["herb"],
+      "nightOnly": false,
+      "rent": { "days": 3, "coins": 600 },
+      "gems": 25,
+      "escort": { "coins": 0, "xp": 0.1 }
+    },
+    {
+      "id": "base:bird.kingfisher",
+      "name": { "vi": "Bói Cá Ngọc" },
+      "sprite": "bird/kingfisher",
+      "unlockLevel": 7,
+      "families": ["fruit"],
+      "nightOnly": false,
+      "rent": { "days": 3, "coins": 900 },
+      "gems": 35,
+      "escort": { "coins": 0.1, "xp": 0 }
+    },
+    {
+      "id": "base:bird.night-owl",
+      "name": { "vi": "Cú Mèo Đêm" },
+      "sprite": "bird/night-owl",
+      "unlockLevel": 12,
+      "families": [],
+      "nightOnly": true,
+      "rent": null,
+      "gems": 60,
+      "escort": { "coins": 0, "xp": 0.2 }
+    }
+  ],
+  "rules": {
+    "secondBranchLevel": 14,
+    "foodMax": 100,
+    "foodPerHour": 12.5,
+    "millet": { "item": "base:mat.cloud-millet", "coins": 20, "food": 50 },
+    "produceFood": 35,
+    "cycleMinutes": { "level1": 6, "level10": 3 },
+    "lastsLongerPerLevel": 0.04,
+    "levelAt": [0, 15, 40, 80, 140, 220, 320, 450, 610, 800],
+    "betterBugFromLevel": 5,
+    "betterBugChance": 0.05,
+    "rentWarnMinutes": 60,
+    "maxRarity": { "default": "good", "nightOnly": "rare" }
+  }
+}

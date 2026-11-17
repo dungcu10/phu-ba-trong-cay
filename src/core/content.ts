@@ -10,6 +10,8 @@ import { IncomeModel, type IncomeConfig } from './income.ts';
 import { validateQuests, type FeatureDef, type QuestDef, type QuestPack, type TrackDef, type TutorialDef } from './questdefs.ts';
 
 export interface GameConfig {
+  /** Chỉ thị 10: night hours in local time (from ≥ from, or < to). */
+  night?: { from: number; to: number };
   startingCoins: number;
   startingLevel: number;
   /** Rương Mây capacity before any upgrade. */
@@ -114,7 +116,8 @@ export interface PotLevelRule {
   base: Partial<Record<PotStatName, number>>;
   perLevel: number;
   coins: { base: number; growth: number };
-  items: Record<string, { base: number; growth: number }>;
+  /** `from`: first level that needs this item (chỉ thị 10 § 3.4); omitted = from level 2. */
+  items: Record<string, { base: number; growth: number; from?: number }>;
 }
 
 /** Where a pot line comes from (POT_SYSTEM 1). */
@@ -233,7 +236,11 @@ export function expandPotLevels(rule: PotLevelRule): PotLevelDef[] {
         ? null
         : {
             coins: Math.round(rule.coins.base * Math.pow(rule.coins.growth, lv - 2)),
-            items: Object.fromEntries(Object.entries(rule.items).map(([id, c]) => [id, Math.round(c.base * Math.pow(c.growth, lv - 2))])),
+            items: Object.fromEntries(
+              Object.entries(rule.items)
+                .filter(([, c]) => lv >= (c.from ?? 2))
+                .map(([id, c]) => [id, Math.max(1, Math.round(c.base * Math.pow(c.growth, lv - Math.max(2, c.from ?? 2))))]),
+            ),
           };
     levels.push({ level: lv, stats, upgradeCost });
   }
@@ -255,16 +262,28 @@ export interface CropDef {
   stages: number;
   produce: { id: string; name: LocalizedText };
   sprite: string;
+  /** Chỉ thị 10 § 3.2: kinds of bug that land on this crop, with weights. */
+  bugs: Array<{ id: string; weight: number }>;
 }
+
+export type BugRarity = 'common' | 'good' | 'rare' | 'epic';
 
 export interface BugDef {
   id: string;
   name: LocalizedText;
-  /** On average one bug per this many seconds of (unmodified) growing time. */
-  growSecondsPerBug: number;
-  /** Most bugs one growth cycle can attract. */
-  maxPerCycle: number;
+  /**
+   * Count rule, set on the first bug only (chỉ thị 10 § 3.2: the number of bugs per cycle is unchanged;
+   * only their kind is now chosen): on average one bug per this many seconds of growing time.
+   */
+  growSecondsPerBug?: number;
+  /** Most bugs one growth cycle can attract (first bug only). */
+  maxPerCycle?: number;
   sprite: string;
+  /** Chỉ thị 10: rarity, level it starts to appear, night only (Đom Đóm Sao), world10 art frame. */
+  rarity: BugRarity;
+  unlockLevel: number;
+  nightOnly: boolean;
+  art?: string;
 }
 
 export interface OrdersConfig {
@@ -385,6 +404,45 @@ export interface ItemDef {
   baseItem?: string;
 }
 
+/** Chỉ thị 10 § 3.3: a bird species. */
+export interface BirdDef {
+  id: string;
+  name: LocalizedText;
+  sprite: string;
+  unlockLevel: number;
+  /** Crop families whose bugs it catches; empty = every family. */
+  families: string[];
+  nightOnly: boolean;
+  rent: { days: number; coins: number } | null;
+  gems: number;
+  escort: { coins: number; xp: number };
+}
+
+/** Chỉ thị 10 § 3.3: rules shared by every bird. */
+export interface BirdRules {
+  secondBranchLevel: number;
+  foodMax: number;
+  foodPerHour: number;
+  millet: { item: string; coins: number; food: number };
+  produceFood: number;
+  cycleMinutes: { level1: number; level10: number };
+  lastsLongerPerLevel: number;
+  levelAt: number[];
+  betterBugFromLevel: number;
+  betterBugChance: number;
+  rentWarnMinutes: number;
+  maxRarity: { default: BugRarity; nightOnly: BugRarity };
+}
+
+/** Chỉ thị 10 § 3.5: a Xưởng Bọ machine. */
+export interface MachineDef {
+  id: string;
+  name: LocalizedText;
+  worker: string;
+  unlockLevel: number;
+  recipes: Array<{ id: string; inputs: Record<string, number>; anyOf?: { family: string; qty: number }[]; output: string; minutes: number }>;
+}
+
 export interface ContentPack {
   contentVersion: number;
   config: GameConfig;
@@ -405,6 +463,10 @@ export interface ContentPack {
   bots: Map<string, BotDef>;
   bugList: BugDef[];
   potSets: Map<string, PotSetDef>;
+  /** Chỉ thị 10: bird species and rules (§ 3.3), Xưởng Bọ machines (§ 3.5). */
+  birds?: Map<string, BirdDef>;
+  birdRules?: BirdRules;
+  machines?: Map<string, MachineDef>;
   missions: MissionsConfig;
   materials: Map<string, MaterialDef>;
   events: EventDef[];
@@ -434,6 +496,7 @@ export interface RawContent {
   quests: unknown;
   features: unknown;
   tutorials: unknown;
+  birds?: unknown;
 }
 
 export class ContentError extends Error {
@@ -449,7 +512,7 @@ type ReadJson = (relativePath: string) => Promise<unknown>;
 export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> {
   const manifest = (await readJson('manifest.json')) as {
     contentVersion: number;
-    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions' | 'materials' | 'events' | 'quests' | 'features' | 'tutorials', string>;
+    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions' | 'materials' | 'events' | 'quests' | 'features' | 'tutorials', string> & Partial<Record<'birds', string>>;
   };
   const raw: RawContent = {
     contentVersion: manifest.contentVersion,
@@ -468,6 +531,7 @@ export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> 
     quests: await readJson(manifest.files.quests),
     features: await readJson(manifest.files.features),
     tutorials: await readJson(manifest.files.tutorials),
+    birds: manifest.files.birds ? await readJson(manifest.files.birds) : undefined,
   };
   return buildContentPack(raw);
 }
@@ -563,9 +627,11 @@ export function buildContentPack(raw: RawContent): ContentPack {
   const items = new Map<string, ItemDef>();
   const bugs = new Map<string, BugDef>();
   asArray('bugs', raw.bugs, problems).forEach((b, i) => {
-    if (!checkFields(`bugs[${i}]`, b, ['growSecondsPerBug', 'maxPerCycle'], ['id', 'sprite'], problems)) return;
+    if (!checkFields(`bugs[${i}]`, b, i === 0 ? ['growSecondsPerBug', 'maxPerCycle', 'unlockLevel'] : ['unlockLevel'], ['id', 'sprite', 'rarity'], problems)) return;
     const bug = b as unknown as BugDef;
-    if (bug.growSecondsPerBug <= 0) problems.push(`bugs[${i}].growSecondsPerBug: phải > 0`);
+    if (i === 0 && !(bug.growSecondsPerBug! > 0)) problems.push(`bugs[${i}].growSecondsPerBug: phải > 0`);
+    if (!['common', 'good', 'rare', 'epic'].includes(bug.rarity)) problems.push(`bugs[${i}].rarity: không hợp lệ`);
+    bug.nightOnly = bug.nightOnly === true;
     addUnique(bugs, bug, `bugs[${i}]`, problems);
     addUnique(items, { id: bug.id, name: bug.name, kind: 'bug', sellPrice: null, countsTowardStorage: false }, `bugs[${i}]`, problems);
   });
@@ -588,6 +654,19 @@ export function buildContentPack(raw: RawContent): ContentPack {
     addUnique(crops, crop, where, problems);
     addUnique(items, { id: crop.produce.id, name: crop.produce.name, kind: 'produce', sellPrice: crop.sellPrice, countsTowardStorage: true }, `${where}.produce`, problems);
   });
+  // Chỉ thị 10 § 3.2: every crop names its bugs; every id exists; each has at least one common bug.
+  for (const crop of crops.values()) {
+    const where = `crop ${crop.id}.bugs`;
+    if (!Array.isArray(crop.bugs) || crop.bugs.length === 0) {
+      problems.push(`${where}: thiếu danh sách bọ`);
+      continue;
+    }
+    for (const b of crop.bugs) {
+      if (!bugs.has(b.id)) problems.push(`${where}: không có bọ ${b.id}`);
+      if (!(b.weight > 0)) problems.push(`${where}: trọng số của ${b.id} phải > 0`);
+    }
+    if (!crop.bugs.some((b) => bugs.get(b.id)?.rarity === 'common')) problems.push(`${where}: cần ít nhất 1 loại bọ Thường`);
+  }
 
   const materials = new Map<string, MaterialDef>();
   asArray('materials', raw.materials, problems).forEach((m, i) => {
@@ -720,6 +799,23 @@ export function buildContentPack(raw: RawContent): ContentPack {
       }),
     );
 
+  // Chỉ thị 10 § 3.3: birds.
+  let birds: Map<string, BirdDef> | undefined;
+  let birdRules: BirdRules | undefined;
+  if (isObj(raw.birds)) {
+    birds = new Map();
+    const rb = raw.birds as { species?: unknown; rules?: BirdRules };
+    asArray('birds.species', rb.species, problems).forEach((b, i) => {
+      if (!checkFields(`birds.species[${i}]`, b, ['unlockLevel', 'gems'], ['id', 'sprite'], problems)) return;
+      const def = b as unknown as BirdDef;
+      for (const f of def.families ?? []) if (![...crops.values()].some((c) => c.family === f)) problems.push(`birds.species[${i}]: hệ "${f}" không có cây nào`);
+      addUnique(birds!, def, `birds.species[${i}]`, problems);
+    });
+    birdRules = rb.rules;
+    if (!birdRules || !isNum(birdRules.foodPerHour) || !Array.isArray(birdRules.levelAt) || birdRules.levelAt.length !== 10) problems.push('birds.rules: thiếu hoặc sai (levelAt cần 10 mốc)');
+    else if (!materials.has(birdRules.millet.item)) problems.push(`birds.rules.millet.item: "${birdRules.millet.item}" không tồn tại`);
+  }
+
   if (problems.length > 0) throw new ContentError(problems);
   const handFloors = [...floors.values()].sort((a, b) => a.unlockLevel - b.unlockLevel);
   const income = new IncomeModel(config.income, [...crops.values()], handFloors, config.floorGen);
@@ -740,6 +836,8 @@ export function buildContentPack(raw: RawContent): ContentPack {
     neighbors,
     bots,
     bugList: [...bugs.values()],
+    birds,
+    birdRules,
     potSets,
     missions,
     materials,
