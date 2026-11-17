@@ -58,7 +58,7 @@ test('lên cấp: XP vượt ngưỡng thì tăng cấp, cộng thưởng xu, gi
   const r = dispatch(content, s, { type: 'harvest', floor: 0, slot: 0 }, T0 + 2 * MIN);
   assert.ok(r.ok && r.events.some((e) => e.type === 'levelUp' && e.level === 2));
   assert.equal(s.player.level, 2);
-  assert.equal(s.player.xp, 1);
+  assert.equal(s.player.xp, content.crops.get(DAISY)!.xp - 1);
   assert.equal(s.player.coins, coins - content.crops.get(DAISY)!.seedPrice + levelUpReward(content, 2).coins);
 });
 

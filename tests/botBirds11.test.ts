@@ -50,6 +50,14 @@ test('chim BOT có bắt bọ (phần chim trong tổng bọ của BOT)', () => 
   assert.ok(birdCaught > 0);
 });
 
+test('BOT chỉ thuê loài chim hợp họ cây trong vườn: chim nào cũng bắt được bọ', () => {
+  const s = newGame(content, { level: 20 }, 42);
+  simulateNeighbors(content, s, T0 + 7 * DAY);
+  for (const [id, b] of Object.entries(s.neighbors)) {
+    for (const bird of b.birds) assert.ok(bird.caught > 0, `${id}: ${bird.species} bắt 0 bọ`);
+  }
+});
+
 test('tất định: mô phỏng liên tục hay mở lại sau 7 ngày cho cùng chim và bọ của BOT', () => {
   const once = newGame(content, { level: 20 }, 11);
   const steps = newGame(content, { level: 20 }, 11);

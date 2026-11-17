@@ -53,7 +53,7 @@ function session(content: ContentPack, state: GameState, bot: BotDef, s: BotStat
   }
 
   // Chỉ thị 11 D1: an active neighbour looks after its birds (same rules as the player).
-  botKeepBirds(content, bot, s, at);
+  botKeepBirds(content, state, bot, s, at);
 
   // Score each option from personality and the current world.
   const options: Array<{ kind: string; score: number; run: () => string }> = [];
