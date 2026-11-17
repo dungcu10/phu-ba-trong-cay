@@ -17,6 +17,7 @@ const FIXTURES = [
   { file: 'save-v4-d7c9ded.json', version: 4, note: 'bản thử d7c9ded — đời save của chủ dự án' },
   { file: 'save-v7-27159a0.json', version: 7, note: 'bản 27159a0' },
   { file: 'save-v8-e17dd05.json', version: 8, note: 'bản thử e17dd05 (Chỉ thị 04)' },
+  { file: 'save-v11-c48ac3c.json', version: 11, note: 'nhánh cto-07 c48ac3c (Chợ Mây) — trước chỉ thị 10' },
 ];
 
 for (const fx of FIXTURES) {
@@ -92,4 +93,22 @@ test('save đời 9 của bản thử nháp 9ef65c4 (chưa có ngân sách quà)
   assert.deepEqual(r.state.player, old.data.player);
   assert.deepEqual(r.state.budget, { day: -1, giftGems: 0 });
   assert.deepEqual(r.state.upgrades, { storage: 0 });
+});
+
+test('save 11 → 12 (chỉ thị 10): mọi phần mới có giá trị mặc định, Bọ Rùa vào Sổ Sâu Bọ', async () => {
+  const raw = await readFile(join(import.meta.dirname, 'fixtures', 'save-v11-c48ac3c.json'), 'utf8');
+  const store = new MemoryStore();
+  await store.put('slot-a', raw);
+  const r = await new SaveManager(store, content).load();
+  assert.equal(r.kind, 'loaded');
+  if (r.kind !== 'loaded') return;
+  const s = r.state;
+  assert.deepEqual(s.birds, []);
+  assert.deepEqual(s.workshop, {});
+  assert.equal(s.seaMap.open.length, 0);
+  assert.equal(s.energy.value, 30);
+  assert.equal(s.fishing.freeBaitDay, -1);
+  for (const f of s.floors) assert.deepEqual(f.decor, [null, null]);
+  assert.equal(s.inventory['base:bug.ladybird'], 7, 'giữ Bọ Rùa');
+  assert.ok(s.collections.bugs['base:bug.ladybird'], 'Bọ Rùa đã có trong Sổ Sâu Bọ');
 });

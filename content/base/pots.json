@@ -66,6 +66,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.pink-moth",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -80,25 +98,29 @@
           "base:mat.cloud-clay": 6
         },
         "20": {
-          "base:mat.cloud-clay": 8
+          "base:mat.cloud-clay": 8,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 10
         },
         "30": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 15
         },
         "40": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 22
         },
         "50": {
-          "base:mat.cloud-clay": 30
+          "base:mat.cloud-clay": 30,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -306,6 +328,11 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.35
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
         }
       }
     },
@@ -410,6 +437,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.jade-beetle",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -425,25 +470,29 @@
           "base:mat.merit-seal": 3
         },
         "20": {
-          "base:mat.merit-seal": 3
+          "base:mat.merit-seal": 3,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.merit-seal": 4
         },
         "30": {
-          "base:mat.merit-seal": 4
+          "base:mat.merit-seal": 4,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.merit-seal": 5
         },
         "40": {
-          "base:mat.merit-seal": 5
+          "base:mat.merit-seal": 5,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.merit-seal": 6
         },
         "50": {
-          "base:mat.merit-seal": 8
+          "base:mat.merit-seal": 8,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -692,6 +741,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.pink-moth",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.star-firefly",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -707,25 +774,29 @@
           "base:mat.moon-seed": 6
         },
         "20": {
-          "base:mat.moon-seed": 8
+          "base:mat.moon-seed": 8,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.moon-seed": 10
         },
         "30": {
-          "base:mat.moon-seed": 12
+          "base:mat.moon-seed": 12,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.moon-seed": 14
         },
         "40": {
-          "base:mat.moon-seed": 16
+          "base:mat.moon-seed": 16,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.moon-seed": 18
         },
         "50": {
-          "base:mat.moon-seed": 24
+          "base:mat.moon-seed": 24,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -932,6 +1003,16 @@
         "base:bug.ladybird": {
           "base": 4,
           "growth": 1.35
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.dew-hopper": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
         }
       }
     },
@@ -964,6 +1045,16 @@
         "base:bug.ladybird": {
           "base": 6,
           "growth": 1.35
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.dew-hopper": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
         }
       }
     },
@@ -996,6 +1087,16 @@
         "base:bug.ladybird": {
           "base": 8,
           "growth": 1.35
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.jade-beetle": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
         }
       }
     },
@@ -1032,6 +1133,21 @@
         "base:bug.ladybird": {
           "base": 4,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.pink-moth": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.star-firefly": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -1068,6 +1184,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.pink-moth": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.gold-scarab": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -1105,6 +1236,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.jade-beetle": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.star-firefly": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -1142,6 +1288,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.dew-hopper": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.gold-scarab": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -1179,6 +1340,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.pink-moth": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.star-firefly": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -1216,6 +1392,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.jade-beetle": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.gold-scarab": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -1253,6 +1444,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.dew-hopper": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.star-firefly": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -1290,6 +1496,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.pink-moth": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.gold-scarab": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -1327,6 +1548,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.jade-beetle": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.star-firefly": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -1364,6 +1600,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.dew-hopper": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.gold-scarab": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -1401,6 +1652,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.pink-moth": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.star-firefly": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -1438,6 +1704,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.jade-beetle": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.gold-scarab": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -1475,6 +1756,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.dew-hopper": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.star-firefly": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -1512,6 +1808,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.pink-moth": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.gold-scarab": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -1549,6 +1860,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.jade-beetle": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.star-firefly": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -1586,6 +1912,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.dew-hopper": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.gold-scarab": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -1623,6 +1964,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.pink-moth": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.star-firefly": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -1660,6 +2016,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.jade-beetle": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.gold-scarab": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -1697,6 +2068,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.dew-hopper": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.star-firefly": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -1734,6 +2120,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.pink-moth": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.gold-scarab": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -1771,6 +2172,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.jade-beetle": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.star-firefly": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -1808,6 +2224,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.dew-hopper": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.gold-scarab": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -1845,6 +2276,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.pink-moth": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.star-firefly": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -1882,6 +2328,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.jade-beetle": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.gold-scarab": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -1919,6 +2380,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.dew-hopper": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.star-firefly": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -1956,6 +2432,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.pink-moth": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.gold-scarab": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -1993,6 +2484,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.jade-beetle": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.star-firefly": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -2030,6 +2536,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.dew-hopper": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.gold-scarab": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -2067,6 +2588,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.pink-moth": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.star-firefly": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -2104,6 +2640,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.jade-beetle": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.gold-scarab": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -2141,6 +2692,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.dew-hopper": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.star-firefly": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -2178,6 +2744,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.pink-moth": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.gold-scarab": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -2215,6 +2796,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.jade-beetle": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.star-firefly": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -2252,6 +2848,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.dew-hopper": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.gold-scarab": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -2289,6 +2900,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.pink-moth": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.star-firefly": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -2326,6 +2952,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.jade-beetle": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.gold-scarab": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -2363,6 +3004,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.dew-hopper": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.star-firefly": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -2400,6 +3056,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.pink-moth": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.gold-scarab": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -2437,6 +3108,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.jade-beetle": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.star-firefly": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -2474,6 +3160,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.dew-hopper": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.gold-scarab": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -2511,6 +3212,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.pink-moth": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.star-firefly": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -2548,6 +3264,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.jade-beetle": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.gold-scarab": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -2585,6 +3316,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.dew-hopper": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.star-firefly": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -2622,6 +3368,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.pink-moth": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.gold-scarab": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -2659,6 +3420,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.jade-beetle": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.star-firefly": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -2696,6 +3472,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.dew-hopper": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.gold-scarab": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -2733,6 +3524,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.pink-moth": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.star-firefly": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -2770,6 +3576,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.jade-beetle": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.gold-scarab": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -2807,6 +3628,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.dew-hopper": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.star-firefly": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -2844,6 +3680,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.pink-moth": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.gold-scarab": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -2881,6 +3732,21 @@
         "base:bug.ladybird": {
           "base": 3,
           "growth": 1.08
+        },
+        "base:bug.leaf-worm": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 5
+        },
+        "base:bug.jade-beetle": {
+          "base": 1,
+          "growth": 1.05,
+          "from": 10
+        },
+        "base:bug.star-firefly": {
+          "base": 1,
+          "growth": 1.04,
+          "from": 25
         }
       }
     },
@@ -2943,6 +3809,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.pink-moth",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -2956,25 +3840,29 @@
           "base:mat.cloud-clay": 6
         },
         "20": {
-          "base:mat.cloud-clay": 8
+          "base:mat.cloud-clay": 8,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 10
         },
         "30": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 15
         },
         "40": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 22
         },
         "50": {
-          "base:mat.cloud-clay": 30
+          "base:mat.cloud-clay": 30,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -3096,6 +3984,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.jade-beetle",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.star-firefly",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -3109,25 +4015,29 @@
           "base:mat.cloud-clay": 6
         },
         "20": {
-          "base:mat.cloud-clay": 8
+          "base:mat.cloud-clay": 8,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 10
         },
         "30": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 15
         },
         "40": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 22
         },
         "50": {
-          "base:mat.cloud-clay": 30
+          "base:mat.cloud-clay": 30,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -3249,6 +4159,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.dew-hopper",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -3262,25 +4190,29 @@
           "base:mat.cloud-clay": 6
         },
         "20": {
-          "base:mat.cloud-clay": 8
+          "base:mat.cloud-clay": 8,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 10
         },
         "30": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 15
         },
         "40": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 22
         },
         "50": {
-          "base:mat.cloud-clay": 30
+          "base:mat.cloud-clay": 30,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -3402,6 +4334,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.pink-moth",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.star-firefly",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -3415,25 +4365,29 @@
           "base:mat.cloud-clay": 6
         },
         "20": {
-          "base:mat.cloud-clay": 8
+          "base:mat.cloud-clay": 8,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 10
         },
         "30": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 15
         },
         "40": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 22
         },
         "50": {
-          "base:mat.cloud-clay": 30
+          "base:mat.cloud-clay": 30,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -3555,6 +4509,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.jade-beetle",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -3568,25 +4540,29 @@
           "base:mat.cloud-clay": 6
         },
         "20": {
-          "base:mat.cloud-clay": 8
+          "base:mat.cloud-clay": 8,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 10
         },
         "30": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 15
         },
         "40": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 22
         },
         "50": {
-          "base:mat.cloud-clay": 30
+          "base:mat.cloud-clay": 30,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -3708,6 +4684,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.dew-hopper",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.star-firefly",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -3721,25 +4715,29 @@
           "base:mat.cloud-clay": 6
         },
         "20": {
-          "base:mat.cloud-clay": 8
+          "base:mat.cloud-clay": 8,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 10
         },
         "30": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 15
         },
         "40": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 22
         },
         "50": {
-          "base:mat.cloud-clay": 30
+          "base:mat.cloud-clay": 30,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -3861,6 +4859,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.pink-moth",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -3874,25 +4890,29 @@
           "base:mat.cloud-clay": 6
         },
         "20": {
-          "base:mat.cloud-clay": 8
+          "base:mat.cloud-clay": 8,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 10
         },
         "30": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 15
         },
         "40": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 22
         },
         "50": {
-          "base:mat.cloud-clay": 30
+          "base:mat.cloud-clay": 30,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -4014,6 +5034,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.jade-beetle",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.star-firefly",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -4027,25 +5065,29 @@
           "base:mat.cloud-clay": 6
         },
         "20": {
-          "base:mat.cloud-clay": 8
+          "base:mat.cloud-clay": 8,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 10
         },
         "30": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 15
         },
         "40": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 22
         },
         "50": {
-          "base:mat.cloud-clay": 30
+          "base:mat.cloud-clay": 30,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -4167,6 +5209,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.dew-hopper",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -4180,25 +5240,29 @@
           "base:mat.cloud-clay": 6
         },
         "20": {
-          "base:mat.cloud-clay": 8
+          "base:mat.cloud-clay": 8,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 10
         },
         "30": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 15
         },
         "40": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 22
         },
         "50": {
-          "base:mat.cloud-clay": 30
+          "base:mat.cloud-clay": 30,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -4320,6 +5384,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.pink-moth",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.star-firefly",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -4333,25 +5415,29 @@
           "base:mat.cloud-clay": 6
         },
         "20": {
-          "base:mat.cloud-clay": 8
+          "base:mat.cloud-clay": 8,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 10
         },
         "30": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 15
         },
         "40": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 22
         },
         "50": {
-          "base:mat.cloud-clay": 30
+          "base:mat.cloud-clay": 30,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -4473,6 +5559,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.jade-beetle",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -4486,25 +5590,29 @@
           "base:mat.cloud-clay": 6
         },
         "20": {
-          "base:mat.cloud-clay": 8
+          "base:mat.cloud-clay": 8,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 10
         },
         "30": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 15
         },
         "40": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 22
         },
         "50": {
-          "base:mat.cloud-clay": 30
+          "base:mat.cloud-clay": 30,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -4627,6 +5735,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.dew-hopper",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.star-firefly",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -4640,25 +5766,29 @@
           "base:mat.cloud-clay": 6
         },
         "20": {
-          "base:mat.cloud-clay": 8
+          "base:mat.cloud-clay": 8,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 10
         },
         "30": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 15
         },
         "40": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 22
         },
         "50": {
-          "base:mat.cloud-clay": 30
+          "base:mat.cloud-clay": 30,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -4781,6 +5911,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.pink-moth",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -4794,25 +5942,29 @@
           "base:mat.cloud-clay": 6
         },
         "20": {
-          "base:mat.cloud-clay": 8
+          "base:mat.cloud-clay": 8,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 10
         },
         "30": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 15
         },
         "40": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 22
         },
         "50": {
-          "base:mat.cloud-clay": 30
+          "base:mat.cloud-clay": 30,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -4935,6 +6087,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.jade-beetle",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.star-firefly",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -4948,25 +6118,29 @@
           "base:mat.cloud-clay": 6
         },
         "20": {
-          "base:mat.cloud-clay": 8
+          "base:mat.cloud-clay": 8,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 10
         },
         "30": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 15
         },
         "40": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 22
         },
         "50": {
-          "base:mat.cloud-clay": 30
+          "base:mat.cloud-clay": 30,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -5089,6 +6263,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.dew-hopper",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -5102,25 +6294,29 @@
           "base:mat.cloud-clay": 6
         },
         "20": {
-          "base:mat.cloud-clay": 8
+          "base:mat.cloud-clay": 8,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 10
         },
         "30": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 15
         },
         "40": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 22
         },
         "50": {
-          "base:mat.cloud-clay": 30
+          "base:mat.cloud-clay": 30,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -5243,6 +6439,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.pink-moth",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.star-firefly",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -5256,25 +6470,29 @@
           "base:mat.cloud-clay": 9
         },
         "20": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 15
         },
         "30": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 23
         },
         "40": {
-          "base:mat.cloud-clay": 27
+          "base:mat.cloud-clay": 27,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 33
         },
         "50": {
-          "base:mat.cloud-clay": 45
+          "base:mat.cloud-clay": 45,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -5397,6 +6615,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.jade-beetle",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -5410,25 +6646,29 @@
           "base:mat.cloud-clay": 9
         },
         "20": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 15
         },
         "30": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 23
         },
         "40": {
-          "base:mat.cloud-clay": 27
+          "base:mat.cloud-clay": 27,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 33
         },
         "50": {
-          "base:mat.cloud-clay": 45
+          "base:mat.cloud-clay": 45,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -5551,6 +6791,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.dew-hopper",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.star-firefly",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -5564,25 +6822,29 @@
           "base:mat.cloud-clay": 9
         },
         "20": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 15
         },
         "30": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 23
         },
         "40": {
-          "base:mat.cloud-clay": 27
+          "base:mat.cloud-clay": 27,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 33
         },
         "50": {
-          "base:mat.cloud-clay": 45
+          "base:mat.cloud-clay": 45,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -5705,6 +6967,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.pink-moth",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -5718,25 +6998,29 @@
           "base:mat.cloud-clay": 9
         },
         "20": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 15
         },
         "30": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 23
         },
         "40": {
-          "base:mat.cloud-clay": 27
+          "base:mat.cloud-clay": 27,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 33
         },
         "50": {
-          "base:mat.cloud-clay": 45
+          "base:mat.cloud-clay": 45,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -5859,6 +7143,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.jade-beetle",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.star-firefly",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -5872,25 +7174,29 @@
           "base:mat.cloud-clay": 9
         },
         "20": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 15
         },
         "30": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 23
         },
         "40": {
-          "base:mat.cloud-clay": 27
+          "base:mat.cloud-clay": 27,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 33
         },
         "50": {
-          "base:mat.cloud-clay": 45
+          "base:mat.cloud-clay": 45,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -6017,6 +7323,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.dew-hopper",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -6030,25 +7354,29 @@
           "base:mat.cloud-clay": 9
         },
         "20": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 15
         },
         "30": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 23
         },
         "40": {
-          "base:mat.cloud-clay": 27
+          "base:mat.cloud-clay": 27,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 33
         },
         "50": {
-          "base:mat.cloud-clay": 45
+          "base:mat.cloud-clay": 45,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -6175,6 +7503,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.pink-moth",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.star-firefly",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -6188,25 +7534,29 @@
           "base:mat.cloud-clay": 9
         },
         "20": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 15
         },
         "30": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 23
         },
         "40": {
-          "base:mat.cloud-clay": 27
+          "base:mat.cloud-clay": 27,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 33
         },
         "50": {
-          "base:mat.cloud-clay": 45
+          "base:mat.cloud-clay": 45,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -6333,6 +7683,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.jade-beetle",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -6346,25 +7714,29 @@
           "base:mat.cloud-clay": 9
         },
         "20": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 15
         },
         "30": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 23
         },
         "40": {
-          "base:mat.cloud-clay": 27
+          "base:mat.cloud-clay": 27,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 33
         },
         "50": {
-          "base:mat.cloud-clay": 45
+          "base:mat.cloud-clay": 45,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -6491,6 +7863,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.dew-hopper",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.star-firefly",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -6504,25 +7894,29 @@
           "base:mat.cloud-clay": 9
         },
         "20": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 15
         },
         "30": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 23
         },
         "40": {
-          "base:mat.cloud-clay": 27
+          "base:mat.cloud-clay": 27,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 33
         },
         "50": {
-          "base:mat.cloud-clay": 45
+          "base:mat.cloud-clay": 45,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -6649,6 +8043,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.pink-moth",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -6662,25 +8074,29 @@
           "base:mat.cloud-clay": 9
         },
         "20": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 15
         },
         "30": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 23
         },
         "40": {
-          "base:mat.cloud-clay": 27
+          "base:mat.cloud-clay": 27,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 33
         },
         "50": {
-          "base:mat.cloud-clay": 45
+          "base:mat.cloud-clay": 45,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -6807,6 +8223,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.jade-beetle",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.star-firefly",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -6820,25 +8254,29 @@
           "base:mat.cloud-clay": 9
         },
         "20": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 15
         },
         "30": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 23
         },
         "40": {
-          "base:mat.cloud-clay": 27
+          "base:mat.cloud-clay": 27,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 33
         },
         "50": {
-          "base:mat.cloud-clay": 45
+          "base:mat.cloud-clay": 45,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -6965,6 +8403,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.dew-hopper",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -6978,25 +8434,29 @@
           "base:mat.cloud-clay": 9
         },
         "20": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 15
         },
         "30": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 23
         },
         "40": {
-          "base:mat.cloud-clay": 27
+          "base:mat.cloud-clay": 27,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 33
         },
         "50": {
-          "base:mat.cloud-clay": 45
+          "base:mat.cloud-clay": 45,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -7123,6 +8583,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.pink-moth",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.star-firefly",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -7136,25 +8614,29 @@
           "base:mat.cloud-clay": 9
         },
         "20": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 15
         },
         "30": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 23
         },
         "40": {
-          "base:mat.cloud-clay": 27
+          "base:mat.cloud-clay": 27,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 33
         },
         "50": {
-          "base:mat.cloud-clay": 45
+          "base:mat.cloud-clay": 45,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -7281,6 +8763,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.jade-beetle",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -7294,25 +8794,29 @@
           "base:mat.cloud-clay": 9
         },
         "20": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 15
         },
         "30": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 23
         },
         "40": {
-          "base:mat.cloud-clay": 27
+          "base:mat.cloud-clay": 27,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 33
         },
         "50": {
-          "base:mat.cloud-clay": 45
+          "base:mat.cloud-clay": 45,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -7439,6 +8943,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.dew-hopper",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.star-firefly",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -7452,25 +8974,29 @@
           "base:mat.cloud-clay": 9
         },
         "20": {
-          "base:mat.cloud-clay": 12
+          "base:mat.cloud-clay": 12,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 15
         },
         "30": {
-          "base:mat.cloud-clay": 18
+          "base:mat.cloud-clay": 18,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 23
         },
         "40": {
-          "base:mat.cloud-clay": 27
+          "base:mat.cloud-clay": 27,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 33
         },
         "50": {
-          "base:mat.cloud-clay": 45
+          "base:mat.cloud-clay": 45,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -7597,6 +9123,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.pink-moth",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -7610,25 +9154,29 @@
           "base:mat.cloud-clay": 12
         },
         "20": {
-          "base:mat.cloud-clay": 16
+          "base:mat.cloud-clay": 16,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 20
         },
         "30": {
-          "base:mat.cloud-clay": 24
+          "base:mat.cloud-clay": 24,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 30
         },
         "40": {
-          "base:mat.cloud-clay": 36
+          "base:mat.cloud-clay": 36,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 44
         },
         "50": {
-          "base:mat.cloud-clay": 60
+          "base:mat.cloud-clay": 60,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -7754,6 +9302,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.jade-beetle",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.star-firefly",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -7767,25 +9333,29 @@
           "base:mat.cloud-clay": 12
         },
         "20": {
-          "base:mat.cloud-clay": 16
+          "base:mat.cloud-clay": 16,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 20
         },
         "30": {
-          "base:mat.cloud-clay": 24
+          "base:mat.cloud-clay": 24,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 30
         },
         "40": {
-          "base:mat.cloud-clay": 36
+          "base:mat.cloud-clay": 36,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 44
         },
         "50": {
-          "base:mat.cloud-clay": 60
+          "base:mat.cloud-clay": 60,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -7911,6 +9481,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.dew-hopper",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -7924,25 +9512,29 @@
           "base:mat.cloud-clay": 12
         },
         "20": {
-          "base:mat.cloud-clay": 16
+          "base:mat.cloud-clay": 16,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 20
         },
         "30": {
-          "base:mat.cloud-clay": 24
+          "base:mat.cloud-clay": 24,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 30
         },
         "40": {
-          "base:mat.cloud-clay": 36
+          "base:mat.cloud-clay": 36,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 44
         },
         "50": {
-          "base:mat.cloud-clay": 60
+          "base:mat.cloud-clay": 60,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -8068,6 +9660,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.pink-moth",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.star-firefly",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -8081,25 +9691,29 @@
           "base:mat.cloud-clay": 12
         },
         "20": {
-          "base:mat.cloud-clay": 16
+          "base:mat.cloud-clay": 16,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 20
         },
         "30": {
-          "base:mat.cloud-clay": 24
+          "base:mat.cloud-clay": 24,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 30
         },
         "40": {
-          "base:mat.cloud-clay": 36
+          "base:mat.cloud-clay": 36,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 44
         },
         "50": {
-          "base:mat.cloud-clay": 60
+          "base:mat.cloud-clay": 60,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -8225,6 +9839,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.jade-beetle",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -8238,25 +9870,29 @@
           "base:mat.cloud-clay": 12
         },
         "20": {
-          "base:mat.cloud-clay": 16
+          "base:mat.cloud-clay": 16,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 20
         },
         "30": {
-          "base:mat.cloud-clay": 24
+          "base:mat.cloud-clay": 24,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 30
         },
         "40": {
-          "base:mat.cloud-clay": 36
+          "base:mat.cloud-clay": 36,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 44
         },
         "50": {
-          "base:mat.cloud-clay": 60
+          "base:mat.cloud-clay": 60,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -8382,6 +10018,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.dew-hopper",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.star-firefly",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -8395,25 +10049,29 @@
           "base:mat.cloud-clay": 12
         },
         "20": {
-          "base:mat.cloud-clay": 16
+          "base:mat.cloud-clay": 16,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 20
         },
         "30": {
-          "base:mat.cloud-clay": 24
+          "base:mat.cloud-clay": 24,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 30
         },
         "40": {
-          "base:mat.cloud-clay": 36
+          "base:mat.cloud-clay": 36,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 44
         },
         "50": {
-          "base:mat.cloud-clay": 60
+          "base:mat.cloud-clay": 60,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -8539,6 +10197,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.pink-moth",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -8552,25 +10228,29 @@
           "base:mat.cloud-clay": 12
         },
         "20": {
-          "base:mat.cloud-clay": 16
+          "base:mat.cloud-clay": 16,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 20
         },
         "30": {
-          "base:mat.cloud-clay": 24
+          "base:mat.cloud-clay": 24,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 30
         },
         "40": {
-          "base:mat.cloud-clay": 36
+          "base:mat.cloud-clay": 36,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 44
         },
         "50": {
-          "base:mat.cloud-clay": 60
+          "base:mat.cloud-clay": 60,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -8696,6 +10376,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.jade-beetle",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.star-firefly",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -8709,25 +10407,29 @@
           "base:mat.cloud-clay": 12
         },
         "20": {
-          "base:mat.cloud-clay": 16
+          "base:mat.cloud-clay": 16,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 20
         },
         "30": {
-          "base:mat.cloud-clay": 24
+          "base:mat.cloud-clay": 24,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 30
         },
         "40": {
-          "base:mat.cloud-clay": 36
+          "base:mat.cloud-clay": 36,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 44
         },
         "50": {
-          "base:mat.cloud-clay": 60
+          "base:mat.cloud-clay": 60,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -8853,6 +10555,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.dew-hopper",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -8866,25 +10586,29 @@
           "base:mat.cloud-clay": 12
         },
         "20": {
-          "base:mat.cloud-clay": 16
+          "base:mat.cloud-clay": 16,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 20
         },
         "30": {
-          "base:mat.cloud-clay": 24
+          "base:mat.cloud-clay": 24,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 30
         },
         "40": {
-          "base:mat.cloud-clay": 36
+          "base:mat.cloud-clay": 36,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 44
         },
         "50": {
-          "base:mat.cloud-clay": 60
+          "base:mat.cloud-clay": 60,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -9010,6 +10734,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.pink-moth",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.star-firefly",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -9023,25 +10765,29 @@
           "base:mat.cloud-clay": 12
         },
         "20": {
-          "base:mat.cloud-clay": 16
+          "base:mat.cloud-clay": 16,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 20
         },
         "30": {
-          "base:mat.cloud-clay": 24
+          "base:mat.cloud-clay": 24,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 30
         },
         "40": {
-          "base:mat.cloud-clay": 36
+          "base:mat.cloud-clay": 36,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 44
         },
         "50": {
-          "base:mat.cloud-clay": 60
+          "base:mat.cloud-clay": 60,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -9171,6 +10917,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.jade-beetle",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -9184,25 +10948,29 @@
           "base:mat.cloud-clay": 12
         },
         "20": {
-          "base:mat.cloud-clay": 16
+          "base:mat.cloud-clay": 16,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 20
         },
         "30": {
-          "base:mat.cloud-clay": 24
+          "base:mat.cloud-clay": 24,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 30
         },
         "40": {
-          "base:mat.cloud-clay": 36
+          "base:mat.cloud-clay": 36,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 44
         },
         "50": {
-          "base:mat.cloud-clay": 60
+          "base:mat.cloud-clay": 60,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -9331,6 +11099,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.dew-hopper",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.star-firefly",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -9344,25 +11130,29 @@
           "base:mat.cloud-clay": 12
         },
         "20": {
-          "base:mat.cloud-clay": 16
+          "base:mat.cloud-clay": 16,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 20
         },
         "30": {
-          "base:mat.cloud-clay": 24
+          "base:mat.cloud-clay": 24,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 30
         },
         "40": {
-          "base:mat.cloud-clay": 36
+          "base:mat.cloud-clay": 36,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 44
         },
         "50": {
-          "base:mat.cloud-clay": 60
+          "base:mat.cloud-clay": 60,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -9491,6 +11281,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.pink-moth",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -9504,25 +11312,29 @@
           "base:mat.cloud-clay": 12
         },
         "20": {
-          "base:mat.cloud-clay": 16
+          "base:mat.cloud-clay": 16,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 20
         },
         "30": {
-          "base:mat.cloud-clay": 24
+          "base:mat.cloud-clay": 24,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 30
         },
         "40": {
-          "base:mat.cloud-clay": 36
+          "base:mat.cloud-clay": 36,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 44
         },
         "50": {
-          "base:mat.cloud-clay": 60
+          "base:mat.cloud-clay": 60,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -9651,6 +11463,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.jade-beetle",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.star-firefly",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -9664,25 +11494,29 @@
           "base:mat.cloud-clay": 12
         },
         "20": {
-          "base:mat.cloud-clay": 16
+          "base:mat.cloud-clay": 16,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 20
         },
         "30": {
-          "base:mat.cloud-clay": 24
+          "base:mat.cloud-clay": 24,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 30
         },
         "40": {
-          "base:mat.cloud-clay": 36
+          "base:mat.cloud-clay": 36,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 44
         },
         "50": {
-          "base:mat.cloud-clay": 60
+          "base:mat.cloud-clay": 60,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -9811,6 +11645,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.dew-hopper",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -9824,25 +11676,29 @@
           "base:mat.cloud-clay": 12
         },
         "20": {
-          "base:mat.cloud-clay": 16
+          "base:mat.cloud-clay": 16,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 20
         },
         "30": {
-          "base:mat.cloud-clay": 24
+          "base:mat.cloud-clay": 24,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 30
         },
         "40": {
-          "base:mat.cloud-clay": 36
+          "base:mat.cloud-clay": 36,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 44
         },
         "50": {
-          "base:mat.cloud-clay": 60
+          "base:mat.cloud-clay": 60,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -9971,6 +11827,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.pink-moth",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.star-firefly",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -9984,25 +11858,29 @@
           "base:mat.cloud-clay": 12
         },
         "20": {
-          "base:mat.cloud-clay": 16
+          "base:mat.cloud-clay": 16,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 20
         },
         "30": {
-          "base:mat.cloud-clay": 24
+          "base:mat.cloud-clay": 24,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 30
         },
         "40": {
-          "base:mat.cloud-clay": 36
+          "base:mat.cloud-clay": 36,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 44
         },
         "50": {
-          "base:mat.cloud-clay": 60
+          "base:mat.cloud-clay": 60,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -10131,6 +12009,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.jade-beetle",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -10144,25 +12040,29 @@
           "base:mat.cloud-clay": 12
         },
         "20": {
-          "base:mat.cloud-clay": 16
+          "base:mat.cloud-clay": 16,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 20
         },
         "30": {
-          "base:mat.cloud-clay": 24
+          "base:mat.cloud-clay": 24,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 30
         },
         "40": {
-          "base:mat.cloud-clay": 36
+          "base:mat.cloud-clay": 36,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 44
         },
         "50": {
-          "base:mat.cloud-clay": 60
+          "base:mat.cloud-clay": 60,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -10291,6 +12191,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.dew-hopper",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.star-firefly",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -10304,25 +12222,29 @@
           "base:mat.cloud-clay": 12
         },
         "20": {
-          "base:mat.cloud-clay": 16
+          "base:mat.cloud-clay": 16,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 20
         },
         "30": {
-          "base:mat.cloud-clay": 24
+          "base:mat.cloud-clay": 24,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 30
         },
         "40": {
-          "base:mat.cloud-clay": 36
+          "base:mat.cloud-clay": 36,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 44
         },
         "50": {
-          "base:mat.cloud-clay": 60
+          "base:mat.cloud-clay": 60,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -10451,6 +12373,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.pink-moth",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.gold-scarab",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -10464,25 +12404,29 @@
           "base:mat.cloud-clay": 12
         },
         "20": {
-          "base:mat.cloud-clay": 16
+          "base:mat.cloud-clay": 16,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 20
         },
         "30": {
-          "base:mat.cloud-clay": 24
+          "base:mat.cloud-clay": 24,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 30
         },
         "40": {
-          "base:mat.cloud-clay": 36
+          "base:mat.cloud-clay": 36,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 44
         },
         "50": {
-          "base:mat.cloud-clay": 60
+          "base:mat.cloud-clay": 60,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [
@@ -10611,6 +12555,24 @@
           "from": 6,
           "base": 1,
           "growth": 1.05
+        },
+        {
+          "item": "base:bug.leaf-worm",
+          "from": 5,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.jade-beetle",
+          "from": 10,
+          "base": 1,
+          "growth": 1.05
+        },
+        {
+          "item": "base:bug.star-firefly",
+          "from": 25,
+          "base": 1,
+          "growth": 1.04
         }
       ],
       "milestones": {
@@ -10624,25 +12586,29 @@
           "base:mat.cloud-clay": 12
         },
         "20": {
-          "base:mat.cloud-clay": 16
+          "base:mat.cloud-clay": 16,
+          "base:bug.jade-cicada": 1
         },
         "25": {
           "base:mat.cloud-clay": 20
         },
         "30": {
-          "base:mat.cloud-clay": 24
+          "base:mat.cloud-clay": 24,
+          "base:bug.jade-cicada": 1
         },
         "35": {
           "base:mat.cloud-clay": 30
         },
         "40": {
-          "base:mat.cloud-clay": 36
+          "base:mat.cloud-clay": 36,
+          "base:bug.jade-cicada": 2
         },
         "45": {
           "base:mat.cloud-clay": 44
         },
         "50": {
-          "base:mat.cloud-clay": 60
+          "base:mat.cloud-clay": 60,
+          "base:bug.jade-cicada": 3
         }
       },
       "stagePlayerLevel": [

@@ -5,7 +5,7 @@ import { dispatch } from '../src/core/game.ts';
 import { createNewGame } from '../src/core/state.ts';
 import { buildContentPack, loadBase, MIN, readRaw, T0 } from './helpers.ts';
 
-test('gói nội dung gốc hợp lệ: 3 tầng × 6–10 chậu, 7 dòng chậu gốc trở lên, 6 giống cây, 1 loại Bọ Mây', async () => {
+test('gói nội dung gốc hợp lệ: 3 tầng × 6–10 chậu, 7 dòng chậu gốc trở lên, 6 giống cây, 8 loại Bọ Mây (chỉ thị 10)', async () => {
   const c = await loadBase();
   assert.equal(c.floors.size, 3);
   for (const f of c.floorList) {
@@ -18,7 +18,8 @@ test('gói nội dung gốc hợp lệ: 3 tầng × 6–10 chậu, 7 dòng chậ
   assert.ok(c.pots.size >= 7);
   assert.deepEqual([...new Set(c.potList.map((p) => p.rarity))].sort(), ['common', 'epic', 'good', 'legendary', 'rare']);
   assert.equal(c.crops.size, 6);
-  assert.equal(c.bugs.size, 1);
+  assert.equal(c.bugs.size, 8);
+  for (const crop of c.cropList) assert.ok(crop.bugs.some((b) => c.bugs.get(b.id)?.rarity === 'common'), `${crop.id} cần bọ Thường`);
   for (const crop of c.cropList) assert.ok(crop.stages >= 4, `${crop.id} phải có >= 4 giai đoạn`);
 });
 
@@ -39,6 +40,7 @@ test('thêm một giống cây mới chỉ cần thêm dữ liệu, không sửa
     stages: 5,
     produce: { id: 'test:item.moon-melon', name: { vi: 'Dưa Trăng' } },
     sprite: 'crops/moon-melon',
+    bugs: [{ id: 'base:bug.ladybird', weight: 1 }],
   });
   const c = buildContentPack(raw);
   const s = createNewGame(c, T0, 1);

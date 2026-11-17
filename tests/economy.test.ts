@@ -99,7 +99,9 @@ test('bắt Bọ Mây: có bọ mới bắt được, mỗi lần bắt bớt đ
         assert.equal(after?.bug?.count ?? 0, st!.bug!.count - 1);
       }
     }
-    assert.equal(s.inventory[BUG] ?? 0, caught);
+    // Chỉ thị 10: the catches are of several kinds; every catch is one bug in the bag.
+    const bagged = content.bugList.reduce((a, b) => a + (s.inventory[b.id] ?? 0), 0);
+    assert.equal(bagged, caught);
     total += caught;
   }
   assert.ok(total >= 5, `10 vụ bạc hà chỉ có ${total} bọ`);
@@ -114,7 +116,7 @@ test('nâng chậu: thiếu bọ hoặc đã cấp tối đa thì bị từ ch�
   const pot = s.floors[0]!.slots[0]!.potInstanceId;
   assert.deepEqual(dispatch(content, s, { type: 'upgradePot', potInstanceId: pot }, T0), { ok: false, error: 'not_enough_items' });
   assert.equal(s.player.coins, 99999);
-  s.inventory[BUG] = 1000;
+  for (const b of content.bugList) s.inventory[b.id] = 1000;
   for (const id of content.materials.keys()) s.inventory[id] = 1000;
   s.player.level = 30;
   const def = content.pots.get(s.pots[pot]!.potId)!;

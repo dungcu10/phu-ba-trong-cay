@@ -99,6 +99,15 @@ export class Art {
     return art;
   }
 
+  /**
+   * Chỉ thị 10: adds an atlas that is not in the fixed list (the world10 art, loaded at start or lazily
+   * per floor). Frames already present are kept.
+   */
+  async addAtlas(url: string, data: SpritesheetData): Promise<void> {
+    const tex = await Assets.load<Texture>(url);
+    Object.assign(this.frames, await new Spritesheet(tex, data).parse());
+  }
+
   /** Atlases left out at load time (directive 05 step 3). */
   readonly notLoaded = new Set<SheetName>();
 
@@ -160,7 +169,11 @@ export class Art {
   missingFor(content: ContentPack): string[] {
     const need = [...SCENE_FRAMES, content.floors.get(content.config.startFloor)!.sprite, 'pots/terracotta/0'];
     for (const c of content.cropList) for (let s = 0; s < c.stages; s++) need.push(`${c.sprite}/${s}`);
-    for (const b of content.bugList) need.push(`${b.sprite}/0`, `${b.sprite}/1`);
+    // Chỉ thị 10 bugs have one approved picture (chars atlas) instead of two crawl frames.
+    for (const b of content.bugList) {
+      if (b.art && b.sprite === b.art) need.push(b.art);
+      else need.push(`${b.sprite}/0`, `${b.sprite}/1`);
+    }
     for (const id of content.items.keys()) if (!content.materials.has(id)) need.push(itemFrame(content, id));
     return need.filter((n) => !this.frames[n]);
   }
@@ -182,6 +195,9 @@ export function itemFrame(content: ContentPack, itemId: string): string {
   // Mutated produce uses its normal picture (with a glow in the UI) until it has its own art.
   const base = content.items.get(itemId)?.baseItem;
   if (base) return itemFrame(content, base);
+  // Chỉ thị 10 bugs without the old sprite sheet use their approved picture as the icon too.
+  const bug = content.bugs.get(itemId);
+  if (bug?.art && bug.sprite === bug.art) return bug.art;
   const crop = content.cropList.find((c) => c.produce.id === itemId);
   const sprite = crop?.sprite ?? content.bugs.get(itemId)?.sprite ?? itemId;
   return `items/${sprite.slice(sprite.lastIndexOf('/') + 1)}`;

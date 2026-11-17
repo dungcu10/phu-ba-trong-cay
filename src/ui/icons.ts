@@ -163,5 +163,30 @@ export function svgIcon(name: IconName, size: number): SVGSVGElement {
 export function itemIcon(content: ContentPack, itemId: string, size: number): Element {
   const mat = content.materials.get(itemId);
   if (mat?.icon.startsWith('svg:') && mat.icon.slice(4) in ICONS) return svgIcon(mat.icon.slice(4) as IconName, size);
+  if (mat?.icon.startsWith('tmp:')) return tempIcon(mat.icon, size);
+  // Chỉ thị 10: bugs with approved art use it (one frame).
+  const bug = content.bugs.get(itemId);
+  if (bug?.art) return icon(bug.art, size);
   return icon(itemFrame(content, itemId), size);
+}
+
+/**
+ * CẦN HÌNH (chỉ thị 10 § 9): temporary icon for an item whose art is not drawn yet — a coloured
+ * rounded tag with a short word ("tmp:<word>:<#colour>"). Listed in ASSET_SOURCES; replaced before merge.
+ */
+export function tempIcon(spec: string, size: number): SVGSVGElement {
+  const [, word = '?', colour = '#B9A8D6'] = spec.split(':');
+  const ns = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns, 'svg');
+  svg.setAttribute('viewBox', '0 0 48 48');
+  svg.setAttribute('width', String(size));
+  svg.setAttribute('height', String(size));
+  svg.setAttribute('aria-hidden', 'true');
+  const r = document.createElementNS(ns, 'rect');
+  Object.entries({ x: '4', y: '4', width: '40', height: '40', rx: '12', fill: colour, stroke: '#FFF8EA', 'stroke-width': '3' }).forEach(([k, v]) => r.setAttribute(k, v));
+  const t = document.createElementNS(ns, 'text');
+  Object.entries({ x: '24', y: '29', 'text-anchor': 'middle', 'font-size': word.length > 3 ? '11' : '14', 'font-weight': '800', fill: '#161A2E', 'font-family': 'sans-serif' }).forEach(([k, v]) => t.setAttribute(k, v));
+  t.textContent = word;
+  svg.append(r, t);
+  return svg;
 }

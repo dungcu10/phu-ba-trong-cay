@@ -105,6 +105,20 @@ export const MIGRATIONS: Record<number, Migration> = {
     data.ranks = { day: -1, prev: {} };
     return data;
   },
+  // 11 -> 12 (chỉ thị 10): birds, Xưởng Bọ, Biển Mây, Năng Lượng Gió, fishing, collections, floor
+  // decor. All start empty / full energy; ids, coins, pots and the Bọ Rùa in the inventory are kept.
+  // The bugs already caught are counted into the Sổ Sâu Bọ by reconcile (it has the content).
+  11: (data) => {
+    const at = typeof data.maxSeenAt === 'number' ? data.maxSeenAt : typeof data.createdAt === 'number' ? data.createdAt : 0;
+    for (const floor of (data.floors as Array<Record<string, unknown>> | undefined) ?? []) floor.decor = [null, null];
+    data.birds = [];
+    data.workshop = {};
+    data.seaMap = { day: -1, index: 0, open: [], chests: [], cleared: false };
+    data.energy = { value: 30, at, dailyDay: -1 };
+    data.fishing = { freeBaitDay: -1 };
+    data.collections = { bugs: {}, fish: {}, claimed: [] };
+    return data;
+  },
 };
 
 export function migrate(

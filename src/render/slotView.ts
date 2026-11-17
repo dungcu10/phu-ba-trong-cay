@@ -50,6 +50,9 @@ export class SlotView extends Container {
   private plantKey = '';
   private potKey = '';
   private bugTextures: [Texture, Texture] | null = null;
+  private bugKind = '';
+  private bugFlies = false;
+  private bugBase = 0.75;
   private markerKind: 'none' | 'water' | 'ripe' = 'none';
   private shownBugs = 0;
   private sway = 0;
@@ -197,9 +200,16 @@ export class SlotView extends Container {
     }
 
     const bugs = status?.bug?.count ?? 0;
-    if (bugs > 0 && this.shownBugs === 0) {
-      const sprite = status!.bug!.bug.sprite;
-      this.bugTextures = [this.art.get(`${sprite}/0`), this.art.get(`${sprite}/1`)];
+    const bugKind = status?.bug?.bug.id ?? '';
+    if (bugs > 0 && (this.shownBugs === 0 || bugKind !== this.bugKind)) {
+      const def = status!.bug!.bug;
+      // Chỉ thị 10: the approved bug pictures (one frame, moved by code: crawling or fluttering).
+      const art = def.art && this.art.has(def.art) ? this.art.get(def.art) : null;
+      this.bugTextures = art ? [art, art] : [this.art.get(`${def.sprite}/0`), this.art.get(`${def.sprite}/1`)];
+      this.bugFlies = art !== null && /moth|firefly|cicada|hopper/.test(def.id);
+      this.bugBase = art ? 1.05 : 0.75;
+      this.bugKind = bugKind;
+      this.tweens.add(TOKENS.motion.bounce.ms * 2, ease.outBack, (v) => this.bug.scale.set(this.bugBase * v), undefined, this);
       this.tweens.add(TOKENS.motion.bounce.ms * 2, ease.outBack, (v) => this.bug.scale.set(0.75 * v), undefined, this);
     }
     this.bug.visible = bugs > 0;
@@ -342,8 +352,17 @@ export class SlotView extends Container {
     }
     if (this.bug.visible && this.bugTextures) {
       this.bug.texture = this.bugTextures[Math.floor(t * 8) % 2]!;
-      this.bug.x = SLOT_GEOM.bugOffset.x + Math.sin(t * 2.3 + this.phase) * 6;
-      this.bug.y = SLOT_GEOM.bugOffset.y + lift + Math.cos(t * 3.1 + this.phase) * 5;
+      if (this.bugFlies) {
+        // Flying bugs hover in a small loop over the plant, wings beating by a quick squash.
+        this.bug.x = SLOT_GEOM.bugOffset.x + Math.sin(t * 1.7 + this.phase) * 14;
+        this.bug.y = SLOT_GEOM.bugOffset.y - 18 + lift + Math.sin(t * 3.4 + this.phase) * 8;
+        this.bug.scale.y = this.bugBase * (0.9 + 0.1 * Math.abs(Math.sin(t * 18)));
+      } else {
+        // Crawling bugs creep along the leaves with a tiny bob.
+        this.bug.x = SLOT_GEOM.bugOffset.x + Math.sin(t * 0.9 + this.phase) * 10;
+        this.bug.y = SLOT_GEOM.bugOffset.y + lift + Math.abs(Math.sin(t * 6 + this.phase)) * -2;
+        this.bug.rotation = Math.sin(t * 0.9 + this.phase) * 0.15;
+      }
       this.bugCount.position.set(this.bug.x + 16, this.bug.y - 10);
     }
   }

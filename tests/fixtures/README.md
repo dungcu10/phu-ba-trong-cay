@@ -10,3 +10,5 @@ Mỗi file do **chính mã của bản cũ** tạo ra (chơi vài lượt rồi 
 | `save-v9-9ef65c4.json` | 9ef65c4 (bản thử nháp nâng cấp v3 đợt 1, chưa có `budget`) | 9 |
 
 Cách tạo lại: `git worktree add /tmp/old-<mã> <mã>`, nối `node_modules`, chạy `npx tsx tools/make-save-fixture.mts /tmp/old-<mã> <file>`.
+
+- `save-v11-c48ac3c.json` — save đời 11 do code nhánh `feat/cto-07-cho-may-giao-dien` @ c48ac3c ghi (SaveManager thật): cấp 6, 30 lần thu hoạch Cúc Bông Gòn, 7 Bọ Rùa. Dùng cho migration 11→12 (chỉ thị 10).

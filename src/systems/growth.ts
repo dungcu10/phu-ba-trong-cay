@@ -55,37 +55,100 @@ function baseCycleSeconds(crop: CropDef, planting: Planting): number {
   return planting.harvestsDone === 0 || crop.regrowSeconds === null ? crop.growSeconds : crop.regrowSeconds;
 }
 
+/** The bug whose numbers set how many bugs a cycle attracts (the first bug, Bọ Rùa Mây). */
+function countRule(content: ContentPack): BugDef {
+  return content.bugList[0]!;
+}
+
 /**
  * Bọ Mây are attracted by growing time, not by number of stages: a cycle of T seconds brings
  * on average T / growSecondsPerBug bugs (capped). Each bug lands at a fixed point of the
  * cycle's growth progress and stays until caught or until the harvest. Because arrival is
  * tied to progress, watering (which only moves progress forward) can never remove a bug.
+ * Chỉ thị 10 § 3.2: this count rule is unchanged (same keys, so old saves see the same bugs);
+ * each arriving bug then gets a kind, picked by the crop's weights.
  */
 export function bugsInCycle(state: GameState, bug: BugDef, crop: CropDef, planting: Planting, attract = 0): number {
-  const expected = Math.min(bug.maxPerCycle, (baseCycleSeconds(crop, planting) / bug.growSecondsPerBug) * (1 + attract));
+  const expected = Math.min(bug.maxPerCycle!, (baseCycleSeconds(crop, planting) / bug.growSecondsPerBug!) * (1 + attract));
   return stochasticRound(expected, state.seed, 'bug', bug.id, planting.id, planting.harvestsDone);
 }
 
-function arrivedBugs(state: GameState, bug: BugDef, crop: CropDef, planting: Planting, progress: number, attract: number): number {
-  const total = bugsInCycle(state, bug, crop, planting, attract);
-  let arrived = 0;
+/** Hour of the day (0–24) in the game's local time. */
+export function localHour(content: ContentPack, at: number): number {
+  const ms = at + content.missions.utcOffsetHours * 3_600_000;
+  return (((ms % 86_400_000) + 86_400_000) % 86_400_000) / 3_600_000;
+}
+
+/** Night in the game's local time (Đom Đóm Sao, Cú Mèo Đêm, Vườn Trăng). */
+export function isNight(content: ContentPack, at: number): boolean {
+  const h = localHour(content, at);
+  const n = content.config.night ?? { from: 19, to: 6 };
+  return h >= n.from || h < n.to;
+}
+
+/** Weight multiplier for a bug on a floor (Vườn Trăng: Đom Đóm Sao twice as often). */
+export type BugBoost = (bugId: string) => number;
+
+/**
+ * Kind of arriving bug number i of the current cycle, deterministic: a weighted pick among the crop's
+ * bugs that are unlocked at the planting's level; night-only bugs only when the bug arrives at night.
+ */
+export function bugKind(content: ContentPack, state: GameState, crop: CropDef, planting: Planting, i: number, at: number, boost?: BugBoost): BugDef {
+  const first = countRule(content);
+  if (planting.bugLevel === undefined) return first;
+  const night = isNight(content, planting.cycleStartedAt + at * baseCycleSeconds(crop, planting) * 1000);
+  const pool: Array<{ bug: BugDef; w: number }> = [];
+  for (const b of crop.bugs) {
+    const def = content.bugs.get(b.id);
+    if (!def || def.unlockLevel > planting.bugLevel) continue;
+    if (def.nightOnly && !night) continue;
+    pool.push({ bug: def, w: b.weight * (boost ? boost(def.id) : 1) });
+  }
+  if (pool.length === 0) return first;
+  const total = pool.reduce((a, p) => a + p.w, 0);
+  let r = randomFor(state.seed, 'bugKind', planting.id, planting.harvestsDone, i) * total;
+  for (const p of pool) {
+    r -= p.w;
+    if (r < 0) return p.bug;
+  }
+  return pool[pool.length - 1]!.bug;
+}
+
+/** Bugs that have arrived by `progress`, in arrival order. */
+export function arrivals(content: ContentPack, state: GameState, crop: CropDef, planting: Planting, progress: number, attract: number, boost?: BugBoost): BugDef[] {
+  const rule = countRule(content);
+  const total = bugsInCycle(state, rule, crop, planting, attract);
+  const list: Array<{ at: number; bug: BugDef }> = [];
   for (let i = 0; i < total; i++) {
-    const at = BUG_ARRIVAL_FROM + randomFor(state.seed, 'bugAt', bug.id, planting.id, planting.harvestsDone, i) * (BUG_ARRIVAL_TO - BUG_ARRIVAL_FROM);
-    if (progress >= at) arrived += 1;
+    const at = BUG_ARRIVAL_FROM + randomFor(state.seed, 'bugAt', rule.id, planting.id, planting.harvestsDone, i) * (BUG_ARRIVAL_TO - BUG_ARRIVAL_FROM);
+    if (progress >= at) list.push({ at, bug: bugKind(content, state, crop, planting, i, at, boost) });
   }
-  return arrived;
+  return list.sort((a, b) => a.at - b.at).map((x) => x.bug);
 }
 
-function visibleBug(content: ContentPack, state: GameState, slot: SlotState, crop: CropDef, planting: Planting, progress: number) {
+/** Bugs on the plant now: per kind, arrived minus caught. The first kind (in arrival order) is shown. */
+export function bugsOnPlant(content: ContentPack, state: GameState, slot: SlotState, crop: CropDef, planting: Planting, progress: number, boost?: BugBoost): Array<{ bug: BugDef; count: number }> {
   const attract = slotBonus(content, state, slot, crop, 'attract');
-  for (const bug of content.bugList) {
-    const count = arrivedBugs(state, bug, crop, planting, progress, attract) - (planting.caughtBugs[bug.id] ?? 0);
-    if (count > 0) return { bug, count };
+  const arrived = arrivals(content, state, crop, planting, progress, attract, boost);
+  const left = new Map<string, { bug: BugDef; count: number }>();
+  for (const b of arrived) {
+    const e = left.get(b.id) ?? { bug: b, count: 0 };
+    e.count += 1;
+    left.set(b.id, e);
   }
-  return null;
+  const out: Array<{ bug: BugDef; count: number }> = [];
+  for (const e of left.values()) {
+    const n = e.count - (planting.caughtBugs[e.bug.id] ?? 0);
+    if (n > 0) out.push({ bug: e.bug, count: n });
+  }
+  return out;
 }
 
-export function cropStatus(content: ContentPack, state: GameState, slot: SlotState, now: number): CropStatus | null {
+function visibleBug(content: ContentPack, state: GameState, slot: SlotState, crop: CropDef, planting: Planting, progress: number, boost?: BugBoost) {
+  return bugsOnPlant(content, state, slot, crop, planting, progress, boost)[0] ?? null;
+}
+
+export function cropStatus(content: ContentPack, state: GameState, slot: SlotState, now: number, boost?: BugBoost): CropStatus | null {
   const planting = slot.planting;
   if (!planting) return null;
   const crop = content.crops.get(planting.cropId);
@@ -105,7 +168,7 @@ export function cropStatus(content: ContentPack, state: GameState, slot: SlotSta
     remainingMs,
     readyAt: now + remainingMs,
     thirsty: !ripe && !planting.wateredStages.includes(stage),
-    bug: visibleBug(content, state, slot, crop, planting, progress),
+    bug: visibleBug(content, state, slot, crop, planting, progress, boost),
     isRegrow: planting.harvestsDone > 0,
   };
 }

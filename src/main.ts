@@ -8,6 +8,7 @@ import { systemClock, type Clock } from './core/clock.ts';
 import { createNewGame } from './core/state.ts';
 import { SaveManager, SLOT_KEYS } from './persistence/saveManager.ts';
 import { IndexedDbStore } from './persistence/store.ts';
+import { loadWorld10 } from './render/world10.ts';
 import { Art } from './render/assets.ts';
 import { GameView, type RendererPreference } from './render/scene.ts';
 import { h } from './ui/dom.ts';
@@ -76,6 +77,8 @@ async function boot(): Promise<void> {
   // the save still owns one of those pots. The dev demo that places them loads it on demand.
   const ownsCatalogPot = Object.values(state.pots).some((p) => content.pots.get(p.potId)?.sprite.startsWith('pots/catalog/'));
   const art = await Art.load(ownsCatalogPot ? [] : ['pots_catalog']);
+  // Chỉ thị 10: the approved world art (vine, cloud rings, pedestals, bugs, birds, Xu Xu); floors load lazily.
+  await loadWorld10(art);
   const missing = art.missingFor(content);
   if (missing.length > 0) throw new Error(`Thiếu hình cho nội dung: ${missing.join(', ')}`);
 

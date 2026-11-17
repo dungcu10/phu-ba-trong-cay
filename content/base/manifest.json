@@ -16,6 +16,7 @@
     "events": "events.json",
     "quests": "quests.json",
     "features": "features.json",
-    "tutorials": "tutorials.json"
+    "tutorials": "tutorials.json",
+    "birds": "birds.json"
   }
 }
