@@ -58,7 +58,7 @@ export function nextHint(content: ContentPack, state: GameState, now: number): H
   }
 
   const floor = nextFloor(content, state);
-  if (floor && canOpenFloor(floor, state)) {
+  if (floor && canOpenFloor(floor, state, content)) {
     return { kind: 'floor', text: `Đủ điều kiện mở ${floor.name.vi} — vuốt lên dọc cây leo và chạm vào tầng mờ.` };
   }
 

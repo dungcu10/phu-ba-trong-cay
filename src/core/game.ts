@@ -3,7 +3,7 @@
 
 import { isSoldInShop, type ContentPack, type FloorDef } from './content.ts';
 import { floorAtIndex } from './floorgen.ts';
-import type { GameState, SlotState } from './state.ts';
+import type { BazaarSlot, GameState, SlotState } from './state.ts';
 import { adjustedOffset, gameTime } from './clock.ts';
 import { stochasticRound } from './rng.ts';
 import { cropStatus } from '../systems/growth.ts';
@@ -17,6 +17,8 @@ import { askNeighborsHelp, canDeliver, flightFor, refillOrders, stillNeeded, typ
 import { coinGiftAmount, nextMilestone, recordHarvest, rollGift, rollMutation, type Gift } from '../systems/surprises.ts';
 import { playerPrice, sellBugs, simulateNeighbors, snapshotRanks, type NeighborEvent } from '../systems/neighbors.ts';
 import { expandCost, expandItems, nextStar } from '../systems/floors.ts';
+import { floorUnlockCost } from '../systems/coinSinks.ts';
+import { buyBazaar, ensureBazaar, rerollBazaar } from '../systems/bazaar.ts';
 import { allMissionsClaimed, ensureMissions, localDay, missionDef, recordMissions } from '../systems/missions.ts';
 import { ensureQuestPeriods, questActive, questClaims, questReward, questView, recordQuests } from '../systems/quests.ts';
 import { botGarden, helpReward, helpsLeft, helpToday, type HelpKind } from '../systems/visit.ts';
@@ -82,7 +84,9 @@ export type Command =
   /** Chỉ thị 12 B6.3: sell spare bugs to a BOT trader at a low price. */
   | { type: 'sellBugs'; itemId: string; qty: number }
   /** Chỉ thị 10 § 3.8: cast a crafted pot at the Lò Gốm. */
-  | { type: 'castPot'; potId: string };
+  | { type: 'castPot'; potId: string }
+  | { type: 'rerollBazaar' }
+  | { type: 'buyBazaar'; slot: number };
 
 export type GameEvent =
   | { type: 'planted'; slot: SlotRef; cropId: string; cost: number }
@@ -101,6 +105,9 @@ export type GameEvent =
   | Exclude<OrderWorldEvent, { type: 'levelUp' }>
   | { type: 'bugsSold'; itemId: string; qty: number; coins: number }
   | { type: 'potCast'; potInstanceId: string; potId: string; perfect: boolean }
+  | { type: 'bazaarRerolled'; coins: number; best: BazaarSlot['rarity']; sure: BazaarSlot['rarity'] | null }
+  | { type: 'bazaarRefreshed' }
+  | { type: 'bazaarBought'; slot: number; rarity: BazaarSlot['rarity']; kind: 'item' | 'pot'; itemId: string; qty: number; currency: 'coins' | 'gems'; price: number; potInstanceId?: string }
   | { type: 'neighborsChipped'; slot: number; help: Array<{ botId: string; itemId: string; qty: number }> }
   | { type: 'journalClaimed'; cropId: string; gems: number; harvests: number }
   | { type: 'itemListed'; listingId: number; itemId: string; qty: number; price: number }
@@ -171,6 +178,7 @@ export type ErrorCode =
   | BirdError
   | 'help_used'
   | 'not_castable'
+  | 'already_bought'
   | 'bird_busy'
   | WorkshopError;
 
@@ -203,6 +211,7 @@ export function updateWorld(content: ContentPack, state: GameState, now: number)
   events.push(...(back as GameEvent[]));
   if (arrived.length > 0) events.push({ type: 'ordersArrived', slots: arrived });
   snapshotRanks(content, state, localDay(content, now));
+  if (ensureBazaar(content, state, now)) events.push({ type: 'bazaarRefreshed' });
   events.push(...simulateNeighbors(content, state, now));
   return events;
 }
@@ -271,6 +280,16 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
     case 'castPot': {
       const r = castPot(content, state, cmd.potId, now);
       return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'potCast', potInstanceId: r.potInstanceId, potId: cmd.potId, perfect: r.perfect }] };
+    }
+    case 'rerollBazaar': {
+      const r = rerollBazaar(content, state, now);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'bazaarRerolled', coins: r.coins, best: r.best, sure: r.sure }] };
+    }
+    case 'buyBazaar': {
+      const r = buyBazaar(content, state, cmd.slot, now);
+      if (typeof r === 'string') return fail(r);
+      const s = r.slot;
+      return { ok: true, events: [{ type: 'bazaarBought', slot: cmd.slot, rarity: s.rarity, kind: s.kind, itemId: s.id, qty: s.qty, currency: s.currency, price: s.price, ...(r.potInstanceId ? { potInstanceId: r.potInstanceId } : {}) }] };
     }
     case 'sellBugs': {
       const r = sellBugs(content, state, cmd.itemId, cmd.qty);
@@ -393,7 +412,7 @@ function expandFloor(content: ContentPack, state: GameState, index: number): Res
   const floor = state.floors[index];
   const def = floor && content.floors.get(floor.floorId);
   if (!floor || !def) return fail('bad_slot');
-  const cost = expandCost(def, floor);
+  const cost = expandCost(def, floor, content, state.player.level);
   if (cost === null) return fail('max_slots');
   if (state.player.coins < cost) return fail('not_enough_coins');
   const items = expandItems(def, floor);
@@ -691,14 +710,15 @@ function unlockFloor(content: ContentPack, state: GameState, floorId: string): R
   const def = nextFloor(content, state);
   if (!def || def.id !== floorId) return fail('not_next_floor');
   if (def.unlockLevel > state.player.level) return fail('locked');
-  if (state.player.coins < def.unlockCost) return fail('not_enough_coins');
+  const cost = floorUnlockCost(content, def, state.player.level);
+  if (state.player.coins < cost) return fail('not_enough_coins');
   const items = def.unlockItems ?? {};
   if (!canAfford(state, { coins: 0, items })) return fail('not_enough_items');
-  state.player.coins -= def.unlockCost;
+  state.player.coins -= cost;
   for (const [id, q] of Object.entries(items)) removeItem(state, id, q);
   const index = state.floors.length;
   state.floors.push(createFloorState(def, state.pots, index));
-  return { ok: true, events: [{ type: 'floorUnlocked', floorId, index, cost: def.unlockCost }] };
+  return { ok: true, events: [{ type: 'floorUnlocked', floorId, index, cost }] };
 }
 
 function buyPot(content: ContentPack, state: GameState, potId: string): Result {

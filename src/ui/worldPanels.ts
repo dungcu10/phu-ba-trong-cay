@@ -17,6 +17,9 @@ import { helpsLeft } from '../systems/visit.ts';
 import { shake } from './potPanels.ts';
 import { formatDuration, formatNumber, FAMILY_TEXT } from './text.ts';
 import { masteryStars, nextMastery } from '../systems/cropExtras.ts';
+import { bazaarOpen, bazaarRules, luckBars, nextFreeRefreshAt, rerollCost, wantedItems } from '../systems/bazaar.ts';
+import { potIcon, rarityChip } from './potPanels.ts';
+import { RARITY_TEXT } from './text.ts';
 
 export interface WorldActions {
   deliverOrder(slot: number, birdId?: string): void;
@@ -26,6 +29,8 @@ export interface WorldActions {
   listItem(itemId: string, qty: number, price: number): void;
   cancelListing(id: number): void;
   buyFromNeighbor(botId: string, itemId: string, qty: number): void;
+  rerollBazaar(): void;
+  buyBazaar(slot: number): void;
   claimJournal(cropId: string): void;
 }
 
@@ -133,7 +138,7 @@ export class OrdersPanel extends Panel {
   }
 }
 
-export type MarketTab = 'mine' | 'market';
+export type MarketTab = 'mine' | 'market' | 'hunt';
 type MarketFilter = 'all' | 'produce' | 'other' | 'orders';
 
 /** "Chợ Mây" (chỉ thị 07): my own stall, and every Phú Bà's stall to buy from. */
@@ -142,6 +147,8 @@ export class StallPanel extends Panel {
   private qty = 1;
   private price = 1;
   private filter: MarketFilter = 'all';
+  /** Board already shown (new Sử Thi / Huyền Thoại slots shake only once). */
+  private seenRoll = -1;
 
   constructor(
     private readonly session: GameSession,
@@ -156,14 +163,82 @@ export class StallPanel extends Panel {
   render(): void {
     clear(this.body);
     const tabs = h('div', { class: 'tabs', role: 'tablist' });
-    for (const [id, name] of [['mine', 'Sạp của tôi'], ['market', 'Đi chợ']] as const) {
+    for (const [id, name] of [['mine', 'Sạp của tôi'], ['market', 'Đi chợ'], ['hunt', 'Săn hàng hiếm']] as const) {
       tabs.append(
         h('button', { class: `tab${this.tab === id ? ' on' : ''}`, role: 'tab', 'aria-selected': this.tab === id ? 'true' : 'false', 'data-test': `market-tab-${id}`, onclick: () => ((this.tab = id), (this.focusBot = null), this.render()) }, name),
       );
     }
     this.body.append(h('div', { class: 'filters' }, tabs));
     if (this.tab === 'market') this.renderMarket();
+    else if (this.tab === 'hunt') this.renderHunt();
     else this.renderMine();
+  }
+
+  /** Chỉ thị 12 B2: the Sạp Săn Hàng — eight slots by rarity, reroll for coins, Vận May bars. */
+  private renderHunt(): void {
+    const { content, state } = this.session;
+    const rules = bazaarRules(content);
+    if (!rules) return;
+    if (!bazaarOpen(content, state)) {
+      this.body.append(h('p', { class: 'note' }, `Sạp Săn Hàng mở ở cấp ${rules.unlockLevel}.`));
+      return;
+    }
+    const now = this.session.now();
+    const z = state.bazaar;
+    const cost = rerollCost(content, state, now);
+    const fresh = z ? z.roll !== this.seenRoll : false;
+    if (z) this.seenRoll = z.roll;
+    const luck = h(
+      'div',
+      { class: 'luck-bars' },
+      ...luckBars(content, state).map((l) =>
+        h(
+          'div',
+          { class: `luck ${l.rarity}`, 'data-test': `luck-${l.rarity}` },
+          h('span', { class: 'luck-label' }, `Vận May ${RARITY_TEXT[l.rarity]}`),
+          h('span', { class: 'luck-track' }, h('span', { class: 'luck-fill', style: `width:${Math.round((100 * l.have) / l.at)}%` })),
+          h('span', { class: 'luck-count' }, l.have >= l.at ? 'lần sau chắc trúng!' : `${l.have}/${l.at}`),
+        ),
+      ),
+    );
+    this.body.append(
+      h('p', { class: 'lead' }, `Các Phú Bà bày hàng mới miễn phí mỗi ${rules.refreshHours} giờ. Muốn săn ngay thì đặt lại sạp: càng đặt nhiều trong ngày càng đắt, sang ngày mới giá về như cũ.`),
+      h(
+        'div',
+        { class: 'hunt-head' },
+        luck,
+        h('span', { class: 'note' }, `Làm mới miễn phí sau ${formatDuration(nextFreeRefreshAt(content, now) - now)}`),
+        h('button', { class: 'candy gold', 'data-test': 'bazaar-reroll', disabled: state.player.coins < cost ? true : undefined, onclick: () => this.actions.rerollBazaar() }, 'Đặt lại sạp · ', coin(16), formatNumber(cost)),
+      ),
+    );
+    if (!z || z.slots.length === 0) {
+      this.body.append(h('p', { class: 'note' }, 'Sạp đang bày hàng, quay lại sau một chút nhé.'));
+      return;
+    }
+    const wanted = wantedItems(content, state);
+    const grid = h('div', { class: 'hunt-grid' });
+    z.slots.forEach((sl, i) => {
+      const pot = sl.kind === 'pot' ? content.pots.get(sl.id) : undefined;
+      const name = pot ? pot.name.vi : (content.items.get(sl.id)?.name.vi ?? sl.id);
+      const seller = content.bots.get(sl.seller);
+      const jackpot = fresh && !sl.sold && (sl.rarity === 'epic' || sl.rarity === 'legendary');
+      const afford = sl.currency === 'gems' ? state.player.gems >= sl.price : state.player.coins >= sl.price;
+      grid.append(
+        h(
+          'div',
+          { class: `hunt-slot rar-${sl.rarity}${sl.sold ? ' sold' : ''}${jackpot ? ' jackpot' : ''}${wanted.has(sl.id) ? ' wanted' : ''}`, 'data-test': `bazaar-slot-${i}` },
+          rarityChip(sl.rarity),
+          pot ? potIcon(pot, 1, 64) : itemIcon(content, sl.id, 56),
+          h('span', { class: 'ware-name' }, name),
+          h('span', { class: 'ware-meta' }, sl.kind === 'pot' ? 'chậu nguyên' : `×${sl.qty}`, wanted.has(sl.id) && h('span', { class: 'ware-flag', title: 'Bạn đang thiếu món này để nâng chậu' }, 'đang thiếu')),
+          seller && h('span', { class: 'hunt-seller' }, botAvatar(seller.id, 22), seller.name.vi),
+          sl.sold
+            ? h('span', { class: 'tag' }, 'Đã mua')
+            : h('button', { class: `candy small${afford ? ' gold' : ''}`, 'data-test': `bazaar-buy-${i}`, disabled: afford ? undefined : true, onclick: () => this.actions.buyBazaar(i) }, sl.currency === 'gems' ? gem(14) : coin(14), formatNumber(sl.price)),
+        ),
+      );
+    });
+    this.body.append(grid);
   }
 
   /** Items still missing for the open balloon orders. */

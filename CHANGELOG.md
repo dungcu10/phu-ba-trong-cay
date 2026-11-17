@@ -29,6 +29,16 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Chỉ thị 12 TỔNG B2 + A3 — Chỗ tiêu xu, phần code (tag `m-12-a3b2-code`)
+- Loại: Thêm
+- Mô tả:
+  - **B2 Sạp Săn Hàng** (Chợ Mây › tab "Săn hàng hiếm", mở cấp 6): 8 ô do Phú Bà bày, độ hiếm 60/26/10/3,5/0,5%, mỗi ô mua 1 lần, xu trả về Phú Bà bày hàng. Tự làm mới miễn phí mỗi 4 giờ (theo giờ địa phương). **Đặt lại** tốn `U(cấp) × 0,15 × 1,5^n`, n về 0 sang ngày mới. **Vận May**: mỗi lần đặt lại không ra Hiếm (Sử Thi) thì +1, đủ 10 (40) thì lần sau chắc có ô Hiếm (Sử Thi); trúng thì về 0; hai thanh hiện trên sạp. Ô Khá 50% là bọ/vật liệu đang thiếu cho lần nâng chậu kế tiếp. Ô Sử Thi bán chậu chữ ký nguyên, ô Huyền Thoại bán chậu Huyền Thoại — trả **ngọc** (giữ quy tắc chậu chữ ký không bán bằng xu). Giá ô xu = U(cấp) × priceU, không thấp hơn giá bán lại × markup (không có vòng mua–bán ra lãi). Ô Sử Thi/Huyền Thoại rung, có tia sáng, có âm; mua món Huyền Thoại thì có thư báo. Tất định từ seed + bộ đếm.
+  - **A3 giá theo cấp**: mở tầng, mở rộng tầng, đúc chậu (theo bậc hiếm), nâng sao máy, mua thêm ô máy cộng thêm `hệ số × U(cấp người chơi)` xu. Hệ số trong `market.json › levelPricing`, **đang để 0 (giữ giá cũ)**; số đề xuất ở `_proposed`. Nâng nhà/Cấp Làng thêm khi làm chỉ thị 11.
+- Ghi chú cho CTO: bot mô phỏng (`tools/progression.ts`) chưa đi Sạp Săn Hàng nên `Xu/U` chưa đổi. Để chỉ số chạy: gọi lệnh `rerollBazaar` / `buyBazaar {slot}`; khi bật hệ số A3 thì truyền cấp vào `expandCost(def, floor, content, level)`, `nextStarCost(content, machine, m, level)`, `floorUnlockCost(content, def, level)` (hiện bot đọc `def.unlockCost` nên sẽ thử mở tầng khi chưa đủ xu — lệnh trả `not_enough_coins`, không hỏng).
+- File/Module: content/base/market.json (mới, manifest), src/systems/bazaar.ts, src/systems/coinSinks.ts (mới), floors.ts, workshop.ts, casting.ts, game.ts (lệnh rerollBazaar/buyBazaar, sự kiện bazaarRerolled/bazaarRefreshed/bazaarBought, updateWorld làm mới sạp), state.ts (`bazaar?`), reconcile.ts, src/ui/worldPanels.ts, controller.ts, styles.css, tests/bazaar12.test.ts (9 test).
+- Ảnh hưởng save: Không (trường `bazaar` tuỳ chọn, save cũ mở bình thường; bảng hỏng thì bỏ và bày lại).
+- Quyết định tự chọn: (1) sạp săn là tab thứ ba "Săn hàng hiếm" trong Chợ Mây thay vì chèn vào tab "Đi chợ" cho gọn trên iPad; (2) Vận May có hai bộ đếm riêng (Hiếm, Sử Thi) — nếu dùng một bộ đếm thì trúng Hiếm sẽ xoá tiến độ Sử Thi và mốc 40 không bao giờ tới; (3) làm mới miễn phí không tính Vận May, chỉ lần đặt lại trả xu mới tính; (4) chưa bán Ngọc Mây (tiền tệ) trên sạp để không tạo đường đổi xu → ngọc; mảnh chậu, Huy Hiệu, Mảnh Trứng Rồng thêm khi có vật phẩm; (5) giá ngọc cho chậu Sử Thi/Huyền Thoại tạm 40/120, CTO chỉnh.
+
 ### [2026-11-18] Chỉ thị 10 M7 phần 1 — Đúc Chậu (tag `m-10-m7a`)
 - Loại: Thêm
 - Mô tả: Lò Gốm có nút "Đúc Chậu" (mở từ cấp 12): đúc chậu nhóm crafted bằng xu + vật liệu (đồng, đá mây, ngọc mài, bạc, bụi vàng, ngọc thô) theo bậc hiếm. Mỗi lần đúc có 10% "đúc hoàn hảo" → chậu +1 sao; mỗi sao +4% chỉ số chậu. Kết quả xác định từ seed. Bảng hiện nguyên liệu có/cần và nguồn rơi.

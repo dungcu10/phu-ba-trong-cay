@@ -20,6 +20,7 @@
     "birds": "birds.json",
     "workshop": "workshop.json",
     "cropExtras": "crop-extras.json",
-    "casting": "casting.json"
+    "casting": "casting.json",
+    "market": "market.json"
   }
 }

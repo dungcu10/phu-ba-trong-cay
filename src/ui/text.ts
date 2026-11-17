@@ -54,6 +54,7 @@ export const ERROR_TEXT: Record<ErrorCode, string> = {
   help_used: 'Hôm nay bạn đã nhờ hàng xóm rồi. Mai nhờ tiếp nhé!',
   bird_busy: 'Chú chim này đang bay theo một khinh khí cầu khác.',
   not_castable: 'Chậu này không đúc được.',
+  already_bought: 'Ô này đã có người mua rồi.',
 };
 
 const numberFormat = new Intl.NumberFormat('vi-VN');

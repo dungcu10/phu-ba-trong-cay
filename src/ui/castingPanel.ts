@@ -62,7 +62,7 @@ export class CastingPanel extends Panel {
     }
     const box = h('div', { class: 'scale cast-recipe' });
     const def = this.selected ? content.pots.get(this.selected) : undefined;
-    const recipe = def ? castRecipe(content, def) : null;
+    const recipe = def ? castRecipe(content, def, state.player.level) : null;
     if (def && recipe) {
       const needs = Object.entries(recipe.items).map(([id, q]) => {
         const have = state.inventory[id] ?? 0;

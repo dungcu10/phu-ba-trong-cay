@@ -206,6 +206,22 @@ function reconcileWorld(state: GameState, content: ContentPack, c: Checker): voi
   }
   state.neighbors = neighbors;
   if (!state.market || typeof state.market.day !== 'number' || typeof state.market.buys !== 'number') state.market = { day: -1, buys: 0 };
+  // Chỉ thị 12 B2: the Sạp Săn Hàng board. A broken board is dropped (a new one is laid on next look);
+  // slots of things no longer in the content are dropped, and Vận May counters kept when they are sane.
+  if (state.bazaar !== undefined) {
+    const z = state.bazaar as Partial<NonNullable<GameState['bazaar']>> | null;
+    if (!z || typeof z !== 'object' || !Number.isInteger(z.window) || !Number.isInteger(z.roll) || !Array.isArray(z.slots)) delete state.bazaar;
+    else {
+      z.slots = z.slots.filter(
+        (sl) => sl && (sl.kind === 'pot' ? content.pots.has(sl.id) : sl.kind === 'item' && content.items.has(sl.id)) && Number.isInteger(sl.qty) && sl.qty > 0 && Number.isFinite(sl.price) && sl.price > 0 && (sl.currency === 'coins' || sl.currency === 'gems'),
+      );
+      if (!Number.isInteger(z.day)) z.day = -1;
+      if (!Number.isInteger(z.rerolls) || z.rerolls! < 0) z.rerolls = 0;
+      const luck: Record<string, number> = {};
+      for (const [k, v] of Object.entries(z.luck && typeof z.luck === 'object' ? z.luck : {})) if (Number.isInteger(v) && v >= 0) luck[k] = v;
+      z.luck = luck;
+    }
+  }
   if (!state.ranks || typeof state.ranks.day !== 'number' || typeof state.ranks.prev !== 'object' || state.ranks.prev === null) state.ranks = { day: -1, prev: {} };
 
   // Pot collection and event progress (POT_SYSTEM 8).

@@ -188,6 +188,14 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
     this.run({ type: 'buyFromNeighbor', botId, itemId, qty });
   }
 
+  rerollBazaar(): void {
+    this.run({ type: 'rerollBazaar' });
+  }
+
+  buyBazaar(slot: number): void {
+    this.run({ type: 'buyBazaar', slot });
+  }
+
   listItem(itemId: string, qty: number, price: number): void {
     this.run({ type: 'listItem', itemId, qty, price });
   }
@@ -587,6 +595,18 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
         this.sfx.play('upgrade');
         const name = content.pots.get(e.potId)?.name.vi ?? 'Chậu';
         this.toasts.show(e.perfect ? `Đúc thành công ${name} Hoàn Mỹ ★! Chậu đã vào kho chậu.` : `Đúc thành công ${name}! Chậu đã vào kho chậu.`, 'level', 3000);
+        break;
+      }
+      case 'bazaarRerolled':
+        this.sfx.play(e.best === 'epic' || e.best === 'legendary' ? 'upgrade' : 'tap');
+        if (e.best === 'legendary') this.toasts.show('Trời ơi! Sạp vừa bày món Huyền Thoại!', 'level', 3000);
+        else if (e.best === 'epic') this.toasts.show('Có món Sử Thi trên sạp kìa!', 'level', 2600);
+        break;
+      case 'bazaarBought': {
+        this.sfx.play(e.rarity === 'epic' || e.rarity === 'legendary' ? 'upgrade' : 'coin');
+        const name = e.kind === 'pot' ? content.pots.get(e.itemId)?.name.vi : content.items.get(e.itemId)?.name.vi;
+        const paid = `−${formatNumber(e.price)} ${e.currency === 'gems' ? 'Ngọc Mây' : 'xu'}`;
+        this.toasts.show(e.kind === 'pot' ? `Săn được ${name}! Chậu đã vào kho chậu. ${paid}` : `Đã mua ${e.qty} ${name ?? ''}: ${paid}`, e.rarity === 'legendary' || e.rarity === 'epic' ? 'level' : 'success', 2600);
         break;
       }
       case 'bugsSold':

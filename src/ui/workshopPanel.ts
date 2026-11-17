@@ -72,8 +72,8 @@ export class WorkshopPanel extends Panel {
         const left = job.endsAt - now;
         queue.append(h('span', { class: `chip${left <= 0 ? ' on' : ''}` }, itemIcon(content, out, 20), left <= 0 ? 'Xong (chờ kho trống)' : formatMinutes(left)));
       }
-      const star = nextStarCost(content, machine, m);
-      const slot = nextSlotCost(content, m);
+      const star = nextStarCost(content, machine, m, state.player.level);
+      const slot = nextSlotCost(content, m, state.player.level);
       const starBtn =
         star &&
         h(
