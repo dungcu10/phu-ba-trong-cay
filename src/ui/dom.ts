@@ -1,7 +1,7 @@
 // Tiny DOM helpers for the HTML overlay (HUD and panels). The overlay is only touched on
 // game events and on a 1-second timer, never from the render loop.
 
-import { atlasData, atlasUrls, sheetOf, type SheetName } from '../render/assets.ts';
+import { atlasData, atlasUrls, extraAtlases, sheetOf, type SheetName } from '../render/assets.ts';
 
 type Child = Node | string | null | undefined | false;
 type Attrs = Record<string, string | number | boolean | ((e: Event) => void) | undefined>;
@@ -21,8 +21,11 @@ export function h<K extends keyof HTMLElementTagNameMap>(tag: K, attrs: Attrs = 
 
 /** An icon cut from the world atlas with CSS, so the HTML UI reuses the same image file. */
 export function icon(frame: string, sizePt: number, sheetName?: SheetName): HTMLElement {
-  const sheet = sheetName ?? sheetOf(frame) ?? 'sprites';
-  const data = atlasData[sheet];
+  const sheet = sheetName ?? sheetOf(frame);
+  // Chỉ thị 10 art (bugs, birds, Xu Xu) lives in atlases added at run time.
+  const extra = sheet ? undefined : extraAtlases.find((a) => a.data.frames[frame]);
+  const data = sheet ? atlasData[sheet] : (extra?.data ?? atlasData.sprites);
+  const url = sheet ? atlasUrls[sheet] : (extra?.url ?? atlasUrls.sprites);
   const f = data.frames[frame]?.frame;
   const el = h('span', { class: 'icon', 'aria-hidden': 'true' });
   if (!f) return el;
@@ -31,7 +34,7 @@ export function icon(frame: string, sizePt: number, sheetName?: SheetName): HTML
   Object.assign(el.style, {
     width: `${sizePt}px`,
     height: `${sizePt}px`,
-    backgroundImage: `url("${atlasUrls[sheet]}")`,
+    backgroundImage: `url("${url}")`,
     backgroundSize: `${meta.w * k}px ${meta.h * k}px`,
     backgroundPosition: `${-f.x * k + (sizePt - f.w * k) / 2}px ${-f.y * k + (sizePt - f.h * k) / 2}px`,
   });

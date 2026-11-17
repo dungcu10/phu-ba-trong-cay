@@ -20,7 +20,7 @@ import { expandCost, nextStar } from '../systems/floors.ts';
 import { allMissionsClaimed, ensureMissions, localDay, missionDef, recordMissions } from '../systems/missions.ts';
 import { ensureQuestPeriods, questActive, questClaims, questReward, questView, recordQuests } from '../systems/quests.ts';
 import { botGarden, helpReward, helpsLeft, helpToday, type HelpKind } from '../systems/visit.ts';
-import { advanceBirds, buyMillet, feedBird, obtainBird, placeBird, type BirdError, type BirdEvent } from '../systems/birds.ts';
+import { advanceBirds, buyMillet, feedAll, feedBird, obtainBird, placeBird, type BirdError, type BirdEvent } from '../systems/birds.ts';
 
 export type SlotRef = { floor: number; slot: number };
 
@@ -68,7 +68,8 @@ export type Command =
   | { type: 'obtainBird'; species: string; how: 'rent' | 'buy' }
   | { type: 'feedBird'; birdId: string; itemId: string }
   | { type: 'placeBird'; birdId: string; floor: number; branch: number }
-  | { type: 'buyMillet'; qty: number };
+  | { type: 'buyMillet'; qty: number }
+  | { type: 'feedAllBirds' };
 
 export type GameEvent =
   | { type: 'planted'; slot: SlotRef; cropId: string; cost: number }
@@ -243,6 +244,10 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
       return birdResult(placeBird(content, state, cmd.birdId, cmd.floor, cmd.branch), []);
     case 'buyMillet':
       return birdResult(buyMillet(content, state, cmd.qty), []);
+    case 'feedAllBirds': {
+      const r = feedAll(content, state, now);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'birdFed', birdId: '*', food: r.fed }] };
+    }
     case 'harvest':
       return harvest(content, state, cmd, now);
     case 'sell':

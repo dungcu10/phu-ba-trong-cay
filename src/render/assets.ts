@@ -53,6 +53,8 @@ export const atlasData = {
   world_misc: worldMiscData as unknown as SpritesheetData,
 };
 export type SheetName = keyof typeof atlasData;
+/** Atlases added at run time (Art.addAtlas), so the HTML icons can use their frames too. */
+export const extraAtlases: { url: string; data: SpritesheetData }[] = [];
 const SHEETS = Object.keys(atlasData) as SheetName[];
 
 /** Atlas holding a frame (frames are unique across atlases), or null. */
@@ -139,6 +141,7 @@ export class Art {
    * per floor). Frames already present are kept.
    */
   async addAtlas(url: string, data: SpritesheetData): Promise<void> {
+    extraAtlases.push({ url, data });
     const tex = await Assets.load<Texture>(url);
     Object.assign(this.frames, await new Spritesheet(tex, data).parse());
   }

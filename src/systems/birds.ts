@@ -283,3 +283,17 @@ export function buyMillet(content: ContentPack, state: GameState, qty: number): 
 export function rentEndsSoon(content: ContentPack, b: BirdState, now: number): boolean {
   return b.rentUntil !== null && b.rentUntil - now <= rules(content).rentWarnMinutes * MIN && b.rentUntil > now;
 }
+
+/** "Cho ăn hết": Hạt Kê Mây to every bird that is not full, until full or out of millet. */
+export function feedAll(content: ContentPack, state: GameState, now: number): BirdError | { fed: number } {
+  const r = rules(content);
+  let fed = 0;
+  for (const b of state.birds) {
+    while (foodAt(content, b, now) < r.foodMax - 0.5 && (state.inventory[r.millet.item] ?? 0) > 0) {
+      if (typeof feedBird(content, state, b.id, r.millet.item, now) === 'string') break;
+      fed += 1;
+    }
+  }
+  if (fed === 0) return state.birds.every((b) => foodAt(content, b, now) >= r.foodMax - 0.5) ? 'already_full' : 'not_enough_items';
+  return { fed };
+}
