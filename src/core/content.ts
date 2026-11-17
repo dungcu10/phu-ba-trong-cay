@@ -405,7 +405,7 @@ export interface EventDef {
 export interface ItemDef {
   id: string;
   name: LocalizedText;
-  kind: 'produce' | 'bug' | 'material';
+  kind: 'produce' | 'bug' | 'material' | 'good';
   sellPrice: number | null;
   countsTowardStorage: boolean;
   /** For mutated produce: the mutation and the normal item it is a variant of. */
@@ -451,7 +451,33 @@ export interface MachineDef {
   name: LocalizedText;
   worker: string;
   unlockLevel: number;
-  recipes: Array<{ id: string; inputs: Record<string, number>; anyOf?: { family: string; qty: number }[]; output: string; minutes: number }>;
+  recipes: RecipeDef[];
+}
+
+export interface RecipeDef {
+  id: string;
+  inputs: Record<string, number>;
+  output: string;
+  minutes: number;
+}
+
+/** Chỉ thị 10 § 3.5: a processed good (Hoa Sấy, Hũ Mứt, Chai Nước Ép…): sold like produce, kept in storage. */
+export interface GoodDef {
+  id: string;
+  name: LocalizedText;
+  icon: string;
+  sellPrice: number;
+  machine: string;
+}
+
+export interface WorkshopRules {
+  slotsStart: number;
+  slotsMax: number;
+  slotCost: number[];
+  stars: Array<{ coins: number; bugs: number }>;
+  starSpeed: number;
+  starOrderBonus: number;
+  valueCap: number;
 }
 
 export interface ContentPack {
@@ -478,6 +504,10 @@ export interface ContentPack {
   birds?: Map<string, BirdDef>;
   birdRules?: BirdRules;
   machines?: Map<string, MachineDef>;
+  /** Chỉ thị 10 § 3.5: processed goods, recipes by id, workshop rules. */
+  goods?: Map<string, GoodDef>;
+  recipes?: Map<string, { machine: MachineDef; recipe: RecipeDef }>;
+  workshopRules?: WorkshopRules;
   missions: MissionsConfig;
   materials: Map<string, MaterialDef>;
   events: EventDef[];
@@ -508,6 +538,7 @@ export interface RawContent {
   features: unknown;
   tutorials: unknown;
   birds?: unknown;
+  workshop?: unknown;
 }
 
 export class ContentError extends Error {
@@ -523,7 +554,7 @@ type ReadJson = (relativePath: string) => Promise<unknown>;
 export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> {
   const manifest = (await readJson('manifest.json')) as {
     contentVersion: number;
-    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions' | 'materials' | 'events' | 'quests' | 'features' | 'tutorials', string> & Partial<Record<'birds', string>>;
+    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions' | 'materials' | 'events' | 'quests' | 'features' | 'tutorials', string> & Partial<Record<'birds' | 'workshop', string>>;
   };
   const raw: RawContent = {
     contentVersion: manifest.contentVersion,
@@ -543,6 +574,7 @@ export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> 
     features: await readJson(manifest.files.features),
     tutorials: await readJson(manifest.files.tutorials),
     birds: manifest.files.birds ? await readJson(manifest.files.birds) : undefined,
+    workshop: manifest.files.workshop ? await readJson(manifest.files.workshop) : undefined,
   };
   return buildContentPack(raw);
 }
@@ -831,6 +863,43 @@ export function buildContentPack(raw: RawContent): ContentPack {
     else if (!materials.has(birdRules.millet.item)) problems.push(`birds.rules.millet.item: "${birdRules.millet.item}" không tồn tại`);
   }
 
+  // Chỉ thị 10 § 3.5: Xưởng Bọ (machines, recipes, processed goods).
+  let machines: Map<string, MachineDef> | undefined;
+  let goods: Map<string, GoodDef> | undefined;
+  let recipes: Map<string, { machine: MachineDef; recipe: RecipeDef }> | undefined;
+  let workshopRules: WorkshopRules | undefined;
+  if (isObj(raw.workshop)) {
+    const rw = raw.workshop as { machines?: unknown; goods?: unknown; rules?: WorkshopRules };
+    machines = new Map();
+    goods = new Map();
+    recipes = new Map();
+    workshopRules = rw.rules;
+    asArray('workshop.goods', rw.goods, problems).forEach((g, i) => {
+      if (!checkFields(`workshop.goods[${i}]`, g, ['sellPrice'], ['id', 'icon', 'machine'], problems)) return;
+      const def = g as unknown as GoodDef;
+      addUnique(goods!, def, `workshop.goods[${i}]`, problems);
+      addUnique(items, { id: def.id, name: def.name, kind: 'good', sellPrice: def.sellPrice, countsTowardStorage: true }, `workshop.goods[${i}]`, problems);
+    });
+    asArray('workshop.machines', rw.machines, problems).forEach((m, i) => {
+      if (!checkFields(`workshop.machines[${i}]`, m, ['unlockLevel'], ['id', 'worker'], problems)) return;
+      const def = m as unknown as MachineDef;
+      if (!bugs.has(def.worker)) problems.push(`workshop.machines[${i}].worker: "${def.worker}" không phải bọ`);
+      addUnique(machines!, def, `workshop.machines[${i}]`, problems);
+      for (const r of asArray(`workshop.machines[${i}].recipes`, def.recipes, problems) as unknown as RecipeDef[]) {
+        for (const id of Object.keys(r.inputs ?? {})) if (!items.has(id)) problems.push(`${r.id}: đầu vào "${id}" không tồn tại`);
+        if (!items.has(r.output)) problems.push(`${r.id}: thành phẩm "${r.output}" không tồn tại`);
+        if (!isNum(r.minutes) || r.minutes <= 0) problems.push(`${r.id}: minutes phải > 0`);
+        // § 3.5: a good is worth at most valueCap × the produce that went in.
+        const out = items.get(r.output);
+        const inValue = Object.entries(r.inputs ?? {}).reduce((a, [id, q]) => a + (items.get(id)?.sellPrice ?? 0) * q, 0);
+        if (out?.sellPrice && inValue > 0 && workshopRules && out.sellPrice > inValue * workshopRules.valueCap) problems.push(`${r.id}: giá thành phẩm vượt ${workshopRules.valueCap} lần đầu vào`);
+        if (recipes!.has(r.id)) problems.push(`${r.id}: trùng id công thức`);
+        recipes!.set(r.id, { machine: def, recipe: r });
+      }
+    });
+    if (!workshopRules || !isNum(workshopRules.slotsStart) || !Array.isArray(workshopRules.stars) || workshopRules.stars.length !== 4) problems.push('workshop.rules: thiếu hoặc sai (stars cần 4 mốc cho sao 2–5)');
+  }
+
   if (problems.length > 0) throw new ContentError(problems);
   const handFloors = [...floors.values()].sort((a, b) => a.unlockLevel - b.unlockLevel);
   const income = new IncomeModel(config.income, [...crops.values()], handFloors, config.floorGen);
@@ -853,6 +922,10 @@ export function buildContentPack(raw: RawContent): ContentPack {
     bugList: [...bugs.values()],
     birds,
     birdRules,
+    machines,
+    goods,
+    recipes,
+    workshopRules,
     potSets,
     missions,
     materials,

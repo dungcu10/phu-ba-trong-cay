@@ -165,6 +165,8 @@ export function itemIcon(content: ContentPack, itemId: string, size: number): El
   if (mat?.icon.startsWith('svg:') && mat.icon.slice(4) in ICONS) return svgIcon(mat.icon.slice(4) as IconName, size);
   // Chỉ thị 10/11: approved pictures (7_bieu-tuong, cut by tools/art/build.py) as "art:<frame>".
   if (mat?.icon.startsWith('art:')) return icon(mat.icon.slice(4), size);
+  const good = content.goods?.get(itemId);
+  if (good?.icon.startsWith('art:')) return icon(good.icon.slice(4), size);
   if (mat?.icon.startsWith('tmp:')) return tempIcon(mat.icon, size);
   // Chỉ thị 10: bugs with approved art use it (one frame).
   const bug = content.bugs.get(itemId);

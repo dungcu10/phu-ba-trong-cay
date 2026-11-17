@@ -20,6 +20,7 @@ import { expandCost, expandItems, nextStar } from '../systems/floors.ts';
 import { allMissionsClaimed, ensureMissions, localDay, missionDef, recordMissions } from '../systems/missions.ts';
 import { ensureQuestPeriods, questActive, questClaims, questReward, questView, recordQuests } from '../systems/quests.ts';
 import { botGarden, helpReward, helpsLeft, helpToday, type HelpKind } from '../systems/visit.ts';
+import { buyMachineSlot, collectWorkshop, startJob, upgradeMachine, type WorkshopError, type WorkshopEvent } from '../systems/workshop.ts';
 import { advanceBirds, buyMillet, feedAll, feedBird, obtainBird, placeBird, type BirdError, type BirdEvent } from '../systems/birds.ts';
 
 export type SlotRef = { floor: number; slot: number };
@@ -69,13 +70,18 @@ export type Command =
   | { type: 'feedBird'; birdId: string; itemId: string }
   | { type: 'placeBird'; birdId: string; floor: number; branch: number }
   | { type: 'buyMillet'; qty: number }
-  | { type: 'feedAllBirds' };
+  | { type: 'feedAllBirds' }
+  /** Chỉ thị 10 § 3.5: Xưởng Bọ. */
+  | { type: 'startJob'; recipeId: string }
+  | { type: 'upgradeMachine'; machineId: string }
+  | { type: 'buyMachineSlot'; machineId: string };
 
 export type GameEvent =
   | { type: 'planted'; slot: SlotRef; cropId: string; cost: number }
   | { type: 'watered'; slot: SlotRef; savedMs: number }
   | { type: 'bugCaught'; slot: SlotRef; itemId: string }
   | BirdEvent
+  | WorkshopEvent
   | { type: 'birdObtained'; birdId: string; species: string; rented: boolean }
   | { type: 'birdFed'; birdId: string; food: number }
   | { type: 'newBug'; itemId: string }
@@ -150,7 +156,8 @@ export type ErrorCode =
   | 'unknown_quest'
   | 'quest_not_ready'
   | 'market_limit'
-  | BirdError;
+  | BirdError
+  | WorkshopError;
 
 export type Result = { ok: true; events: GameEvent[] } | { ok: false; error: ErrorCode };
 
@@ -188,7 +195,7 @@ export function dispatch(content: ContentPack, state: GameState, cmd: Command, r
   ensureMissions(content, state, now);
   ensureQuestPeriods(content, state, now);
   // Birds work in time order up to now, before the player acts, with the player's own catchBug.
-  const birdEvents = runBirds(content, state, now);
+  const birdEvents = [...runBirds(content, state, now), ...collectWorkshop(content, state, now)];
   const ran = run(content, state, cmd, now);
   // Bird catches count for missions even when the player's command itself fails.
   const result: Result = ran.ok ? { ok: true, events: [...birdEvents, ...ran.events] } : { ok: true, events: birdEvents };
@@ -244,6 +251,12 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
       return birdResult(placeBird(content, state, cmd.birdId, cmd.floor, cmd.branch), []);
     case 'buyMillet':
       return birdResult(buyMillet(content, state, cmd.qty), []);
+    case 'startJob':
+    case 'upgradeMachine':
+    case 'buyMachineSlot': {
+      const r = cmd.type === 'startJob' ? startJob(content, state, cmd.recipeId, now) : cmd.type === 'upgradeMachine' ? upgradeMachine(content, state, cmd.machineId) : buyMachineSlot(content, state, cmd.machineId);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [r] };
+    }
     case 'feedAllBirds': {
       const r = feedAll(content, state, now);
       return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'birdFed', birdId: '*', food: r.fed }] };
