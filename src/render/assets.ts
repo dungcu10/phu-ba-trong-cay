@@ -16,14 +16,41 @@ import catalogData from '../../assets/art/pots_catalog.json';
 import catalogWebp from '../../assets/art/pots_catalog.webp?url';
 import signatureData from '../../assets/art/pots_signature.json';
 import signatureWebp from '../../assets/art/pots_signature.webp?url';
+import worldHouseData from '../../assets/art/world_floor_house.json';
+import worldHouseWebp from '../../assets/art/world_floor_house.webp?url';
+import worldFallsData from '../../assets/art/world_floor_falls.json';
+import worldFallsWebp from '../../assets/art/world_floor_falls.webp?url';
+import worldBridgeData from '../../assets/art/world_floor_bridge.json';
+import worldBridgeWebp from '../../assets/art/world_floor_bridge.webp?url';
+import worldVineData from '../../assets/art/world_vine.json';
+import worldVineWebp from '../../assets/art/world_vine.webp?url';
+import worldMiscData from '../../assets/art/world_misc.json';
+import worldMiscWebp from '../../assets/art/world_misc.webp?url';
 
-export const atlasUrls = { sprites: spritesPng, scene: scenePng, pots_phoenix: phoenixWebp, pots_catalog: catalogWebp, pots_signature: signatureWebp } as const;
+export const atlasUrls = {
+  sprites: spritesPng,
+  scene: scenePng,
+  pots_phoenix: phoenixWebp,
+  pots_catalog: catalogWebp,
+  pots_signature: signatureWebp,
+  world_floor_house: worldHouseWebp,
+  world_floor_falls: worldFallsWebp,
+  world_floor_bridge: worldBridgeWebp,
+  world_vine: worldVineWebp,
+  world_misc: worldMiscWebp,
+} as const;
 export const atlasData = {
   sprites: spritesData as unknown as SpritesheetData,
   scene: sceneData as unknown as SpritesheetData,
   pots_phoenix: phoenixData as unknown as SpritesheetData,
   pots_catalog: catalogData as unknown as SpritesheetData,
   pots_signature: signatureData as unknown as SpritesheetData,
+  // The owner's concept art (cut out and upscaled by tools/concept): cloud floors, vine, pets.
+  world_floor_house: worldHouseData as unknown as SpritesheetData,
+  world_floor_falls: worldFallsData as unknown as SpritesheetData,
+  world_floor_bridge: worldBridgeData as unknown as SpritesheetData,
+  world_vine: worldVineData as unknown as SpritesheetData,
+  world_misc: worldMiscData as unknown as SpritesheetData,
 };
 export type SheetName = keyof typeof atlasData;
 const SHEETS = Object.keys(atlasData) as SheetName[];
@@ -73,6 +100,14 @@ export function potMouth(frame: string): number | null {
   const s = sheetOf(frame);
   const f = s ? (atlasData[s].frames[frame] as unknown as { mouth?: number }) : null;
   return typeof f?.mouth === 'number' ? f.mouth : null;
+}
+
+/** A numeric extra field stored on an atlas frame (e.g. a pedestal's "lift"), or 0. */
+export function frameNumber(frame: string, key: string): number {
+  const s = sheetOf(frame);
+  const f = s ? (atlasData[s].frames[frame] as unknown as Record<string, unknown>) : null;
+  const v = f?.[key];
+  return typeof v === 'number' ? v : 0;
 }
 
 /** Frames the scene itself needs, besides those named by the content pack. */

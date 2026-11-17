@@ -17,6 +17,7 @@ import { Ambience } from './ambience.ts';
 import { homeGarden, type GardenFloor, type GardenModel } from './garden.ts';
 import { SLOT_GEOM, SlotView } from './slotView.ts';
 import { ease, Tweens } from './tween.ts';
+import { PET_SPECIES, PetActor } from './worldArt.ts';
 import { buildVine, floorArtId, floorPicture, hasWorld10, pedestalSprite, ringSprites, slotXs, type Swayer } from './world10.ts';
 
 /** Giao diện fantasy (chỉ thị 06): night glass + thin gold for the canvas signs too. */
@@ -89,6 +90,8 @@ interface FloorView {
   animating: boolean;
   /** Chỉ thị 10: back half of the cloud ring around the vine (drawn behind the vine, follows the floor). */
   ringBack: Sprite | null;
+  /** Pets living on this floor (the owner's approved pets, decoration until the pet system). */
+  pets: PetActor[];
 }
 
 type Drag = {
@@ -383,6 +386,15 @@ export class GameView {
     const pedLayer = new Container();
     const potLayer = new Container();
     container.addChild(pedLayer, potLayer);
+    const pets: PetActor[] = [];
+    if (fi < PET_SPECIES.length) {
+      // One pet per floor for the first floors, wandering on the lawn in front of the pots.
+      const pet = PetActor.create(this.art, PET_SPECIES[fi]!, 77 + fi * 31, -WORLD.potRowSpan / 2 - 90, WORLD.potRowSpan / 2);
+      if (pet) {
+        pet.sprite.position.set(-WORLD.potRowSpan / 2 - 60 + ((fi * 263) % 700), 30);
+        pets.push(pet);
+      }
+    }
     f.pots.forEach((_, i) => {
       const view = new SlotView(fi, i, this.art, this.tweens, this.dot, this.glow);
       if (w10) {
@@ -406,8 +418,9 @@ export class GameView {
     }
     const sign = this.buildSign(f);
     container.addChild(sign);
+    for (const p of pets) container.addChild(p.sprite);
     this.floorsLayer.addChild(container);
-    return { key: this.floorKey(f), container, slots, ghost, sign, signKey: this.signKey(f), phase: fi * 1.7, animating: false, ringBack };
+    return { key: this.floorKey(f), container, slots, ghost, sign, signKey: this.signKey(f), phase: fi * 1.7, animating: false, ringBack, pets };
   }
 
   private popNewSlot(fv: FloorView, i: number): void {
@@ -774,6 +787,8 @@ export class GameView {
         fv.ringBack.y = fv.container.y + RING_Y;
         fv.ringBack.alpha = fv.container.alpha;
       }
+      // Pets only move while their floor is drawn.
+      for (const p of fv.pets) p.update(dt, fv.container.visible);
     });
     // Leaves and lanterns sway, only around the floor in view (the one in view and its neighbours).
     // Visible band: from the camera floor up through the zoomed-out floors above it.

@@ -1,0 +1,6 @@
+{
+ "cloud-cat_idle": ["out/cat2_x4.png", [148, 28, 445, 266], "near"],
+ "cloud-cat_run": ["out/cat2_x4.png", [565, 38, 925, 266], "near"],
+ "cloud-cat_sleep": ["out/cat2_x4.png", [135, 312, 405, 538], "main"],
+ "cloud-cat_happy": ["out/cat2_x4.png", [645, 322, 940, 540], "near"]
+}

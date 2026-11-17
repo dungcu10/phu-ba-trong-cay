@@ -76,7 +76,9 @@ async function boot(): Promise<void> {
   // Directive 05 step 3: the retired catalog pots' atlas (29.5 MB of GPU memory) is only loaded when
   // the save still owns one of those pots. The dev demo that places them loads it on demand.
   const ownsCatalogPot = Object.values(state.pots).some((p) => content.pots.get(p.potId)?.sprite.startsWith('pots/catalog/'));
-  const art = await Art.load(ownsCatalogPot ? [] : ['pots_catalog']);
+  // Chỉ thị 10 replaced the concept floors and vine (files kept); only their pets atlas is still used.
+  const retired = ['world_floor_house', 'world_floor_falls', 'world_floor_bridge', 'world_vine'] as const;
+  const art = await Art.load(ownsCatalogPot ? [...retired] : ['pots_catalog', ...retired]);
   // Chỉ thị 10: the approved world art (vine, cloud rings, pedestals, bugs, birds, Xu Xu); floors load lazily.
   await loadWorld10(art);
   const missing = art.missingFor(content);

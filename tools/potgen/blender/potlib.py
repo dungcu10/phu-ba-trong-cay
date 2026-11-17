@@ -7,7 +7,9 @@ nên cùng một bộ hàm dùng lại được cho mọi dòng chậu.
 Quy ước: Z hướng lên, máy quay nhìn theo +Y (mặt trước của chậu quay về -Y).
 Chiều cao thân chậu chuẩn hóa ~1.0 đơn vị.
 """
+import json
 import math
+import os
 import random
 
 import bmesh
@@ -1381,6 +1383,18 @@ def _track(ob, target):
     c.target = target
     c.track_axis = "TRACK_NEGATIVE_Z"
     c.up_axis = "UP_Y"
+
+
+def load_style(path):
+    """Đọc một preset ánh sáng trong style/. Preset có thể "extends" preset khác rồi ghi đè vài khóa
+    (ví dụ world.json kế thừa studio_cream.json và chỉ thay đèn). studio_cream vẫn là mặc định của chậu."""
+    style = json.load(open(path, encoding="utf-8"))
+    base = style.pop("extends", None)
+    if base:
+        merged = load_style(os.path.join(os.path.dirname(path), base))
+        merged.update(style)
+        style = merged
+    return style
 
 
 def setup_scene(style):

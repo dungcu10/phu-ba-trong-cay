@@ -1,0 +1,14 @@
+{
+  "extends": "studio_cream.json",
+  "name": "world",
+  "note": "Preset cho cây leo, tầng mây, thú cưng (chỉ thị 08). Chung camera, AgX/Standard, độ phơi sáng với studio_cream; chỉ khác đèn: nắng chiều chính từ trên-trái, viền sáng vàng ấm từ sau-phải, đèn hắt tím từ dưới để bóng ngả tím. studio_cream giữ nguyên và vẫn là mặc định cho chậu.",
+  "world_color": "#E6D3E8",
+  "world_strength": 0.42,
+  "lights": [
+    {"name": "Key", "loc": [-4.5, -5.5, 6.5], "energy": 1180, "size": 4.0, "color": "#FFDDA8"},
+    {"name": "Rim", "loc": [4.0, 5.0, 4.5], "energy": 900, "size": 3.0, "color": "#FFC86A"},
+    {"name": "Bounce", "loc": [0.5, -4.0, -4.5], "energy": 300, "size": 6.0, "color": "#B9A8D6"},
+    {"name": "Fill", "loc": [5.5, -5.0, 2.0], "energy": 200, "size": 5.0, "color": "#FFD9E0"},
+    {"name": "Top", "loc": [0.0, -1.0, 8.0], "energy": 200, "size": 4.0, "color": "#FFF1DC"}
+  ]
+}
