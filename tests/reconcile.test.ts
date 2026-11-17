@@ -100,6 +100,8 @@ test('game mở được và chơi tiếp với save có cây đã bị gỡ kh�
   raw.crops = (raw.crops as Array<{ id: string }>).filter((c) => c.id !== TOMATO);
   // A content edit that removes a crop also removes it from floor star requirements.
   for (const f of raw.floors as Array<{ stars: Array<{ items: Record<string, number> }> }>) for (const st of f.stars) delete st.items['base:item.cherry-tomato'];
+  // …and from quests that name it.
+  for (const q of (raw.quests as { quests: Array<{ filter?: { cropId?: string } }> }).quests) if (q.filter?.cropId === TOMATO) delete q.filter.cropId;
   const smaller = buildContentPack(raw);
   const r = await loadLocal(envelope(s), smaller);
   assert.ok(r.kind === 'loaded');

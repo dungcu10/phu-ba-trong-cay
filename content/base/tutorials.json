@@ -1,0 +1,62 @@
+[
+  {
+    "id": "tut.orders",
+    "title": {
+      "vi": "Mở khóa: Đơn khinh khí cầu"
+    },
+    "text": {
+      "vi": "Khinh khí cầu của hàng xóm ghé đặt hàng. Giao đủ nông sản để nhận nhiều xu và kinh nghiệm hơn bán thường; đơn quý còn tặng Ngọc Mây."
+    },
+    "target": "open-orders"
+  },
+  {
+    "id": "tut.journal",
+    "title": {
+      "vi": "Mở khóa: Sổ Tay"
+    },
+    "text": {
+      "vi": "Sổ Tay ghi mỗi loại cây bạn đã thu hoạch. Đủ mốc thì nhận Ngọc Mây."
+    },
+    "target": "open-journal"
+  },
+  {
+    "id": "tut.shop",
+    "title": {
+      "vi": "Mở khóa: Lò Gốm Bà Mây"
+    },
+    "text": {
+      "vi": "Mua chậu mới: mỗi chậu có chỉ số riêng và lên được 50 cấp. Chậu hợp họ cây thì càng mạnh."
+    },
+    "target": "open-shop"
+  },
+  {
+    "id": "tut.neighbors",
+    "title": {
+      "vi": "Mở khóa: Bảng Phú Bà"
+    },
+    "text": {
+      "vi": "Xem ai giàu nhất làng mây, ghé vườn hàng xóm tưới cây và bắt bọ giúp họ để nhận xu và tình thân."
+    },
+    "target": "open-neighbors"
+  },
+  {
+    "id": "tut.event",
+    "title": {
+      "vi": "Mở khóa: Lễ Hội"
+    },
+    "text": {
+      "vi": "Lễ hội có hạn: chơi như thường để tích điểm, đạt mốc nhận quà độc quyền."
+    },
+    "target": "open-event"
+  },
+  {
+    "id": "tut.stall",
+    "title": {
+      "vi": "Mở khóa: Sạp Phú Bà"
+    },
+    "text": {
+      "vi": "Bày nông sản lên sạp với giá bạn chọn. Hàng xóm ghé mua theo sở thích — giá càng hời bán càng nhanh."
+    },
+    "target": "open-stall"
+  }
+]

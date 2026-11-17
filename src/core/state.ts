@@ -2,8 +2,9 @@
 
 import type { ContentPack, FloorDef } from './content.ts';
 import { newSeed } from './rng.ts';
+import { emptyQuestState, type QuestState } from '../systems/quests.ts';
 
-export const SAVE_VERSION = 9;
+export const SAVE_VERSION = 10;
 
 export interface Planting {
   /** Unique per planting, used as a key for deterministic randomness. */
@@ -46,7 +47,7 @@ export interface PotInstance {
   level: number;
   /** Game time it was obtained (POT_SYSTEM 8), and how. */
   obtainedAt?: number;
-  source?: 'start' | 'shop' | 'floor' | 'exchange' | 'event' | 'old-save';
+  source?: 'start' | 'shop' | 'floor' | 'exchange' | 'event' | 'old-save' | 'quest';
   /** Every level reached, with the time (kept small: one entry per level, at most 50). */
   history?: Array<{ level: number; at: number }>;
 }
@@ -143,6 +144,10 @@ export interface GameState {
   upgrades: { storage: number };
   /** Daily budgets (save 9): gems given by surprise gifts on local day `day`. */
   budget: { day: number; giftGems: number };
+  /** Quests (save 10): counted progress, tiers claimed, weekly/monthly draws. */
+  quests: QuestState;
+  /** Tutorials already shown (save 10). */
+  tutorials: string[];
 }
 
 /** Builds a floor with its starting pots (used for the first floor and every unlocked one). */
@@ -188,6 +193,8 @@ export function createNewGame(content: ContentPack, now: number, entropy = now):
     events: {},
     upgrades: { storage: 0 },
     budget: { day: -1, giftGems: 0 },
+    quests: emptyQuestState(),
+    tutorials: [],
   };
 }
 

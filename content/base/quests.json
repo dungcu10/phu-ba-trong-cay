@@ -1,0 +1,1210 @@
+{
+  "tracks": [
+    {
+      "id": "newbie",
+      "name": {
+        "vi": "Tân thủ"
+      },
+      "skipAtLevel": 6
+    },
+    {
+      "id": "weekly",
+      "name": {
+        "vi": "Tuần"
+      },
+      "reset": "week",
+      "pick": 5
+    },
+    {
+      "id": "monthly",
+      "name": {
+        "vi": "Tháng"
+      },
+      "reset": "month",
+      "pick": 4
+    },
+    {
+      "id": "journey",
+      "name": {
+        "vi": "Hành trình"
+      }
+    },
+    {
+      "id": "achievement",
+      "name": {
+        "vi": "Thành tựu"
+      }
+    },
+    {
+      "id": "secret",
+      "name": {
+        "vi": "Bí mật"
+      }
+    }
+  ],
+  "quests": [
+    {
+      "id": "newbie.01-plant-daisy",
+      "track": "newbie",
+      "name": {
+        "vi": "Gieo hạt Cúc Bông Gòn"
+      },
+      "desc": {
+        "vi": "Chạm vào một chậu trống rồi chọn Cúc Bông Gòn (miễn phí)."
+      },
+      "trigger": "plant",
+      "filter": {
+        "cropId": "base:crop.cotton-daisy"
+      },
+      "target": 1,
+      "reward": {
+        "coins": 20,
+        "xp": 2
+      }
+    },
+    {
+      "id": "newbie.02-harvest-3",
+      "track": "newbie",
+      "name": {
+        "vi": "Thu hoạch 3 lần"
+      },
+      "desc": {
+        "vi": "Cây chín có ngôi sao vàng. Chạm hoặc vuốt tay qua các chậu để thu."
+      },
+      "trigger": "harvest",
+      "target": 3,
+      "reward": {
+        "coins": 20,
+        "xp": 3
+      },
+      "requires": [
+        "newbie.01-plant-daisy"
+      ]
+    },
+    {
+      "id": "newbie.03-sell-5",
+      "track": "newbie",
+      "name": {
+        "vi": "Bán 5 nông sản"
+      },
+      "desc": {
+        "vi": "Mở Rương Mây, chọn nông sản rồi bấm Bán."
+      },
+      "trigger": "sell",
+      "target": 5,
+      "reward": {
+        "coins": 30,
+        "xp": 3
+      },
+      "requires": [
+        "newbie.02-harvest-3"
+      ]
+    },
+    {
+      "id": "newbie.04-water-3",
+      "track": "newbie",
+      "name": {
+        "vi": "Tưới cây 3 lần"
+      },
+      "desc": {
+        "vi": "Cây khát hiện giọt nước. Chạm vào chậu để tưới, cây lớn nhanh hơn."
+      },
+      "trigger": "water",
+      "target": 3,
+      "reward": {
+        "coins": 20,
+        "xp": 3
+      },
+      "requires": [
+        "newbie.03-sell-5"
+      ]
+    },
+    {
+      "id": "newbie.05-level-2",
+      "track": "newbie",
+      "name": {
+        "vi": "Đạt cấp 2"
+      },
+      "desc": {
+        "vi": "Thu hoạch để có kinh nghiệm."
+      },
+      "measure": "level",
+      "target": 2,
+      "reward": {
+        "coins": 30,
+        "gems": 1
+      },
+      "requires": [
+        "newbie.04-water-3"
+      ]
+    },
+    {
+      "id": "newbie.06-plant-tomato",
+      "track": "newbie",
+      "name": {
+        "vi": "Gieo 2 hạt Cà Chua Bi Ngọt"
+      },
+      "desc": {
+        "vi": "Cà chua thu được 2 lần mỗi lần gieo."
+      },
+      "trigger": "plant",
+      "filter": {
+        "cropId": "base:crop.cherry-tomato"
+      },
+      "target": 2,
+      "reward": {
+        "coinsHours": 0.3,
+        "xp": 5
+      },
+      "requires": [
+        "newbie.05-level-2"
+      ]
+    },
+    {
+      "id": "newbie.07-order-1",
+      "track": "newbie",
+      "name": {
+        "vi": "Giao 1 đơn khinh khí cầu"
+      },
+      "desc": {
+        "vi": "Mở Đơn hàng: đủ nông sản thì bấm Giao hàng để nhận nhiều xu hơn bán."
+      },
+      "trigger": "deliverOrder",
+      "target": 1,
+      "reward": {
+        "coinsHours": 0.3,
+        "xp": 8
+      },
+      "requires": [
+        "newbie.06-plant-tomato"
+      ]
+    },
+    {
+      "id": "newbie.08-bug-2",
+      "track": "newbie",
+      "name": {
+        "vi": "Bắt 2 Bọ Mây"
+      },
+      "desc": {
+        "vi": "Bọ Mây đậu trên cây đang lớn. Chạm để bắt — bọ dùng để nâng cấp chậu."
+      },
+      "trigger": "catchBug",
+      "target": 2,
+      "reward": {
+        "coinsHours": 0.2,
+        "xp": 5
+      },
+      "requires": [
+        "newbie.07-order-1"
+      ]
+    },
+    {
+      "id": "newbie.09-upgrade-pot",
+      "track": "newbie",
+      "name": {
+        "vi": "Nâng cấp một chậu"
+      },
+      "desc": {
+        "vi": "Chạm vào một chậu đang trống để mở Bàn Thợ Gốm, rồi bấm Nâng cấp."
+      },
+      "trigger": "upgradePot",
+      "target": 1,
+      "reward": {
+        "coinsHours": 0.3,
+        "items": {
+          "base:mat.cloud-clay": 2
+        }
+      },
+      "requires": [
+        "newbie.08-bug-2"
+      ]
+    },
+    {
+      "id": "newbie.10-tomato-10",
+      "track": "newbie",
+      "name": {
+        "vi": "Thu hoạch 10 lần Cà Chua Bi Ngọt"
+      },
+      "desc": {
+        "vi": "Cà chua mọc lại sau mỗi lần thu — không cần gieo lại ngay."
+      },
+      "trigger": "harvest",
+      "filter": {
+        "cropId": "base:crop.cherry-tomato"
+      },
+      "target": 10,
+      "reward": {
+        "coinsHours": 0.3,
+        "gems": 1
+      },
+      "requires": [
+        "newbie.09-upgrade-pot"
+      ]
+    },
+    {
+      "id": "newbie.11-expand-1",
+      "track": "newbie",
+      "name": {
+        "vi": "Thêm một vị trí chậu"
+      },
+      "desc": {
+        "vi": "Chạm dấu + ở cuối tầng."
+      },
+      "trigger": "expandFloor",
+      "target": 1,
+      "reward": {
+        "coinsHours": 0.4,
+        "xp": 10
+      },
+      "requires": [
+        "newbie.10-tomato-10"
+      ]
+    },
+    {
+      "id": "newbie.12-level-3",
+      "track": "newbie",
+      "name": {
+        "vi": "Đạt cấp 3"
+      },
+      "desc": {
+        "vi": "Cấp 3 mở Lò Gốm, Bảng Phú Bà và Lễ Hội."
+      },
+      "measure": "level",
+      "target": 3,
+      "reward": {
+        "coinsHours": 0.3,
+        "gems": 1
+      },
+      "requires": [
+        "newbie.11-expand-1"
+      ]
+    },
+    {
+      "id": "newbie.13-help-1",
+      "track": "newbie",
+      "name": {
+        "vi": "Giúp hàng xóm 1 lần"
+      },
+      "desc": {
+        "vi": "Mở Phú Bà, ghé vườn một hàng xóm, tưới hoặc bắt bọ giúp họ."
+      },
+      "trigger": "helpNeighbor",
+      "target": 1,
+      "reward": {
+        "coinsHours": 0.4,
+        "xp": 10
+      },
+      "requires": [
+        "newbie.12-level-3"
+      ]
+    },
+    {
+      "id": "newbie.14-level-4",
+      "track": "newbie",
+      "name": {
+        "vi": "Đạt cấp 4"
+      },
+      "desc": {
+        "vi": "Cấp 4 mở Sạp Phú Bà."
+      },
+      "measure": "level",
+      "target": 4,
+      "reward": {
+        "coinsHours": 0.3,
+        "xp": 5
+      },
+      "requires": [
+        "newbie.13-help-1"
+      ]
+    },
+    {
+      "id": "newbie.15-stall-1",
+      "track": "newbie",
+      "name": {
+        "vi": "Bày bán 1 món ở Sạp"
+      },
+      "desc": {
+        "vi": "Mở Sạp, chọn món và giá rồi Bày lên sạp — hàng xóm sẽ ghé mua."
+      },
+      "trigger": "listStall",
+      "target": 1,
+      "reward": {
+        "coinsHours": 0.4,
+        "gems": 1
+      },
+      "requires": [
+        "newbie.14-level-4"
+      ]
+    },
+    {
+      "id": "newbie.16-level-5",
+      "track": "newbie",
+      "name": {
+        "vi": "Đạt cấp 5"
+      },
+      "desc": {
+        "vi": "Tầng mây thứ hai mở ở cấp 5."
+      },
+      "measure": "level",
+      "target": 5,
+      "reward": {
+        "coinsHours": 0.5,
+        "gems": 2
+      },
+      "requires": [
+        "newbie.15-stall-1"
+      ]
+    },
+    {
+      "id": "newbie.17-floor-2",
+      "track": "newbie",
+      "name": {
+        "vi": "Mở tầng mây thứ hai"
+      },
+      "desc": {
+        "vi": "Kéo lên dọc cây leo và chạm vào tầng mờ phía trên."
+      },
+      "measure": "floors",
+      "target": 2,
+      "reward": {
+        "coinsHours": 1,
+        "gems": 3,
+        "items": {
+          "base:mat.cloud-clay": 3
+        }
+      },
+      "requires": [
+        "newbie.16-level-5"
+      ]
+    },
+    {
+      "id": "weekly.harvest",
+      "track": "weekly",
+      "name": {
+        "vi": "Thu hoạch nhiều lần"
+      },
+      "trigger": "harvest",
+      "target": {
+        "base": 60,
+        "perLevel": 4
+      },
+      "reward": {
+        "coinsHours": 2,
+        "gems": 1
+      }
+    },
+    {
+      "id": "weekly.flowers",
+      "track": "weekly",
+      "name": {
+        "vi": "Thu hoạch cây họ Hoa"
+      },
+      "trigger": "harvest",
+      "filter": {
+        "family": "flower"
+      },
+      "target": {
+        "base": 20,
+        "perLevel": 1.5
+      },
+      "reward": {
+        "coinsHours": 2,
+        "gems": 1
+      }
+    },
+    {
+      "id": "weekly.fruits",
+      "track": "weekly",
+      "name": {
+        "vi": "Thu hoạch cây họ Quả"
+      },
+      "trigger": "harvest",
+      "filter": {
+        "family": "fruit"
+      },
+      "target": {
+        "base": 20,
+        "perLevel": 1.5
+      },
+      "reward": {
+        "coinsHours": 2,
+        "gems": 1
+      },
+      "minLevel": 2
+    },
+    {
+      "id": "weekly.herbs",
+      "track": "weekly",
+      "name": {
+        "vi": "Thu hoạch cây họ Rau Thảo"
+      },
+      "trigger": "harvest",
+      "filter": {
+        "family": "herb"
+      },
+      "target": {
+        "base": 15,
+        "perLevel": 1.2
+      },
+      "reward": {
+        "coinsHours": 2,
+        "gems": 1
+      },
+      "minLevel": 3
+    },
+    {
+      "id": "weekly.orders",
+      "track": "weekly",
+      "name": {
+        "vi": "Giao đơn khinh khí cầu"
+      },
+      "trigger": "deliverOrder",
+      "target": {
+        "base": 10,
+        "perLevel": 0.3
+      },
+      "reward": {
+        "coinsHours": 3,
+        "gems": 1
+      },
+      "minLevel": 2
+    },
+    {
+      "id": "weekly.bugs",
+      "track": "weekly",
+      "name": {
+        "vi": "Bắt Bọ Mây"
+      },
+      "trigger": "catchBug",
+      "target": {
+        "base": 25,
+        "perLevel": 1
+      },
+      "reward": {
+        "coinsHours": 2,
+        "items": {
+          "base:mat.cloud-clay": 3
+        }
+      }
+    },
+    {
+      "id": "weekly.help",
+      "track": "weekly",
+      "name": {
+        "vi": "Giúp hàng xóm"
+      },
+      "trigger": "helpNeighbor",
+      "target": 12,
+      "reward": {
+        "coinsHours": 2,
+        "gems": 1
+      },
+      "minLevel": 3
+    },
+    {
+      "id": "weekly.upgrade",
+      "track": "weekly",
+      "name": {
+        "vi": "Nâng cấp chậu"
+      },
+      "trigger": "upgradePot",
+      "target": 6,
+      "reward": {
+        "coinsHours": 2,
+        "items": {
+          "base:mat.cloud-clay": 4
+        }
+      },
+      "minLevel": 3
+    },
+    {
+      "id": "weekly.sell",
+      "track": "weekly",
+      "name": {
+        "vi": "Bán nông sản"
+      },
+      "trigger": "sell",
+      "target": {
+        "base": 150,
+        "perLevel": 8
+      },
+      "reward": {
+        "coinsHours": 2,
+        "gems": 1
+      }
+    },
+    {
+      "id": "weekly.daily",
+      "track": "weekly",
+      "name": {
+        "vi": "Hoàn thành nhiệm vụ hằng ngày"
+      },
+      "trigger": "claimDaily",
+      "target": 10,
+      "reward": {
+        "coinsHours": 2,
+        "items": {
+          "base:mat.merit-seal": 1
+        }
+      }
+    },
+    {
+      "id": "weekly.stall",
+      "track": "weekly",
+      "name": {
+        "vi": "Hàng xóm mua ở Sạp"
+      },
+      "trigger": "stallSold",
+      "target": 15,
+      "reward": {
+        "coinsHours": 2,
+        "gems": 1
+      },
+      "minLevel": 4
+    },
+    {
+      "id": "weekly.rain",
+      "track": "weekly",
+      "name": {
+        "vi": "Gọi Mưa Mây"
+      },
+      "trigger": "cloudRain",
+      "target": 2,
+      "reward": {
+        "coinsHours": 2,
+        "gems": 1
+      },
+      "minLevel": 16
+    },
+    {
+      "id": "weekly.star",
+      "track": "weekly",
+      "name": {
+        "vi": "Lên sao một tầng"
+      },
+      "trigger": "starFloor",
+      "target": 1,
+      "reward": {
+        "coinsHours": 3,
+        "gems": 1
+      },
+      "minLevel": 3
+    },
+    {
+      "id": "weekly.mutation",
+      "track": "weekly",
+      "name": {
+        "vi": "Thu hoạch quả Biến Dị"
+      },
+      "trigger": "mutation",
+      "target": 1,
+      "reward": {
+        "coinsHours": 2,
+        "gems": 1
+      },
+      "minLevel": 2
+    },
+    {
+      "id": "monthly.harvest",
+      "track": "monthly",
+      "name": {
+        "vi": "Mùa bội thu"
+      },
+      "trigger": "harvest",
+      "target": {
+        "base": 400,
+        "perLevel": 20
+      },
+      "reward": {
+        "coinsHours": 8,
+        "gems": 6
+      }
+    },
+    {
+      "id": "monthly.orders",
+      "track": "monthly",
+      "name": {
+        "vi": "Phi đội khinh khí cầu"
+      },
+      "trigger": "deliverOrder",
+      "target": {
+        "base": 40,
+        "perLevel": 1
+      },
+      "reward": {
+        "coinsHours": 8,
+        "gems": 6
+      },
+      "minLevel": 2
+    },
+    {
+      "id": "monthly.upgrade",
+      "track": "monthly",
+      "name": {
+        "vi": "Thợ gốm chăm chỉ"
+      },
+      "trigger": "upgradePot",
+      "target": 25,
+      "reward": {
+        "coinsHours": 6,
+        "items": {
+          "base:mat.cloud-clay": 10
+        }
+      },
+      "minLevel": 3
+    },
+    {
+      "id": "monthly.help",
+      "track": "monthly",
+      "name": {
+        "vi": "Láng giềng tốt bụng"
+      },
+      "trigger": "helpNeighbor",
+      "target": 45,
+      "reward": {
+        "coinsHours": 6,
+        "gems": 5
+      },
+      "minLevel": 3
+    },
+    {
+      "id": "monthly.expand",
+      "track": "monthly",
+      "name": {
+        "vi": "Mở rộng vườn"
+      },
+      "trigger": "expandFloor",
+      "target": 2,
+      "reward": {
+        "coinsHours": 8,
+        "gems": 5
+      },
+      "minLevel": 3
+    },
+    {
+      "id": "monthly.daily",
+      "track": "monthly",
+      "name": {
+        "vi": "Bền bỉ mỗi ngày"
+      },
+      "trigger": "claimDaily",
+      "target": 45,
+      "reward": {
+        "coinsHours": 6,
+        "items": {
+          "base:mat.merit-seal": 3
+        }
+      }
+    },
+    {
+      "id": "monthly.buypot",
+      "track": "monthly",
+      "name": {
+        "vi": "Sưu tầm chậu mới"
+      },
+      "trigger": "buyPot",
+      "target": 2,
+      "reward": {
+        "coinsHours": 6,
+        "gems": 5
+      },
+      "minLevel": 4
+    },
+    {
+      "id": "monthly.earn",
+      "track": "monthly",
+      "name": {
+        "vi": "Kiếm thật nhiều xu"
+      },
+      "trigger": "earnCoins",
+      "target": {
+        "base": 20000,
+        "perLevel": 4000
+      },
+      "reward": {
+        "coinsHours": 8,
+        "gems": 5
+      }
+    },
+    {
+      "id": "journey.floors",
+      "track": "journey",
+      "name": {
+        "vi": "Leo tầng mây"
+      },
+      "desc": {
+        "vi": "Mở thêm tầng mây."
+      },
+      "measure": "floors",
+      "tiers": {
+        "base": 2,
+        "step": 1,
+        "rewardGrowth": 1.03
+      },
+      "reward": {
+        "coinsHours": 2,
+        "gems": 1
+      }
+    },
+    {
+      "id": "journey.level",
+      "track": "journey",
+      "name": {
+        "vi": "Thăng cấp"
+      },
+      "desc": {
+        "vi": "Lên cấp."
+      },
+      "measure": "level",
+      "tiers": {
+        "base": 5,
+        "step": 5,
+        "rewardGrowth": 1.0
+      },
+      "reward": {
+        "coinsHours": 2,
+        "gems": 1
+      }
+    },
+    {
+      "id": "journey.stars",
+      "track": "journey",
+      "name": {
+        "vi": "Sao trên mây"
+      },
+      "desc": {
+        "vi": "Tổng số sao của các tầng."
+      },
+      "measure": "stars",
+      "tiers": {
+        "base": 3,
+        "step": 3,
+        "rewardGrowth": 1.0
+      },
+      "reward": {
+        "coinsHours": 2,
+        "gems": 1
+      }
+    },
+    {
+      "id": "journey.potlevel",
+      "track": "journey",
+      "name": {
+        "vi": "Bàn tay thợ gốm"
+      },
+      "desc": {
+        "vi": "Cấp cao nhất của một chậu."
+      },
+      "measure": "maxPotLevel",
+      "tiers": {
+        "base": 5,
+        "step": 5,
+        "rewardGrowth": 1.03
+      },
+      "reward": {
+        "coinsHours": 2,
+        "items": {
+          "base:mat.cloud-clay": 3
+        }
+      }
+    },
+    {
+      "id": "journey.storage",
+      "track": "journey",
+      "name": {
+        "vi": "Rương thêm rộng"
+      },
+      "desc": {
+        "vi": "Nâng Rương Mây."
+      },
+      "measure": "storageTier",
+      "tiers": {
+        "base": 1,
+        "step": 2,
+        "rewardGrowth": 1.0
+      },
+      "reward": {
+        "coinsHours": 1,
+        "gems": 1
+      }
+    },
+    {
+      "id": "journey.upper",
+      "track": "journey",
+      "name": {
+        "vi": "Vườn trên cao"
+      },
+      "desc": {
+        "vi": "Thu hoạch ở tầng thứ 3 trở lên."
+      },
+      "trigger": "harvest",
+      "filter": {
+        "floorMin": 2
+      },
+      "tiers": {
+        "base": 50,
+        "growth": 2.5,
+        "rewardGrowth": 1.05
+      },
+      "reward": {
+        "coinsHours": 2,
+        "gems": 1
+      }
+    },
+    {
+      "id": "journey.gerbera",
+      "track": "journey",
+      "name": {
+        "vi": "Vườn hoa vàng"
+      },
+      "desc": {
+        "vi": "Thu hoạch Hoa Đồng Tiền Vàng."
+      },
+      "trigger": "harvest",
+      "filter": {
+        "cropId": "base:crop.golden-gerbera"
+      },
+      "tiers": {
+        "base": 20,
+        "growth": 2.5,
+        "rewardGrowth": 1.05
+      },
+      "reward": {
+        "coinsHours": 2,
+        "gems": 1
+      }
+    },
+    {
+      "id": "journey.strawberry",
+      "track": "journey",
+      "name": {
+        "vi": "Dâu mây ngọt lịm"
+      },
+      "desc": {
+        "vi": "Thu hoạch Dâu Tây Mây."
+      },
+      "trigger": "harvest",
+      "filter": {
+        "cropId": "base:crop.cloud-strawberry"
+      },
+      "tiers": {
+        "base": 20,
+        "growth": 2.5,
+        "rewardGrowth": 1.05
+      },
+      "reward": {
+        "coinsHours": 2,
+        "gems": 1
+      }
+    },
+    {
+      "id": "achievement.harvest",
+      "track": "achievement",
+      "name": {
+        "vi": "Nhà nông mây"
+      },
+      "trigger": "harvest",
+      "tiers": {
+        "base": 50,
+        "growth": 3,
+        "rewardGrowth": 1.05
+      },
+      "reward": {
+        "coinsHours": 1,
+        "gems": 1
+      }
+    },
+    {
+      "id": "achievement.sell",
+      "track": "achievement",
+      "name": {
+        "vi": "Thương lái"
+      },
+      "trigger": "sell",
+      "tiers": {
+        "base": 100,
+        "growth": 3,
+        "rewardGrowth": 1.05
+      },
+      "reward": {
+        "coinsHours": 1,
+        "gems": 1
+      }
+    },
+    {
+      "id": "achievement.orders",
+      "track": "achievement",
+      "name": {
+        "vi": "Bạn của khinh khí cầu"
+      },
+      "trigger": "deliverOrder",
+      "tiers": {
+        "base": 10,
+        "growth": 3,
+        "rewardGrowth": 1.05
+      },
+      "reward": {
+        "coinsHours": 1,
+        "gems": 1
+      }
+    },
+    {
+      "id": "achievement.bugs",
+      "track": "achievement",
+      "name": {
+        "vi": "Người bắt bọ"
+      },
+      "trigger": "catchBug",
+      "tiers": {
+        "base": 20,
+        "growth": 3,
+        "rewardGrowth": 1.05
+      },
+      "reward": {
+        "coinsHours": 1,
+        "gems": 1
+      }
+    },
+    {
+      "id": "achievement.help",
+      "track": "achievement",
+      "name": {
+        "vi": "Láng giềng vàng"
+      },
+      "trigger": "helpNeighbor",
+      "tiers": {
+        "base": 5,
+        "growth": 3,
+        "rewardGrowth": 1.05
+      },
+      "reward": {
+        "coinsHours": 1,
+        "gems": 1
+      }
+    },
+    {
+      "id": "achievement.water",
+      "track": "achievement",
+      "name": {
+        "vi": "Người tưới mây"
+      },
+      "trigger": "water",
+      "tiers": {
+        "base": 30,
+        "growth": 3,
+        "rewardGrowth": 1.05
+      },
+      "reward": {
+        "coinsHours": 1,
+        "gems": 1
+      }
+    },
+    {
+      "id": "achievement.stall",
+      "track": "achievement",
+      "name": {
+        "vi": "Chủ sạp"
+      },
+      "trigger": "stallSold",
+      "tiers": {
+        "base": 10,
+        "growth": 3,
+        "rewardGrowth": 1.05
+      },
+      "reward": {
+        "coinsHours": 1,
+        "gems": 1
+      }
+    },
+    {
+      "id": "achievement.mutation",
+      "track": "achievement",
+      "name": {
+        "vi": "Săn Biến Dị"
+      },
+      "trigger": "mutation",
+      "tiers": {
+        "base": 1,
+        "growth": 3,
+        "rewardGrowth": 1.05
+      },
+      "reward": {
+        "coinsHours": 1,
+        "gems": 1
+      }
+    },
+    {
+      "id": "achievement.potlines",
+      "track": "achievement",
+      "name": {
+        "vi": "Nhà sưu tầm chậu"
+      },
+      "measure": "potLines",
+      "tiers": {
+        "base": 3,
+        "step": 3,
+        "rewardGrowth": 1.03
+      },
+      "reward": {
+        "coinsHours": 1,
+        "gems": 2
+      }
+    },
+    {
+      "id": "achievement.crops",
+      "track": "achievement",
+      "name": {
+        "vi": "Bách khoa cây trồng"
+      },
+      "measure": "cropKinds",
+      "tiers": {
+        "targets": [
+          2,
+          4,
+          6,
+          9,
+          12,
+          15,
+          18
+        ]
+      },
+      "reward": {
+        "coinsHours": 1,
+        "gems": 2
+      }
+    },
+    {
+      "id": "achievement.friend",
+      "track": "achievement",
+      "name": {
+        "vi": "Tri kỷ"
+      },
+      "measure": "bestFriendship",
+      "tiers": {
+        "base": 10,
+        "growth": 2
+      },
+      "reward": {
+        "coinsHours": 1,
+        "gems": 2
+      }
+    },
+    {
+      "id": "secret.jade",
+      "track": "secret",
+      "name": {
+        "vi": "Ngọc trong mây"
+      },
+      "desc": {
+        "vi": "Thu hoạch một quả Biến Dị Ngọc."
+      },
+      "hidden": true,
+      "trigger": "mutation",
+      "filter": {
+        "mutation": "jade"
+      },
+      "target": 1,
+      "reward": {
+        "coinsHours": 3,
+        "gems": 5
+      }
+    },
+    {
+      "id": "secret.night",
+      "track": "secret",
+      "name": {
+        "vi": "Cú đêm"
+      },
+      "desc": {
+        "vi": "Thu hoạch 10 lần trong khoảng 0–4 giờ sáng."
+      },
+      "hidden": true,
+      "trigger": "harvest",
+      "filter": {
+        "hours": [
+          0,
+          4
+        ]
+      },
+      "target": 10,
+      "reward": {
+        "coinsHours": 2,
+        "gems": 4
+      }
+    },
+    {
+      "id": "secret.golden",
+      "track": "secret",
+      "name": {
+        "vi": "Mưa vàng"
+      },
+      "desc": {
+        "vi": "Thu hoạch 10 quả Biến Dị Vàng."
+      },
+      "hidden": true,
+      "trigger": "mutation",
+      "filter": {
+        "mutation": "golden"
+      },
+      "target": 10,
+      "reward": {
+        "coinsHours": 3,
+        "gems": 5
+      }
+    },
+    {
+      "id": "secret.rain5",
+      "track": "secret",
+      "name": {
+        "vi": "Thần mưa"
+      },
+      "desc": {
+        "vi": "Gọi Mưa Mây 5 lần."
+      },
+      "hidden": true,
+      "trigger": "cloudRain",
+      "target": 5,
+      "reward": {
+        "coinsHours": 2,
+        "gems": 4
+      }
+    },
+    {
+      "id": "secret.legend",
+      "track": "secret",
+      "name": {
+        "vi": "Báu vật huyền thoại"
+      },
+      "desc": {
+        "vi": "Mua một chậu Huyền Thoại."
+      },
+      "hidden": true,
+      "trigger": "buyPot",
+      "filter": {
+        "rarity": "legendary"
+      },
+      "target": 1,
+      "reward": {
+        "coinsHours": 3,
+        "gems": 5
+      }
+    },
+    {
+      "id": "secret.top",
+      "track": "secret",
+      "name": {
+        "vi": "Trên tầng mây thứ mười"
+      },
+      "desc": {
+        "vi": "Mở tầng mây thứ 10."
+      },
+      "hidden": true,
+      "measure": "floors",
+      "target": 10,
+      "reward": {
+        "coinsHours": 5,
+        "gems": 8
+      }
+    }
+  ]
+}

@@ -7,6 +7,7 @@ export const POT_STATS: PotStatName[] = ['speed', 'yield', 'xp', 'attract', 'luc
 
 import { FloorMap, type FloorGenConfig } from './floorgen.ts';
 import { IncomeModel, type IncomeConfig } from './income.ts';
+import { validateQuests, type FeatureDef, type QuestDef, type QuestPack, type TrackDef, type TutorialDef } from './questdefs.ts';
 
 export interface GameConfig {
   startingCoins: number;
@@ -387,6 +388,13 @@ export interface ContentPack {
   missions: MissionsConfig;
   materials: Map<string, MaterialDef>;
   events: EventDef[];
+  /** Quests (đợt 2): tracks in display order, quests in file order. */
+  questTracks: Map<string, TrackDef>;
+  questList: QuestDef[];
+  quests: Map<string, QuestDef>;
+  /** Features that open with level or quests, in file order, and their tutorials. */
+  features: Map<string, FeatureDef>;
+  tutorials: Map<string, TutorialDef>;
 }
 
 export interface RawContent {
@@ -403,6 +411,9 @@ export interface RawContent {
   missions: unknown;
   materials: unknown;
   events: unknown;
+  quests: unknown;
+  features: unknown;
+  tutorials: unknown;
 }
 
 export class ContentError extends Error {
@@ -418,7 +429,7 @@ type ReadJson = (relativePath: string) => Promise<unknown>;
 export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> {
   const manifest = (await readJson('manifest.json')) as {
     contentVersion: number;
-    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions' | 'materials' | 'events', string>;
+    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions' | 'materials' | 'events' | 'quests' | 'features' | 'tutorials', string>;
   };
   const raw: RawContent = {
     contentVersion: manifest.contentVersion,
@@ -434,6 +445,9 @@ export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> 
     missions: await readJson(manifest.files.missions),
     materials: await readJson(manifest.files.materials),
     events: await readJson(manifest.files.events),
+    quests: await readJson(manifest.files.quests),
+    features: await readJson(manifest.files.features),
+    tutorials: await readJson(manifest.files.tutorials),
   };
   return buildContentPack(raw);
 }
@@ -670,6 +684,20 @@ export function buildContentPack(raw: RawContent): ContentPack {
     if (fg.firstLevel <= lastHand) problems.push('config.floorGen.firstLevel: phải cao hơn tầng cuối trong floors.json');
   }
 
+  const questPack = (isObj(raw.quests) ? raw.quests : { tracks: [], quests: [] }) as unknown as QuestPack;
+  const featureList = (Array.isArray(raw.features) ? raw.features : []) as FeatureDef[];
+  const tutorialList = (Array.isArray(raw.tutorials) ? raw.tutorials : []) as TutorialDef[];
+  if (!Array.isArray(questPack.tracks) || !Array.isArray(questPack.quests)) problems.push('quests.json: cần tracks và quests');
+  else
+    problems.push(
+      ...validateQuests(questPack, featureList, tutorialList, {
+        items: (id) => items.has(id),
+        crops: (id) => crops.has(id),
+        pots: (id) => pots.has(id),
+        families: new Set([...crops.values()].map((c) => c.family)),
+      }),
+    );
+
   if (problems.length > 0) throw new ContentError(problems);
   const handFloors = [...floors.values()].sort((a, b) => a.unlockLevel - b.unlockLevel);
   const income = new IncomeModel(config.income, [...crops.values()], handFloors, config.floorGen);
@@ -694,5 +722,10 @@ export function buildContentPack(raw: RawContent): ContentPack {
     missions,
     materials,
     events,
+    questTracks: new Map(questPack.tracks.map((t) => [t.id, t])),
+    questList: questPack.quests,
+    quests: new Map(questPack.quests.map((q) => [q.id, q])),
+    features: new Map(featureList.map((f) => [f.id, f])),
+    tutorials: new Map(tutorialList.map((t) => [t.id, t])),
   };
 }

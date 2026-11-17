@@ -90,6 +90,13 @@ export const MIGRATIONS: Record<number, Migration> = {
     data.budget = { day: -1, giftGems: 0 };
     return data;
   },
+  // 9 -> 10 (nâng cấp v3 đợt 2): quests and tutorials. Left empty here; reconcile, which has the
+  // content, fills them and lets players past the newbie chain skip it (adoptQuestsForOldSave).
+  9: (data) => {
+    delete data.quests;
+    delete data.tutorials;
+    return data;
+  },
 };
 
 export function migrate(

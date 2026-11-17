@@ -7,6 +7,7 @@
 //   nearest valid value (refusing it would lock the player out of their own game).
 // The result is always a state the simulation can run without throwing.
 
+import { adoptQuestsForOldSave, emptyQuestState } from '../systems/quests.ts';
 import type { ContentPack } from '../core/content.ts';
 import { newNeighbors, type GameState, type Planting, type SlotState } from '../core/state.ts';
 import { SaveFormatError } from './serializer.ts';
@@ -49,6 +50,16 @@ export function reconcile(input: GameState, content: ContentPack, mode: Reconcil
   state.player.gems = c.num('Ngọc Mây', state.player.gems, { min: 0, int: true, fallback: 0 });
   if (!state.upgrades || typeof state.upgrades !== 'object') state.upgrades = { storage: 0 };
   state.upgrades.storage = c.num('bậc Rương Mây', state.upgrades.storage, { min: 0, int: true, fallback: 0 });
+  // Save 10: quests and tutorials. A save without them comes from before quests existed.
+  if (!state.quests || typeof state.quests !== 'object' || !Array.isArray(state.tutorials)) {
+    state.quests = emptyQuestState();
+    state.tutorials = [];
+    adoptQuestsForOldSave(content, state);
+  }
+  for (const k of ['progress', 'claims', 'periods'] as const) if (!state.quests[k] || typeof state.quests[k] !== 'object') state.quests[k] = {};
+  for (const id of Object.keys(state.quests.progress)) if (!content.quests.has(id) || !(Number(state.quests.progress[id]) >= 0)) delete state.quests.progress[id];
+  for (const id of Object.keys(state.quests.claims)) if (!content.quests.has(id) || !(Number(state.quests.claims[id]) >= 0)) delete state.quests.claims[id];
+  state.tutorials = state.tutorials.filter((t) => typeof t === 'string');
   // Bản thử 9ef65c4 wrote save 9 without the gift budget: fill it in.
   if (!state.budget || typeof state.budget !== 'object') state.budget = { day: -1, giftGems: 0 };
   state.budget.day = c.num('ngày ngân sách quà', state.budget.day, { min: -1, int: true, fallback: -1 });

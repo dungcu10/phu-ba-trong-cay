@@ -126,45 +126,51 @@ export class MissionsPanel extends Panel {
     this.render();
   }
 
-  private reward(r: MissionDef['reward']): HTMLElement {
-    const items = Object.entries(r.items ?? {}).map(([id, q]) => h('span', { class: 'tag', title: this.session.content.items.get(id)?.name.vi ?? '' }, itemIcon(this.session.content, id, 20), String(q)));
-    return h('span', { class: 'reward' }, r.coins > 0 && h('span', { class: 'tag' }, coin(16), formatNumber(r.coins)), r.xp > 0 && h('span', { class: 'tag xp' }, `${r.xp} XP`), r.gems > 0 && h('span', { class: 'tag' }, gem(16), String(r.gems)), ...items);
-  }
-
   render(): void {
     clear(this.body);
-    const { content, state } = this.session;
-    const now = this.session.now();
-    this.body.append(h('p', { class: 'lead' }, `Đổi nhiệm vụ mới sau ${formatClock(dayEndsAt(content, now) - now)}`));
-    const list = h('div', { class: 'missions' });
-    state.missions.list.forEach((m, i) => {
-      const def = missionDef(content, m.id);
-      if (!def) return;
-      const done = m.progress >= def.target;
-      const pct = Math.min(100, (m.progress / def.target) * 100);
-      const btn = m.claimed
-        ? h('span', { class: 'claimed' }, 'Đã nhận')
-        : h('button', { class: `candy ${done ? 'gold' : 'blocked'}`, 'data-test': `claim-mission-${i}`, onclick: () => (done ? this.actions.claimMission(i) : shake(btn)) }, 'Nhận');
-      list.append(
-        h(
-          'div',
-          { class: `mission${done ? ' done' : ''}${m.claimed ? ' claimed' : ''}` },
-          h('span', { class: 'mission-main' }, h('strong', {}, def.name.vi), h('span', { class: 'bar' }, h('i', { style: `width:${pct}%` })), h('span', { class: 'note' }, `${m.progress}/${def.target}`)),
-          this.reward(def.reward),
-          btn,
-        ),
-      );
-    });
-    const all = allMissionsClaimed(state);
-    const bonus = content.missions.allDone;
-    const bonusBtn = state.missions.bonusClaimed
-      ? h('span', { class: 'claimed' }, 'Đã nhận')
-      : h('button', { class: `candy ${all ? 'primary' : 'blocked'}`, 'data-test': 'claim-mission-bonus', onclick: () => (all ? this.actions.claimMissionBonus() : shake(bonusBtn)) }, 'Nhận quà');
-    list.append(h('div', { class: 'mission bonus' }, h('span', { class: 'mission-main' }, h('strong', {}, 'Xong cả 3 nhiệm vụ'), h('span', { class: 'note' }, 'Quà thêm cho người chăm chỉ')), this.reward(bonus), bonusBtn));
-    this.body.append(list);
-    const pots = missionPotBox(this.session, this.potActions);
-    if (pots) this.body.append(pots);
+    this.body.append(...dailyMissionsView(this.session, this.actions, this.potActions));
   }
+}
+
+function missionReward(session: GameSession, r: MissionDef['reward']): HTMLElement {
+  const items = Object.entries(r.items ?? {}).map(([id, q]) => h('span', { class: 'tag', title: session.content.items.get(id)?.name.vi ?? '' }, itemIcon(session.content, id, 20), String(q)));
+  return h('span', { class: 'reward' }, r.coins > 0 && h('span', { class: 'tag' }, coin(16), formatNumber(r.coins)), r.xp > 0 && h('span', { class: 'tag xp' }, `${r.xp} XP`), r.gems > 0 && h('span', { class: 'tag' }, gem(16), String(r.gems)), ...items);
+}
+
+/** Today's three missions, the all-done bonus and the mission pot (also the "Hôm nay" tab). */
+export function dailyMissionsView(session: GameSession, actions: GardenActions, potActions: PotSystemActions): HTMLElement[] {
+  const { content, state } = session;
+  const now = session.now();
+  const out: HTMLElement[] = [h('p', { class: 'lead' }, `Đổi nhiệm vụ mới sau ${formatClock(dayEndsAt(content, now) - now)}`)];
+  const list = h('div', { class: 'missions' });
+  state.missions.list.forEach((m, i) => {
+    const def = missionDef(content, m.id);
+    if (!def) return;
+    const done = m.progress >= def.target;
+    const pct = Math.min(100, (m.progress / def.target) * 100);
+    const btn = m.claimed
+      ? h('span', { class: 'claimed' }, 'Đã nhận')
+      : h('button', { class: `candy ${done ? 'gold' : 'blocked'}`, 'data-test': `claim-mission-${i}`, onclick: () => (done ? actions.claimMission(i) : shake(btn)) }, 'Nhận');
+    list.append(
+      h(
+        'div',
+        { class: `mission${done ? ' done' : ''}${m.claimed ? ' claimed' : ''}` },
+        h('span', { class: 'mission-main' }, h('strong', {}, def.name.vi), h('span', { class: 'bar' }, h('i', { style: `width:${pct}%` })), h('span', { class: 'note' }, `${m.progress}/${def.target}`)),
+        missionReward(session, def.reward),
+        btn,
+      ),
+    );
+  });
+  const all = allMissionsClaimed(state);
+  const bonus = content.missions.allDone;
+  const bonusBtn = state.missions.bonusClaimed
+    ? h('span', { class: 'claimed' }, 'Đã nhận')
+    : h('button', { class: `candy ${all ? 'primary' : 'blocked'}`, 'data-test': 'claim-mission-bonus', onclick: () => (all ? actions.claimMissionBonus() : shake(bonusBtn)) }, 'Nhận quà');
+  list.append(h('div', { class: 'mission bonus' }, h('span', { class: 'mission-main' }, h('strong', {}, 'Xong cả 3 nhiệm vụ'), h('span', { class: 'note' }, 'Quà thêm cho người chăm chỉ')), missionReward(session, bonus), bonusBtn));
+  out.push(list);
+  const pots = missionPotBox(session, potActions);
+  if (pots) out.push(pots);
+  return out;
 }
 
 export interface SeedTrayActions {

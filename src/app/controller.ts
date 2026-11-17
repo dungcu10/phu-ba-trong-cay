@@ -15,6 +15,8 @@ import { potLook } from '../systems/pots.ts';
 import { SettingsPanel } from '../ui/settings.ts';
 import { FloorPanel, PotShopPanel, type PotShopActions } from '../ui/potPanels.ts';
 import { JournalPanel, LettersPanel, NeighborsPanel, OrdersPanel, StallPanel, type WorldActions } from '../ui/worldPanels.ts';
+import { FeatureTutorialPanel, QuestCenterPanel, TODAY } from '../ui/questPanels.ts';
+import { pendingTutorial } from '../systems/quests.ts';
 import { FloorInfoPanel, MissionsPanel, SeedTray, VisitBar, type GardenActions, type SeedTrayActions } from '../ui/gardenPanels.ts';
 import { visitGarden } from '../render/garden.ts';
 import { h } from '../ui/dom.ts';
@@ -55,7 +57,9 @@ export class Controller implements PanelActions, PotShopActions, WorldActions, G
       openOrders: () => this.open(new OrdersPanel(this.session, this)),
       openStall: () => this.open(new StallPanel(this.session, this)),
       openNeighbors: () => this.open(new NeighborsPanel(this.session, (botId) => this.visit(botId))),
-      openMissions: () => this.open(new MissionsPanel(this.session, this, this)),
+      openMissions: () => this.openQuests(TODAY),
+      openQuests: (track) => this.openQuests(track ?? TODAY),
+      claimQuest: (id) => this.claimQuest(id),
       openEvent: () => this.open(new EventPanel(this.session, this)),
       toggleTray: () => this.toggleTray(),
       openJournal: () => this.open(new JournalPanel(this.session, this)),
@@ -75,14 +79,59 @@ export class Controller implements PanelActions, PotShopActions, WorldActions, G
     };
     session.onChange((events) => this.onEvents(events));
     this.welcomeBack();
+    setTimeout(() => this.maybeTutorial(), 1500);
     setInterval(() => {
       this.hud.update();
       // Countdowns on the order board move every second.
-      if (this.panel instanceof OrdersPanel || this.panel instanceof MissionsPanel) this.panel.render();
+      if (this.panel instanceof OrdersPanel || this.panel instanceof MissionsPanel || this.panel instanceof QuestCenterPanel) this.panel.render();
       this.visitBar?.update();
+      // A feature that just opened is introduced once nothing else is on screen.
+      if (++this.idleTicks % 3 === 0) this.maybeTutorial();
     }, 1000);
     setInterval(() => this.session.run({ type: 'tick' }), TICK_MS);
     this.hud.update();
+  }
+
+  // --- Quests and tutorials (đợt 2) ----------------------------------------------------------
+
+  private idleTicks = 0;
+
+  openQuests(track: string): void {
+    this.sfx.play('tap');
+    this.open(new QuestCenterPanel(this.session, track, this, this));
+  }
+
+  claimQuest(questId: string): void {
+    this.run({ type: 'claimQuest', questId });
+  }
+
+  /** Introduces a feature the first time it opens, when no window is in the way. */
+  private maybeTutorial(): void {
+    if (this.panel || this.visitBar) return;
+    const p = pendingTutorial(this.session.content, this.session.state);
+    if (!p) return;
+    this.sfx.play('levelUp');
+    this.open(
+      new FeatureTutorialPanel(
+        this.session,
+        p.featureId,
+        p.tutorialId,
+        (f) => this.openFeature(f),
+        (id) => this.run({ type: 'seeTutorial', tutorialId: id }, true),
+      ),
+    );
+  }
+
+  private openFeature(feature: string): void {
+    const go: Record<string, () => void> = {
+      orders: () => this.open(new OrdersPanel(this.session, this)),
+      stall: () => this.open(new StallPanel(this.session, this)),
+      neighbors: () => this.open(new NeighborsPanel(this.session, (botId) => this.visit(botId))),
+      journal: () => this.open(new JournalPanel(this.session, this)),
+      event: () => this.open(new EventPanel(this.session, this)),
+      shop: () => this.openShop(),
+    };
+    setTimeout(() => go[feature]?.(), 250);
   }
 
   /** First tick after opening: catch up on time away and sum it up in one friendly letter. */
@@ -579,6 +628,19 @@ export class Controller implements PanelActions, PotShopActions, WorldActions, G
         const name = this.session.content.missions.pool.find((m) => m.id === e.missionId)?.name.vi ?? '';
         this.sfx.play('upgrade');
         this.toasts.show(`Xong nhiệm vụ: ${name}! Mở Nhiệm vụ để nhận thưởng.`, 'level', 2600);
+        break;
+      }
+      case 'questDone': {
+        const q = this.session.content.quests.get(e.questId);
+        if (!q) break;
+        this.sfx.play('upgrade');
+        this.toasts.show(q.hidden ? `Lộ diện nhiệm vụ bí mật: ${q.name.vi}!` : `Xong nhiệm vụ: ${q.name.vi}!`, 'level', 2400);
+        break;
+      }
+      case 'questClaimed': {
+        this.sfx.play('coin');
+        const parts = [e.coins > 0 && `+${formatNumber(e.coins)} xu`, e.xp > 0 && `+${e.xp} XP`, e.gems > 0 && `+${e.gems} Ngọc Mây`, ...Object.entries(e.items).map(([id, n]) => `+${n} ${this.session.content.items.get(id)?.name.vi ?? id}`)].filter(Boolean);
+        this.toasts.show(`Nhận thưởng: ${parts.join(', ')}`, 'success', 2200);
         break;
       }
       case 'missionClaimed':

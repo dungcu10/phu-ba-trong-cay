@@ -13,6 +13,9 @@
     "potsets": "potsets.json",
     "missions": "missions.json",
     "materials": "materials.json",
-    "events": "events.json"
+    "events": "events.json",
+    "quests": "quests.json",
+    "features": "features.json",
+    "tutorials": "tutorials.json"
   }
 }

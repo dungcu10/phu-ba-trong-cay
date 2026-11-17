@@ -18,6 +18,7 @@ import { coinGiftAmount, nextMilestone, recordHarvest, rollGift, rollMutation, t
 import { simulateNeighbors, type NeighborEvent } from '../systems/neighbors.ts';
 import { expandCost, nextStar } from '../systems/floors.ts';
 import { allMissionsClaimed, ensureMissions, localDay, missionDef, recordMissions } from '../systems/missions.ts';
+import { ensureQuestPeriods, questActive, questClaims, questReward, questView, recordQuests } from '../systems/quests.ts';
 import { botGarden, helpReward, helpsLeft, helpToday, type HelpKind } from '../systems/visit.ts';
 
 export type SlotRef = { floor: number; slot: number };
@@ -56,7 +57,11 @@ export type Command =
   /** Buys the next Rương Mây tier for coins (no cap). */
   | { type: 'upgradeStorage' }
   /** Mưa Mây: spends gems to ripen every growing crop on one floor now. */
-  | { type: 'cloudRain'; floor: number };
+  | { type: 'cloudRain'; floor: number }
+  /** Claims the next tier of a quest (đợt 2). */
+  | { type: 'claimQuest'; questId: string }
+  /** Marks a tutorial as shown so it never comes back. */
+  | { type: 'seeTutorial'; tutorialId: string };
 
 export type GameEvent =
   | { type: 'planted'; slot: SlotRef; cropId: string; cost: number }
@@ -89,7 +94,9 @@ export type GameEvent =
   | { type: 'eventMilestoneClaimed'; eventId: string; index: number; coins: number; gems: number; items: Record<string, number>; pot: string | null }
   | { type: 'bookRewardClaimed'; lines: number; gems: number }
   | { type: 'storageUpgraded'; tier: number; capacity: number; cost: number }
-  | { type: 'cloudRained'; floor: number; pots: number; gems: number };
+  | { type: 'cloudRained'; floor: number; pots: number; gems: number }
+  | { type: 'questDone'; questId: string }
+  | { type: 'questClaimed'; questId: string; tier: number; coins: number; gems: number; xp: number; items: Record<string, number>; pot: string | null };
 
 export type ErrorCode =
   | 'bad_slot'
@@ -126,7 +133,9 @@ export type ErrorCode =
   | 'help_limit'
   | 'level_not_open'
   | 'not_obtainable'
-  | 'nothing_growing';
+  | 'nothing_growing'
+  | 'unknown_quest'
+  | 'quest_not_ready';
 
 export type Result = { ok: true; events: GameEvent[] } | { ok: false; error: ErrorCode };
 
@@ -161,9 +170,11 @@ export function updateWorld(content: ContentPack, state: GameState, now: number)
 export function dispatch(content: ContentPack, state: GameState, cmd: Command, realNow: number): Result {
   const now = advanceTime(state, realNow);
   ensureMissions(content, state, now);
+  ensureQuestPeriods(content, state, now);
   const result = run(content, state, cmd, now);
   if (result.ok) {
     for (const index of recordMissions(content, state, result.events)) result.events.push({ type: 'missionDone', index, missionId: state.missions.list[index]!.id });
+    for (const questId of recordQuests(content, state, result.events, now)) result.events.push({ type: 'questDone', questId });
     // Event points come from what just happened, only while an event runs (POT_SYSTEM 3).
     for (const ev of activeEvents(content, now)) {
       const pts = eventPointsFor(ev, result.events);
@@ -231,6 +242,12 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
       return upgradeStorage(content, state);
     case 'cloudRain':
       return cloudRain(content, state, cmd.floor, now);
+    case 'claimQuest':
+      return claimQuest(content, state, cmd.questId, now);
+    case 'seeTutorial':
+      if (!content.tutorials.has(cmd.tutorialId)) return fail('unknown_quest');
+      if (!state.tutorials.includes(cmd.tutorialId)) state.tutorials.push(cmd.tutorialId);
+      return { ok: true, events: [] };
     case 'claimBookReward':
       return claimBookReward(content, state);
   }
@@ -501,6 +518,22 @@ function upgradePot(content: ContentPack, state: GameState, potInstanceId: strin
   const def = content.pots.get(pot.potId)!;
   const skills = def.skills.filter((s) => s.level === pot.level).map((s) => s.id);
   return { ok: true, events: [{ type: 'potUpgraded', potInstanceId, level: pot.level, milestone: isMilestone(def, pot.level), skills }] };
+}
+
+function claimQuest(content: ContentPack, state: GameState, questId: string, now: number): Result {
+  const q = content.quests.get(questId);
+  if (!q) return fail('unknown_quest');
+  if (!questActive(content, state, q) || !questView(content, state, q).claimable) return fail('quest_not_ready');
+  const r = questReward(content, state, q);
+  const tier = questClaims(state, q.id);
+  state.quests.claims[q.id] = tier + 1;
+  state.player.coins += r.coins;
+  state.player.gems += r.gems;
+  for (const [id, n] of Object.entries(r.items)) addItem(state, id, n);
+  if (r.pot) grantPot(state, r.pot, 'quest', now);
+  const events: GameEvent[] = [{ type: 'questClaimed', questId, tier, coins: r.coins, gems: r.gems, xp: r.xp, items: r.items, pot: r.pot }];
+  for (const level of addXp(content, state, r.xp)) events.push({ type: 'levelUp', level });
+  return { ok: true, events };
 }
 
 function upgradeStorage(content: ContentPack, state: GameState): Result {

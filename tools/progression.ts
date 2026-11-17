@@ -9,6 +9,7 @@
 import { isSoldInShop, type ContentPack, type CropDef } from '../src/core/content.ts';
 import { cloudRainCost, dispatch, nextFloor, type Command } from '../src/core/game.ts';
 import { storageUpgradeCost } from '../src/systems/economy.ts';
+import { questActive, questView } from '../src/systems/quests.ts';
 import { createNewGame, type GameState } from '../src/core/state.ts';
 import { canDeliver } from '../src/systems/orders.ts';
 import { expandCost } from '../src/systems/floors.ts';
@@ -20,6 +21,8 @@ export interface DayReport {
   level: number;
   coins: number;
   gems: number;
+  /** Quests claimed this day. */
+  quests: number;
   /** Gems earned this day (before spending). */
   gemsEarned: number;
   /** U(level) at the end of the day. */
@@ -39,6 +42,7 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
   const s = createNewGame(content, T0, seed);
   let milestones = 0;
   let gemsEarned = 0;
+  let questsClaimed = 0;
   const gemSources: Record<string, number> = {};
   const run = (cmd: Command, t: number) => {
     const gems = s.player.gems;
@@ -51,6 +55,10 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
       for (const e of r.events) {
         if (e.type === 'floorUnlocked' || e.type === 'floorExpanded' || e.type === 'floorStarred') milestones++;
         if (e.type === 'potBought' || (e.type === 'potUpgraded' && e.milestone) || e.type === 'storageUpgraded') milestones++;
+        if (e.type === 'questClaimed') {
+          questsClaimed++;
+          gemSources[`quest:${e.questId}`] = (gemSources[`quest:${e.questId}`] ?? 0) + e.gems;
+        }
         if (e.type === 'levelUp' && content.cropList.some((c) => c.unlockLevel === e.level)) milestones++;
       }
     }
@@ -85,6 +93,8 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
       run({ type: 'claimMissionBonus' }, t);
       for (const ev of visibleEvents(content, s, t)) while (claimableMilestones(s, ev) > 0 && run({ type: 'claimEventMilestone', eventId: ev.id }, t).ok);
       for (const c of content.cropList) run({ type: 'claimJournal', cropId: c.id }, t);
+      // Quests (đợt 2): claim whatever is ready, tier after tier.
+      for (const q of content.questList) while (questActive(content, s, q) && questView(content, s, q).claimable && run({ type: 'claimQuest', questId: q.id }, t).ok);
       const best = () =>
         content.cropList.filter((c) => c.unlockLevel <= s.player.level && c.seedPrice <= s.player.coins).sort((a, b) => score(b) - score(a))[0];
       // Better pots: when coins are plentiful, buy a shop pot the player does not own yet and put it
@@ -130,9 +140,10 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
         if (!id || !run({ type: 'upgradePot', potInstanceId: id }, t).ok) break;
       }
     }
-    out.push({ day: day + 1, level: s.player.level, coins: s.player.coins, gems: s.player.gems, gemsEarned, unit: content.income.unit(s.player.level), floors: s.floors.length, pots: Object.keys(s.pots).length, harvests: s.stats.harvests, milestones });
+    out.push({ day: day + 1, level: s.player.level, coins: s.player.coins, gems: s.player.gems, quests: questsClaimed, gemsEarned, unit: content.income.unit(s.player.level), floors: s.floors.length, pots: Object.keys(s.pots).length, harvests: s.stats.harvests, milestones });
     milestones = 0;
     gemsEarned = 0;
+    questsClaimed = 0;
   }
   return { days: out, state: s, gemSources };
 }

@@ -8,6 +8,7 @@ import { storageCapacity, storageUsed, xpToNextLevel } from '../systems/economy.
 import { canDeliver } from '../systems/orders.ts';
 import { nextMilestone } from '../systems/surprises.ts';
 import { missionsReady } from '../systems/missions.ts';
+import { featureOpen, questsReady, trackedQuest } from '../systems/quests.ts';
 import { claimableMilestones, visibleEvents } from '../systems/events.ts';
 import { h } from './dom.ts';
 import { nextHint } from './hint.ts';
@@ -26,6 +27,9 @@ export interface HudActions {
   openMissions(): void;
   openEvent(): void;
   toggleTray(): void;
+  /** Opens the quest centre on a track ('today' = daily missions). */
+  openQuests(track?: string): void;
+  claimQuest(questId: string): void;
 }
 
 export class Hud {
@@ -48,6 +52,15 @@ export class Hud {
   private readonly eventTime = h('span', { class: 'ev-timer' });
   private readonly eventBtn: HTMLElement;
   private readonly seeds: HTMLElement;
+  /** Buttons that appear only once their feature is open (features.json). */
+  private readonly gated: Array<{ feature: string; el: HTMLElement }> = [];
+  private readonly tracker: HTMLElement;
+  private readonly trackerName = h('strong', {});
+  private readonly trackerTrack = h('span', { class: 'qt-track' });
+  private readonly trackerBar = h('i', {});
+  private readonly trackerCount = h('span', { class: 'qt-count' });
+  private readonly trackerClaim: HTMLButtonElement;
+  private trackedId: string | null = null;
   private last = { coins: -1, gems: -1 };
   /** Screen position of the storage button, where harvested produce flies to. */
   readonly storageButton: HTMLElement;
@@ -71,16 +84,28 @@ export class Hud {
       this.storageBadge,
     );
     const shop = h('button', { class: 'round-big', 'aria-label': 'Lò Gốm', 'data-test': 'open-shop', onclick: () => actions.openShop() }, svgIcon('kiln', 62), h('span', { class: 'round-label' }, 'Lò Gốm'));
-    const side = (label: string, test: string, art: Element, badge: HTMLElement | null, run: () => void) =>
-      h('button', { class: 'side-btn', 'aria-label': label, 'data-test': test, onclick: run }, art, h('span', { class: 'side-label' }, label), badge);
+    const side = (label: string, test: string, art: Element, badge: HTMLElement | null, run: () => void, feature?: string) => {
+      const b = h('button', { class: 'side-btn', 'aria-label': label, 'data-test': test, onclick: run }, art, h('span', { class: 'side-label' }, label), badge);
+      if (feature) this.gated.push({ feature, el: b });
+      return b;
+    };
     const services = h(
       'div',
       { class: 'hud-side' },
       side('Nhiệm vụ', 'open-missions', svgIcon('missions', 46), this.missionBadge, () => actions.openMissions()),
-      side('Đơn hàng', 'open-orders', svgIcon('orders', 46), this.orderBadge, () => actions.openOrders()),
-      side('Sạp', 'open-stall', svgIcon('stall', 46), this.stallBadge, () => actions.openStall()),
-      side('Phú Bà', 'open-neighbors', svgIcon('crown', 46), null, () => actions.openNeighbors()),
-      side('Sổ Tay', 'open-journal', svgIcon('journal', 46), this.journalBadge, () => actions.openJournal()),
+      side('Đơn hàng', 'open-orders', svgIcon('orders', 46), this.orderBadge, () => actions.openOrders(), 'orders'),
+      side('Sạp', 'open-stall', svgIcon('stall', 46), this.stallBadge, () => actions.openStall(), 'stall'),
+      side('Phú Bà', 'open-neighbors', svgIcon('crown', 46), null, () => actions.openNeighbors(), 'neighbors'),
+      side('Sổ Tay', 'open-journal', svgIcon('journal', 46), this.journalBadge, () => actions.openJournal(), 'journal'),
+    );
+    this.gated.push({ feature: 'shop', el: shop });
+    // Quest tracker (đợt 2): the quest to do next, its progress, and a claim button when ready.
+    this.trackerClaim = h('button', { class: 'candy small gold', 'data-test': 'tracker-claim', onclick: (e: Event) => (e.stopPropagation(), this.trackedId && actions.claimQuest(this.trackedId)) }, 'Nhận') as HTMLButtonElement;
+    this.tracker = h(
+      'button',
+      { class: 'quest-tracker hidden', 'data-test': 'quest-tracker', 'aria-label': 'Nhiệm vụ đang theo', onclick: () => actions.openQuests(this.trackedTrack) },
+      h('span', { class: 'qt-main' }, this.trackerTrack, this.trackerName, h('span', { class: 'bar' }, this.trackerBar), this.trackerCount),
+      this.trackerClaim,
     );
     this.eventBtn = h('button', { class: 'side-btn event-btn', 'aria-label': 'Lễ Hội', 'data-test': 'open-event', onclick: () => actions.openEvent() }, svgIcon('moon', 50), h('span', { class: 'side-label' }, 'Lễ Hội'), this.eventTime, this.eventBadge);
     this.el = h(
@@ -91,8 +116,12 @@ export class Hud {
       this.hint,
       services,
       h('div', { class: 'hud-arc' }, seeds, this.storageButton, shop),
+      this.tracker,
     );
+    this.gated.push({ feature: 'event', el: this.eventBtn });
   }
+
+  private trackedTrack: string | undefined;
 
   setTrayOpen(on: boolean): void {
     this.seeds.classList.toggle('on', on);
@@ -134,10 +163,26 @@ export class Hud {
     this.badge(this.stallBadge, state.stall.length);
     this.badge(this.journalBadge, content.cropList.filter((c) => nextMilestone(content, state, c.id)).length);
     this.badge(this.letterBadge, state.notices.filter((n) => !n.read).length);
-    this.badge(this.missionBadge, missionsReady(content, state));
+    this.badge(this.missionBadge, missionsReady(content, state) + questsReady(content, state));
     const now = this.session.now();
     const evs = visibleEvents(content, state, now);
+    for (const g of this.gated) g.el.classList.toggle('locked-feature', !featureOpen(content, state, g.feature));
     this.eventBtn.classList.toggle('hidden', evs.length === 0);
+    const tq = trackedQuest(content, state);
+    this.tracker.classList.toggle('hidden', !tq);
+    if (tq) {
+      this.trackedId = tq.def.id;
+      this.trackedTrack = tq.def.track;
+      const track = content.questTracks.get(tq.def.track);
+      const target = tq.target ?? 1;
+      const steps = track?.skipAtLevel !== undefined ? content.questList.filter((q) => q.track === track.id) : null;
+      this.trackerTrack.textContent = steps ? `${track!.name.vi} ${steps.findIndex((q) => q.id === tq.def.id) + 1}/${steps.length}` : (track?.name.vi ?? '');
+      this.trackerName.textContent = tq.def.name.vi;
+      this.trackerBar.style.width = `${Math.min(100, (tq.progress / target) * 100)}%`;
+      this.trackerCount.textContent = `${formatNumber(Math.min(tq.progress, target))}/${formatNumber(target)}`;
+      this.trackerClaim.style.display = tq.claimable ? '' : 'none';
+      this.tracker.classList.toggle('ready', tq.claimable);
+    }
     if (evs.length > 0) {
       const ev = evs[0]!;
       this.eventTime.textContent = now < ev.end ? formatTimeLeft(ev.end - now) : 'Hết hạn';

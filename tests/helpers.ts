@@ -26,6 +26,9 @@ export async function readRaw(): Promise<RawContent> {
     missions: await read(manifest.files.missions!),
     materials: await read(manifest.files.materials!),
     events: await read(manifest.files.events!),
+    quests: await read(manifest.files.quests!),
+    features: await read(manifest.files.features!),
+    tutorials: await read(manifest.files.tutorials!),
   };
 }
 

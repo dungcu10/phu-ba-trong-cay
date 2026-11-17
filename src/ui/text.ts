@@ -38,6 +38,8 @@ export const ERROR_TEXT: Record<ErrorCode, string> = {
   level_not_open: 'Các cấp tiếp theo của dòng chậu này sẽ mở ở bản cập nhật sau.',
   not_obtainable: 'Chậu này không đổi được bằng vật phẩm.',
   nothing_growing: 'Không có cây nào đang lớn trên tầng này.',
+  unknown_quest: 'Không tìm thấy nhiệm vụ này.',
+  quest_not_ready: 'Nhiệm vụ chưa xong.',
 };
 
 const numberFormat = new Intl.NumberFormat('vi-VN');

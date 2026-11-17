@@ -63,6 +63,11 @@ export function makeDemo(session: GameSession, view: GameView, controller: Contr
 
   return (step: string) => {
     if (step !== 'pot-upgrade') closePanels();
+    const qt = /^quests-([a-z]+)$/.exec(step); // 'quests-<track>': quest centre on that tab (đợt 2)
+    if (qt) {
+      controller.openQuests(qt[1]!);
+      return true;
+    }
     const tab = /^shop-t(\d+)$/.exec(step); // 'shop-t<N>': pot shop open on tab N (directive 04)
     if (tab) {
       controller.openShop();
