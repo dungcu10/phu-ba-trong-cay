@@ -116,7 +116,7 @@
     },
     "bots": {
       "_note": "Chỉ thị 11 D1: BOT dùng chung luật chim. Vườn BOT là vườn dựng nên số bọ đậu trên cây tính theo tỉ lệ: số cây × tỉ lệ sinh bọ của luật đếm (Bọ Rùa) × phần thời gian cây đang lớn (growingShare, đo từ người chơi vừa 2 giờ/lần). BOT tự bắt phần chim không bắt.",
-      "growingShare": 0.35,
+      "growingShare": 0.45,
       "feedBelow": 50,
       "rentWhenCoinsTimes": 3
     }
