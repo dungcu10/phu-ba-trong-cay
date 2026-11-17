@@ -10,6 +10,7 @@
 import { adoptQuestsForOldSave, emptyQuestState } from '../systems/quests.ts';
 import type { ContentPack } from '../core/content.ts';
 import { genFloorNumber } from '../core/floorgen.ts';
+import { orderSlotsFor } from '../systems/orders.ts';
 import { emptyV12Parts, newNeighbors, type GameState, type Planting, type SlotState } from '../core/state.ts';
 import { SaveFormatError } from './serializer.ts';
 
@@ -162,11 +163,28 @@ function reconcileWorld(state: GameState, content: ContentPack, c: Checker): voi
   const now = state.maxSeenAt;
   if (!state.orders || !Array.isArray(state.orders.slots)) state.orders = { slots: [], counter: 0 };
   state.orders.counter = c.num('bộ đếm đơn hàng', state.orders.counter, { min: 0, int: true, fallback: 0 });
-  state.orders.slots = state.orders.slots.slice(0, content.orders.slots).map((sl) => {
+  // Chỉ thị 10 § 3.6: up to the player's slot count (6, more by level), and a balloon on its way keeps
+  // what it will pay (it is the player's: never dropped).
+  const maxSlots = orderSlotsFor(content, state.player?.level ?? 1);
+  state.orders.slots = state.orders.slots.slice(0, maxSlots).map((sl) => {
     const order = sl?.order && Object.keys(sl.order.items ?? {}).every((id) => content.items.has(id)) ? sl.order : null;
-    return { order, readyAt: typeof sl?.readyAt === 'number' ? sl.readyAt : now };
+    const f = sl?.flight;
+    const flight =
+      f && typeof f === 'object'
+        ? {
+            coins: c.num('xu khinh khí cầu', f.coins, { min: 0, int: true, fallback: 0 }),
+            xp: c.num('XP khinh khí cầu', f.xp, { min: 0, int: true, fallback: 0 }),
+            gems: c.num('ngọc khinh khí cầu', f.gems, { min: 0, int: true, fallback: 0 }),
+            items: Object.fromEntries(Object.entries(f.items ?? {}).filter(([id, q]) => content.items.has(id) && Number.isInteger(q) && q > 0)),
+            customer: typeof f.customer === 'string' ? f.customer : '',
+            rare: !!f.rare,
+            bird: typeof f.bird === 'string' && content.birds?.has(f.bird) ? f.bird : null,
+          }
+        : null;
+    return { order, readyAt: typeof sl?.readyAt === 'number' ? sl.readyAt : now, ...(flight ? { flight } : {}) };
   });
   while (state.orders.slots.length < content.orders.slots) state.orders.slots.push({ order: null, readyAt: now });
+  if (state.orders.helpDay !== undefined && typeof state.orders.helpDay !== 'number') delete state.orders.helpDay;
 
   const journal: GameState['journal'] = {};
   for (const [id, e] of Object.entries(state.journal ?? {})) {

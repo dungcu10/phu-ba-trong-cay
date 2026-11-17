@@ -11,5 +11,14 @@
   "xpPerCoin": 0.35,
   "rareChance": 0.05,
   "rareMultiplier": 2.0,
-  "rareGems": 1
+  "rareGems": 1,
+  "_m6": "Chỉ thị 10 § 3.6 (M6, luồng tính năng): chỉ thêm trường mới. Khinh khí cầu bay đi trong refillSeconds; XP cộng khi gửi, xu/ngọc/vật phẩm về cùng khinh khí cầu. extraSlots (vd [{level:10,slots:7},{level:15,slots:8},{level:20,slots:9}]) và rareItems (vd [Sợi Mây Kết, Giọt Sương Trời]) để trống chờ CTO chỉnh số: bật lên làm lệch đơn/ngày và cấp ngày 7.",
+  "goodsShare": 0.4,
+  "rareHours": 24,
+  "rareItems": [],
+  "extraSlots": [],
+  "escortLevel": 11,
+  "helpLevel": 13,
+  "helpChance": 0.5,
+  "helpFriendshipBonus": 0.02
 }

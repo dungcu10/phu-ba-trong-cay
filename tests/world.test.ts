@@ -49,11 +49,13 @@ test('giao đơn: cần đủ hàng, thưởng nhiều hơn bán lẻ, khinh kh�
   const r = dispatch(content, s, { type: 'deliverOrder', slot: 0 }, T0);
   assert.ok(r.ok);
   assert.ok(order.coins > shopValue, `đơn ${order.coins} xu > bán lẻ ${shopValue} xu`);
-  assert.equal(s.player.coins, coins + order.coins);
+  // Chỉ thị 10 § 3.6: the coins come back with the balloon.
+  assert.equal(s.player.coins, coins);
   assert.equal(s.orders.slots[0]!.order, null);
   tick(s, T0 + (content.orders.refillSeconds - 1) * SEC);
   assert.equal(s.orders.slots[0]!.order, null);
-  tick(s, T0 + content.orders.refillSeconds * SEC);
+  const back = dispatch(content, s, { type: 'tick' }, T0 + content.orders.refillSeconds * SEC);
+  assert.ok(back.ok && back.events.some((e) => e.type === 'balloonBack' && e.slot === 0 && e.coins === order.coins));
   assert.ok(s.orders.slots[0]!.order);
   assert.equal(s.stats.ordersDone, 1);
   assert.ok(s.neighbors[order.customer]!.friendship > 0, 'khách quen hơn sau khi giao đơn');

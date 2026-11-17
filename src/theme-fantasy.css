@@ -281,3 +281,7 @@ body, button, input { font-family: 'Be Vietnam Pro', system-ui, sans-serif; }
 .toast > span { overflow: hidden; text-overflow: ellipsis; }
 .toast.success, .toast.info { background: linear-gradient(90deg, rgba(22, 26, 46, 0), rgba(22, 26, 46, 0.86) 18%, rgba(22, 26, 46, 0.86) 82%, rgba(22, 26, 46, 0)); color: #F6EFE2; }
 .toast.success { color: #CDEFC4; }
+
+/* Quantity tags on order lines and recipes: readable on the night-glass theme (dark tag, light text). */
+.qty-tag { background: #5B4326; color: #F6EFE2; }
+.order-line.done .qty-tag { background: #F3D27E; color: #3B2A12; }

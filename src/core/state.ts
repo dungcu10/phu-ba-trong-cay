@@ -119,12 +119,30 @@ export interface Order {
   xp: number;
   gems: number;
   rare: boolean;
+  /** Chỉ thị 10 § 3.6: a rare order leaves at this time; an extra item it pays (Sợi Mây / Giọt Sương). */
+  expiresAt?: number;
+  bonusItem?: string;
+  /** Items neighbours chipped in (they count toward the order). */
+  given?: Record<string, number>;
+}
+
+/** A balloon on its way with a sent order: it pays when it comes back (chỉ thị 10 § 3.6). */
+export interface OrderFlight {
+  coins: number;
+  xp: number;
+  gems: number;
+  items: Record<string, number>;
+  customer: string;
+  rare: boolean;
+  /** Escorting bird (its species bonus is added when the balloon comes back), or null. */
+  bird: string | null;
 }
 
 export interface OrderSlot {
   order: Order | null;
   /** When an empty slot receives its next order (the balloon's return). */
   readyAt: number;
+  flight?: OrderFlight | null;
 }
 
 export interface JournalEntry {
@@ -192,7 +210,7 @@ export interface GameState {
   potStock: string[];
   nextId: number;
   stats: { harvests: number; coinsEarned: number; bugsCaught: number; ordersDone: number; gifts: number };
-  orders: { slots: OrderSlot[]; counter: number };
+  orders: { slots: OrderSlot[]; counter: number; helpDay?: number };
   journal: Record<string, JournalEntry>;
   neighbors: Record<string, BotState>;
   stall: Listing[];

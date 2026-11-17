@@ -18,7 +18,8 @@ import { shake } from './potPanels.ts';
 import { formatDuration, formatNumber, FAMILY_TEXT } from './text.ts';
 
 export interface WorldActions {
-  deliverOrder(slot: number): void;
+  deliverOrder(slot: number, birdId?: string): void;
+  askNeighbors(slot: number): void;
   skipOrder(slot: number): void;
   rushOrder(slot: number): void;
   listItem(itemId: string, qty: number, price: number): void;
@@ -35,8 +36,11 @@ function botName(session: GameSession, id: string): string {
   return session.content.bots.get(id)?.name.vi ?? 'Khách lạ';
 }
 
-/** "Bảng Đơn Khinh Khí Cầu": six parchment notes pinned on a wooden board. */
+/** "Bảng Đơn Khinh Khí Cầu": parchment notes pinned on a wooden board (6, up to 9 by level). */
 export class OrdersPanel extends Panel {
+  /** Bird chosen to escort the next balloon (chỉ thị 10 § 3.6), or null. */
+  private escort: string | null = null;
+
   constructor(
     private readonly session: GameSession,
     private readonly actions: WorldActions,
@@ -50,16 +54,28 @@ export class OrdersPanel extends Panel {
     const { content, state } = this.session;
     const now = this.session.now();
     const board = h('div', { class: 'board' });
+    // Birds free to escort (placed or not, not already flying with a balloon).
+    const escortOpen = state.player.level >= (content.orders.escortLevel ?? 1) && !!content.birds;
+    const free = escortOpen ? state.birds.filter((b) => !(b.escort && b.escort.until > now)) : [];
+    if (this.escort && !free.some((b) => b.id === this.escort)) this.escort = null;
+    const helpOpen = state.player.level >= (content.orders.helpLevel ?? 1);
+    const helpUsed = state.orders.helpDay === localDay(content, now);
     state.orders.slots.forEach((slot, i) => {
       const o = slot.order;
       if (!o) {
         const wait = Math.max(0, slot.readyAt - now);
+        const f = slot.flight;
+        const bird = f?.bird ? content.birds?.get(f.bird) : undefined;
         board.append(
           h(
             'div',
-            { class: 'note-card empty', 'data-test': `order-empty-${i}` },
+            { class: `note-card empty${f ? ' flying' : ''}`, 'data-test': `order-empty-${i}` },
             svgIcon('orders', 44),
-            h('span', { class: 'pack-info' }, wait > 0 ? `Khinh khí cầu về sau ${formatDuration(wait)}` : 'Đang hạ cánh…'),
+            f
+              ? h('span', { class: 'pack-info' }, `Đang bay, về sau ${formatDuration(wait)}`)
+              : h('span', { class: 'pack-info' }, wait > 0 ? `Khinh khí cầu về sau ${formatDuration(wait)}` : 'Đang hạ cánh…'),
+            f && h('span', { class: 'rewards' }, h('span', {}, coin(18), formatNumber(f.coins)), f.xp > 0 && h('span', {}, star(18), formatNumber(f.xp)), f.gems > 0 && h('span', {}, gem(18), String(f.gems)), ...Object.entries(f.items).map(([id, q]) => h('span', {}, itemIcon(content, id, 18), String(q)))),
+            bird && h('span', { class: 'pack-info' }, icon(`bird/${f!.bird!.slice(f!.bird!.lastIndexOf('.') + 1)}/fly`, 26), `${bird.name.vi} dẫn đường`),
             wait > 0 && h('button', { class: 'candy plain small', onclick: () => this.actions.rushOrder(i) }, gem(16), `${content.orders.skipNowGems} · Gọi về ngay`),
           ),
         );
@@ -68,28 +84,51 @@ export class OrdersPanel extends Panel {
       const ok = canDeliver(state, o);
       const lines = h('div', { class: 'order-lines' });
       for (const [id, qty] of Object.entries(o.items)) {
-        const have = state.inventory[id] ?? 0;
-        lines.append(h('span', { class: `order-line${have >= qty ? ' done' : ''}` }, itemIcon(content, id, 44), h('span', { class: 'qty-tag' }, `${Math.min(have, qty)}/${qty}`)));
+        const given = o.given?.[id] ?? 0;
+        const have = (state.inventory[id] ?? 0) + given;
+        lines.append(h('span', { class: `order-line${have >= qty ? ' done' : ''}` }, itemIcon(content, id, 44), h('span', { class: 'qty-tag' }, `${Math.min(have, qty)}/${qty}`), given > 0 && h('span', { class: 'given-tag' }, `+${given}`)));
       }
       const btn = h(
         'button',
-        { class: `candy ${ok ? 'primary' : 'blocked'} small`, 'data-test': `deliver-${i}`, onclick: () => (ok ? this.actions.deliverOrder(i) : shake(btn)) },
-        'Giao hàng',
+        { class: `candy ${ok ? 'primary' : 'blocked'} small`, 'data-test': `deliver-${i}`, onclick: () => (ok ? this.actions.deliverOrder(i, this.escort ?? undefined) : shake(btn)) },
+        this.escort ? 'Gửi cùng chim' : 'Gửi hàng',
       );
+      const left = o.expiresAt !== undefined ? o.expiresAt - now : null;
       board.append(
         h(
           'div',
           { class: `note-card${o.rare ? ' rare' : ''}`, 'data-test': `order-${i}` },
           h('span', { class: 'pin' }),
-          o.rare && h('span', { class: 'rare-tag' }, 'Đơn quý'),
+          o.rare && h('span', { class: 'rare-tag' }, left !== null ? `Đơn quý · còn ${formatDuration(left)}` : 'Đơn quý'),
           h('span', { class: 'customer' }, botName(this.session, o.customer)),
           lines,
-          h('span', { class: 'rewards' }, h('span', {}, coin(18), formatNumber(o.coins)), h('span', {}, star(18), formatNumber(o.xp)), o.gems > 0 && h('span', {}, gem(18), String(o.gems))),
-          h('span', { class: 'note-actions' }, btn, h('button', { class: 'link-btn', 'data-test': `skip-${i}`, onclick: () => this.actions.skipOrder(i) }, 'Bỏ đơn')),
+          h('span', { class: 'rewards' }, h('span', {}, coin(18), formatNumber(o.coins)), h('span', {}, star(18), formatNumber(o.xp)), o.gems > 0 && h('span', {}, gem(18), String(o.gems)), o.bonusItem && h('span', {}, itemIcon(content, o.bonusItem, 18), '1')),
+          h(
+            'span',
+            { class: 'note-actions' },
+            btn,
+            helpOpen && !ok && !helpUsed && h('button', { class: 'link-btn', 'data-test': `help-${i}`, onclick: () => this.actions.askNeighbors(i) }, 'Nhờ góp'),
+            h('button', { class: 'link-btn', 'data-test': `skip-${i}`, onclick: () => this.actions.skipOrder(i) }, 'Bỏ đơn'),
+          ),
         ),
       );
     });
-    this.body.append(h('p', { class: 'lead' }, 'Giao đơn được nhiều xu và kinh nghiệm hơn bán ở Rương. Đơn quý có thêm Ngọc Mây.'), board);
+    const escortRow =
+      free.length > 0 &&
+      h(
+        'div',
+        { class: 'bird-tools escort-row' },
+        h('span', { class: 'pack-info' }, 'Chim dẫn đường:'),
+        h('button', { class: `chip${this.escort === null ? ' on' : ''}`, onclick: () => ((this.escort = null), this.render()) }, 'Không'),
+        ...free.map((b) => {
+          const def = content.birds!.get(b.species);
+          const bonus = def ? [def.escort.coins ? `+${Math.round(def.escort.coins * 100)}% xu` : '', def.escort.xp ? `+${Math.round(def.escort.xp * 100)}% XP` : ''].filter(Boolean).join(' ') : '';
+          return h('button', { class: `chip${this.escort === b.id ? ' on' : ''}`, 'data-test': `escort-${b.id}`, onclick: () => ((this.escort = b.id), this.render()) }, icon(`bird/${b.species.slice(b.species.lastIndexOf('.') + 1)}/perch`, 22), `${def?.name.vi ?? ''} ${bonus}`);
+        }),
+      );
+    this.body.append(h('p', { class: 'lead' }, 'Gửi đủ hàng thì khinh khí cầu bay đi, về mới trả xu và kinh nghiệm. Chim dẫn đường cộng thêm thưởng nhưng không bắt sâu khi đi. Đơn quý có hạn, thưởng thêm Ngọc Mây và vật phẩm.'));
+    if (escortRow) this.body.append(escortRow);
+    this.body.append(board);
   }
 }
 

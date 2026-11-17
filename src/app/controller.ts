@@ -167,8 +167,12 @@ export class Controller implements WorkshopActions, BirdActions, PanelActions, P
     this.openPanel(panel);
   }
 
-  deliverOrder(slot: number): void {
-    this.run({ type: 'deliverOrder', slot });
+  deliverOrder(slot: number, birdId?: string): void {
+    this.run({ type: 'deliverOrder', slot, ...(birdId ? { birdId } : {}) });
+  }
+
+  askNeighbors(slot: number): void {
+    this.run({ type: 'askNeighbors', slot });
   }
 
   skipOrder(slot: number): void {
@@ -699,10 +703,25 @@ export class Controller implements WorkshopActions, BirdActions, PanelActions, P
         if (!this.panel) this.toasts.show(e.slots.length > 1 ? `Khinh khí cầu mang ${e.slots.length} đơn hàng mới tới!` : 'Khinh khí cầu mang đơn hàng mới tới!', 'info', 2200);
         break;
       case 'orderDelivered': {
+        // Chỉ thị 10 § 3.6: the balloon flies off now and pays when it comes back.
+        this.sfx.play('tap');
+        const back = Math.round(content.orders.refillSeconds / 60);
+        this.toasts.show(`Khách cảm ơn: +${e.xp} XP. Khinh khí cầu cất cánh, về sau ${back} phút mang ${formatNumber(e.coins)} xu.`, e.rare ? 'level' : 'success', 2800);
+        break;
+      }
+      case 'balloonBack': {
         this.sfx.play('coin');
         const who = content.bots.get(e.customer)?.name.vi ?? 'Khách';
-        const gems = e.gems > 0 ? `, +${e.gems} Ngọc Mây` : '';
-        this.toasts.show(`${who} cảm ơn! +${formatNumber(e.coins)} xu, +${e.xp} XP${gems}`, e.rare ? 'level' : 'success', 2600);
+        const extra = [e.gems > 0 ? `+${e.gems} Ngọc Mây` : '', ...Object.entries(e.items).map(([id, q]) => `+${q} ${content.items.get(id)?.name.vi ?? ''}`)].filter(Boolean).join(', ');
+        this.toasts.show(`Khinh khí cầu về! ${who} gửi +${formatNumber(e.coins)} xu${e.xp > 0 ? `, +${e.xp} XP` : ''}${extra ? `, ${extra}` : ''}`, e.rare ? 'level' : 'success', 2800);
+        break;
+      }
+      case 'rareOrderLeft':
+        this.toasts.show('Một đơn hiếm đã hết hạn, khinh khí cầu mang đơn mới tới.', 'info', 2200);
+        break;
+      case 'neighborsChipped': {
+        const names = e.help.map((h) => `${content.bots.get(h.botId)?.name.vi ?? 'Hàng xóm'} góp ${h.qty} ${content.items.get(h.itemId)?.name.vi ?? ''}`);
+        this.toasts.show(names.length ? names.join(' · ') : 'Hôm nay hàng xóm chưa có hàng để góp.', names.length ? 'success' : 'info', 3000);
         break;
       }
       case 'journalClaimed':
