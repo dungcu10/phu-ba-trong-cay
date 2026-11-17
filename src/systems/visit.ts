@@ -44,6 +44,32 @@ export function helpReward(content: ContentPack, bot: BotState): { coins: number
   return { coins: Math.round(h.coinsBase + h.coinsPerLevel * bot.level), xp: h.xp };
 }
 
+/**
+ * Only the crops of a neighbour's generated garden (floor by floor, slot by slot), with the very same
+ * random keys as botGarden — for the BOT bird and bug rules, which need no pots, levels or needs.
+ */
+export function botCrops(content: ContentPack, state: GameState, botId: string, now: number): CropDef[][] {
+  const def = content.bots.get(botId);
+  const bot = state.neighbors[botId];
+  if (!def || !bot) return [];
+  const seed = state.seed;
+  const day = localDay(content, now);
+  const lv = bot.level;
+  const crops = content.cropList.filter((c) => c.unlockLevel <= lv);
+  const liked = crops.filter((c) => c.family === def.likes);
+  const floors = content.floorList.filter((f) => f.unlockLevel <= lv);
+  return floors.map((fdef, fi) => {
+    const extra = Math.floor((lv - fdef.unlockLevel) / 3);
+    const slots = Math.min(fdef.maxSlots, fdef.slotCount + extra);
+    const out: CropDef[] = [];
+    for (let i = 0; i < slots; i++) {
+      const key = `${fi}:${i}`;
+      out.push(liked.length > 0 && randomFor(seed, 'vlike', botId, key, day) < 0.6 ? pick(liked, randomFor(seed, 'vcl', botId, key, day)) : pick(crops, randomFor(seed, 'vc', botId, key, day)));
+    }
+    return out;
+  });
+}
+
 export function botGarden(content: ContentPack, state: GameState, botId: string, now: number): VisitFloor[] {
   const def = content.bots.get(botId);
   const bot = state.neighbors[botId];

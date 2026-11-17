@@ -29,6 +29,16 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] B6 phần code — chỗ tiêu bọ lặp lại: Xưởng tốn bọ thợ, bán bọ cho thương lái; tăng tốc BOT (tag `m-12-b6-code`)
+- Loại: Thêm / Tối ưu
+- Mô tả: (1) mỗi mẻ Xưởng tốn bọ thợ của máy — trường mới `workerBugs` trong công thức (`workshop.json`, sinh bởi `tools/make-workshop.py`, đang là 1), thiếu bọ thì không làm được, cửa sổ Xưởng hiện bọ thợ như một nguyên liệu. (2) Bán bọ cho thương lái BOT: trường mới `neighbors.json` → `market.bugTrader` { factor 0,5, rarityValue thường 30 / khá 80 / hiếm 250 / rất hiếm 800 } — giá = `market.values` (Bọ Rùa 30) hoặc theo độ hiếm, × factor; lệnh `sellBugs`; Rương Mây có nút "Bán cho thương lái". (3) Cho thú cưng ăn bọ: để tới khi làm thú cưng (chỉ thị 11).
+- Tối ưu: 40 BOT × 7 ngày 142 → 109 ms (máy này) — chim BOT dùng một lần băm mỗi phiên rồi sinh số kế tiếp, BOT tự bắt bọ dùng danh sách chậu nhớ theo ngày, vườn BOT cho luật chim/bọ chỉ dựng cây (`botCrops`, cùng khóa ngẫu nhiên với `botGarden`, có test trùng khớp).
+- **Cho CTO:** chưa đổi số nào cũ; ba số mới (`workerBugs` 1, `bugTrader.factor` 0,5, `rarityValue`) chờ CTO chỉnh qua mô phỏng. Bot mô phỏng (`tools/progression.ts`) chưa bán bọ.
+- File/Module: `src/systems/{workshop,neighbors,botBirds,visit}.ts`, `src/core/{content,game}.ts`, `src/ui/{workshopPanel,panels}.ts`, `src/app/controller.ts`, `content/base/{workshop,neighbors}.json`, `tools/make-workshop.py`
+- Ảnh hưởng save: Không.
+- Kiểm thử: `tests/workshop10.test.ts` (+ bọ thợ), `tests/bugSinks12.test.ts`, `tests/botBirds11.test.ts` (+ vườn rút gọn trùng khớp). `npm run check` XANH.
+- Trạng thái nghiệm thu: Chờ
+
 ### [2026-11-18] Bổ sung A6.4–A6.5 phần code — Hoa Trăng Non ban đêm, Thông Thạo, Cây Hot (tag `m-12-a6-code`)
 - Loại: Thêm
 - Mô tả: `content/base/crop-extras.json` (file mới của luồng tính năng; `crops.json` là của CTO) + `src/systems/cropExtras.ts`. Cây lớn nhanh ban đêm (cộng với đặc tính đêm của Vườn Trăng, tắt game vẫn đúng); Thông Thạo 5 sao theo số lần thu hoạch, thưởng đi qua `slotBonus` nên chịu trần; Cây Hot mỗi ngày (theo seed và ngày): giá bán và đơn có cây Hot được cộng; khay hạt có nhãn "Hot hôm nay", Sổ Tay hiện sao Thông Thạo và số lần còn thiếu. Test A6.6 "mỗi cây ≥ 3 công dụng".

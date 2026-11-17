@@ -140,6 +140,32 @@ export function marketValue(content: ContentPack, itemId: string): number {
   return content.neighbors.market.values[itemId] ?? 0;
 }
 
+/** What a BOT trader pays for one bug (chỉ thị 12 B6.3): the market reference value (or one by the
+ *  bug's rarity) × the trader factor. Null when bugs cannot be sold. */
+export function bugTraderPrice(content: ContentPack, itemId: string): number | null {
+  const t = content.neighbors.market.bugTrader;
+  const bug = content.bugs.get(itemId);
+  if (!t || !bug) return null;
+  const value = content.neighbors.market.values[itemId] ?? t.rarityValue[bug.rarity] ?? 0;
+  const price = Math.floor(value * t.factor);
+  return price > 0 ? price : null;
+}
+
+/** Sells bugs to a BOT trader (the player; shared rule, so BOTs can use it too). */
+export function sellBugs(content: ContentPack, state: GameState, itemId: string, qty: number): { coins: number } | 'not_sellable' | 'bad_quantity' | 'not_enough_items' {
+  const price = bugTraderPrice(content, itemId);
+  if (price === null) return 'not_sellable';
+  if (!Number.isInteger(qty) || qty <= 0) return 'bad_quantity';
+  if ((state.inventory[itemId] ?? 0) < qty) return 'not_enough_items';
+  const left = state.inventory[itemId]! - qty;
+  if (left === 0) delete state.inventory[itemId];
+  else state.inventory[itemId] = left;
+  const coins = price * qty;
+  state.player.coins += coins;
+  state.stats.coinsEarned += coins;
+  return { coins };
+}
+
 /** A neighbour's asking price: never below markup × value, cheaper from traders. */
 export function askingPrice(content: ContentPack, bot: BotDef, itemId: string): number {
   const m = content.neighbors.market;

@@ -41,7 +41,15 @@ export function machineOrderBonus(content: ContentPack, state: GameState, machin
   return m ? rules(content).starOrderBonus * (m.stars - 1) : 0;
 }
 
-/** Adds a job: takes the produce now, the good comes when the job ends. */
+/** Everything a batch takes: the recipe's inputs plus the machine's worker bugs (B6, default 1). */
+export function jobInputs(machine: MachineDef, recipe: RecipeDef): Record<string, number> {
+  const bugs = recipe.workerBugs ?? 1;
+  const out = { ...recipe.inputs };
+  if (bugs > 0) out[machine.worker] = (out[machine.worker] ?? 0) + bugs;
+  return out;
+}
+
+/** Adds a job: takes the produce (and the worker bugs) now, the good comes when the job ends. */
 export function startJob(content: ContentPack, state: GameState, recipeId: string, now: number): WorkshopError | WorkshopEvent {
   const hit = content.recipes?.get(recipeId);
   if (!hit) return 'unknown_recipe';
@@ -49,8 +57,9 @@ export function startJob(content: ContentPack, state: GameState, recipeId: strin
   if (state.player.level < machine.unlockLevel) return 'locked';
   const m = machineState(content, state, machine.id);
   if (m.queue.length >= m.slots) return 'queue_full';
-  for (const [id, q] of Object.entries(recipe.inputs)) if ((state.inventory[id] ?? 0) < q) return 'not_enough_items';
-  for (const [id, q] of Object.entries(recipe.inputs)) removeItem(state, id, q);
+  const take = jobInputs(machine, recipe);
+  for (const [id, q] of Object.entries(take)) if ((state.inventory[id] ?? 0) < q) return 'not_enough_items';
+  for (const [id, q] of Object.entries(take)) removeItem(state, id, q);
   const start = Math.max(now, m.queue.at(-1)?.endsAt ?? now);
   const endsAt = start + jobMs(content, recipe, m.stars);
   m.queue.push({ recipe: recipeId, endsAt });

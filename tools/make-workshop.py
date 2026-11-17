@@ -6,6 +6,7 @@ bổ sung A6.3: công thức theo cây). Chạy lại khi crops.json có cây m�
   nếu máy chưa có công thức nào ở cấp mở máy, thêm cây cùng hệ đã mở trước đó để máy dùng được ngay.
 - Giá hàng chế biến = 1,5 × tổng giá bán nông sản đầu vào (ràng buộc § 3.5: không quá 1,6 lần).
 - Thời gian = thời gian lớn của cây đầu vào, kẹp trong [5 phút, 4 giờ].
+- workerBugs: mỗi mẻ tốn bấy nhiêu con bọ thợ của máy (chỗ tiêu bọ lặp lại, B6; CTO chỉnh số).
 """
 import json
 from pathlib import Path
@@ -66,7 +67,7 @@ for mid, name, worker, level, icon, stem, family, qty, wanted, extra in MACHINES
         goods.append({'id': good, 'name': {'vi': f"{stem} {short(c['produce']['name']['vi'])}"},
                       'icon': f'art:icon/{icon}', 'sellPrice': round(value * VALUE), 'machine': f'base:machine.{mid}'})
         recipes.append({'id': f'base:recipe.{mid}.{slug}', 'inputs': inputs, 'output': good,
-                        'minutes': int(min(240, max(5, round(minutes))))})
+                        'minutes': int(min(240, max(5, round(minutes)))), 'workerBugs': 1})
     machines.append({'id': f'base:machine.{mid}', 'name': {'vi': name}, 'worker': worker, 'unlockLevel': level,
                      'recipes': recipes})
 
@@ -74,12 +75,12 @@ for mid, name, worker, level, icon, stem, family, qty, wanted, extra in MACHINES
 # ràng buộc 1,6 lần không áp dụng; Ngọc Mây dùng đúc chậu và cho Rồng (chỉ thị 11).
 machines.append({'id': 'base:machine.gem-grinder', 'name': {'vi': 'Máy Mài Ngọc'}, 'worker': 'base:bug.gold-scarab',
                  'unlockLevel': 16, 'recipes': [
-                     {'id': 'base:recipe.gem-grinder.stone', 'inputs': {'base:mat.cloud-stone': 3}, 'output': 'base:mat.cut-gem', 'minutes': 60},
-                     {'id': 'base:recipe.gem-grinder.jade', 'inputs': {'base:mat.raw-jade': 1, 'base:mat.cloud-stone': 1}, 'output': 'base:mat.cut-gem', 'minutes': 40},
+                     {'id': 'base:recipe.gem-grinder.stone', 'inputs': {'base:mat.cloud-stone': 3}, 'output': 'base:mat.cut-gem', 'minutes': 60, 'workerBugs': 1},
+                     {'id': 'base:recipe.gem-grinder.jade', 'inputs': {'base:mat.raw-jade': 1, 'base:mat.cloud-stone': 1}, 'output': 'base:mat.cut-gem', 'minutes': 40, 'workerBugs': 1},
                  ] + [
                      # A6.3: khoáng cộng Hoa Trăng Non hoặc Cỏ Sao Băng (Kỳ Hoa) → Ngọc Mây.
                      {'id': f'base:recipe.gem-grinder.{slug}', 'inputs': {'base:mat.cloud-stone': 2, crop(slug)['produce']['id']: 1},
-                      'output': 'base:mat.cut-gem', 'minutes': 30}
+                      'output': 'base:mat.cut-gem', 'minutes': 30, 'workerBugs': 1}
                      for slug in ('crescent-flower', 'shooting-star-grass') if crop(slug)
                  ]})
 
