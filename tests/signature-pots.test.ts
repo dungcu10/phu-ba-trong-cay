@@ -1,5 +1,6 @@
 // Directive 04 step 3: the 50 signature pots replace the 50 catalog pots in the shop.
-// Old ids stay (retired: hidden from the shop, still loadable); the new ones copy their economy.
+// Old ids stay (retired: hidden from the shop, still loadable); the new ones copy their shop fields.
+// Directive 05: their growth and skills are balanced separately (tests/signature-balance.test.ts).
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -50,12 +51,12 @@ test('50 chậu đặc trưng: id, tên, nhóm theo bảng; sprite có khung tro
   assert.deepEqual([...new Set(sig.map((d) => d.theme))], line.groups);
 });
 
-test('chậu mới số N thừa hưởng nguyên chỉ số kinh tế của chậu cũ số N', () => {
+test('chậu mới số N giữ độ hiếm, giá, cấp mở, họ cây ưa, bộ và nguồn của chậu cũ số N (chỉ thị 05: cấp và kỹ năng cân bằng riêng)', () => {
   assert.equal(old.length, 50);
   for (const d of sig) {
     const o = old.find((x) => nn(x) === nn(d))!;
     for (const k of ECONOMY) assert.deepEqual(d[k], o[k], `${d.id}.${k}`);
-    assert.deepEqual(d.levels, o.levels, `${d.id}.levels`);
+    assert.equal(d.levels.length, 50, `${d.id}: 50 cấp`);
   }
 });
 

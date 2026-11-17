@@ -2899,26 +2899,143 @@
     "price": 5000,
     "unlockLevel": 12,
     "favoredFamily": "flower",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "speed": 0.08,
-        "yield": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 400,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "yield",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "yield": [
+          0.079,
+          0.525
+        ],
+        "speed": [
+          0.02,
+          0.134
+        ],
+        "xp": [
+          0.027,
+          0.181
+        ],
+        "luck": [
+          0.016,
+          0.105
+        ]
+      },
+      "coins": {
+        "base": 250,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 2
+        },
+        "10": {
+          "base:mat.cloud-clay": 4
+        },
+        "15": {
+          "base:mat.cloud-clay": 6
+        },
+        "20": {
+          "base:mat.cloud-clay": 8
+        },
+        "25": {
+          "base:mat.cloud-clay": 10
+        },
+        "30": {
+          "base:mat.cloud-clay": 12
+        },
+        "35": {
+          "base:mat.cloud-clay": 15
+        },
+        "40": {
+          "base:mat.cloud-clay": 18
+        },
+        "45": {
+          "base:mat.cloud-clay": 22
+        },
+        "50": {
+          "base:mat.cloud-clay": 30
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-warm-oven",
+        "level": 10,
+        "name": {
+          "vi": "Bếp Ấm"
+        },
+        "desc": {
+          "vi": "Sản lượng +3%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "yield",
+          "value": 0.03
+        }
+      },
+      {
+        "id": "sig-double-batch",
+        "level": 25,
+        "name": {
+          "vi": "Mẻ Bánh Đôi"
+        },
+        "desc": {
+          "vi": "4% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.04
+        }
+      },
+      {
+        "id": "sig-cloud-feast",
+        "level": 50,
+        "name": {
+          "vi": "Tiệc Mây"
+        },
+        "desc": {
+          "vi": "Sản lượng +6%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "yield",
+          "value": 0.06
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/01/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -2935,26 +3052,143 @@
     "price": 5000,
     "unlockLevel": 12,
     "favoredFamily": "fruit",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "yield": 0.1,
-        "xp": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 400,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "yield",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "yield": [
+          0.077,
+          0.513
+        ],
+        "speed": [
+          0.027,
+          0.177
+        ],
+        "xp": [
+          0.02,
+          0.131
+        ],
+        "luck": [
+          0.015,
+          0.103
+        ]
+      },
+      "coins": {
+        "base": 250,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 2
+        },
+        "10": {
+          "base:mat.cloud-clay": 4
+        },
+        "15": {
+          "base:mat.cloud-clay": 6
+        },
+        "20": {
+          "base:mat.cloud-clay": 8
+        },
+        "25": {
+          "base:mat.cloud-clay": 10
+        },
+        "30": {
+          "base:mat.cloud-clay": 12
+        },
+        "35": {
+          "base:mat.cloud-clay": 15
+        },
+        "40": {
+          "base:mat.cloud-clay": 18
+        },
+        "45": {
+          "base:mat.cloud-clay": 22
+        },
+        "50": {
+          "base:mat.cloud-clay": 30
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-warm-oven",
+        "level": 10,
+        "name": {
+          "vi": "Bếp Ấm"
+        },
+        "desc": {
+          "vi": "Sản lượng +3%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "yield",
+          "value": 0.03
+        }
+      },
+      {
+        "id": "sig-double-batch",
+        "level": 25,
+        "name": {
+          "vi": "Mẻ Bánh Đôi"
+        },
+        "desc": {
+          "vi": "4% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.04
+        }
+      },
+      {
+        "id": "sig-cloud-feast",
+        "level": 50,
+        "name": {
+          "vi": "Tiệc Mây"
+        },
+        "desc": {
+          "vi": "Sản lượng +6%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "yield",
+          "value": 0.06
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/02/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -2971,26 +3205,143 @@
     "price": 5000,
     "unlockLevel": 12,
     "favoredFamily": "herb",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "speed": 0.06,
-        "luck": 0.1
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 400,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "yield",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "yield": [
+          0.079,
+          0.525
+        ],
+        "speed": [
+          0.02,
+          0.134
+        ],
+        "xp": [
+          0.027,
+          0.181
+        ],
+        "luck": [
+          0.016,
+          0.105
+        ]
+      },
+      "coins": {
+        "base": 250,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 2
+        },
+        "10": {
+          "base:mat.cloud-clay": 4
+        },
+        "15": {
+          "base:mat.cloud-clay": 6
+        },
+        "20": {
+          "base:mat.cloud-clay": 8
+        },
+        "25": {
+          "base:mat.cloud-clay": 10
+        },
+        "30": {
+          "base:mat.cloud-clay": 12
+        },
+        "35": {
+          "base:mat.cloud-clay": 15
+        },
+        "40": {
+          "base:mat.cloud-clay": 18
+        },
+        "45": {
+          "base:mat.cloud-clay": 22
+        },
+        "50": {
+          "base:mat.cloud-clay": 30
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-warm-oven",
+        "level": 10,
+        "name": {
+          "vi": "Bếp Ấm"
+        },
+        "desc": {
+          "vi": "Sản lượng +3%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "yield",
+          "value": 0.03
+        }
+      },
+      {
+        "id": "sig-double-batch",
+        "level": 25,
+        "name": {
+          "vi": "Mẻ Bánh Đôi"
+        },
+        "desc": {
+          "vi": "4% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.04
+        }
+      },
+      {
+        "id": "sig-cloud-feast",
+        "level": 50,
+        "name": {
+          "vi": "Tiệc Mây"
+        },
+        "desc": {
+          "vi": "Sản lượng +6%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "yield",
+          "value": 0.06
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/03/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3007,26 +3358,143 @@
     "price": 5000,
     "unlockLevel": 12,
     "favoredFamily": "flower",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "xp": 0.1,
-        "luck": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 400,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "yield",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "yield": [
+          0.077,
+          0.513
+        ],
+        "speed": [
+          0.027,
+          0.177
+        ],
+        "xp": [
+          0.02,
+          0.131
+        ],
+        "luck": [
+          0.015,
+          0.103
+        ]
+      },
+      "coins": {
+        "base": 250,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 2
+        },
+        "10": {
+          "base:mat.cloud-clay": 4
+        },
+        "15": {
+          "base:mat.cloud-clay": 6
+        },
+        "20": {
+          "base:mat.cloud-clay": 8
+        },
+        "25": {
+          "base:mat.cloud-clay": 10
+        },
+        "30": {
+          "base:mat.cloud-clay": 12
+        },
+        "35": {
+          "base:mat.cloud-clay": 15
+        },
+        "40": {
+          "base:mat.cloud-clay": 18
+        },
+        "45": {
+          "base:mat.cloud-clay": 22
+        },
+        "50": {
+          "base:mat.cloud-clay": 30
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-warm-oven",
+        "level": 10,
+        "name": {
+          "vi": "Bếp Ấm"
+        },
+        "desc": {
+          "vi": "Sản lượng +3%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "yield",
+          "value": 0.03
+        }
+      },
+      {
+        "id": "sig-double-batch",
+        "level": 25,
+        "name": {
+          "vi": "Mẻ Bánh Đôi"
+        },
+        "desc": {
+          "vi": "4% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.04
+        }
+      },
+      {
+        "id": "sig-cloud-feast",
+        "level": 50,
+        "name": {
+          "vi": "Tiệc Mây"
+        },
+        "desc": {
+          "vi": "Sản lượng +6%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "yield",
+          "value": 0.06
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/04/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3043,26 +3511,143 @@
     "price": 5000,
     "unlockLevel": 12,
     "favoredFamily": "fruit",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "speed": 0.08,
-        "yield": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 400,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "yield",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "yield": [
+          0.079,
+          0.525
+        ],
+        "speed": [
+          0.02,
+          0.134
+        ],
+        "xp": [
+          0.027,
+          0.181
+        ],
+        "luck": [
+          0.016,
+          0.105
+        ]
+      },
+      "coins": {
+        "base": 250,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 2
+        },
+        "10": {
+          "base:mat.cloud-clay": 4
+        },
+        "15": {
+          "base:mat.cloud-clay": 6
+        },
+        "20": {
+          "base:mat.cloud-clay": 8
+        },
+        "25": {
+          "base:mat.cloud-clay": 10
+        },
+        "30": {
+          "base:mat.cloud-clay": 12
+        },
+        "35": {
+          "base:mat.cloud-clay": 15
+        },
+        "40": {
+          "base:mat.cloud-clay": 18
+        },
+        "45": {
+          "base:mat.cloud-clay": 22
+        },
+        "50": {
+          "base:mat.cloud-clay": 30
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-warm-oven",
+        "level": 10,
+        "name": {
+          "vi": "Bếp Ấm"
+        },
+        "desc": {
+          "vi": "Sản lượng +3%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "yield",
+          "value": 0.03
+        }
+      },
+      {
+        "id": "sig-double-batch",
+        "level": 25,
+        "name": {
+          "vi": "Mẻ Bánh Đôi"
+        },
+        "desc": {
+          "vi": "4% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.04
+        }
+      },
+      {
+        "id": "sig-cloud-feast",
+        "level": 50,
+        "name": {
+          "vi": "Tiệc Mây"
+        },
+        "desc": {
+          "vi": "Sản lượng +6%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "yield",
+          "value": 0.06
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/05/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3079,26 +3664,143 @@
     "price": 5000,
     "unlockLevel": 12,
     "favoredFamily": "herb",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "yield": 0.1,
-        "xp": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 400,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "yield",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "yield": [
+          0.077,
+          0.513
+        ],
+        "speed": [
+          0.027,
+          0.177
+        ],
+        "xp": [
+          0.02,
+          0.131
+        ],
+        "luck": [
+          0.015,
+          0.103
+        ]
+      },
+      "coins": {
+        "base": 250,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 2
+        },
+        "10": {
+          "base:mat.cloud-clay": 4
+        },
+        "15": {
+          "base:mat.cloud-clay": 6
+        },
+        "20": {
+          "base:mat.cloud-clay": 8
+        },
+        "25": {
+          "base:mat.cloud-clay": 10
+        },
+        "30": {
+          "base:mat.cloud-clay": 12
+        },
+        "35": {
+          "base:mat.cloud-clay": 15
+        },
+        "40": {
+          "base:mat.cloud-clay": 18
+        },
+        "45": {
+          "base:mat.cloud-clay": 22
+        },
+        "50": {
+          "base:mat.cloud-clay": 30
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-warm-oven",
+        "level": 10,
+        "name": {
+          "vi": "Bếp Ấm"
+        },
+        "desc": {
+          "vi": "Sản lượng +3%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "yield",
+          "value": 0.03
+        }
+      },
+      {
+        "id": "sig-double-batch",
+        "level": 25,
+        "name": {
+          "vi": "Mẻ Bánh Đôi"
+        },
+        "desc": {
+          "vi": "4% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.04
+        }
+      },
+      {
+        "id": "sig-cloud-feast",
+        "level": 50,
+        "name": {
+          "vi": "Tiệc Mây"
+        },
+        "desc": {
+          "vi": "Sản lượng +6%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "yield",
+          "value": 0.06
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/06/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3115,26 +3817,143 @@
     "price": 5000,
     "unlockLevel": 12,
     "favoredFamily": "flower",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "speed": 0.06,
-        "luck": 0.1
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 400,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "yield",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "yield": [
+          0.079,
+          0.525
+        ],
+        "speed": [
+          0.02,
+          0.134
+        ],
+        "xp": [
+          0.027,
+          0.181
+        ],
+        "luck": [
+          0.016,
+          0.105
+        ]
+      },
+      "coins": {
+        "base": 250,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 2
+        },
+        "10": {
+          "base:mat.cloud-clay": 4
+        },
+        "15": {
+          "base:mat.cloud-clay": 6
+        },
+        "20": {
+          "base:mat.cloud-clay": 8
+        },
+        "25": {
+          "base:mat.cloud-clay": 10
+        },
+        "30": {
+          "base:mat.cloud-clay": 12
+        },
+        "35": {
+          "base:mat.cloud-clay": 15
+        },
+        "40": {
+          "base:mat.cloud-clay": 18
+        },
+        "45": {
+          "base:mat.cloud-clay": 22
+        },
+        "50": {
+          "base:mat.cloud-clay": 30
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-warm-oven",
+        "level": 10,
+        "name": {
+          "vi": "Bếp Ấm"
+        },
+        "desc": {
+          "vi": "Sản lượng +3%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "yield",
+          "value": 0.03
+        }
+      },
+      {
+        "id": "sig-double-batch",
+        "level": 25,
+        "name": {
+          "vi": "Mẻ Bánh Đôi"
+        },
+        "desc": {
+          "vi": "4% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.04
+        }
+      },
+      {
+        "id": "sig-cloud-feast",
+        "level": 50,
+        "name": {
+          "vi": "Tiệc Mây"
+        },
+        "desc": {
+          "vi": "Sản lượng +6%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "yield",
+          "value": 0.06
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/07/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3151,26 +3970,143 @@
     "price": 5000,
     "unlockLevel": 12,
     "favoredFamily": "fruit",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "xp": 0.1,
-        "luck": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 400,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "yield",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "yield": [
+          0.077,
+          0.513
+        ],
+        "speed": [
+          0.027,
+          0.177
+        ],
+        "xp": [
+          0.02,
+          0.131
+        ],
+        "luck": [
+          0.015,
+          0.103
+        ]
+      },
+      "coins": {
+        "base": 250,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 2
+        },
+        "10": {
+          "base:mat.cloud-clay": 4
+        },
+        "15": {
+          "base:mat.cloud-clay": 6
+        },
+        "20": {
+          "base:mat.cloud-clay": 8
+        },
+        "25": {
+          "base:mat.cloud-clay": 10
+        },
+        "30": {
+          "base:mat.cloud-clay": 12
+        },
+        "35": {
+          "base:mat.cloud-clay": 15
+        },
+        "40": {
+          "base:mat.cloud-clay": 18
+        },
+        "45": {
+          "base:mat.cloud-clay": 22
+        },
+        "50": {
+          "base:mat.cloud-clay": 30
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-warm-oven",
+        "level": 10,
+        "name": {
+          "vi": "Bếp Ấm"
+        },
+        "desc": {
+          "vi": "Sản lượng +3%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "yield",
+          "value": 0.03
+        }
+      },
+      {
+        "id": "sig-double-batch",
+        "level": 25,
+        "name": {
+          "vi": "Mẻ Bánh Đôi"
+        },
+        "desc": {
+          "vi": "4% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.04
+        }
+      },
+      {
+        "id": "sig-cloud-feast",
+        "level": 50,
+        "name": {
+          "vi": "Tiệc Mây"
+        },
+        "desc": {
+          "vi": "Sản lượng +6%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "yield",
+          "value": 0.06
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/08/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3187,26 +4123,143 @@
     "price": 5000,
     "unlockLevel": 12,
     "favoredFamily": "herb",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "speed": 0.08,
-        "yield": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 400,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "yield",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "yield": [
+          0.079,
+          0.525
+        ],
+        "speed": [
+          0.02,
+          0.134
+        ],
+        "xp": [
+          0.027,
+          0.181
+        ],
+        "luck": [
+          0.016,
+          0.105
+        ]
+      },
+      "coins": {
+        "base": 250,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 2
+        },
+        "10": {
+          "base:mat.cloud-clay": 4
+        },
+        "15": {
+          "base:mat.cloud-clay": 6
+        },
+        "20": {
+          "base:mat.cloud-clay": 8
+        },
+        "25": {
+          "base:mat.cloud-clay": 10
+        },
+        "30": {
+          "base:mat.cloud-clay": 12
+        },
+        "35": {
+          "base:mat.cloud-clay": 15
+        },
+        "40": {
+          "base:mat.cloud-clay": 18
+        },
+        "45": {
+          "base:mat.cloud-clay": 22
+        },
+        "50": {
+          "base:mat.cloud-clay": 30
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-warm-oven",
+        "level": 10,
+        "name": {
+          "vi": "Bếp Ấm"
+        },
+        "desc": {
+          "vi": "Sản lượng +3%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "yield",
+          "value": 0.03
+        }
+      },
+      {
+        "id": "sig-double-batch",
+        "level": 25,
+        "name": {
+          "vi": "Mẻ Bánh Đôi"
+        },
+        "desc": {
+          "vi": "4% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.04
+        }
+      },
+      {
+        "id": "sig-cloud-feast",
+        "level": 50,
+        "name": {
+          "vi": "Tiệc Mây"
+        },
+        "desc": {
+          "vi": "Sản lượng +6%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "yield",
+          "value": 0.06
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/09/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3223,26 +4276,143 @@
     "price": 5000,
     "unlockLevel": 12,
     "favoredFamily": "flower",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "yield": 0.1,
-        "xp": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 400,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "yield",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "yield": [
+          0.077,
+          0.513
+        ],
+        "speed": [
+          0.027,
+          0.177
+        ],
+        "xp": [
+          0.02,
+          0.131
+        ],
+        "luck": [
+          0.015,
+          0.103
+        ]
+      },
+      "coins": {
+        "base": 250,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 2
+        },
+        "10": {
+          "base:mat.cloud-clay": 4
+        },
+        "15": {
+          "base:mat.cloud-clay": 6
+        },
+        "20": {
+          "base:mat.cloud-clay": 8
+        },
+        "25": {
+          "base:mat.cloud-clay": 10
+        },
+        "30": {
+          "base:mat.cloud-clay": 12
+        },
+        "35": {
+          "base:mat.cloud-clay": 15
+        },
+        "40": {
+          "base:mat.cloud-clay": 18
+        },
+        "45": {
+          "base:mat.cloud-clay": 22
+        },
+        "50": {
+          "base:mat.cloud-clay": 30
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-warm-oven",
+        "level": 10,
+        "name": {
+          "vi": "Bếp Ấm"
+        },
+        "desc": {
+          "vi": "Sản lượng +3%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "yield",
+          "value": 0.03
+        }
+      },
+      {
+        "id": "sig-double-batch",
+        "level": 25,
+        "name": {
+          "vi": "Mẻ Bánh Đôi"
+        },
+        "desc": {
+          "vi": "4% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.04
+        }
+      },
+      {
+        "id": "sig-cloud-feast",
+        "level": 50,
+        "name": {
+          "vi": "Tiệc Mây"
+        },
+        "desc": {
+          "vi": "Sản lượng +6%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "yield",
+          "value": 0.06
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/10/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3259,26 +4429,144 @@
     "price": 5000,
     "unlockLevel": 12,
     "favoredFamily": "fruit",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "speed": 0.06,
-        "luck": 0.1
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 400,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "xp",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "xp": [
+          0.068,
+          0.454
+        ],
+        "luck": [
+          0.092,
+          0.614
+        ],
+        "yield": [
+          0.024,
+          0.16
+        ],
+        "speed": [
+          0.012,
+          0.08
+        ]
+      },
+      "coins": {
+        "base": 250,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 2
+        },
+        "10": {
+          "base:mat.cloud-clay": 4
+        },
+        "15": {
+          "base:mat.cloud-clay": 6
+        },
+        "20": {
+          "base:mat.cloud-clay": 8
+        },
+        "25": {
+          "base:mat.cloud-clay": 10
+        },
+        "30": {
+          "base:mat.cloud-clay": 12
+        },
+        "35": {
+          "base:mat.cloud-clay": 15
+        },
+        "40": {
+          "base:mat.cloud-clay": 18
+        },
+        "45": {
+          "base:mat.cloud-clay": 22
+        },
+        "50": {
+          "base:mat.cloud-clay": 30
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-little-helper",
+        "level": 10,
+        "name": {
+          "vi": "Bạn Nhỏ Chăm Chỉ"
+        },
+        "desc": {
+          "vi": "Kinh nghiệm +5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "xp",
+          "value": 0.05
+        }
+      },
+      {
+        "id": "sig-lucky-charm",
+        "level": 25,
+        "name": {
+          "vi": "Bùa May"
+        },
+        "desc": {
+          "vi": "May mắn +8%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "luck",
+          "value": 0.08
+        }
+      },
+      {
+        "id": "sig-soulmate",
+        "level": 50,
+        "name": {
+          "vi": "Tri Kỷ"
+        },
+        "desc": {
+          "vi": "Kinh nghiệm +10%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "xp",
+          "value": 0.1
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/11/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3295,26 +4583,144 @@
     "price": 5000,
     "unlockLevel": 12,
     "favoredFamily": "herb",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "xp": 0.1,
-        "luck": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 400,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "xp",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "xp": [
+          0.09,
+          0.603
+        ],
+        "luck": [
+          0.067,
+          0.445
+        ],
+        "yield": [
+          0.024,
+          0.157
+        ],
+        "speed": [
+          0.012,
+          0.079
+        ]
+      },
+      "coins": {
+        "base": 250,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 2
+        },
+        "10": {
+          "base:mat.cloud-clay": 4
+        },
+        "15": {
+          "base:mat.cloud-clay": 6
+        },
+        "20": {
+          "base:mat.cloud-clay": 8
+        },
+        "25": {
+          "base:mat.cloud-clay": 10
+        },
+        "30": {
+          "base:mat.cloud-clay": 12
+        },
+        "35": {
+          "base:mat.cloud-clay": 15
+        },
+        "40": {
+          "base:mat.cloud-clay": 18
+        },
+        "45": {
+          "base:mat.cloud-clay": 22
+        },
+        "50": {
+          "base:mat.cloud-clay": 30
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-little-helper",
+        "level": 10,
+        "name": {
+          "vi": "Bạn Nhỏ Chăm Chỉ"
+        },
+        "desc": {
+          "vi": "Kinh nghiệm +5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "xp",
+          "value": 0.05
+        }
+      },
+      {
+        "id": "sig-lucky-charm",
+        "level": 25,
+        "name": {
+          "vi": "Bùa May"
+        },
+        "desc": {
+          "vi": "May mắn +8%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "luck",
+          "value": 0.08
+        }
+      },
+      {
+        "id": "sig-soulmate",
+        "level": 50,
+        "name": {
+          "vi": "Tri Kỷ"
+        },
+        "desc": {
+          "vi": "Kinh nghiệm +10%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "xp",
+          "value": 0.1
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/12/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3331,26 +4737,144 @@
     "price": 5000,
     "unlockLevel": 12,
     "favoredFamily": "flower",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "speed": 0.08,
-        "yield": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 400,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "xp",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "xp": [
+          0.068,
+          0.454
+        ],
+        "luck": [
+          0.092,
+          0.614
+        ],
+        "yield": [
+          0.024,
+          0.16
+        ],
+        "speed": [
+          0.012,
+          0.08
+        ]
+      },
+      "coins": {
+        "base": 250,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 2
+        },
+        "10": {
+          "base:mat.cloud-clay": 4
+        },
+        "15": {
+          "base:mat.cloud-clay": 6
+        },
+        "20": {
+          "base:mat.cloud-clay": 8
+        },
+        "25": {
+          "base:mat.cloud-clay": 10
+        },
+        "30": {
+          "base:mat.cloud-clay": 12
+        },
+        "35": {
+          "base:mat.cloud-clay": 15
+        },
+        "40": {
+          "base:mat.cloud-clay": 18
+        },
+        "45": {
+          "base:mat.cloud-clay": 22
+        },
+        "50": {
+          "base:mat.cloud-clay": 30
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-little-helper",
+        "level": 10,
+        "name": {
+          "vi": "Bạn Nhỏ Chăm Chỉ"
+        },
+        "desc": {
+          "vi": "Kinh nghiệm +5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "xp",
+          "value": 0.05
+        }
+      },
+      {
+        "id": "sig-lucky-charm",
+        "level": 25,
+        "name": {
+          "vi": "Bùa May"
+        },
+        "desc": {
+          "vi": "May mắn +8%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "luck",
+          "value": 0.08
+        }
+      },
+      {
+        "id": "sig-soulmate",
+        "level": 50,
+        "name": {
+          "vi": "Tri Kỷ"
+        },
+        "desc": {
+          "vi": "Kinh nghiệm +10%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "xp",
+          "value": 0.1
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/13/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3367,26 +4891,144 @@
     "price": 5000,
     "unlockLevel": 12,
     "favoredFamily": "fruit",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "yield": 0.1,
-        "xp": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 400,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "xp",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "xp": [
+          0.09,
+          0.603
+        ],
+        "luck": [
+          0.067,
+          0.445
+        ],
+        "yield": [
+          0.024,
+          0.157
+        ],
+        "speed": [
+          0.012,
+          0.079
+        ]
+      },
+      "coins": {
+        "base": 250,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 2
+        },
+        "10": {
+          "base:mat.cloud-clay": 4
+        },
+        "15": {
+          "base:mat.cloud-clay": 6
+        },
+        "20": {
+          "base:mat.cloud-clay": 8
+        },
+        "25": {
+          "base:mat.cloud-clay": 10
+        },
+        "30": {
+          "base:mat.cloud-clay": 12
+        },
+        "35": {
+          "base:mat.cloud-clay": 15
+        },
+        "40": {
+          "base:mat.cloud-clay": 18
+        },
+        "45": {
+          "base:mat.cloud-clay": 22
+        },
+        "50": {
+          "base:mat.cloud-clay": 30
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-little-helper",
+        "level": 10,
+        "name": {
+          "vi": "Bạn Nhỏ Chăm Chỉ"
+        },
+        "desc": {
+          "vi": "Kinh nghiệm +5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "xp",
+          "value": 0.05
+        }
+      },
+      {
+        "id": "sig-lucky-charm",
+        "level": 25,
+        "name": {
+          "vi": "Bùa May"
+        },
+        "desc": {
+          "vi": "May mắn +8%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "luck",
+          "value": 0.08
+        }
+      },
+      {
+        "id": "sig-soulmate",
+        "level": 50,
+        "name": {
+          "vi": "Tri Kỷ"
+        },
+        "desc": {
+          "vi": "Kinh nghiệm +10%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "xp",
+          "value": 0.1
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/14/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3403,26 +5045,144 @@
     "price": 5000,
     "unlockLevel": 12,
     "favoredFamily": "herb",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "speed": 0.06,
-        "luck": 0.1
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 400,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "xp",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "xp": [
+          0.068,
+          0.454
+        ],
+        "luck": [
+          0.092,
+          0.614
+        ],
+        "yield": [
+          0.024,
+          0.16
+        ],
+        "speed": [
+          0.012,
+          0.08
+        ]
+      },
+      "coins": {
+        "base": 250,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 2
+        },
+        "10": {
+          "base:mat.cloud-clay": 4
+        },
+        "15": {
+          "base:mat.cloud-clay": 6
+        },
+        "20": {
+          "base:mat.cloud-clay": 8
+        },
+        "25": {
+          "base:mat.cloud-clay": 10
+        },
+        "30": {
+          "base:mat.cloud-clay": 12
+        },
+        "35": {
+          "base:mat.cloud-clay": 15
+        },
+        "40": {
+          "base:mat.cloud-clay": 18
+        },
+        "45": {
+          "base:mat.cloud-clay": 22
+        },
+        "50": {
+          "base:mat.cloud-clay": 30
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-little-helper",
+        "level": 10,
+        "name": {
+          "vi": "Bạn Nhỏ Chăm Chỉ"
+        },
+        "desc": {
+          "vi": "Kinh nghiệm +5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "xp",
+          "value": 0.05
+        }
+      },
+      {
+        "id": "sig-lucky-charm",
+        "level": 25,
+        "name": {
+          "vi": "Bùa May"
+        },
+        "desc": {
+          "vi": "May mắn +8%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "luck",
+          "value": 0.08
+        }
+      },
+      {
+        "id": "sig-soulmate",
+        "level": 50,
+        "name": {
+          "vi": "Tri Kỷ"
+        },
+        "desc": {
+          "vi": "Kinh nghiệm +10%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "xp",
+          "value": 0.1
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/15/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3439,26 +5199,144 @@
     "price": 12000,
     "unlockLevel": 16,
     "favoredFamily": "flower",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "xp": 0.1,
-        "luck": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 700,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "xp",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "xp": [
+          0.102,
+          0.679
+        ],
+        "luck": [
+          0.075,
+          0.502
+        ],
+        "yield": [
+          0.027,
+          0.177
+        ],
+        "speed": [
+          0.013,
+          0.089
+        ]
+      },
+      "coins": {
+        "base": 400,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 3
+        },
+        "10": {
+          "base:mat.cloud-clay": 6
+        },
+        "15": {
+          "base:mat.cloud-clay": 9
+        },
+        "20": {
+          "base:mat.cloud-clay": 12
+        },
+        "25": {
+          "base:mat.cloud-clay": 15
+        },
+        "30": {
+          "base:mat.cloud-clay": 18
+        },
+        "35": {
+          "base:mat.cloud-clay": 23
+        },
+        "40": {
+          "base:mat.cloud-clay": 27
+        },
+        "45": {
+          "base:mat.cloud-clay": 33
+        },
+        "50": {
+          "base:mat.cloud-clay": 45
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-little-helper",
+        "level": 10,
+        "name": {
+          "vi": "Bạn Nhỏ Chăm Chỉ"
+        },
+        "desc": {
+          "vi": "Kinh nghiệm +5,6%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "xp",
+          "value": 0.056
+        }
+      },
+      {
+        "id": "sig-lucky-charm",
+        "level": 25,
+        "name": {
+          "vi": "Bùa May"
+        },
+        "desc": {
+          "vi": "May mắn +9%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "luck",
+          "value": 0.09
+        }
+      },
+      {
+        "id": "sig-soulmate",
+        "level": 50,
+        "name": {
+          "vi": "Tri Kỷ"
+        },
+        "desc": {
+          "vi": "Kinh nghiệm +11,2%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "xp",
+          "value": 0.112
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/16/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3475,26 +5353,144 @@
     "price": 12000,
     "unlockLevel": 16,
     "favoredFamily": "fruit",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "speed": 0.08,
-        "yield": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 700,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "xp",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "xp": [
+          0.077,
+          0.512
+        ],
+        "luck": [
+          0.104,
+          0.692
+        ],
+        "yield": [
+          0.027,
+          0.181
+        ],
+        "speed": [
+          0.014,
+          0.09
+        ]
+      },
+      "coins": {
+        "base": 400,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 3
+        },
+        "10": {
+          "base:mat.cloud-clay": 6
+        },
+        "15": {
+          "base:mat.cloud-clay": 9
+        },
+        "20": {
+          "base:mat.cloud-clay": 12
+        },
+        "25": {
+          "base:mat.cloud-clay": 15
+        },
+        "30": {
+          "base:mat.cloud-clay": 18
+        },
+        "35": {
+          "base:mat.cloud-clay": 23
+        },
+        "40": {
+          "base:mat.cloud-clay": 27
+        },
+        "45": {
+          "base:mat.cloud-clay": 33
+        },
+        "50": {
+          "base:mat.cloud-clay": 45
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-little-helper",
+        "level": 10,
+        "name": {
+          "vi": "Bạn Nhỏ Chăm Chỉ"
+        },
+        "desc": {
+          "vi": "Kinh nghiệm +5,6%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "xp",
+          "value": 0.056
+        }
+      },
+      {
+        "id": "sig-lucky-charm",
+        "level": 25,
+        "name": {
+          "vi": "Bùa May"
+        },
+        "desc": {
+          "vi": "May mắn +9%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "luck",
+          "value": 0.09
+        }
+      },
+      {
+        "id": "sig-soulmate",
+        "level": 50,
+        "name": {
+          "vi": "Tri Kỷ"
+        },
+        "desc": {
+          "vi": "Kinh nghiệm +11,2%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "xp",
+          "value": 0.112
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/17/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3511,26 +5507,144 @@
     "price": 12000,
     "unlockLevel": 16,
     "favoredFamily": "herb",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "yield": 0.1,
-        "xp": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 700,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "xp",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "xp": [
+          0.102,
+          0.679
+        ],
+        "luck": [
+          0.075,
+          0.502
+        ],
+        "yield": [
+          0.027,
+          0.177
+        ],
+        "speed": [
+          0.013,
+          0.089
+        ]
+      },
+      "coins": {
+        "base": 400,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 3
+        },
+        "10": {
+          "base:mat.cloud-clay": 6
+        },
+        "15": {
+          "base:mat.cloud-clay": 9
+        },
+        "20": {
+          "base:mat.cloud-clay": 12
+        },
+        "25": {
+          "base:mat.cloud-clay": 15
+        },
+        "30": {
+          "base:mat.cloud-clay": 18
+        },
+        "35": {
+          "base:mat.cloud-clay": 23
+        },
+        "40": {
+          "base:mat.cloud-clay": 27
+        },
+        "45": {
+          "base:mat.cloud-clay": 33
+        },
+        "50": {
+          "base:mat.cloud-clay": 45
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-little-helper",
+        "level": 10,
+        "name": {
+          "vi": "Bạn Nhỏ Chăm Chỉ"
+        },
+        "desc": {
+          "vi": "Kinh nghiệm +5,6%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "xp",
+          "value": 0.056
+        }
+      },
+      {
+        "id": "sig-lucky-charm",
+        "level": 25,
+        "name": {
+          "vi": "Bùa May"
+        },
+        "desc": {
+          "vi": "May mắn +9%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "luck",
+          "value": 0.09
+        }
+      },
+      {
+        "id": "sig-soulmate",
+        "level": 50,
+        "name": {
+          "vi": "Tri Kỷ"
+        },
+        "desc": {
+          "vi": "Kinh nghiệm +11,2%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "xp",
+          "value": 0.112
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/18/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3547,26 +5661,144 @@
     "price": 12000,
     "unlockLevel": 16,
     "favoredFamily": "flower",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "speed": 0.06,
-        "luck": 0.1
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 700,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "xp",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "xp": [
+          0.077,
+          0.512
+        ],
+        "luck": [
+          0.104,
+          0.692
+        ],
+        "yield": [
+          0.027,
+          0.181
+        ],
+        "speed": [
+          0.014,
+          0.09
+        ]
+      },
+      "coins": {
+        "base": 400,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 3
+        },
+        "10": {
+          "base:mat.cloud-clay": 6
+        },
+        "15": {
+          "base:mat.cloud-clay": 9
+        },
+        "20": {
+          "base:mat.cloud-clay": 12
+        },
+        "25": {
+          "base:mat.cloud-clay": 15
+        },
+        "30": {
+          "base:mat.cloud-clay": 18
+        },
+        "35": {
+          "base:mat.cloud-clay": 23
+        },
+        "40": {
+          "base:mat.cloud-clay": 27
+        },
+        "45": {
+          "base:mat.cloud-clay": 33
+        },
+        "50": {
+          "base:mat.cloud-clay": 45
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-little-helper",
+        "level": 10,
+        "name": {
+          "vi": "Bạn Nhỏ Chăm Chỉ"
+        },
+        "desc": {
+          "vi": "Kinh nghiệm +5,6%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "xp",
+          "value": 0.056
+        }
+      },
+      {
+        "id": "sig-lucky-charm",
+        "level": 25,
+        "name": {
+          "vi": "Bùa May"
+        },
+        "desc": {
+          "vi": "May mắn +9%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "luck",
+          "value": 0.09
+        }
+      },
+      {
+        "id": "sig-soulmate",
+        "level": 50,
+        "name": {
+          "vi": "Tri Kỷ"
+        },
+        "desc": {
+          "vi": "Kinh nghiệm +11,2%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "xp",
+          "value": 0.112
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/19/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3583,26 +5815,144 @@
     "price": 12000,
     "unlockLevel": 16,
     "favoredFamily": "fruit",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "xp": 0.1,
-        "luck": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 700,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "xp",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "xp": [
+          0.102,
+          0.679
+        ],
+        "luck": [
+          0.075,
+          0.502
+        ],
+        "yield": [
+          0.027,
+          0.177
+        ],
+        "speed": [
+          0.013,
+          0.089
+        ]
+      },
+      "coins": {
+        "base": 400,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 3
+        },
+        "10": {
+          "base:mat.cloud-clay": 6
+        },
+        "15": {
+          "base:mat.cloud-clay": 9
+        },
+        "20": {
+          "base:mat.cloud-clay": 12
+        },
+        "25": {
+          "base:mat.cloud-clay": 15
+        },
+        "30": {
+          "base:mat.cloud-clay": 18
+        },
+        "35": {
+          "base:mat.cloud-clay": 23
+        },
+        "40": {
+          "base:mat.cloud-clay": 27
+        },
+        "45": {
+          "base:mat.cloud-clay": 33
+        },
+        "50": {
+          "base:mat.cloud-clay": 45
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-little-helper",
+        "level": 10,
+        "name": {
+          "vi": "Bạn Nhỏ Chăm Chỉ"
+        },
+        "desc": {
+          "vi": "Kinh nghiệm +5,6%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "xp",
+          "value": 0.056
+        }
+      },
+      {
+        "id": "sig-lucky-charm",
+        "level": 25,
+        "name": {
+          "vi": "Bùa May"
+        },
+        "desc": {
+          "vi": "May mắn +9%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "luck",
+          "value": 0.09
+        }
+      },
+      {
+        "id": "sig-soulmate",
+        "level": 50,
+        "name": {
+          "vi": "Tri Kỷ"
+        },
+        "desc": {
+          "vi": "Kinh nghiệm +11,2%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "xp",
+          "value": 0.112
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/20/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3619,26 +5969,148 @@
     "price": 12000,
     "unlockLevel": 16,
     "favoredFamily": "herb",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "speed": 0.08,
-        "yield": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 700,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "speed",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "speed": [
+          0.063,
+          0.422
+        ],
+        "care": [
+          0.102,
+          0.68
+        ],
+        "yield": [
+          0.027,
+          0.18
+        ],
+        "xp": [
+          0.019,
+          0.127
+        ],
+        "luck": [
+          0.013,
+          0.084
+        ]
+      },
+      "coins": {
+        "base": 400,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 3
+        },
+        "10": {
+          "base:mat.cloud-clay": 6
+        },
+        "15": {
+          "base:mat.cloud-clay": 9
+        },
+        "20": {
+          "base:mat.cloud-clay": 12
+        },
+        "25": {
+          "base:mat.cloud-clay": 15
+        },
+        "30": {
+          "base:mat.cloud-clay": 18
+        },
+        "35": {
+          "base:mat.cloud-clay": 23
+        },
+        "40": {
+          "base:mat.cloud-clay": 27
+        },
+        "45": {
+          "base:mat.cloud-clay": 33
+        },
+        "50": {
+          "base:mat.cloud-clay": 45
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-morning-dew",
+        "level": 10,
+        "name": {
+          "vi": "Sương Sớm"
+        },
+        "desc": {
+          "vi": "Chăm sóc +11,2%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "care",
+          "value": 0.112
+        }
+      },
+      {
+        "id": "sig-young-sun",
+        "level": 25,
+        "name": {
+          "vi": "Nắng Non"
+        },
+        "desc": {
+          "vi": "Lớn nhanh +4,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "speed",
+          "value": 0.045
+        }
+      },
+      {
+        "id": "sig-sacred-grove",
+        "level": 50,
+        "name": {
+          "vi": "Rừng Thiêng"
+        },
+        "desc": {
+          "vi": "Lớn nhanh +6,7%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "speed",
+          "value": 0.067
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/21/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3655,26 +6127,148 @@
     "price": 12000,
     "unlockLevel": 16,
     "favoredFamily": "flower",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "yield": 0.1,
-        "xp": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 700,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "speed",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "speed": [
+          0.063,
+          0.418
+        ],
+        "care": [
+          0.075,
+          0.497
+        ],
+        "yield": [
+          0.036,
+          0.24
+        ],
+        "xp": [
+          0.019,
+          0.125
+        ],
+        "luck": [
+          0.013,
+          0.084
+        ]
+      },
+      "coins": {
+        "base": 400,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 3
+        },
+        "10": {
+          "base:mat.cloud-clay": 6
+        },
+        "15": {
+          "base:mat.cloud-clay": 9
+        },
+        "20": {
+          "base:mat.cloud-clay": 12
+        },
+        "25": {
+          "base:mat.cloud-clay": 15
+        },
+        "30": {
+          "base:mat.cloud-clay": 18
+        },
+        "35": {
+          "base:mat.cloud-clay": 23
+        },
+        "40": {
+          "base:mat.cloud-clay": 27
+        },
+        "45": {
+          "base:mat.cloud-clay": 33
+        },
+        "50": {
+          "base:mat.cloud-clay": 45
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-morning-dew",
+        "level": 10,
+        "name": {
+          "vi": "Sương Sớm"
+        },
+        "desc": {
+          "vi": "Chăm sóc +11,2%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "care",
+          "value": 0.112
+        }
+      },
+      {
+        "id": "sig-young-sun",
+        "level": 25,
+        "name": {
+          "vi": "Nắng Non"
+        },
+        "desc": {
+          "vi": "Lớn nhanh +4,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "speed",
+          "value": 0.045
+        }
+      },
+      {
+        "id": "sig-sacred-grove",
+        "level": 50,
+        "name": {
+          "vi": "Rừng Thiêng"
+        },
+        "desc": {
+          "vi": "Lớn nhanh +6,7%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "speed",
+          "value": 0.067
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/22/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3691,26 +6285,148 @@
     "price": 12000,
     "unlockLevel": 16,
     "favoredFamily": "fruit",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "speed": 0.06,
-        "luck": 0.1
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 700,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "speed",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "speed": [
+          0.063,
+          0.422
+        ],
+        "care": [
+          0.102,
+          0.68
+        ],
+        "yield": [
+          0.027,
+          0.18
+        ],
+        "xp": [
+          0.019,
+          0.127
+        ],
+        "luck": [
+          0.013,
+          0.084
+        ]
+      },
+      "coins": {
+        "base": 400,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 3
+        },
+        "10": {
+          "base:mat.cloud-clay": 6
+        },
+        "15": {
+          "base:mat.cloud-clay": 9
+        },
+        "20": {
+          "base:mat.cloud-clay": 12
+        },
+        "25": {
+          "base:mat.cloud-clay": 15
+        },
+        "30": {
+          "base:mat.cloud-clay": 18
+        },
+        "35": {
+          "base:mat.cloud-clay": 23
+        },
+        "40": {
+          "base:mat.cloud-clay": 27
+        },
+        "45": {
+          "base:mat.cloud-clay": 33
+        },
+        "50": {
+          "base:mat.cloud-clay": 45
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-morning-dew",
+        "level": 10,
+        "name": {
+          "vi": "Sương Sớm"
+        },
+        "desc": {
+          "vi": "Chăm sóc +11,2%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "care",
+          "value": 0.112
+        }
+      },
+      {
+        "id": "sig-young-sun",
+        "level": 25,
+        "name": {
+          "vi": "Nắng Non"
+        },
+        "desc": {
+          "vi": "Lớn nhanh +4,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "speed",
+          "value": 0.045
+        }
+      },
+      {
+        "id": "sig-sacred-grove",
+        "level": 50,
+        "name": {
+          "vi": "Rừng Thiêng"
+        },
+        "desc": {
+          "vi": "Lớn nhanh +6,7%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "speed",
+          "value": 0.067
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/23/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3727,26 +6443,148 @@
     "price": 12000,
     "unlockLevel": 16,
     "favoredFamily": "herb",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "xp": 0.1,
-        "luck": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 700,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "speed",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "speed": [
+          0.063,
+          0.418
+        ],
+        "care": [
+          0.075,
+          0.497
+        ],
+        "yield": [
+          0.036,
+          0.24
+        ],
+        "xp": [
+          0.019,
+          0.125
+        ],
+        "luck": [
+          0.013,
+          0.084
+        ]
+      },
+      "coins": {
+        "base": 400,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 3
+        },
+        "10": {
+          "base:mat.cloud-clay": 6
+        },
+        "15": {
+          "base:mat.cloud-clay": 9
+        },
+        "20": {
+          "base:mat.cloud-clay": 12
+        },
+        "25": {
+          "base:mat.cloud-clay": 15
+        },
+        "30": {
+          "base:mat.cloud-clay": 18
+        },
+        "35": {
+          "base:mat.cloud-clay": 23
+        },
+        "40": {
+          "base:mat.cloud-clay": 27
+        },
+        "45": {
+          "base:mat.cloud-clay": 33
+        },
+        "50": {
+          "base:mat.cloud-clay": 45
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-morning-dew",
+        "level": 10,
+        "name": {
+          "vi": "Sương Sớm"
+        },
+        "desc": {
+          "vi": "Chăm sóc +11,2%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "care",
+          "value": 0.112
+        }
+      },
+      {
+        "id": "sig-young-sun",
+        "level": 25,
+        "name": {
+          "vi": "Nắng Non"
+        },
+        "desc": {
+          "vi": "Lớn nhanh +4,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "speed",
+          "value": 0.045
+        }
+      },
+      {
+        "id": "sig-sacred-grove",
+        "level": 50,
+        "name": {
+          "vi": "Rừng Thiêng"
+        },
+        "desc": {
+          "vi": "Lớn nhanh +6,7%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "speed",
+          "value": 0.067
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/24/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3763,26 +6601,148 @@
     "price": 12000,
     "unlockLevel": 16,
     "favoredFamily": "flower",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "speed": 0.08,
-        "yield": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 700,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "speed",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "speed": [
+          0.063,
+          0.422
+        ],
+        "care": [
+          0.102,
+          0.68
+        ],
+        "yield": [
+          0.027,
+          0.18
+        ],
+        "xp": [
+          0.019,
+          0.127
+        ],
+        "luck": [
+          0.013,
+          0.084
+        ]
+      },
+      "coins": {
+        "base": 400,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 3
+        },
+        "10": {
+          "base:mat.cloud-clay": 6
+        },
+        "15": {
+          "base:mat.cloud-clay": 9
+        },
+        "20": {
+          "base:mat.cloud-clay": 12
+        },
+        "25": {
+          "base:mat.cloud-clay": 15
+        },
+        "30": {
+          "base:mat.cloud-clay": 18
+        },
+        "35": {
+          "base:mat.cloud-clay": 23
+        },
+        "40": {
+          "base:mat.cloud-clay": 27
+        },
+        "45": {
+          "base:mat.cloud-clay": 33
+        },
+        "50": {
+          "base:mat.cloud-clay": 45
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-morning-dew",
+        "level": 10,
+        "name": {
+          "vi": "Sương Sớm"
+        },
+        "desc": {
+          "vi": "Chăm sóc +11,2%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "care",
+          "value": 0.112
+        }
+      },
+      {
+        "id": "sig-young-sun",
+        "level": 25,
+        "name": {
+          "vi": "Nắng Non"
+        },
+        "desc": {
+          "vi": "Lớn nhanh +4,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "speed",
+          "value": 0.045
+        }
+      },
+      {
+        "id": "sig-sacred-grove",
+        "level": 50,
+        "name": {
+          "vi": "Rừng Thiêng"
+        },
+        "desc": {
+          "vi": "Lớn nhanh +6,7%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "speed",
+          "value": 0.067
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/25/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3799,26 +6759,148 @@
     "price": 12000,
     "unlockLevel": 16,
     "favoredFamily": "fruit",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "yield": 0.1,
-        "xp": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 700,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "speed",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "speed": [
+          0.063,
+          0.418
+        ],
+        "care": [
+          0.075,
+          0.497
+        ],
+        "yield": [
+          0.036,
+          0.24
+        ],
+        "xp": [
+          0.019,
+          0.125
+        ],
+        "luck": [
+          0.013,
+          0.084
+        ]
+      },
+      "coins": {
+        "base": 400,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 3
+        },
+        "10": {
+          "base:mat.cloud-clay": 6
+        },
+        "15": {
+          "base:mat.cloud-clay": 9
+        },
+        "20": {
+          "base:mat.cloud-clay": 12
+        },
+        "25": {
+          "base:mat.cloud-clay": 15
+        },
+        "30": {
+          "base:mat.cloud-clay": 18
+        },
+        "35": {
+          "base:mat.cloud-clay": 23
+        },
+        "40": {
+          "base:mat.cloud-clay": 27
+        },
+        "45": {
+          "base:mat.cloud-clay": 33
+        },
+        "50": {
+          "base:mat.cloud-clay": 45
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-morning-dew",
+        "level": 10,
+        "name": {
+          "vi": "Sương Sớm"
+        },
+        "desc": {
+          "vi": "Chăm sóc +11,2%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "care",
+          "value": 0.112
+        }
+      },
+      {
+        "id": "sig-young-sun",
+        "level": 25,
+        "name": {
+          "vi": "Nắng Non"
+        },
+        "desc": {
+          "vi": "Lớn nhanh +4,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "speed",
+          "value": 0.045
+        }
+      },
+      {
+        "id": "sig-sacred-grove",
+        "level": 50,
+        "name": {
+          "vi": "Rừng Thiêng"
+        },
+        "desc": {
+          "vi": "Lớn nhanh +6,7%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "speed",
+          "value": 0.067
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/26/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3835,26 +6917,148 @@
     "price": 12000,
     "unlockLevel": 16,
     "favoredFamily": "herb",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "speed": 0.06,
-        "luck": 0.1
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 700,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "speed",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "speed": [
+          0.063,
+          0.422
+        ],
+        "care": [
+          0.102,
+          0.68
+        ],
+        "yield": [
+          0.027,
+          0.18
+        ],
+        "xp": [
+          0.019,
+          0.127
+        ],
+        "luck": [
+          0.013,
+          0.084
+        ]
+      },
+      "coins": {
+        "base": 400,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 3
+        },
+        "10": {
+          "base:mat.cloud-clay": 6
+        },
+        "15": {
+          "base:mat.cloud-clay": 9
+        },
+        "20": {
+          "base:mat.cloud-clay": 12
+        },
+        "25": {
+          "base:mat.cloud-clay": 15
+        },
+        "30": {
+          "base:mat.cloud-clay": 18
+        },
+        "35": {
+          "base:mat.cloud-clay": 23
+        },
+        "40": {
+          "base:mat.cloud-clay": 27
+        },
+        "45": {
+          "base:mat.cloud-clay": 33
+        },
+        "50": {
+          "base:mat.cloud-clay": 45
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-morning-dew",
+        "level": 10,
+        "name": {
+          "vi": "Sương Sớm"
+        },
+        "desc": {
+          "vi": "Chăm sóc +11,2%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "care",
+          "value": 0.112
+        }
+      },
+      {
+        "id": "sig-young-sun",
+        "level": 25,
+        "name": {
+          "vi": "Nắng Non"
+        },
+        "desc": {
+          "vi": "Lớn nhanh +4,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "speed",
+          "value": 0.045
+        }
+      },
+      {
+        "id": "sig-sacred-grove",
+        "level": 50,
+        "name": {
+          "vi": "Rừng Thiêng"
+        },
+        "desc": {
+          "vi": "Lớn nhanh +6,7%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "speed",
+          "value": 0.067
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/27/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3871,26 +7075,148 @@
     "price": 12000,
     "unlockLevel": 16,
     "favoredFamily": "flower",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "xp": 0.1,
-        "luck": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 700,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "speed",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "speed": [
+          0.063,
+          0.418
+        ],
+        "care": [
+          0.075,
+          0.497
+        ],
+        "yield": [
+          0.036,
+          0.24
+        ],
+        "xp": [
+          0.019,
+          0.125
+        ],
+        "luck": [
+          0.013,
+          0.084
+        ]
+      },
+      "coins": {
+        "base": 400,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 3
+        },
+        "10": {
+          "base:mat.cloud-clay": 6
+        },
+        "15": {
+          "base:mat.cloud-clay": 9
+        },
+        "20": {
+          "base:mat.cloud-clay": 12
+        },
+        "25": {
+          "base:mat.cloud-clay": 15
+        },
+        "30": {
+          "base:mat.cloud-clay": 18
+        },
+        "35": {
+          "base:mat.cloud-clay": 23
+        },
+        "40": {
+          "base:mat.cloud-clay": 27
+        },
+        "45": {
+          "base:mat.cloud-clay": 33
+        },
+        "50": {
+          "base:mat.cloud-clay": 45
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-morning-dew",
+        "level": 10,
+        "name": {
+          "vi": "Sương Sớm"
+        },
+        "desc": {
+          "vi": "Chăm sóc +11,2%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "care",
+          "value": 0.112
+        }
+      },
+      {
+        "id": "sig-young-sun",
+        "level": 25,
+        "name": {
+          "vi": "Nắng Non"
+        },
+        "desc": {
+          "vi": "Lớn nhanh +4,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "speed",
+          "value": 0.045
+        }
+      },
+      {
+        "id": "sig-sacred-grove",
+        "level": 50,
+        "name": {
+          "vi": "Rừng Thiêng"
+        },
+        "desc": {
+          "vi": "Lớn nhanh +6,7%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "speed",
+          "value": 0.067
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/28/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3907,26 +7233,148 @@
     "price": 12000,
     "unlockLevel": 16,
     "favoredFamily": "fruit",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "speed": 0.08,
-        "yield": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 700,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "speed",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "speed": [
+          0.063,
+          0.422
+        ],
+        "care": [
+          0.102,
+          0.68
+        ],
+        "yield": [
+          0.027,
+          0.18
+        ],
+        "xp": [
+          0.019,
+          0.127
+        ],
+        "luck": [
+          0.013,
+          0.084
+        ]
+      },
+      "coins": {
+        "base": 400,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 3
+        },
+        "10": {
+          "base:mat.cloud-clay": 6
+        },
+        "15": {
+          "base:mat.cloud-clay": 9
+        },
+        "20": {
+          "base:mat.cloud-clay": 12
+        },
+        "25": {
+          "base:mat.cloud-clay": 15
+        },
+        "30": {
+          "base:mat.cloud-clay": 18
+        },
+        "35": {
+          "base:mat.cloud-clay": 23
+        },
+        "40": {
+          "base:mat.cloud-clay": 27
+        },
+        "45": {
+          "base:mat.cloud-clay": 33
+        },
+        "50": {
+          "base:mat.cloud-clay": 45
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-morning-dew",
+        "level": 10,
+        "name": {
+          "vi": "Sương Sớm"
+        },
+        "desc": {
+          "vi": "Chăm sóc +11,2%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "care",
+          "value": 0.112
+        }
+      },
+      {
+        "id": "sig-young-sun",
+        "level": 25,
+        "name": {
+          "vi": "Nắng Non"
+        },
+        "desc": {
+          "vi": "Lớn nhanh +4,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "speed",
+          "value": 0.045
+        }
+      },
+      {
+        "id": "sig-sacred-grove",
+        "level": 50,
+        "name": {
+          "vi": "Rừng Thiêng"
+        },
+        "desc": {
+          "vi": "Lớn nhanh +6,7%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "speed",
+          "value": 0.067
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/29/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3943,26 +7391,148 @@
     "price": 12000,
     "unlockLevel": 16,
     "favoredFamily": "herb",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "yield": 0.1,
-        "xp": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 700,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "speed",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "speed": [
+          0.063,
+          0.418
+        ],
+        "care": [
+          0.075,
+          0.497
+        ],
+        "yield": [
+          0.036,
+          0.24
+        ],
+        "xp": [
+          0.019,
+          0.125
+        ],
+        "luck": [
+          0.013,
+          0.084
+        ]
+      },
+      "coins": {
+        "base": 400,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 3
+        },
+        "10": {
+          "base:mat.cloud-clay": 6
+        },
+        "15": {
+          "base:mat.cloud-clay": 9
+        },
+        "20": {
+          "base:mat.cloud-clay": 12
+        },
+        "25": {
+          "base:mat.cloud-clay": 15
+        },
+        "30": {
+          "base:mat.cloud-clay": 18
+        },
+        "35": {
+          "base:mat.cloud-clay": 23
+        },
+        "40": {
+          "base:mat.cloud-clay": 27
+        },
+        "45": {
+          "base:mat.cloud-clay": 33
+        },
+        "50": {
+          "base:mat.cloud-clay": 45
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-morning-dew",
+        "level": 10,
+        "name": {
+          "vi": "Sương Sớm"
+        },
+        "desc": {
+          "vi": "Chăm sóc +11,2%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "care",
+          "value": 0.112
+        }
+      },
+      {
+        "id": "sig-young-sun",
+        "level": 25,
+        "name": {
+          "vi": "Nắng Non"
+        },
+        "desc": {
+          "vi": "Lớn nhanh +4,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "speed",
+          "value": 0.045
+        }
+      },
+      {
+        "id": "sig-sacred-grove",
+        "level": 50,
+        "name": {
+          "vi": "Rừng Thiêng"
+        },
+        "desc": {
+          "vi": "Lớn nhanh +6,7%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "speed",
+          "value": 0.067
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/30/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -3979,26 +7549,147 @@
     "price": 25000,
     "unlockLevel": 20,
     "favoredFamily": "flower",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "speed": 0.06,
-        "luck": 0.1
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 1000,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "care",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "care": [
+          0.097,
+          0.644
+        ],
+        "attract": [
+          0.131,
+          0.872
+        ],
+        "yield": [
+          0.045,
+          0.303
+        ],
+        "speed": [
+          0.028,
+          0.19
+        ],
+        "xp": [
+          0.023,
+          0.152
+        ]
+      },
+      "coins": {
+        "base": 600,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 4
+        },
+        "10": {
+          "base:mat.cloud-clay": 8
+        },
+        "15": {
+          "base:mat.cloud-clay": 12
+        },
+        "20": {
+          "base:mat.cloud-clay": 16
+        },
+        "25": {
+          "base:mat.cloud-clay": 20
+        },
+        "30": {
+          "base:mat.cloud-clay": 24
+        },
+        "35": {
+          "base:mat.cloud-clay": 30
+        },
+        "40": {
+          "base:mat.cloud-clay": 36
+        },
+        "45": {
+          "base:mat.cloud-clay": 44
+        },
+        "50": {
+          "base:mat.cloud-clay": 60
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-glaze-scent",
+        "level": 10,
+        "name": {
+          "vi": "Men Hương"
+        },
+        "desc": {
+          "vi": "Hút bọ +12,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "attract",
+          "value": 0.125
+        }
+      },
+      {
+        "id": "sig-old-kiln",
+        "level": 25,
+        "name": {
+          "vi": "Lò Cổ"
+        },
+        "desc": {
+          "vi": "Chăm sóc +16,3%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "care",
+          "value": 0.163
+        }
+      },
+      {
+        "id": "sig-heirloom",
+        "level": 50,
+        "name": {
+          "vi": "Báu Vật Gia Truyền"
+        },
+        "desc": {
+          "vi": "7,5% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.075
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/31/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -4015,26 +7706,147 @@
     "price": 25000,
     "unlockLevel": 20,
     "favoredFamily": "fruit",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "xp": 0.1,
-        "luck": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 1000,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "care",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "care": [
+          0.131,
+          0.872
+        ],
+        "attract": [
+          0.097,
+          0.644
+        ],
+        "yield": [
+          0.045,
+          0.303
+        ],
+        "speed": [
+          0.028,
+          0.19
+        ],
+        "xp": [
+          0.023,
+          0.152
+        ]
+      },
+      "coins": {
+        "base": 600,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 4
+        },
+        "10": {
+          "base:mat.cloud-clay": 8
+        },
+        "15": {
+          "base:mat.cloud-clay": 12
+        },
+        "20": {
+          "base:mat.cloud-clay": 16
+        },
+        "25": {
+          "base:mat.cloud-clay": 20
+        },
+        "30": {
+          "base:mat.cloud-clay": 24
+        },
+        "35": {
+          "base:mat.cloud-clay": 30
+        },
+        "40": {
+          "base:mat.cloud-clay": 36
+        },
+        "45": {
+          "base:mat.cloud-clay": 44
+        },
+        "50": {
+          "base:mat.cloud-clay": 60
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-glaze-scent",
+        "level": 10,
+        "name": {
+          "vi": "Men Hương"
+        },
+        "desc": {
+          "vi": "Hút bọ +12,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "attract",
+          "value": 0.125
+        }
+      },
+      {
+        "id": "sig-old-kiln",
+        "level": 25,
+        "name": {
+          "vi": "Lò Cổ"
+        },
+        "desc": {
+          "vi": "Chăm sóc +16,3%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "care",
+          "value": 0.163
+        }
+      },
+      {
+        "id": "sig-heirloom",
+        "level": 50,
+        "name": {
+          "vi": "Báu Vật Gia Truyền"
+        },
+        "desc": {
+          "vi": "7,5% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.075
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/32/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -4051,26 +7863,147 @@
     "price": 25000,
     "unlockLevel": 20,
     "favoredFamily": "herb",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "speed": 0.08,
-        "yield": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 1000,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "care",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "care": [
+          0.097,
+          0.644
+        ],
+        "attract": [
+          0.131,
+          0.872
+        ],
+        "yield": [
+          0.045,
+          0.303
+        ],
+        "speed": [
+          0.028,
+          0.19
+        ],
+        "xp": [
+          0.023,
+          0.152
+        ]
+      },
+      "coins": {
+        "base": 600,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 4
+        },
+        "10": {
+          "base:mat.cloud-clay": 8
+        },
+        "15": {
+          "base:mat.cloud-clay": 12
+        },
+        "20": {
+          "base:mat.cloud-clay": 16
+        },
+        "25": {
+          "base:mat.cloud-clay": 20
+        },
+        "30": {
+          "base:mat.cloud-clay": 24
+        },
+        "35": {
+          "base:mat.cloud-clay": 30
+        },
+        "40": {
+          "base:mat.cloud-clay": 36
+        },
+        "45": {
+          "base:mat.cloud-clay": 44
+        },
+        "50": {
+          "base:mat.cloud-clay": 60
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-glaze-scent",
+        "level": 10,
+        "name": {
+          "vi": "Men Hương"
+        },
+        "desc": {
+          "vi": "Hút bọ +12,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "attract",
+          "value": 0.125
+        }
+      },
+      {
+        "id": "sig-old-kiln",
+        "level": 25,
+        "name": {
+          "vi": "Lò Cổ"
+        },
+        "desc": {
+          "vi": "Chăm sóc +16,3%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "care",
+          "value": 0.163
+        }
+      },
+      {
+        "id": "sig-heirloom",
+        "level": 50,
+        "name": {
+          "vi": "Báu Vật Gia Truyền"
+        },
+        "desc": {
+          "vi": "7,5% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.075
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/33/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -4087,26 +8020,147 @@
     "price": 25000,
     "unlockLevel": 20,
     "favoredFamily": "flower",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "yield": 0.1,
-        "xp": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 1000,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "care",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "care": [
+          0.131,
+          0.872
+        ],
+        "attract": [
+          0.097,
+          0.644
+        ],
+        "yield": [
+          0.045,
+          0.303
+        ],
+        "speed": [
+          0.028,
+          0.19
+        ],
+        "xp": [
+          0.023,
+          0.152
+        ]
+      },
+      "coins": {
+        "base": 600,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 4
+        },
+        "10": {
+          "base:mat.cloud-clay": 8
+        },
+        "15": {
+          "base:mat.cloud-clay": 12
+        },
+        "20": {
+          "base:mat.cloud-clay": 16
+        },
+        "25": {
+          "base:mat.cloud-clay": 20
+        },
+        "30": {
+          "base:mat.cloud-clay": 24
+        },
+        "35": {
+          "base:mat.cloud-clay": 30
+        },
+        "40": {
+          "base:mat.cloud-clay": 36
+        },
+        "45": {
+          "base:mat.cloud-clay": 44
+        },
+        "50": {
+          "base:mat.cloud-clay": 60
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-glaze-scent",
+        "level": 10,
+        "name": {
+          "vi": "Men Hương"
+        },
+        "desc": {
+          "vi": "Hút bọ +12,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "attract",
+          "value": 0.125
+        }
+      },
+      {
+        "id": "sig-old-kiln",
+        "level": 25,
+        "name": {
+          "vi": "Lò Cổ"
+        },
+        "desc": {
+          "vi": "Chăm sóc +16,3%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "care",
+          "value": 0.163
+        }
+      },
+      {
+        "id": "sig-heirloom",
+        "level": 50,
+        "name": {
+          "vi": "Báu Vật Gia Truyền"
+        },
+        "desc": {
+          "vi": "7,5% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.075
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/34/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -4123,26 +8177,147 @@
     "price": 25000,
     "unlockLevel": 20,
     "favoredFamily": "fruit",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "speed": 0.06,
-        "luck": 0.1
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 1000,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "care",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "care": [
+          0.097,
+          0.644
+        ],
+        "attract": [
+          0.131,
+          0.872
+        ],
+        "yield": [
+          0.045,
+          0.303
+        ],
+        "speed": [
+          0.028,
+          0.19
+        ],
+        "xp": [
+          0.023,
+          0.152
+        ]
+      },
+      "coins": {
+        "base": 600,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 4
+        },
+        "10": {
+          "base:mat.cloud-clay": 8
+        },
+        "15": {
+          "base:mat.cloud-clay": 12
+        },
+        "20": {
+          "base:mat.cloud-clay": 16
+        },
+        "25": {
+          "base:mat.cloud-clay": 20
+        },
+        "30": {
+          "base:mat.cloud-clay": 24
+        },
+        "35": {
+          "base:mat.cloud-clay": 30
+        },
+        "40": {
+          "base:mat.cloud-clay": 36
+        },
+        "45": {
+          "base:mat.cloud-clay": 44
+        },
+        "50": {
+          "base:mat.cloud-clay": 60
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-glaze-scent",
+        "level": 10,
+        "name": {
+          "vi": "Men Hương"
+        },
+        "desc": {
+          "vi": "Hút bọ +12,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "attract",
+          "value": 0.125
+        }
+      },
+      {
+        "id": "sig-old-kiln",
+        "level": 25,
+        "name": {
+          "vi": "Lò Cổ"
+        },
+        "desc": {
+          "vi": "Chăm sóc +16,3%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "care",
+          "value": 0.163
+        }
+      },
+      {
+        "id": "sig-heirloom",
+        "level": 50,
+        "name": {
+          "vi": "Báu Vật Gia Truyền"
+        },
+        "desc": {
+          "vi": "7,5% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.075
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/35/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -4159,26 +8334,147 @@
     "price": 25000,
     "unlockLevel": 20,
     "favoredFamily": "herb",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "xp": 0.1,
-        "luck": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 1000,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "care",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "care": [
+          0.131,
+          0.872
+        ],
+        "attract": [
+          0.097,
+          0.644
+        ],
+        "yield": [
+          0.045,
+          0.303
+        ],
+        "speed": [
+          0.028,
+          0.19
+        ],
+        "xp": [
+          0.023,
+          0.152
+        ]
+      },
+      "coins": {
+        "base": 600,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 4
+        },
+        "10": {
+          "base:mat.cloud-clay": 8
+        },
+        "15": {
+          "base:mat.cloud-clay": 12
+        },
+        "20": {
+          "base:mat.cloud-clay": 16
+        },
+        "25": {
+          "base:mat.cloud-clay": 20
+        },
+        "30": {
+          "base:mat.cloud-clay": 24
+        },
+        "35": {
+          "base:mat.cloud-clay": 30
+        },
+        "40": {
+          "base:mat.cloud-clay": 36
+        },
+        "45": {
+          "base:mat.cloud-clay": 44
+        },
+        "50": {
+          "base:mat.cloud-clay": 60
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-glaze-scent",
+        "level": 10,
+        "name": {
+          "vi": "Men Hương"
+        },
+        "desc": {
+          "vi": "Hút bọ +12,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "attract",
+          "value": 0.125
+        }
+      },
+      {
+        "id": "sig-old-kiln",
+        "level": 25,
+        "name": {
+          "vi": "Lò Cổ"
+        },
+        "desc": {
+          "vi": "Chăm sóc +16,3%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "care",
+          "value": 0.163
+        }
+      },
+      {
+        "id": "sig-heirloom",
+        "level": 50,
+        "name": {
+          "vi": "Báu Vật Gia Truyền"
+        },
+        "desc": {
+          "vi": "7,5% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.075
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/36/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -4195,26 +8491,147 @@
     "price": 25000,
     "unlockLevel": 20,
     "favoredFamily": "flower",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "speed": 0.08,
-        "yield": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 1000,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "care",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "care": [
+          0.097,
+          0.644
+        ],
+        "attract": [
+          0.131,
+          0.872
+        ],
+        "yield": [
+          0.045,
+          0.303
+        ],
+        "speed": [
+          0.028,
+          0.19
+        ],
+        "xp": [
+          0.023,
+          0.152
+        ]
+      },
+      "coins": {
+        "base": 600,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 4
+        },
+        "10": {
+          "base:mat.cloud-clay": 8
+        },
+        "15": {
+          "base:mat.cloud-clay": 12
+        },
+        "20": {
+          "base:mat.cloud-clay": 16
+        },
+        "25": {
+          "base:mat.cloud-clay": 20
+        },
+        "30": {
+          "base:mat.cloud-clay": 24
+        },
+        "35": {
+          "base:mat.cloud-clay": 30
+        },
+        "40": {
+          "base:mat.cloud-clay": 36
+        },
+        "45": {
+          "base:mat.cloud-clay": 44
+        },
+        "50": {
+          "base:mat.cloud-clay": 60
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-glaze-scent",
+        "level": 10,
+        "name": {
+          "vi": "Men Hương"
+        },
+        "desc": {
+          "vi": "Hút bọ +12,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "attract",
+          "value": 0.125
+        }
+      },
+      {
+        "id": "sig-old-kiln",
+        "level": 25,
+        "name": {
+          "vi": "Lò Cổ"
+        },
+        "desc": {
+          "vi": "Chăm sóc +16,3%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "care",
+          "value": 0.163
+        }
+      },
+      {
+        "id": "sig-heirloom",
+        "level": 50,
+        "name": {
+          "vi": "Báu Vật Gia Truyền"
+        },
+        "desc": {
+          "vi": "7,5% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.075
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/37/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -4231,26 +8648,147 @@
     "price": 25000,
     "unlockLevel": 20,
     "favoredFamily": "fruit",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "yield": 0.1,
-        "xp": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 1000,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "care",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "care": [
+          0.131,
+          0.872
+        ],
+        "attract": [
+          0.097,
+          0.644
+        ],
+        "yield": [
+          0.045,
+          0.303
+        ],
+        "speed": [
+          0.028,
+          0.19
+        ],
+        "xp": [
+          0.023,
+          0.152
+        ]
+      },
+      "coins": {
+        "base": 600,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 4
+        },
+        "10": {
+          "base:mat.cloud-clay": 8
+        },
+        "15": {
+          "base:mat.cloud-clay": 12
+        },
+        "20": {
+          "base:mat.cloud-clay": 16
+        },
+        "25": {
+          "base:mat.cloud-clay": 20
+        },
+        "30": {
+          "base:mat.cloud-clay": 24
+        },
+        "35": {
+          "base:mat.cloud-clay": 30
+        },
+        "40": {
+          "base:mat.cloud-clay": 36
+        },
+        "45": {
+          "base:mat.cloud-clay": 44
+        },
+        "50": {
+          "base:mat.cloud-clay": 60
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-glaze-scent",
+        "level": 10,
+        "name": {
+          "vi": "Men Hương"
+        },
+        "desc": {
+          "vi": "Hút bọ +12,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "attract",
+          "value": 0.125
+        }
+      },
+      {
+        "id": "sig-old-kiln",
+        "level": 25,
+        "name": {
+          "vi": "Lò Cổ"
+        },
+        "desc": {
+          "vi": "Chăm sóc +16,3%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "care",
+          "value": 0.163
+        }
+      },
+      {
+        "id": "sig-heirloom",
+        "level": 50,
+        "name": {
+          "vi": "Báu Vật Gia Truyền"
+        },
+        "desc": {
+          "vi": "7,5% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.075
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/38/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -4267,26 +8805,147 @@
     "price": 25000,
     "unlockLevel": 20,
     "favoredFamily": "herb",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "speed": 0.06,
-        "luck": 0.1
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 1000,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "care",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "care": [
+          0.097,
+          0.644
+        ],
+        "attract": [
+          0.131,
+          0.872
+        ],
+        "yield": [
+          0.045,
+          0.303
+        ],
+        "speed": [
+          0.028,
+          0.19
+        ],
+        "xp": [
+          0.023,
+          0.152
+        ]
+      },
+      "coins": {
+        "base": 600,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 4
+        },
+        "10": {
+          "base:mat.cloud-clay": 8
+        },
+        "15": {
+          "base:mat.cloud-clay": 12
+        },
+        "20": {
+          "base:mat.cloud-clay": 16
+        },
+        "25": {
+          "base:mat.cloud-clay": 20
+        },
+        "30": {
+          "base:mat.cloud-clay": 24
+        },
+        "35": {
+          "base:mat.cloud-clay": 30
+        },
+        "40": {
+          "base:mat.cloud-clay": 36
+        },
+        "45": {
+          "base:mat.cloud-clay": 44
+        },
+        "50": {
+          "base:mat.cloud-clay": 60
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-glaze-scent",
+        "level": 10,
+        "name": {
+          "vi": "Men Hương"
+        },
+        "desc": {
+          "vi": "Hút bọ +12,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "attract",
+          "value": 0.125
+        }
+      },
+      {
+        "id": "sig-old-kiln",
+        "level": 25,
+        "name": {
+          "vi": "Lò Cổ"
+        },
+        "desc": {
+          "vi": "Chăm sóc +16,3%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "care",
+          "value": 0.163
+        }
+      },
+      {
+        "id": "sig-heirloom",
+        "level": 50,
+        "name": {
+          "vi": "Báu Vật Gia Truyền"
+        },
+        "desc": {
+          "vi": "7,5% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.075
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/39/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -4303,26 +8962,147 @@
     "price": 25000,
     "unlockLevel": 20,
     "favoredFamily": "flower",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "xp": 0.1,
-        "luck": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 1000,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "care",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "care": [
+          0.131,
+          0.872
+        ],
+        "attract": [
+          0.097,
+          0.644
+        ],
+        "yield": [
+          0.045,
+          0.303
+        ],
+        "speed": [
+          0.028,
+          0.19
+        ],
+        "xp": [
+          0.023,
+          0.152
+        ]
+      },
+      "coins": {
+        "base": 600,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 4
+        },
+        "10": {
+          "base:mat.cloud-clay": 8
+        },
+        "15": {
+          "base:mat.cloud-clay": 12
+        },
+        "20": {
+          "base:mat.cloud-clay": 16
+        },
+        "25": {
+          "base:mat.cloud-clay": 20
+        },
+        "30": {
+          "base:mat.cloud-clay": 24
+        },
+        "35": {
+          "base:mat.cloud-clay": 30
+        },
+        "40": {
+          "base:mat.cloud-clay": 36
+        },
+        "45": {
+          "base:mat.cloud-clay": 44
+        },
+        "50": {
+          "base:mat.cloud-clay": 60
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-glaze-scent",
+        "level": 10,
+        "name": {
+          "vi": "Men Hương"
+        },
+        "desc": {
+          "vi": "Hút bọ +12,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "attract",
+          "value": 0.125
+        }
+      },
+      {
+        "id": "sig-old-kiln",
+        "level": 25,
+        "name": {
+          "vi": "Lò Cổ"
+        },
+        "desc": {
+          "vi": "Chăm sóc +16,3%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "care",
+          "value": 0.163
+        }
+      },
+      {
+        "id": "sig-heirloom",
+        "level": 50,
+        "name": {
+          "vi": "Báu Vật Gia Truyền"
+        },
+        "desc": {
+          "vi": "7,5% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.075
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/40/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -4339,26 +9119,150 @@
     "price": 25000,
     "unlockLevel": 20,
     "favoredFamily": "fruit",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "speed": 0.08,
-        "yield": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 1000,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "luck",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "speed": [
+          0.037,
+          0.248
+        ],
+        "yield": [
+          0.044,
+          0.292
+        ],
+        "xp": [
+          0.044,
+          0.292
+        ],
+        "luck": [
+          0.05,
+          0.336
+        ],
+        "attract": [
+          0.029,
+          0.195
+        ],
+        "care": [
+          0.029,
+          0.195
+        ]
+      },
+      "coins": {
+        "base": 600,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 4
+        },
+        "10": {
+          "base:mat.cloud-clay": 8
+        },
+        "15": {
+          "base:mat.cloud-clay": 12
+        },
+        "20": {
+          "base:mat.cloud-clay": 16
+        },
+        "25": {
+          "base:mat.cloud-clay": 20
+        },
+        "30": {
+          "base:mat.cloud-clay": 24
+        },
+        "35": {
+          "base:mat.cloud-clay": 30
+        },
+        "40": {
+          "base:mat.cloud-clay": 36
+        },
+        "45": {
+          "base:mat.cloud-clay": 44
+        },
+        "50": {
+          "base:mat.cloud-clay": 60
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-blessing",
+        "level": 10,
+        "name": {
+          "vi": "Phúc Khí"
+        },
+        "desc": {
+          "vi": "May mắn +7,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "luck",
+          "value": 0.075
+        }
+      },
+      {
+        "id": "sig-divine-grace",
+        "level": 25,
+        "name": {
+          "vi": "Thần Ân"
+        },
+        "desc": {
+          "vi": "5% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.05
+        }
+      },
+      {
+        "id": "sig-heaven-mandate",
+        "level": 50,
+        "name": {
+          "vi": "Thiên Mệnh"
+        },
+        "desc": {
+          "vi": "11,2% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.112
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/41/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -4375,26 +9279,150 @@
     "price": 25000,
     "unlockLevel": 20,
     "favoredFamily": "herb",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "yield": 0.1,
-        "xp": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 1000,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "luck",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "speed": [
+          0.048,
+          0.322
+        ],
+        "yield": [
+          0.042,
+          0.28
+        ],
+        "xp": [
+          0.042,
+          0.28
+        ],
+        "luck": [
+          0.036,
+          0.238
+        ],
+        "attract": [
+          0.028,
+          0.187
+        ],
+        "care": [
+          0.028,
+          0.187
+        ]
+      },
+      "coins": {
+        "base": 600,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 4
+        },
+        "10": {
+          "base:mat.cloud-clay": 8
+        },
+        "15": {
+          "base:mat.cloud-clay": 12
+        },
+        "20": {
+          "base:mat.cloud-clay": 16
+        },
+        "25": {
+          "base:mat.cloud-clay": 20
+        },
+        "30": {
+          "base:mat.cloud-clay": 24
+        },
+        "35": {
+          "base:mat.cloud-clay": 30
+        },
+        "40": {
+          "base:mat.cloud-clay": 36
+        },
+        "45": {
+          "base:mat.cloud-clay": 44
+        },
+        "50": {
+          "base:mat.cloud-clay": 60
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-blessing",
+        "level": 10,
+        "name": {
+          "vi": "Phúc Khí"
+        },
+        "desc": {
+          "vi": "May mắn +7,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "luck",
+          "value": 0.075
+        }
+      },
+      {
+        "id": "sig-divine-grace",
+        "level": 25,
+        "name": {
+          "vi": "Thần Ân"
+        },
+        "desc": {
+          "vi": "5% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.05
+        }
+      },
+      {
+        "id": "sig-heaven-mandate",
+        "level": 50,
+        "name": {
+          "vi": "Thiên Mệnh"
+        },
+        "desc": {
+          "vi": "11,2% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.112
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/42/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -4411,26 +9439,150 @@
     "price": 25000,
     "unlockLevel": 20,
     "favoredFamily": "flower",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "speed": 0.06,
-        "luck": 0.1
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 1000,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "luck",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "speed": [
+          0.037,
+          0.248
+        ],
+        "yield": [
+          0.044,
+          0.292
+        ],
+        "xp": [
+          0.044,
+          0.292
+        ],
+        "luck": [
+          0.05,
+          0.336
+        ],
+        "attract": [
+          0.029,
+          0.195
+        ],
+        "care": [
+          0.029,
+          0.195
+        ]
+      },
+      "coins": {
+        "base": 600,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 4
+        },
+        "10": {
+          "base:mat.cloud-clay": 8
+        },
+        "15": {
+          "base:mat.cloud-clay": 12
+        },
+        "20": {
+          "base:mat.cloud-clay": 16
+        },
+        "25": {
+          "base:mat.cloud-clay": 20
+        },
+        "30": {
+          "base:mat.cloud-clay": 24
+        },
+        "35": {
+          "base:mat.cloud-clay": 30
+        },
+        "40": {
+          "base:mat.cloud-clay": 36
+        },
+        "45": {
+          "base:mat.cloud-clay": 44
+        },
+        "50": {
+          "base:mat.cloud-clay": 60
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-blessing",
+        "level": 10,
+        "name": {
+          "vi": "Phúc Khí"
+        },
+        "desc": {
+          "vi": "May mắn +7,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "luck",
+          "value": 0.075
+        }
+      },
+      {
+        "id": "sig-divine-grace",
+        "level": 25,
+        "name": {
+          "vi": "Thần Ân"
+        },
+        "desc": {
+          "vi": "5% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.05
+        }
+      },
+      {
+        "id": "sig-heaven-mandate",
+        "level": 50,
+        "name": {
+          "vi": "Thiên Mệnh"
+        },
+        "desc": {
+          "vi": "11,2% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.112
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/43/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -4447,26 +9599,150 @@
     "price": 25000,
     "unlockLevel": 20,
     "favoredFamily": "fruit",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "xp": 0.1,
-        "luck": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 1000,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "luck",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "speed": [
+          0.048,
+          0.322
+        ],
+        "yield": [
+          0.042,
+          0.28
+        ],
+        "xp": [
+          0.042,
+          0.28
+        ],
+        "luck": [
+          0.036,
+          0.238
+        ],
+        "attract": [
+          0.028,
+          0.187
+        ],
+        "care": [
+          0.028,
+          0.187
+        ]
+      },
+      "coins": {
+        "base": 600,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 4
+        },
+        "10": {
+          "base:mat.cloud-clay": 8
+        },
+        "15": {
+          "base:mat.cloud-clay": 12
+        },
+        "20": {
+          "base:mat.cloud-clay": 16
+        },
+        "25": {
+          "base:mat.cloud-clay": 20
+        },
+        "30": {
+          "base:mat.cloud-clay": 24
+        },
+        "35": {
+          "base:mat.cloud-clay": 30
+        },
+        "40": {
+          "base:mat.cloud-clay": 36
+        },
+        "45": {
+          "base:mat.cloud-clay": 44
+        },
+        "50": {
+          "base:mat.cloud-clay": 60
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-blessing",
+        "level": 10,
+        "name": {
+          "vi": "Phúc Khí"
+        },
+        "desc": {
+          "vi": "May mắn +7,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "luck",
+          "value": 0.075
+        }
+      },
+      {
+        "id": "sig-divine-grace",
+        "level": 25,
+        "name": {
+          "vi": "Thần Ân"
+        },
+        "desc": {
+          "vi": "5% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.05
+        }
+      },
+      {
+        "id": "sig-heaven-mandate",
+        "level": 50,
+        "name": {
+          "vi": "Thiên Mệnh"
+        },
+        "desc": {
+          "vi": "11,2% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.112
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/44/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -4483,26 +9759,150 @@
     "price": 25000,
     "unlockLevel": 20,
     "favoredFamily": "herb",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "speed": 0.08,
-        "yield": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 1000,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "luck",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "speed": [
+          0.037,
+          0.248
+        ],
+        "yield": [
+          0.044,
+          0.292
+        ],
+        "xp": [
+          0.044,
+          0.292
+        ],
+        "luck": [
+          0.05,
+          0.336
+        ],
+        "attract": [
+          0.029,
+          0.195
+        ],
+        "care": [
+          0.029,
+          0.195
+        ]
+      },
+      "coins": {
+        "base": 600,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 4
+        },
+        "10": {
+          "base:mat.cloud-clay": 8
+        },
+        "15": {
+          "base:mat.cloud-clay": 12
+        },
+        "20": {
+          "base:mat.cloud-clay": 16
+        },
+        "25": {
+          "base:mat.cloud-clay": 20
+        },
+        "30": {
+          "base:mat.cloud-clay": 24
+        },
+        "35": {
+          "base:mat.cloud-clay": 30
+        },
+        "40": {
+          "base:mat.cloud-clay": 36
+        },
+        "45": {
+          "base:mat.cloud-clay": 44
+        },
+        "50": {
+          "base:mat.cloud-clay": 60
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-blessing",
+        "level": 10,
+        "name": {
+          "vi": "Phúc Khí"
+        },
+        "desc": {
+          "vi": "May mắn +7,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "luck",
+          "value": 0.075
+        }
+      },
+      {
+        "id": "sig-divine-grace",
+        "level": 25,
+        "name": {
+          "vi": "Thần Ân"
+        },
+        "desc": {
+          "vi": "5% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.05
+        }
+      },
+      {
+        "id": "sig-heaven-mandate",
+        "level": 50,
+        "name": {
+          "vi": "Thiên Mệnh"
+        },
+        "desc": {
+          "vi": "11,2% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.112
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/45/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -4519,26 +9919,150 @@
     "price": 25000,
     "unlockLevel": 20,
     "favoredFamily": "flower",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "yield": 0.1,
-        "xp": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 1000,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "luck",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "speed": [
+          0.048,
+          0.322
+        ],
+        "yield": [
+          0.042,
+          0.28
+        ],
+        "xp": [
+          0.042,
+          0.28
+        ],
+        "luck": [
+          0.036,
+          0.238
+        ],
+        "attract": [
+          0.028,
+          0.187
+        ],
+        "care": [
+          0.028,
+          0.187
+        ]
+      },
+      "coins": {
+        "base": 600,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 4
+        },
+        "10": {
+          "base:mat.cloud-clay": 8
+        },
+        "15": {
+          "base:mat.cloud-clay": 12
+        },
+        "20": {
+          "base:mat.cloud-clay": 16
+        },
+        "25": {
+          "base:mat.cloud-clay": 20
+        },
+        "30": {
+          "base:mat.cloud-clay": 24
+        },
+        "35": {
+          "base:mat.cloud-clay": 30
+        },
+        "40": {
+          "base:mat.cloud-clay": 36
+        },
+        "45": {
+          "base:mat.cloud-clay": 44
+        },
+        "50": {
+          "base:mat.cloud-clay": 60
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-blessing",
+        "level": 10,
+        "name": {
+          "vi": "Phúc Khí"
+        },
+        "desc": {
+          "vi": "May mắn +7,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "luck",
+          "value": 0.075
+        }
+      },
+      {
+        "id": "sig-divine-grace",
+        "level": 25,
+        "name": {
+          "vi": "Thần Ân"
+        },
+        "desc": {
+          "vi": "5% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.05
+        }
+      },
+      {
+        "id": "sig-heaven-mandate",
+        "level": 50,
+        "name": {
+          "vi": "Thiên Mệnh"
+        },
+        "desc": {
+          "vi": "11,2% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.112
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/46/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -4555,26 +10079,150 @@
     "price": 25000,
     "unlockLevel": 20,
     "favoredFamily": "fruit",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "speed": 0.06,
-        "luck": 0.1
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 1000,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "luck",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "speed": [
+          0.037,
+          0.248
+        ],
+        "yield": [
+          0.044,
+          0.292
+        ],
+        "xp": [
+          0.044,
+          0.292
+        ],
+        "luck": [
+          0.05,
+          0.336
+        ],
+        "attract": [
+          0.029,
+          0.195
+        ],
+        "care": [
+          0.029,
+          0.195
+        ]
+      },
+      "coins": {
+        "base": 600,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 4
+        },
+        "10": {
+          "base:mat.cloud-clay": 8
+        },
+        "15": {
+          "base:mat.cloud-clay": 12
+        },
+        "20": {
+          "base:mat.cloud-clay": 16
+        },
+        "25": {
+          "base:mat.cloud-clay": 20
+        },
+        "30": {
+          "base:mat.cloud-clay": 24
+        },
+        "35": {
+          "base:mat.cloud-clay": 30
+        },
+        "40": {
+          "base:mat.cloud-clay": 36
+        },
+        "45": {
+          "base:mat.cloud-clay": 44
+        },
+        "50": {
+          "base:mat.cloud-clay": 60
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-blessing",
+        "level": 10,
+        "name": {
+          "vi": "Phúc Khí"
+        },
+        "desc": {
+          "vi": "May mắn +7,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "luck",
+          "value": 0.075
+        }
+      },
+      {
+        "id": "sig-divine-grace",
+        "level": 25,
+        "name": {
+          "vi": "Thần Ân"
+        },
+        "desc": {
+          "vi": "5% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.05
+        }
+      },
+      {
+        "id": "sig-heaven-mandate",
+        "level": 50,
+        "name": {
+          "vi": "Thiên Mệnh"
+        },
+        "desc": {
+          "vi": "11,2% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.112
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/47/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -4591,26 +10239,150 @@
     "price": 25000,
     "unlockLevel": 20,
     "favoredFamily": "herb",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "xp": 0.1,
-        "luck": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 1000,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "luck",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "speed": [
+          0.048,
+          0.322
+        ],
+        "yield": [
+          0.042,
+          0.28
+        ],
+        "xp": [
+          0.042,
+          0.28
+        ],
+        "luck": [
+          0.036,
+          0.238
+        ],
+        "attract": [
+          0.028,
+          0.187
+        ],
+        "care": [
+          0.028,
+          0.187
+        ]
+      },
+      "coins": {
+        "base": 600,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 4
+        },
+        "10": {
+          "base:mat.cloud-clay": 8
+        },
+        "15": {
+          "base:mat.cloud-clay": 12
+        },
+        "20": {
+          "base:mat.cloud-clay": 16
+        },
+        "25": {
+          "base:mat.cloud-clay": 20
+        },
+        "30": {
+          "base:mat.cloud-clay": 24
+        },
+        "35": {
+          "base:mat.cloud-clay": 30
+        },
+        "40": {
+          "base:mat.cloud-clay": 36
+        },
+        "45": {
+          "base:mat.cloud-clay": 44
+        },
+        "50": {
+          "base:mat.cloud-clay": 60
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-blessing",
+        "level": 10,
+        "name": {
+          "vi": "Phúc Khí"
+        },
+        "desc": {
+          "vi": "May mắn +7,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "luck",
+          "value": 0.075
+        }
+      },
+      {
+        "id": "sig-divine-grace",
+        "level": 25,
+        "name": {
+          "vi": "Thần Ân"
+        },
+        "desc": {
+          "vi": "5% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.05
+        }
+      },
+      {
+        "id": "sig-heaven-mandate",
+        "level": 50,
+        "name": {
+          "vi": "Thiên Mệnh"
+        },
+        "desc": {
+          "vi": "11,2% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.112
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/48/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -4627,26 +10399,150 @@
     "price": 25000,
     "unlockLevel": 20,
     "favoredFamily": "flower",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "speed": 0.08,
-        "yield": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 1000,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "luck",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "speed": [
+          0.037,
+          0.248
+        ],
+        "yield": [
+          0.044,
+          0.292
+        ],
+        "xp": [
+          0.044,
+          0.292
+        ],
+        "luck": [
+          0.05,
+          0.336
+        ],
+        "attract": [
+          0.029,
+          0.195
+        ],
+        "care": [
+          0.029,
+          0.195
+        ]
+      },
+      "coins": {
+        "base": 600,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 4
+        },
+        "10": {
+          "base:mat.cloud-clay": 8
+        },
+        "15": {
+          "base:mat.cloud-clay": 12
+        },
+        "20": {
+          "base:mat.cloud-clay": 16
+        },
+        "25": {
+          "base:mat.cloud-clay": 20
+        },
+        "30": {
+          "base:mat.cloud-clay": 24
+        },
+        "35": {
+          "base:mat.cloud-clay": 30
+        },
+        "40": {
+          "base:mat.cloud-clay": 36
+        },
+        "45": {
+          "base:mat.cloud-clay": 44
+        },
+        "50": {
+          "base:mat.cloud-clay": 60
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-blessing",
+        "level": 10,
+        "name": {
+          "vi": "Phúc Khí"
+        },
+        "desc": {
+          "vi": "May mắn +7,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "luck",
+          "value": 0.075
+        }
+      },
+      {
+        "id": "sig-divine-grace",
+        "level": 25,
+        "name": {
+          "vi": "Thần Ân"
+        },
+        "desc": {
+          "vi": "5% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.05
+        }
+      },
+      {
+        "id": "sig-heaven-mandate",
+        "level": 50,
+        "name": {
+          "vi": "Thiên Mệnh"
+        },
+        "desc": {
+          "vi": "11,2% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.112
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/49/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"
@@ -4663,26 +10559,150 @@
     "price": 25000,
     "unlockLevel": 20,
     "favoredFamily": "fruit",
-    "levelRule": {
-      "maxLevel": 50,
-      "base": {
-        "yield": 0.1,
-        "xp": 0.08
-      },
-      "perLevel": 0.02,
-      "coins": {
-        "base": 1000,
-        "growth": 1.12
-      },
-      "items": {
-        "base:bug.ladybird": {
-          "base": 3,
-          "growth": 1.08
-        }
-      }
-    },
     "set": null,
     "group": "shop",
+    "focus": "luck",
+    "source": {
+      "vi": "Mua ở Lò Gốm Bà Mây"
+    },
+    "growth": {
+      "maxLevel": 50,
+      "openTo": 10,
+      "curve": 0.85,
+      "stats": {
+        "speed": [
+          0.048,
+          0.322
+        ],
+        "yield": [
+          0.042,
+          0.28
+        ],
+        "xp": [
+          0.042,
+          0.28
+        ],
+        "luck": [
+          0.036,
+          0.238
+        ],
+        "attract": [
+          0.028,
+          0.187
+        ],
+        "care": [
+          0.028,
+          0.187
+        ]
+      },
+      "coins": {
+        "base": 600,
+        "growth": 1.15
+      },
+      "materials": [
+        {
+          "item": "base:bug.ladybird",
+          "from": 2,
+          "base": 2,
+          "growth": 1.06
+        },
+        {
+          "item": "base:mat.cloud-clay",
+          "from": 6,
+          "base": 1,
+          "growth": 1.05
+        }
+      ],
+      "milestones": {
+        "5": {
+          "base:mat.cloud-clay": 4
+        },
+        "10": {
+          "base:mat.cloud-clay": 8
+        },
+        "15": {
+          "base:mat.cloud-clay": 12
+        },
+        "20": {
+          "base:mat.cloud-clay": 16
+        },
+        "25": {
+          "base:mat.cloud-clay": 20
+        },
+        "30": {
+          "base:mat.cloud-clay": 24
+        },
+        "35": {
+          "base:mat.cloud-clay": 30
+        },
+        "40": {
+          "base:mat.cloud-clay": 36
+        },
+        "45": {
+          "base:mat.cloud-clay": 44
+        },
+        "50": {
+          "base:mat.cloud-clay": 60
+        }
+      },
+      "stagePlayerLevel": [
+        1,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27
+      ]
+    },
+    "skills": [
+      {
+        "id": "sig-blessing",
+        "level": 10,
+        "name": {
+          "vi": "Phúc Khí"
+        },
+        "desc": {
+          "vi": "May mắn +7,5%."
+        },
+        "effect": {
+          "kind": "stat",
+          "stat": "luck",
+          "value": 0.075
+        }
+      },
+      {
+        "id": "sig-divine-grace",
+        "level": 25,
+        "name": {
+          "vi": "Thần Ân"
+        },
+        "desc": {
+          "vi": "5% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.05
+        }
+      },
+      {
+        "id": "sig-heaven-mandate",
+        "level": 50,
+        "name": {
+          "vi": "Thiên Mệnh"
+        },
+        "desc": {
+          "vi": "11,2% cơ hội thu hoạch gấp đôi."
+        },
+        "effect": {
+          "kind": "doubleYield",
+          "chance": 0.112
+        }
+      }
+    ],
     "art": {
       "frames": "pots/sig/50/50",
       "levels": "50 (chỉ có ảnh mốc cấp 50)"

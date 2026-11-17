@@ -83,7 +83,10 @@ async function boot(): Promise<void> {
   const session = new GameSession(content, state, clock, saves);
   if (loaded.kind === 'empty') await session.saveNow(true);
 
-  const art = await Art.load();
+  // Directive 05 step 3: the retired catalog pots' atlas (29.5 MB of GPU memory) is only loaded when
+  // the save still owns one of those pots. The dev demo that places them loads it on demand.
+  const ownsCatalogPot = Object.values(state.pots).some((p) => content.pots.get(p.potId)?.sprite.startsWith('pots/catalog/'));
+  const art = await Art.load(ownsCatalogPot ? [] : ['pots_catalog']);
   const missing = art.missingFor(content);
   if (missing.length > 0) throw new Error(`Thiếu hình cho nội dung: ${missing.join(', ')}`);
 
@@ -134,7 +137,14 @@ async function boot(): Promise<void> {
   document.getElementById('loading')?.remove();
   window.addEventListener('beforeunload', () => void session.saveNow());
   // Exposed for the automated browser tests only.
-  const demo = dev && 'advance' in clock ? makeDemo(session, view, controller, clock as ReturnType<typeof devClock>) : undefined;
+  const runDemo = dev && 'advance' in clock ? makeDemo(session, view, controller, clock as ReturnType<typeof devClock>) : undefined;
+  const demo = runDemo
+    ? (step: string): boolean => {
+        // The directive 03 demo places retired catalog pots: bring their atlas in, then redraw.
+        if (step === 'blender' && art.notLoaded.has('pots_catalog')) void art.loadSheet('pots_catalog').then(() => controller.resync());
+        return runDemo(step);
+      }
+    : undefined;
   (window as unknown as { __pbtc?: unknown }).__pbtc = { session, view, backupFileName, demo };
 }
 
