@@ -755,3 +755,10 @@ html, body {
 .workshop .order-line { width: 44px; height: 46px; }
 .workshop .qty-tag { color: #F6EFE2; background: #5B4326; }
 .workshop .order-line.done .qty-tag { background: #F3D27E; color: #3B2A12; }
+/* Chỉ thị 10 § 3.6: balloon on its way, escort row, neighbours' help */
+.note-card.flying { opacity: 0.92; border-style: dashed; }
+.escort-row { justify-content: flex-start; }
+.escort-row .chip { display: inline-flex; align-items: center; gap: 4px; }
+.given-tag { position: absolute; top: -6px; right: -6px; padding: 0 5px; border-radius: 8px; background: #2E7D5B; color: #FFF8EA; font-size: 11px; font-weight: 800; }
+.note-card .note-actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px 10px; }
+.note-card .note-actions .candy, .note-card .note-actions .link-btn { white-space: nowrap; }

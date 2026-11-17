@@ -13,7 +13,7 @@ import { randomFor } from './rng.ts';
 import { activeEvents, eventPointsFor } from '../systems/events.ts';
 import { slotBonus } from '../systems/modifiers.ts';
 import { createFloorState } from './state.ts';
-import { canDeliver, refillOrders } from '../systems/orders.ts';
+import { askNeighborsHelp, canDeliver, flightFor, refillOrders, stillNeeded, type OrderWorldEvent } from '../systems/orders.ts';
 import { coinGiftAmount, nextMilestone, recordHarvest, rollGift, rollMutation, type Gift } from '../systems/surprises.ts';
 import { playerPrice, simulateNeighbors, snapshotRanks, type NeighborEvent } from '../systems/neighbors.ts';
 import { expandCost, expandItems, nextStar } from '../systems/floors.ts';
@@ -38,7 +38,10 @@ export type Command =
   /** Lets time-driven things happen: balloons bring orders, neighbours act. Sent by the app
    *  before every player command and every few seconds. */
   | { type: 'tick' }
-  | { type: 'deliverOrder'; slot: number }
+  /** Sends an order: the balloon flies off and pays when it comes back; a bird may escort it. */
+  | { type: 'deliverOrder'; slot: number; birdId?: string }
+  /** Once a day: ask the neighbours to chip in for an order (chỉ thị 10 § 3.6). */
+  | { type: 'askNeighbors'; slot: number }
   | { type: 'skipOrder'; slot: number }
   | { type: 'rushOrder'; slot: number }
   | { type: 'claimJournal'; cropId: string }
@@ -90,6 +93,8 @@ export type GameEvent =
   | { type: 'ordersArrived'; slots: number[] }
   | { type: 'orderDelivered'; slot: number; coins: number; xp: number; gems: number; customer: string; rare: boolean }
   | { type: 'orderSkipped'; slot: number }
+  | Exclude<OrderWorldEvent, { type: 'levelUp' }>
+  | { type: 'neighborsChipped'; slot: number; help: Array<{ botId: string; itemId: string; qty: number }> }
   | { type: 'journalClaimed'; cropId: string; gems: number; harvests: number }
   | { type: 'itemListed'; listingId: number; itemId: string; qty: number; price: number }
   | { type: 'boughtFromNeighbor'; botId: string; itemId: string; qty: number; coins: number }
@@ -157,6 +162,8 @@ export type ErrorCode =
   | 'quest_not_ready'
   | 'market_limit'
   | BirdError
+  | 'help_used'
+  | 'bird_busy'
   | WorkshopError;
 
 export type Result = { ok: true; events: GameEvent[] } | { ok: false; error: ErrorCode };
@@ -183,7 +190,9 @@ export function advanceTime(state: GameState, realNow: number): number {
 /** Things that happen because time passed: balloons bring new orders, neighbours live. */
 export function updateWorld(content: ContentPack, state: GameState, now: number): GameEvent[] {
   const events: GameEvent[] = [];
-  const arrived = refillOrders(content, state, now);
+  const back: OrderWorldEvent[] = [];
+  const arrived = refillOrders(content, state, now, back);
+  events.push(...(back as GameEvent[]));
   if (arrived.length > 0) events.push({ type: 'ordersArrived', slots: arrived });
   snapshotRanks(content, state, localDay(content, now));
   events.push(...simulateNeighbors(content, state, now));
@@ -276,7 +285,9 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
     case 'tick':
       return { ok: true, events: updateWorld(content, state, now) };
     case 'deliverOrder':
-      return deliverOrder(content, state, cmd.slot, now);
+      return deliverOrder(content, state, cmd.slot, now, cmd.birdId);
+    case 'askNeighbors':
+      return askNeighbors(content, state, cmd.slot, now);
     case 'skipOrder':
       return skipOrder(content, state, cmd.slot, now);
     case 'rushOrder':
@@ -698,23 +709,49 @@ function placePot(state: GameState, ref: SlotRef, potInstanceId: string): Result
   return { ok: true, events: [{ type: 'potPlaced', slot: ref, potInstanceId, replaced }] };
 }
 
-function deliverOrder(content: ContentPack, state: GameState, index: number, now: number): Result {
+function deliverOrder(content: ContentPack, state: GameState, index: number, now: number, birdId?: string): Result {
   const slot = state.orders.slots[index];
   const order = slot?.order;
   if (!slot || !order) return fail('no_order');
   if (!canDeliver(state, order)) return fail('not_enough_items');
-  for (const [id, qty] of Object.entries(order.items)) removeItem(state, id, qty);
-  state.player.coins += order.coins;
-  state.player.gems += order.gems;
-  state.stats.coinsEarned += order.coins;
+  // Chỉ thị 10 § 3.6: an escorting bird (from escortLevel) flies with the balloon until it is back,
+  // and does not catch bugs meanwhile.
+  const bird = birdId ? state.birds.find((b) => b.id === birdId) : undefined;
+  if (birdId) {
+    if (!bird) return fail('no_bird');
+    if (state.player.level < (content.orders.escortLevel ?? 1)) return fail('level_not_open');
+    if (bird.escort && bird.escort.until > now) return fail('bird_busy');
+  }
+  for (const [id, qty] of Object.entries(stillNeeded(order))) removeItem(state, id, qty);
   state.stats.ordersDone += 1;
   const friend = state.neighbors[order.customer];
   if (friend) friend.friendship += content.neighbors.orderFriendship;
   slot.order = null;
   slot.readyAt = now + content.orders.refillSeconds * 1000;
-  const events: GameEvent[] = [{ type: 'orderDelivered', slot: index, coins: order.coins, xp: order.xp, gems: order.gems, customer: order.customer, rare: order.rare }];
-  for (const level of addXp(content, state, order.xp)) events.push({ type: 'levelUp', level });
+  slot.flight = flightFor(content, state, order, bird?.species ?? null);
+  if (bird) bird.escort = { slot: index, until: slot.readyAt };
+  // XP now (the customer's thanks); coins, gems and items come back with the balloon.
+  const xp = slot.flight.xp;
+  slot.flight.xp = 0;
+  const events: GameEvent[] = [{ type: 'orderDelivered', slot: index, coins: slot.flight.coins, xp, gems: slot.flight.gems, customer: order.customer, rare: order.rare }];
+  for (const level of addXp(content, state, xp)) events.push({ type: 'levelUp', level });
   return { ok: true, events };
+}
+
+/** "Nhờ hàng xóm góp hàng": once a day, from helpLevel. */
+function askNeighbors(content: ContentPack, state: GameState, index: number, now: number): Result {
+  const order = state.orders.slots[index]?.order;
+  if (!order) return fail('no_order');
+  if (state.player.level < (content.orders.helpLevel ?? 1)) return fail('level_not_open');
+  const day = localDay(content, now);
+  if (state.orders.helpDay === day) return fail('help_used');
+  state.orders.helpDay = day;
+  const help = askNeighborsHelp(content, state, order, now);
+  for (const h of help) {
+    const bot = state.neighbors[h.botId];
+    if (bot) bot.friendship += 1;
+  }
+  return { ok: true, events: [{ type: 'neighborsChipped', slot: index, help }] };
 }
 
 function skipOrder(content: ContentPack, state: GameState, index: number, now: number): Result {

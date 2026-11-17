@@ -51,6 +51,8 @@ export const ERROR_TEXT: Record<ErrorCode, string> = {
   queue_full: 'Hàng chờ của máy đã đầy. Đợi máy làm xong, hoặc mua thêm khe.',
   unknown_machine: 'Không thấy máy này.',
   unknown_recipe: 'Không thấy công thức này.',
+  help_used: 'Hôm nay bạn đã nhờ hàng xóm rồi. Mai nhờ tiếp nhé!',
+  bird_busy: 'Chú chim này đang bay theo một khinh khí cầu khác.',
 };
 
 const numberFormat = new Intl.NumberFormat('vi-VN');

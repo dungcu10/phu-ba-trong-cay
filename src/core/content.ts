@@ -306,6 +306,16 @@ export interface OrdersConfig {
   rareChance: number;
   rareMultiplier: number;
   rareGems: number;
+  /** Chỉ thị 10 § 3.6 (M6): share of orders with a processed good once the Xưởng is open, rare order
+   *  lifetime and extra item, more slots by level, bird escort and neighbour help from these levels. */
+  goodsShare?: number;
+  rareHours?: number;
+  rareItems?: string[];
+  extraSlots?: Array<{ level: number; slots: number }>;
+  escortLevel?: number;
+  helpLevel?: number;
+  helpChance?: number;
+  helpFriendshipBonus?: number;
 }
 
 export interface MutationDef {

@@ -17,11 +17,11 @@ VALUE = 1.5
 MACHINES = [
     # id, name, worker bug, unlock level, icon, good name stem, family, qty, A6.3 crops (slug), extra input
     ('dryer', 'Máy Sấy Hoa', 'base:bug.ladybird', 6, 'dried-flowers', 'Hoa Sấy', 'flower', 3,
-     ['hong-may', 'golden-gerbera', 'huong-duong-nang'], None),
+     ['cloud-rose', 'golden-gerbera', 'sun-sunflower'], None),
     ('jam-pot', 'Nồi Mứt', 'base:bug.jade-beetle', 7, 'jam', 'Hũ Mứt', 'fruit', 4,
-     ['cloud-strawberry', 'tao-do-may', 'dao-tien'], None),
+     ['cloud-strawberry', 'sky-apple', 'heaven-peach'], None),
     ('juicer', 'Máy Ép Nước', 'base:bug.dew-hopper', 10, 'juice', 'Chai Nước Ép', 'herb', 3,
-     ['cai-may', 'sky-carrot'], ('fruit', 1)),
+     ['cloud-bokchoy', 'sky-carrot'], ('fruit', 1)),
 ]
 
 
@@ -76,6 +76,11 @@ machines.append({'id': 'base:machine.gem-grinder', 'name': {'vi': 'Máy Mài Ng�
                  'unlockLevel': 16, 'recipes': [
                      {'id': 'base:recipe.gem-grinder.stone', 'inputs': {'base:mat.cloud-stone': 3}, 'output': 'base:mat.cut-gem', 'minutes': 60},
                      {'id': 'base:recipe.gem-grinder.jade', 'inputs': {'base:mat.raw-jade': 1, 'base:mat.cloud-stone': 1}, 'output': 'base:mat.cut-gem', 'minutes': 40},
+                 ] + [
+                     # A6.3: khoáng cộng Hoa Trăng Non hoặc Cỏ Sao Băng (Kỳ Hoa) → Ngọc Mây.
+                     {'id': f'base:recipe.gem-grinder.{slug}', 'inputs': {'base:mat.cloud-stone': 2, crop(slug)['produce']['id']: 1},
+                      'output': 'base:mat.cut-gem', 'minutes': 30}
+                     for slug in ('crescent-flower', 'shooting-star-grass') if crop(slug)
                  ]})
 
 rules = {

@@ -9,12 +9,12 @@
       "unlockLevel": 6,
       "recipes": [
         {
-          "id": "base:recipe.dryer.cotton-daisy",
+          "id": "base:recipe.dryer.cloud-rose",
           "inputs": {
-            "base:item.cotton-daisy": 3
+            "base:item.cloud-rose": 3
           },
-          "output": "base:good.dried-flowers.cotton-daisy",
-          "minutes": 5
+          "output": "base:good.dried-flowers.cloud-rose",
+          "minutes": 10
         },
         {
           "id": "base:recipe.dryer.golden-gerbera",
@@ -23,6 +23,14 @@
           },
           "output": "base:good.dried-flowers.golden-gerbera",
           "minutes": 120
+        },
+        {
+          "id": "base:recipe.dryer.sun-sunflower",
+          "inputs": {
+            "base:item.sun-sunflower": 3
+          },
+          "output": "base:good.dried-flowers.sun-sunflower",
+          "minutes": 180
         }
       ]
     },
@@ -41,6 +49,22 @@
           },
           "output": "base:good.jam.cloud-strawberry",
           "minutes": 45
+        },
+        {
+          "id": "base:recipe.jam-pot.sky-apple",
+          "inputs": {
+            "base:item.sky-apple": 4
+          },
+          "output": "base:good.jam.sky-apple",
+          "minutes": 20
+        },
+        {
+          "id": "base:recipe.jam-pot.heaven-peach",
+          "inputs": {
+            "base:item.heaven-peach": 4
+          },
+          "output": "base:good.jam.heaven-peach",
+          "minutes": 240
         }
       ]
     },
@@ -52,6 +76,15 @@
       "worker": "base:bug.dew-hopper",
       "unlockLevel": 10,
       "recipes": [
+        {
+          "id": "base:recipe.juicer.cloud-bokchoy",
+          "inputs": {
+            "base:item.cloud-bokchoy": 3,
+            "base:item.cherry-tomato": 1
+          },
+          "output": "base:good.juice.cloud-bokchoy",
+          "minutes": 8
+        },
         {
           "id": "base:recipe.juicer.sky-carrot",
           "inputs": {
@@ -87,18 +120,36 @@
           },
           "output": "base:mat.cut-gem",
           "minutes": 40
+        },
+        {
+          "id": "base:recipe.gem-grinder.crescent-flower",
+          "inputs": {
+            "base:mat.cloud-stone": 2,
+            "base:item.crescent-flower": 1
+          },
+          "output": "base:mat.cut-gem",
+          "minutes": 30
+        },
+        {
+          "id": "base:recipe.gem-grinder.shooting-star-grass",
+          "inputs": {
+            "base:mat.cloud-stone": 2,
+            "base:item.shooting-star-grass": 1
+          },
+          "output": "base:mat.cut-gem",
+          "minutes": 30
         }
       ]
     }
   ],
   "goods": [
     {
-      "id": "base:good.dried-flowers.cotton-daisy",
+      "id": "base:good.dried-flowers.cloud-rose",
       "name": {
-        "vi": "Hoa Sấy Cúc Bông Gòn"
+        "vi": "Hoa Sấy Hồng Mây"
       },
       "icon": "art:icon/dried-flowers",
-      "sellPrice": 4,
+      "sellPrice": 58,
       "machine": "base:machine.dryer"
     },
     {
@@ -111,6 +162,15 @@
       "machine": "base:machine.dryer"
     },
     {
+      "id": "base:good.dried-flowers.sun-sunflower",
+      "name": {
+        "vi": "Hoa Sấy Hướng Dương Nắng"
+      },
+      "icon": "art:icon/dried-flowers",
+      "sellPrice": 621,
+      "machine": "base:machine.dryer"
+    },
+    {
       "id": "base:good.jam.cloud-strawberry",
       "name": {
         "vi": "Hũ Mứt Dâu Tây Mây"
@@ -118,6 +178,33 @@
       "icon": "art:icon/jam",
       "sellPrice": 192,
       "machine": "base:machine.jam-pot"
+    },
+    {
+      "id": "base:good.jam.sky-apple",
+      "name": {
+        "vi": "Hũ Mứt Táo Đỏ Mây"
+      },
+      "icon": "art:icon/jam",
+      "sellPrice": 114,
+      "machine": "base:machine.jam-pot"
+    },
+    {
+      "id": "base:good.jam.heaven-peach",
+      "name": {
+        "vi": "Hũ Mứt Đào Tiên"
+      },
+      "icon": "art:icon/jam",
+      "sellPrice": 4920,
+      "machine": "base:machine.jam-pot"
+    },
+    {
+      "id": "base:good.juice.cloud-bokchoy",
+      "name": {
+        "vi": "Chai Nước Ép Cải Mây"
+      },
+      "icon": "art:icon/juice",
+      "sellPrice": 56,
+      "machine": "base:machine.juicer"
     },
     {
       "id": "base:good.juice.sky-carrot",
