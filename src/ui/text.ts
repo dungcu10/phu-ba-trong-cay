@@ -41,6 +41,13 @@ export const ERROR_TEXT: Record<ErrorCode, string> = {
   unknown_quest: 'Không tìm thấy nhiệm vụ này.',
   quest_not_ready: 'Nhiệm vụ chưa xong.',
   market_limit: 'Hôm nay bạn đã mua đủ 20 lượt ở chợ. Mai quay lại nhé!',
+  no_bird: 'Không thấy chú chim này.',
+  level_too_low: 'Chưa đủ cấp để có chú chim này.',
+  cannot_rent: 'Chim này chỉ mua bằng ngọc, không cho thuê.',
+  no_perch: 'Hết cành trống cho chim đậu. Mở thêm tầng hoặc lên cấp 14 để có cành thứ hai.',
+  wrong_food: 'Chim này không ăn món đó. Cho ăn Hạt Kê Mây hoặc nông sản đúng họ cây.',
+  already_full: 'Chim đang no rồi.',
+  bad_perch: 'Cành này chưa mở.',
 };
 
 const numberFormat = new Intl.NumberFormat('vi-VN');
