@@ -18,6 +18,9 @@ import { homeGarden, type GardenFloor, type GardenModel } from './garden.ts';
 import { SLOT_GEOM, SlotView } from './slotView.ts';
 import { ease, Tweens } from './tween.ts';
 
+/** Giao diện fantasy (chỉ thị 06): night glass + thin gold for the canvas signs too. */
+const FX = { night: '#161A2E', gold: '#F3D27E', ivory: '#FFF8EA' } as const;
+
 export type RendererPreference = 'webgpu' | 'webgl';
 
 /** World layout in points. The floor art is stretched to hold a row of pots. */
@@ -237,10 +240,10 @@ export class GameView {
     return cloud;
   }
 
-  private text(text: string, size: number, fill: string = C.ui.textOnDark, stroke: string = C.ui.wood): Text {
+  private text(text: string, size: number, fill: string = FX.ivory, stroke: string = FX.night): Text {
     const t = new Text({
       text,
-      style: { fontFamily: `"${TOKENS.font.display}", sans-serif`, fontWeight: '800', fontSize: size, fill: hex(fill), stroke: { color: hex(stroke), width: 6, join: 'round' }, align: 'center' },
+      style: { fontFamily: `"${TOKENS.font.display}", sans-serif`, fontWeight: '700', fontSize: size, fill: hex(fill), stroke: { color: hex(stroke), width: 5, join: 'round' }, align: 'center', letterSpacing: 0.3 },
       resolution: 2,
     });
     t.anchor.set(0.5);
@@ -254,7 +257,7 @@ export class GameView {
       const a = -Math.PI / 2 + (i * Math.PI) / 5;
       pts.push(x + Math.cos(a) * rr, y + Math.sin(a) * rr);
     }
-    g.poly(pts).fill({ color: hex(filled ? C.brand.gold : C.ui.paper), alpha: filled ? 1 : 0.55 }).stroke({ color: hex(C.ui.number), width: 2.5, join: 'round' });
+    g.poly(pts).fill({ color: hex(filled ? FX.gold : FX.night), alpha: filled ? 1 : 0.5 }).stroke({ color: hex(FX.gold), width: 1.5, join: 'round' });
   }
 
   /** Wooden sign under a floor: stars, name, and the completed pot set if any. */
@@ -265,14 +268,14 @@ export class GameView {
     const starsW = maxStars > 0 ? maxStars * 30 + 10 : 0;
     const w = name.width + starsW + 44;
     const g = new Graphics();
-    g.roundRect(-w / 2 + 3, 5, w, 48, 18).fill({ color: hex(C.ui.wood), alpha: 0.35 });
-    g.roundRect(-w / 2, 0, w, 48, 18).fill(hex(C.ui.wood)).stroke({ color: hex(C.ui.number), width: 3 });
-    g.roundRect(-w / 2 + 6, 5, w - 12, 10, 5).fill({ color: 0xffffff, alpha: 0.12 });
+    // Giao diện fantasy: night-glass chip with a thin gold line and a diamond at each end.
+    g.roundRect(-w / 2, 0, w, 48, 24).fill({ color: hex(FX.night), alpha: 0.82 }).stroke({ color: hex(FX.gold), width: 1.5, alpha: 0.7 });
+    for (const sx of [-1, 1]) g.poly([sx * (w / 2 + 2), 18, sx * (w / 2 + 8), 24, sx * (w / 2 + 2), 30, sx * (w / 2 - 4), 24]).fill(hex(FX.gold));
     for (let i = 0; i < maxStars; i++) this.star(g, -w / 2 + 30 + i * 30, 24, 12, i < f.stars);
     name.position.set(-w / 2 + 22 + starsW + name.width / 2, 25);
     sign.addChild(g, name);
     if (f.setName) {
-      const set = this.text(`Bộ ${f.setName}`, TOKENS.font.size.caption, C.ui.textOnDark, C.brand.jade);
+      const set = this.text(`Bộ ${f.setName}`, TOKENS.font.size.caption, FX.gold, FX.night);
       set.position.set(0, 64);
       sign.addChild(set);
     }
@@ -288,16 +291,14 @@ export class GameView {
   private buildGhost(cost: number, scale: number): Container {
     const ghost = new Container();
     const g = new Graphics();
-    g.ellipse(0, -8, 52, 16).fill({ color: hex(C.ui.wood), alpha: 0.18 });
-    g.circle(0, -62, 50).fill(hex(C.ui.wood));
-    g.circle(0, -62, 46).fill(hex(C.brand.gold));
-    g.circle(0, -62, 40).fill({ color: hex(C.ui.paper), alpha: 0.92 });
-    g.ellipse(-10, -86, 22, 9).fill({ color: 0xffffff, alpha: 0.6 });
-    g.roundRect(-6, -86, 12, 48, 6).fill(hex(C.brand.gold));
-    g.roundRect(-24, -68, 48, 12, 6).fill(hex(C.brand.gold));
-    const price = this.text(`${formatNumber(cost)} xu`, TOKENS.font.size.caption, C.ui.textOnDark, C.ui.wood);
+    g.ellipse(0, -8, 46, 12).fill({ color: hex(FX.night), alpha: 0.18 });
+    g.circle(0, -62, 42).fill({ color: hex(FX.night), alpha: 0.72 }).stroke({ color: hex(FX.gold), width: 2, alpha: 0.85 });
+    g.circle(0, -62, 36).stroke({ color: hex(FX.gold), width: 1, alpha: 0.3 });
+    g.roundRect(-2.5, -80, 5, 36, 2.5).fill(hex(FX.gold));
+    g.roundRect(-18, -64.5, 36, 5, 2.5).fill(hex(FX.gold));
+    const price = this.text(`${formatNumber(cost)} xu`, TOKENS.font.size.caption, FX.gold, FX.night);
     price.position.set(0, 12);
-    const label = this.text('Thêm chậu', TOKENS.font.size.caption, C.ui.textOnDark, C.ui.wood);
+    const label = this.text('Thêm chậu', TOKENS.font.size.caption, FX.ivory, FX.night);
     label.position.set(0, -128);
     ghost.addChild(g, label, price);
     ghost.scale.set(scale);
@@ -382,10 +383,11 @@ export class GameView {
     cloud.alpha = 0.5;
     // A signboard sits on the faded cloud, low enough to stay clear of the HUD and the hint line.
     const g = new Graphics();
-    g.roundRect(-230, 72, 460, 112, 24).fill({ color: hex(C.ui.wood), alpha: 0.92 }).stroke({ color: hex(C.ui.number), width: 3 });
+    g.roundRect(-230, 72, 460, 112, 26).fill({ color: hex(FX.night), alpha: 0.84 }).stroke({ color: hex(FX.gold), width: 1.5, alpha: 0.7 });
+    g.roundRect(-222, 80, 444, 96, 20).stroke({ color: hex(FX.gold), width: 1, alpha: 0.22 });
     const name = this.text(`Tầng ${this.floors.length + 1} · ${def.name.vi}`, TOKENS.font.size.window);
     name.position.set(0, 106);
-    const info = this.text('', TOKENS.font.size.label, C.brand.cream);
+    const info = this.text('', TOKENS.font.size.label, FX.gold);
     info.position.set(0, 154);
     container.addChild(cloud, g, name, info);
     this.floorsLayer.addChild(container);

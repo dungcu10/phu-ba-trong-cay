@@ -68,7 +68,7 @@ export class Effects extends Container {
           fontWeight: '800',
           fontSize: TOKENS.font.size.numberLarge,
           fill: hex(TOKENS.color.ui.textOnDark),
-          stroke: { color: hex(TOKENS.color.ui.wood), width: 6, join: 'round' },
+          stroke: { color: hex('#5A3A0E'), width: 5, join: 'round' },
         },
         resolution: 2,
       });

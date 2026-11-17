@@ -100,11 +100,11 @@ export class SlotView extends Container {
     this.bug = new Sprite();
     this.bug.anchor.set(0.5);
     this.bug.visible = false;
-    this.bugCount = new Text({ text: '', style: { fontFamily: `"${TOKENS.font.display}", sans-serif`, fontWeight: '800', fontSize: TOKENS.font.size.caption, fill: hex(C.ui.textOnDark), stroke: { color: hex(C.ui.wood), width: 4, join: 'round' } }, resolution: 2 });
+    this.bugCount = new Text({ text: '', style: { fontFamily: `"${TOKENS.font.display}", sans-serif`, fontWeight: '800', fontSize: TOKENS.font.size.caption, fill: hex('#FFF8EA'), stroke: { color: hex('#161A2E'), width: 4, join: 'round' } }, resolution: 2 });
     this.bugCount.anchor.set(0, 1);
     this.bar = new Graphics();
     this.bar.y = SLOT_GEOM.barY;
-    this.timer = new Text({ text: '', style: { fontFamily: `"${TOKENS.font.display}", sans-serif`, fontWeight: '800', fontSize: TOKENS.font.size.caption, fill: hex(C.ui.text), stroke: { color: hex(C.ui.paper), width: 4, join: 'round' } }, resolution: 2 });
+    this.timer = new Text({ text: '', style: { fontFamily: `"${TOKENS.font.display}", sans-serif`, fontWeight: '800', fontSize: TOKENS.font.size.caption, fill: hex('#FFF8EA'), stroke: { color: hex('#161A2E'), width: 4, join: 'round' } }, resolution: 2 });
     this.timer.anchor.set(0.5, 0);
     this.timer.y = SLOT_GEOM.barY + 10;
     // Plant in front of the pot: its base sits on the soil line inside the mouth.

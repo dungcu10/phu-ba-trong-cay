@@ -74,7 +74,7 @@ body, button, input { font-family: 'Be Vietnam Pro', system-ui, sans-serif; }
 .lvl-ring::after { content: ""; position: absolute; top: -4px; left: 50%; width: 8px; height: 8px; transform: translateX(-50%) rotate(45deg); background: var(--fx-gold); }
 .lvl-ring .flower {
   position: relative; z-index: 1; margin: 0; width: auto; height: auto; border: 0; background: none;
-  font-family: var(--fx-title); font-weight: 700; font-size: 30px; line-height: 1; color: #FFF8EA; text-shadow: 0 0 10px rgba(243, 210, 126, 0.45);
+  font-family: 'Be Vietnam Pro', sans-serif; font-weight: 700; font-size: 24px; line-height: 1; color: #FFF8EA; text-shadow: 0 0 10px rgba(243, 210, 126, 0.45);
 }
 .profile-text { display: flex; flex-direction: column; gap: 2px; padding-top: 8px; }
 .profile-name { font-family: var(--fx-title); font-weight: 700; font-size: 22px; line-height: 1; color: #FFF8EA; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6); }
@@ -123,7 +123,7 @@ body, button, input { font-family: 'Be Vietnam Pro', system-ui, sans-serif; }
   font-size: 0; line-height: 0; background: #FF8A70; box-shadow: 0 0 0 2px #1B2038;
 }
 .knob .badge { top: 2px; right: 2px; }
-.round-big .badge { top: 6px; right: 14px; width: auto; min-width: 0; height: 18px; padding: 0 6px; border-radius: 9px; font-size: 11px; line-height: 18px; color: #1B2038; background: var(--fx-gold); }
+.round-big .badge { top: -10px; right: 50%; transform: translateX(50%); width: auto; min-width: 0; height: 18px; padding: 0 6px; border-radius: 9px; font-size: 11px; line-height: 18px; color: #1B2038; background: var(--fx-gold); }
 .round-big .badge.full { background: #FF8A70; }
 .badge.hidden { display: none; }
 .locked-feature { display: none !important; }
