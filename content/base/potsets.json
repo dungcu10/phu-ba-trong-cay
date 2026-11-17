@@ -1,0 +1,68 @@
+[
+  {
+    "id": "base:set.ancient-craft",
+    "name": {
+      "vi": "Đồ Cổ Mộc Đồng"
+    },
+    "tiers": [
+      {
+        "count": 4,
+        "stats": {
+          "speed": 0.04
+        }
+      },
+      {
+        "count": 6,
+        "stats": {
+          "speed": 0.08,
+          "xp": 0.05
+        }
+      }
+    ]
+  },
+  {
+    "id": "base:set.palace-ceramic",
+    "name": {
+      "vi": "Gốm Sứ Cung Đình"
+    },
+    "tiers": [
+      {
+        "count": 4,
+        "stats": {
+          "xp": 0.06,
+          "luck": 0.04
+        }
+      },
+      {
+        "count": 6,
+        "stats": {
+          "xp": 0.12,
+          "luck": 0.08
+        }
+      }
+    ]
+  },
+  {
+    "id": "base:set.sky-treasure",
+    "name": {
+      "vi": "Bảo Vật Trời Mây"
+    },
+    "tiers": [
+      {
+        "count": 4,
+        "stats": {
+          "yield": 0.06,
+          "attract": 0.05
+        }
+      },
+      {
+        "count": 6,
+        "stats": {
+          "yield": 0.12,
+          "attract": 0.1,
+          "luck": 0.05
+        }
+      }
+    ]
+  }
+]

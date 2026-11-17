@@ -1,0 +1,8193 @@
+{
+ "name": "Bộ 50 chậu đặc trưng (đã duyệt bản phác 17/11/2026)",
+ "out_name": "signature_all",
+ "profiles": {},
+ "groups": [
+  "Đồ ăn",
+  "Linh vật",
+  "Thiên nhiên",
+  "Gốm Á Đông",
+  "Thần thoại"
+ ],
+ "pots": [
+  {
+   "id": 1,
+   "group": "Đồ ăn",
+   "name": "Bánh Kem Sinh Nhật",
+   "profiles": {
+    "cake3": [
+     [
+      0.64,
+      0.0
+     ],
+     [
+      0.66,
+      0.02
+     ],
+     [
+      0.66,
+      0.3
+     ],
+     [
+      0.52,
+      0.31
+     ],
+     [
+      0.52,
+      0.6
+     ],
+     [
+      0.4,
+      0.61
+     ],
+     [
+      0.4,
+      0.9
+     ],
+     [
+      0.42,
+      0.92
+     ]
+    ]
+   },
+   "materials": {
+    "sponge": {
+     "gradient": [
+      [
+       0.0,
+       "#FFC2D2"
+      ],
+      [
+       1.0,
+       "#FFE3EA"
+      ]
+     ],
+     "roughness": 0.55,
+     "subsurface": 0.2
+    },
+    "cream": {
+     "color": "#FFFBF6",
+     "roughness": 0.35,
+     "subsurface": 0.3
+    },
+    "berry": {
+     "color": "#E8203A",
+     "roughness": 0.25,
+     "coat": 0.6
+    },
+    "wax": {
+     "gradient": [
+      [
+       0.0,
+       "#7FD8FF"
+      ],
+      [
+       1.0,
+       "#FFB0D8"
+      ]
+     ],
+     "roughness": 0.4
+    },
+    "flame": {
+     "color": "#FFB43C",
+     "emission": "#FF9A1E",
+     "emission_strength": 10
+    },
+    "sprinkle": {
+     "color": "#FFD23C",
+     "roughness": 0.4
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "cake3",
+     "mat": "sponge",
+     "scale": 1.12,
+     "smooth": false
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "drips",
+     "mat": "cream",
+     "zs": [
+      0.315,
+      0.635,
+      0.97
+     ],
+     "count": 16
+    },
+    {
+     "type": "dots",
+     "mat": "berry",
+     "count": 7,
+     "size": [
+      0.05,
+      0.07
+     ],
+     "z": [
+      0.12,
+      0.25
+     ],
+     "flat": 0.9
+    },
+    {
+     "type": "dots",
+     "mat": "sprinkle",
+     "count": 12,
+     "size": [
+      0.015,
+      0.022
+     ],
+     "z": [
+      0.38,
+      0.55
+     ],
+     "seed": 4
+    },
+    {
+     "type": "face",
+     "z": 0.16,
+     "eye": 0.065,
+     "gap": 16
+    },
+    {
+     "type": "candles",
+     "mat": "wax",
+     "flame_mat": "flame",
+     "count": 5,
+     "height": 0.34
+    }
+   ],
+   "ref_id": 45
+  },
+  {
+   "id": 2,
+   "group": "Đồ ăn",
+   "name": "Trà Sữa Trân Châu",
+   "profiles": {
+    "cup": [
+     [
+      0.36,
+      0.0
+     ],
+     [
+      0.38,
+      0.03
+     ],
+     [
+      0.44,
+      0.4
+     ],
+     [
+      0.5,
+      0.8
+     ],
+     [
+      0.53,
+      1.0
+     ],
+     [
+      0.55,
+      1.05
+     ]
+    ]
+   },
+   "materials": {
+    "cup": {
+     "gradient": [
+      [
+       0.0,
+       "#E8D2B0"
+      ],
+      [
+       1.0,
+       "#FFF4E4"
+      ]
+     ],
+     "roughness": 0.12,
+     "transmission": 0.35,
+     "ior": 1.4
+    },
+    "boba": {
+     "color": "#2A160C",
+     "roughness": 0.15,
+     "coat": 1
+    },
+    "lid": {
+     "color": "#F4F8FF",
+     "roughness": 0.05,
+     "transmission": 0.7,
+     "ior": 1.45
+    },
+    "straw": {
+     "color": "#FF7FA8",
+     "roughness": 0.3,
+     "coat": 0.5
+    },
+    "heart": {
+     "color": "#FF4F8A",
+     "roughness": 0.3,
+     "coat": 0.6
+    },
+    "foam": {
+     "color": "#FFF8EC",
+     "roughness": 0.6
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "cup",
+     "mat": "cup",
+     "scale": 1.05
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "dots",
+     "mat": "boba",
+     "count": 22,
+     "size": [
+      0.05,
+      0.065
+     ],
+     "z": [
+      0.05,
+      0.3
+     ],
+     "arc": 300,
+     "flat": 0.85
+    },
+    {
+     "type": "band",
+     "mat": "foam",
+     "z": 0.92,
+     "rr": 0.03
+    },
+    {
+     "type": "lid",
+     "mat": "lid"
+    },
+    {
+     "type": "straw",
+     "mat": "straw",
+     "height": 0.95,
+     "radius": 0.055
+    },
+    {
+     "type": "face",
+     "z": 0.58,
+     "eye": 0.07,
+     "gap": 16
+    }
+   ],
+   "ref_id": 37
+  },
+  {
+   "id": 3,
+   "group": "Đồ ăn",
+   "name": "Kem Ốc Quế",
+   "profiles": {
+    "waffle": [
+     [
+      0.3,
+      0.0
+     ],
+     [
+      0.33,
+      0.03
+     ],
+     [
+      0.5,
+      0.6
+     ],
+     [
+      0.56,
+      0.85
+     ],
+     [
+      0.58,
+      0.9
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#C8863F"
+      ],
+      [
+       1.0,
+       "#EAB66C"
+      ]
+     ],
+     "roughness": 0.6
+    },
+    "grid": {
+     "color": "#A86A2C",
+     "roughness": 0.6
+    },
+    "scoop": {
+     "gradient": [
+      [
+       0.0,
+       "#F48FB1"
+      ],
+      [
+       1.0,
+       "#FFC4D8"
+      ]
+     ],
+     "roughness": 0.45,
+     "subsurface": 0.25
+    },
+    "cherry": {
+     "color": "#D7192F",
+     "roughness": 0.15,
+     "coat": 0.8
+    },
+    "stem": {
+     "color": "#5C8A2E",
+     "roughness": 0.35
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "waffle",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "meridians",
+     "mat": "grid",
+     "count": 14,
+     "twist": 0.9,
+     "radius": 0.014,
+     "z": [
+      0.04,
+      0.86
+     ]
+    },
+    {
+     "type": "meridians",
+     "mat": "grid",
+     "count": 14,
+     "twist": -0.9,
+     "radius": 0.014,
+     "z": [
+      0.04,
+      0.86
+     ]
+    },
+    {
+     "type": "puffs",
+     "mat": "scoop",
+     "balls": [
+      [
+       0.6,
+       0.0,
+       1.0,
+       0.19
+      ],
+      [
+       0.5047575842429982,
+       0.32437598731899464,
+       1.0,
+       0.19
+      ],
+      [
+       0.24926739616942478,
+       0.5457707991519105,
+       1.0,
+       0.19
+      ],
+      [
+       -0.08535888850626057,
+       0.5938971797819684,
+       1.0,
+       0.19
+      ],
+      [
+       -0.3928858840230501,
+       0.45347622003300947,
+       1.0,
+       0.19
+      ],
+      [
+       -0.5756815438359043,
+       0.16908802466972564,
+       1.0,
+       0.19
+      ],
+      [
+       -0.5757128671765859,
+       -0.16898134384397215,
+       1.0,
+       0.19
+      ],
+      [
+       -0.3929699096763076,
+       -0.45340340767245524,
+       1.0,
+       0.19
+      ],
+      [
+       -0.08546894045142146,
+       -0.5938813519703336,
+       1.0,
+       0.19
+      ],
+      [
+       0.24916625664274705,
+       -0.5458169808192492,
+       1.0,
+       0.19
+      ],
+      [
+       0.5046974663776341,
+       -0.32446951695343706,
+       1.0,
+       0.19
+      ]
+     ]
+    },
+    {
+     "type": "drips",
+     "mat": "scoop",
+     "zs": [
+      0.93
+     ],
+     "count": 12
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "sphere",
+       "mat": "cherry",
+       "at": [
+        0.38,
+        0.12,
+        1.13
+       ],
+       "scale": 0.1
+      }
+     ]
+    },
+    {
+     "type": "path",
+     "mat": "stem",
+     "radius": 0.012,
+     "points": [
+      [
+       0.38,
+       0.12,
+       1.22
+      ],
+      [
+       0.42,
+       0.12,
+       1.32
+      ],
+      [
+       0.5,
+       0.14,
+       1.38
+      ]
+     ]
+    },
+    {
+     "type": "face",
+     "z": 0.42,
+     "eye": 0.065
+    }
+   ]
+  },
+  {
+   "id": 4,
+   "group": "Đồ ăn",
+   "name": "Donut Cầu Vồng",
+   "profiles": {
+    "donut": [
+     [
+      0.42,
+      0.0
+     ],
+     [
+      0.55,
+      0.06
+     ],
+     [
+      0.62,
+      0.28
+     ],
+     [
+      0.6,
+      0.5
+     ],
+     [
+      0.52,
+      0.62
+     ],
+     [
+      0.5,
+      0.64
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#D08A45"
+      ],
+      [
+       1.0,
+       "#F0C07E"
+      ]
+     ],
+     "roughness": 0.65
+    },
+    "icing": {
+     "color": "#F06FA2",
+     "roughness": 0.25,
+     "coat": 0.5
+    },
+    "s1": {
+     "color": "#7FC8F8",
+     "roughness": 0.35
+    },
+    "s2": {
+     "color": "#FFD166",
+     "roughness": 0.35
+    },
+    "s3": {
+     "color": "#9EE07A",
+     "roughness": 0.35
+    },
+    "s4": {
+     "color": "#FFFFFF",
+     "roughness": 0.35
+    },
+    "s5": {
+     "color": "#B49CF7",
+     "roughness": 0.35
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "donut",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "drips",
+     "mat": "icing",
+     "zs": [
+      0.9
+     ],
+     "count": 18
+    },
+    {
+     "type": "dots",
+     "mat": "s1",
+     "count": 6,
+     "size": [
+      0.014,
+      0.022
+     ],
+     "z": [
+      0.78,
+      0.95
+     ],
+     "flat": 2.2,
+     "seed": 0
+    },
+    {
+     "type": "dots",
+     "mat": "s2",
+     "count": 6,
+     "size": [
+      0.014,
+      0.022
+     ],
+     "z": [
+      0.78,
+      0.95
+     ],
+     "flat": 2.2,
+     "seed": 1
+    },
+    {
+     "type": "dots",
+     "mat": "s3",
+     "count": 6,
+     "size": [
+      0.014,
+      0.022
+     ],
+     "z": [
+      0.78,
+      0.95
+     ],
+     "flat": 2.2,
+     "seed": 2
+    },
+    {
+     "type": "dots",
+     "mat": "s4",
+     "count": 6,
+     "size": [
+      0.014,
+      0.022
+     ],
+     "z": [
+      0.78,
+      0.95
+     ],
+     "flat": 2.2,
+     "seed": 3
+    },
+    {
+     "type": "dots",
+     "mat": "s5",
+     "count": 6,
+     "size": [
+      0.014,
+      0.022
+     ],
+     "z": [
+      0.78,
+      0.95
+     ],
+     "flat": 2.2,
+     "seed": 4
+    },
+    {
+     "type": "face",
+     "z": 0.3,
+     "eye": 0.065
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "group": "Đồ ăn",
+   "name": "Bánh Bao",
+   "profiles": {
+    "bun": [
+     [
+      0.3,
+      0.0
+     ],
+     [
+      0.5,
+      0.05
+     ],
+     [
+      0.62,
+      0.25
+     ],
+     [
+      0.58,
+      0.48
+     ],
+     [
+      0.44,
+      0.66
+     ],
+     [
+      0.26,
+      0.76
+     ],
+     [
+      0.24,
+      0.78
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#F2E6D6"
+      ],
+      [
+       1.0,
+       "#FFFBF4"
+      ]
+     ],
+     "roughness": 0.7,
+     "subsurface": 0.35
+    },
+    "pleat": {
+     "color": "#E3D2BA",
+     "roughness": 0.7
+    },
+    "mark": {
+     "color": "#E8424E",
+     "roughness": 0.35
+    },
+    "steam": {
+     "color": "#FFFFFF",
+     "roughness": 0.05,
+     "transmission": 0.6,
+     "ior": 1.45
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "bun",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "meridians",
+     "mat": "pleat",
+     "count": 14,
+     "twist": 0.4,
+     "radius": 0.022,
+     "z": [
+      0.56,
+      0.98
+     ]
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "sphere",
+       "mat": "mark",
+       "surf": [
+        0,
+        0.62,
+        0.0
+       ],
+       "flat": true,
+       "scale": [
+        0.04,
+        0.04,
+        0.012
+       ]
+      }
+     ]
+    },
+    {
+     "type": "path",
+     "mat": "steam",
+     "radius": 0.03,
+     "taper": [
+      1.0,
+      0.8,
+      0.2
+     ],
+     "points": [
+      [
+       0.35,
+       0.2,
+       1.0
+      ],
+      [
+       0.45,
+       0.2,
+       1.2
+      ],
+      [
+       0.32,
+       0.2,
+       1.38
+      ],
+      [
+       0.42,
+       0.2,
+       1.55
+      ]
+     ]
+    },
+    {
+     "type": "face",
+     "z": 0.32,
+     "eye": 0.07
+    }
+   ]
+  },
+  {
+   "id": 6,
+   "group": "Đồ ăn",
+   "name": "Dưa Hấu",
+   "profiles": {
+    "melon": [
+     [
+      0.25,
+      0.0
+     ],
+     [
+      0.42,
+      0.04
+     ],
+     [
+      0.58,
+      0.25
+     ],
+     [
+      0.66,
+      0.55
+     ],
+     [
+      0.68,
+      0.68
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#2E8B3E"
+      ],
+      [
+       1.0,
+       "#55B85A"
+      ]
+     ],
+     "roughness": 0.4,
+     "coat": 0.4
+    },
+    "stripe": {
+     "color": "#1E5E2A",
+     "roughness": 0.4
+    },
+    "white": {
+     "color": "#F4F7E8",
+     "roughness": 0.35
+    },
+    "flesh": {
+     "color": "#F2475A",
+     "roughness": 0.5,
+     "subsurface": 0.3
+    },
+    "seed": {
+     "color": "#2A1A1A",
+     "roughness": 0.2
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "melon",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "meridians",
+     "mat": "stripe",
+     "count": 11,
+     "wave": 0.08,
+     "radius": 0.034,
+     "z": [
+      0.06,
+      0.85
+     ]
+    },
+    {
+     "type": "band",
+     "mat": "white",
+     "z": 0.91,
+     "rr": 0.03
+    },
+    {
+     "type": "rim",
+     "mat": "flesh",
+     "rr": 0.06
+    },
+    {
+     "type": "dots",
+     "mat": "seed",
+     "count": 9,
+     "size": [
+      0.016,
+      0.02
+     ],
+     "z": [
+      0.97,
+      0.99
+     ],
+     "ring": true,
+     "arc": 200
+    },
+    {
+     "type": "face",
+     "z": 0.4,
+     "eye": 0.068
+    }
+   ]
+  },
+  {
+   "id": 7,
+   "group": "Đồ ăn",
+   "name": "Macaron",
+   "profiles": {
+    "mac": [
+     [
+      0.5,
+      0.0
+     ],
+     [
+      0.6,
+      0.04
+     ],
+     [
+      0.64,
+      0.14
+     ],
+     [
+      0.6,
+      0.24
+     ],
+     [
+      0.56,
+      0.27
+     ],
+     [
+      0.56,
+      0.36
+     ],
+     [
+      0.6,
+      0.39
+     ],
+     [
+      0.64,
+      0.5
+     ],
+     [
+      0.6,
+      0.6
+     ],
+     [
+      0.54,
+      0.64
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#B993EE"
+      ],
+      [
+       1.0,
+       "#D9C2FA"
+      ]
+     ],
+     "roughness": 0.5
+    },
+    "cream": {
+     "color": "#FFF4DE",
+     "roughness": 0.6,
+     "subsurface": 0.2
+    },
+    "feet": {
+     "color": "#A985E0",
+     "roughness": 0.7
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "mac",
+     "mat": "body",
+     "scale": 1.15,
+     "smooth": false
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "band",
+     "mat": "cream",
+     "z": 0.49,
+     "rr": 0.06
+    },
+    {
+     "type": "band",
+     "mat": "feet",
+     "z": 0.4,
+     "rr": 0.03
+    },
+    {
+     "type": "band",
+     "mat": "feet",
+     "z": 0.6,
+     "rr": 0.03
+    },
+    {
+     "type": "face",
+     "z": 0.78,
+     "eye": 0.06
+    }
+   ]
+  },
+  {
+   "id": 8,
+   "group": "Đồ ăn",
+   "name": "Bánh Flan",
+   "profiles": {
+    "flan": [
+     [
+      0.6,
+      0.0
+     ],
+     [
+      0.6,
+      0.08
+     ],
+     [
+      0.52,
+      0.52
+     ],
+     [
+      0.46,
+      0.6
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#F2C94C"
+      ],
+      [
+       1.0,
+       "#FBE38A"
+      ]
+     ],
+     "roughness": 0.3,
+     "subsurface": 0.4
+    },
+    "caramel": {
+     "color": "#A0521A",
+     "roughness": 0.1,
+     "coat": 1.0
+    },
+    "plate": {
+     "color": "#FFFFFF",
+     "roughness": 0.15,
+     "coat": 0.6
+    },
+    "mint": {
+     "color": "#58B85C",
+     "roughness": 0.35
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "flan",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "drips",
+     "mat": "caramel",
+     "zs": [
+      0.98
+     ],
+     "count": 14
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "cyl",
+       "mat": "plate",
+       "at": [
+        0,
+        0,
+        -0.01
+       ],
+       "abs_z": true,
+       "scale": [
+        0.95,
+        0.95,
+        0.04
+       ],
+       "ground": true
+      },
+      {
+       "shape": "leaf",
+       "mat": "mint",
+       "at": [
+        0.3,
+        0.15,
+        0.95
+       ],
+       "rot": [
+        -30,
+        30,
+        0
+       ],
+       "scale": 0.25
+      }
+     ]
+    },
+    {
+     "type": "face",
+     "z": 0.32,
+     "eye": 0.07
+    }
+   ]
+  },
+  {
+   "id": 9,
+   "group": "Đồ ăn",
+   "name": "Sushi Cá Hồi",
+   "profiles": {
+    "roll": [
+     [
+      0.55,
+      0.0
+     ],
+     [
+      0.6,
+      0.03
+     ],
+     [
+      0.62,
+      0.1
+     ],
+     [
+      0.62,
+      0.6
+     ],
+     [
+      0.6,
+      0.66
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "color": "#FAF7F0",
+     "roughness": 0.85
+    },
+    "nori": {
+     "color": "#1F3326",
+     "roughness": 0.6
+    },
+    "salmon": {
+     "gradient": [
+      [
+       0.0,
+       "#F2793A"
+      ],
+      [
+       1.0,
+       "#FFA46A"
+      ]
+     ],
+     "roughness": 0.3,
+     "subsurface": 0.3
+    },
+    "grain": {
+     "color": "#FFFFFF",
+     "roughness": 0.8
+    },
+    "eye_w": {
+     "color": "#F4F1E8",
+     "roughness": 0.2
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "roll",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "cyl",
+       "mat": "nori",
+       "at": [
+        0,
+        0,
+        0.12
+       ],
+       "scale": [
+        0.73,
+        0.73,
+        0.3
+       ]
+      }
+     ]
+    },
+    {
+     "type": "tiles",
+     "mat": "grain",
+     "shape": "sphere",
+     "rows": 2,
+     "cols": 12,
+     "z": [
+      0.68,
+      0.84
+     ],
+     "size": 0.032,
+     "flat": 0.6,
+     "arc": 200
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "sphere",
+       "mat": "salmon",
+       "at": [
+        0.0,
+        0.26,
+        1.08
+       ],
+       "rot": [
+        -32,
+        0,
+        0
+       ],
+       "scale": [
+        0.6,
+        0.34,
+        0.16
+       ]
+      }
+     ]
+    },
+    {
+     "type": "path",
+     "mat": "grain",
+     "radius": 0.012,
+     "points": [
+      [
+       -0.42,
+       0.05,
+       1.1
+      ],
+      [
+       -0.3,
+       0.22,
+       1.16
+      ],
+      [
+       -0.18,
+       0.42,
+       1.1
+      ]
+     ]
+    },
+    {
+     "type": "path",
+     "mat": "grain",
+     "radius": 0.012,
+     "points": [
+      [
+       -0.16999999999999998,
+       0.05,
+       1.1
+      ],
+      [
+       -0.05,
+       0.22,
+       1.16
+      ],
+      [
+       0.06999999999999999,
+       0.42,
+       1.1
+      ]
+     ]
+    },
+    {
+     "type": "path",
+     "mat": "grain",
+     "radius": 0.012,
+     "points": [
+      [
+       0.08000000000000002,
+       0.05,
+       1.1
+      ],
+      [
+       0.2,
+       0.22,
+       1.16
+      ],
+      [
+       0.32,
+       0.42,
+       1.1
+      ]
+     ]
+    },
+    {
+     "type": "face",
+     "z": 0.33,
+     "eye": 0.06,
+     "eye_mat": "eye_w"
+    }
+   ]
+  },
+  {
+   "id": 10,
+   "group": "Đồ ăn",
+   "name": "Cupcake",
+   "profiles": {
+    "wrap": [
+     [
+      0.38,
+      0.0
+     ],
+     [
+      0.4,
+      0.03
+     ],
+     [
+      0.52,
+      0.55
+     ],
+     [
+      0.54,
+      0.58
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#5AAEE6"
+      ],
+      [
+       1.0,
+       "#8FD0FF"
+      ]
+     ],
+     "roughness": 0.5
+    },
+    "pleat": {
+     "color": "#3E8FCC",
+     "roughness": 0.35
+    },
+    "frost": {
+     "gradient": [
+      [
+       0.0,
+       "#F7A8C4"
+      ],
+      [
+       1.0,
+       "#FFE3EE"
+      ]
+     ],
+     "roughness": 0.4,
+     "subsurface": 0.3
+    },
+    "cherry": {
+     "color": "#D7192F",
+     "roughness": 0.15,
+     "coat": 0.8
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "wrap",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "meridians",
+     "mat": "pleat",
+     "count": 18,
+     "radius": 0.018,
+     "z": [
+      0.02,
+      0.98
+     ]
+    },
+    {
+     "type": "puffs",
+     "mat": "frost",
+     "balls": [
+      [
+       0.5,
+       0.0,
+       1.06,
+       0.17
+      ],
+      [
+       0.40451394315938705,
+       0.29388513026290425,
+       1.06,
+       0.17
+      ],
+      [
+       0.15452612084142323,
+       0.47552253151423,
+       1.06,
+       0.17
+      ],
+      [
+       -0.15448206130863473,
+       0.4755368468729161,
+       1.06,
+       0.17
+      ],
+      [
+       -0.4044867119108075,
+       0.2939226086703496,
+       1.06,
+       0.17
+      ],
+      [
+       -0.4999999978538281,
+       4.632679483024513e-05,
+       1.06,
+       0.17
+      ],
+      [
+       -0.40454117093534087,
+       -0.2938476493325467,
+       1.06,
+       0.17
+      ],
+      [
+       -0.15457017904765322,
+       -0.47550821207333155,
+       1.06,
+       0.17
+      ],
+      [
+       0.1544380004496662,
+       -0.47555115814926674,
+       1.06,
+       0.17
+      ],
+      [
+       0.4044594771898356,
+       -0.29396008455456135,
+       1.06,
+       0.17
+      ]
+     ]
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "sphere",
+       "mat": "cherry",
+       "at": [
+        -0.2,
+        0.3,
+        1.25
+       ],
+       "scale": 0.09
+      }
+     ]
+    },
+    {
+     "type": "face",
+     "z": 0.42,
+     "eye": 0.06
+    }
+   ]
+  },
+  {
+   "id": 11,
+   "group": "Linh vật",
+   "name": "Phi Hành Gia Mèo",
+   "profiles": {
+    "cat_orb": [
+     [
+      0.22,
+      0.0
+     ],
+     [
+      0.4,
+      0.05
+     ],
+     [
+      0.58,
+      0.22
+     ],
+     [
+      0.63,
+      0.45
+     ],
+     [
+      0.58,
+      0.7
+     ],
+     [
+      0.45,
+      0.86
+     ],
+     [
+      0.43,
+      0.92
+     ],
+     [
+      0.46,
+      0.96
+     ]
+    ]
+   },
+   "materials": {
+    "shell": {
+     "gradient": [
+      [
+       0.0,
+       "#E8ECF4"
+      ],
+      [
+       1.0,
+       "#FFFFFF"
+      ]
+     ],
+     "roughness": 0.18,
+     "coat": 0.8
+    },
+    "pink": {
+     "color": "#FF9EC0",
+     "roughness": 0.5
+    },
+    "ring": {
+     "gradient": [
+      [
+       0.0,
+       "#7FA8FF"
+      ],
+      [
+       1.0,
+       "#C8A0FF"
+      ]
+     ],
+     "roughness": 0.2,
+     "metallic": 0.6
+    },
+    "metal": {
+     "color": "#D9DDE3",
+     "metallic": 1,
+     "roughness": 0.2
+    },
+    "ball": {
+     "color": "#FF5A8A",
+     "emission": "#FF5A8A",
+     "emission_strength": 2
+    },
+    "moon": {
+     "color": "#FFE07A",
+     "emission": "#FFD23C",
+     "emission_strength": 1.5
+    },
+    "star": {
+     "color": "#FFF3B0",
+     "emission": "#FFF3B0",
+     "emission_strength": 6
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "cat_orb",
+     "mat": "shell",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "rim",
+     "mat": "metal",
+     "rr": 0.04
+    },
+    {
+     "type": "ears",
+     "mat": "shell",
+     "inner_mat": "pink",
+     "length": 0.34,
+     "angle": 52
+    },
+    {
+     "type": "face",
+     "z": 0.48,
+     "eye": 0.08,
+     "gap": 18
+    },
+    {
+     "type": "orbit",
+     "mat": "ring",
+     "z": 0.42,
+     "scale": 1.3,
+     "moons": 3,
+     "moon_mat": "moon"
+    },
+    {
+     "type": "antenna",
+     "mat": "metal",
+     "ball_mat": "ball",
+     "height": 0.5
+    },
+    {
+     "type": "embers",
+     "mat": "star",
+     "count": 10,
+     "size": [
+      0.012,
+      0.022
+     ]
+    }
+   ],
+   "ref_id": 38
+  },
+  {
+   "id": 12,
+   "group": "Linh vật",
+   "name": "Cáo Chín Đuôi",
+   "profiles": {
+    "fox_urn": [
+     [
+      0.26,
+      0.0
+     ],
+     [
+      0.4,
+      0.05
+     ],
+     [
+      0.55,
+      0.25
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      0.54,
+      0.68
+     ],
+     [
+      0.42,
+      0.84
+     ],
+     [
+      0.45,
+      0.93
+     ],
+     [
+      0.52,
+      1.0
+     ]
+    ]
+   },
+   "materials": {
+    "porcelain": {
+     "gradient": [
+      [
+       0.0,
+       "#F2F6FF"
+      ],
+      [
+       1.0,
+       "#FFFFFF"
+      ]
+     ],
+     "roughness": 0.15,
+     "coat": 0.8
+    },
+    "tail": {
+     "gradient": [
+      [
+       0.0,
+       "#FFFFFF"
+      ],
+      [
+       0.55,
+       "#E6F2FF"
+      ],
+      [
+       0.8,
+       "#7FC4FF"
+      ],
+      [
+       1.0,
+       "#3A7BFF"
+      ]
+     ],
+     "roughness": 0.6,
+     "sheen": 1,
+     "emission_from_gradient": true,
+     "emission_strength": 0.12
+    },
+    "inner": {
+     "color": "#FFB0C8",
+     "roughness": 0.5
+    },
+    "foxfire": {
+     "color": "#7FF0FF",
+     "emission": "#3AD8FF",
+     "emission_strength": 7
+    },
+    "blue": {
+     "color": "#3AA8E8",
+     "roughness": 0.25,
+     "coat": 0.6
+    },
+    "silver": {
+     "color": "#D9DDE3",
+     "metallic": 1,
+     "roughness": 0.2
+    }
+   },
+   "parts": [
+    {
+     "type": "tail",
+     "mat": "tail",
+     "shape": "petal",
+     "z": 0.55,
+     "count": 9,
+     "length": 1.15,
+     "spread": 84,
+     "width": 0.34,
+     "y": 0.3,
+     "len_curve": "mid"
+    },
+    {
+     "type": "body",
+     "profile": "fox_urn",
+     "mat": "porcelain",
+     "scale": 1.12
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "rim",
+     "mat": "silver",
+     "rr": 0.04
+    },
+    {
+     "type": "ears",
+     "mat": "porcelain",
+     "inner_mat": "inner",
+     "length": 0.36,
+     "angle": 42,
+     "tilt": 14
+    },
+    {
+     "type": "band",
+     "mat": "blue",
+     "z": 0.2,
+     "rr": 0.02
+    },
+    {
+     "type": "filigree",
+     "mat": "blue",
+     "z": 0.2,
+     "amp": 0.03,
+     "waves": 6,
+     "spiral": 0
+    },
+    {
+     "type": "face",
+     "z": 0.5,
+     "eye": 0.075,
+     "sleepy": true
+    },
+    {
+     "type": "embers",
+     "mat": "foxfire",
+     "count": 7,
+     "size": [
+      0.04,
+      0.06
+     ],
+     "box": [
+      1.2,
+      0.4,
+      1.8
+     ]
+    }
+   ],
+   "ref_id": 46
+  },
+  {
+   "id": 13,
+   "group": "Linh vật",
+   "name": "Thỏ Ngọc",
+   "profiles": {
+    "orb": [
+     [
+      0.22,
+      0.0
+     ],
+     [
+      0.4,
+      0.05
+     ],
+     [
+      0.58,
+      0.22
+     ],
+     [
+      0.63,
+      0.45
+     ],
+     [
+      0.58,
+      0.7
+     ],
+     [
+      0.45,
+      0.86
+     ],
+     [
+      0.43,
+      0.92
+     ],
+     [
+      0.46,
+      0.96
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#EEF0F8"
+      ],
+      [
+       1.0,
+       "#FFFFFF"
+      ]
+     ],
+     "roughness": 0.4,
+     "subsurface": 0.2
+    },
+    "pink": {
+     "color": "#F7A8C4",
+     "roughness": 0.5
+    },
+    "moon": {
+     "color": "#FFE08A",
+     "emission": "#FFE08A",
+     "emission_strength": 3
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "orb",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "sphere",
+       "mat": "body",
+       "at": [
+        0.2,
+        0.05,
+        1.3
+       ],
+       "rot": [
+        0,
+        12,
+        0
+       ],
+       "scale": [
+        0.11,
+        0.07,
+        0.36
+       ],
+       "mirror": true
+      },
+      {
+       "shape": "sphere",
+       "mat": "pink",
+       "at": [
+        0.2,
+        -0.01,
+        1.3
+       ],
+       "rot": [
+        0,
+        12,
+        0
+       ],
+       "scale": [
+        0.06,
+        0.04,
+        0.27
+       ],
+       "mirror": true
+      },
+      {
+       "shape": "sphere",
+       "mat": "body",
+       "at": [
+        0.62,
+        0.1,
+        0.22
+       ],
+       "scale": 0.12
+      },
+      {
+       "shape": "sphere",
+       "mat": "moon",
+       "at": [
+        -0.75,
+        0.3,
+        1.5
+       ],
+       "scale": 0.07
+      }
+     ]
+    },
+    {
+     "type": "face",
+     "z": 0.5,
+     "eye": 0.07
+    }
+   ]
+  },
+  {
+   "id": 14,
+   "group": "Linh vật",
+   "name": "Rồng Con",
+   "profiles": {
+    "orb": [
+     [
+      0.22,
+      0.0
+     ],
+     [
+      0.4,
+      0.05
+     ],
+     [
+      0.58,
+      0.22
+     ],
+     [
+      0.63,
+      0.45
+     ],
+     [
+      0.58,
+      0.7
+     ],
+     [
+      0.45,
+      0.86
+     ],
+     [
+      0.43,
+      0.92
+     ],
+     [
+      0.46,
+      0.96
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#3FA65A"
+      ],
+      [
+       1.0,
+       "#6FCF7E"
+      ]
+     ],
+     "roughness": 0.35,
+     "coat": 0.4
+    },
+    "belly": {
+     "color": "#DDF2C4",
+     "roughness": 0.5
+    },
+    "horn": {
+     "color": "#FFD166",
+     "roughness": 0.3
+    },
+    "spike": {
+     "color": "#FF9F43",
+     "roughness": 0.4
+    },
+    "wing": {
+     "gradient": [
+      [
+       0.0,
+       "#8EDB8A"
+      ],
+      [
+       1.0,
+       "#C8F2A8"
+      ]
+     ],
+     "roughness": 0.4
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "orb",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "sphere",
+       "mat": "belly",
+       "surf": [
+        0,
+        0.38,
+        -0.02
+       ],
+       "flat": true,
+       "scale": [
+        0.36,
+        0.34,
+        0.07
+       ]
+      },
+      {
+       "shape": "horn",
+       "mat": "horn",
+       "at": [
+        0.24,
+        0.05,
+        1.04
+       ],
+       "rot": [
+        0,
+        22,
+        0
+       ],
+       "scale": [
+        0.06,
+        0.06,
+        0.2
+       ],
+       "mirror": true
+      }
+     ]
+    },
+    {
+     "type": "petals",
+     "mat": "spike",
+     "shape": "blade",
+     "count": 5,
+     "arc": 120,
+     "center": 180,
+     "z": 0.93,
+     "length": 0.2,
+     "width": 0.6,
+     "tilt": -5
+    },
+    {
+     "type": "wings",
+     "mat": "wing",
+     "shape": "membrane",
+     "z": 0.65,
+     "count": 3,
+     "layers": 1,
+     "length": 0.45,
+     "spread": [
+      20,
+      70
+     ],
+     "width": 0.5
+    },
+    {
+     "type": "path",
+     "mat": "body",
+     "radius": 0.07,
+     "taper": [
+      1.0,
+      0.7,
+      0.2
+     ],
+     "points": [
+      [
+       0.5,
+       0.2,
+       0.15
+      ],
+      [
+       0.8,
+       0.15,
+       0.2
+      ],
+      [
+       0.85,
+       0.1,
+       0.4
+      ],
+      [
+       0.72,
+       0.05,
+       0.48
+      ]
+     ]
+    },
+    {
+     "type": "face",
+     "z": 0.6,
+     "eye": 0.07
+    }
+   ]
+  },
+  {
+   "id": 15,
+   "group": "Linh vật",
+   "name": "Cá Koi",
+   "profiles": {
+    "orb": [
+     [
+      0.22,
+      0.0
+     ],
+     [
+      0.4,
+      0.05
+     ],
+     [
+      0.58,
+      0.22
+     ],
+     [
+      0.63,
+      0.45
+     ],
+     [
+      0.58,
+      0.7
+     ],
+     [
+      0.45,
+      0.86
+     ],
+     [
+      0.43,
+      0.92
+     ],
+     [
+      0.46,
+      0.96
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "color": "#FFFFFF",
+     "roughness": 0.25,
+     "coat": 0.6
+    },
+    "orange": {
+     "color": "#FF6B2C",
+     "roughness": 0.25,
+     "coat": 0.6
+    },
+    "fin": {
+     "color": "#FFB08A",
+     "roughness": 0.05,
+     "transmission": 0.5,
+     "ior": 1.45
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "orb",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "sphere",
+       "mat": "orange",
+       "surf": [
+        -30,
+        0.72,
+        -0.03
+       ],
+       "flat": true,
+       "scale": [
+        0.24,
+        0.16,
+        0.06
+       ]
+      },
+      {
+       "shape": "sphere",
+       "mat": "orange",
+       "surf": [
+        40,
+        0.2,
+        -0.03
+       ],
+       "flat": true,
+       "scale": [
+        0.2,
+        0.13,
+        0.06
+       ]
+      },
+      {
+       "shape": "sphere",
+       "mat": "orange",
+       "surf": [
+        120,
+        0.6,
+        -0.03
+       ],
+       "flat": true,
+       "scale": [
+        0.25,
+        0.18,
+        0.06
+       ]
+      },
+      {
+       "shape": "fin",
+       "mat": "fin",
+       "at": [
+        0.6,
+        -0.05,
+        0.3
+       ],
+       "rot": [
+        0,
+        120,
+        0
+       ],
+       "scale": 0.35,
+       "mirror": true
+      }
+     ]
+    },
+    {
+     "type": "petals",
+     "mat": "fin",
+     "shape": "fin",
+     "count": 2,
+     "arc": 40,
+     "center": 120,
+     "z": 0.45,
+     "length": 0.65,
+     "width": 0.7,
+     "tilt": 70
+    },
+    {
+     "type": "path",
+     "mat": "orange",
+     "radius": 0.01,
+     "mirror": true,
+     "points": [
+      [
+       0.12,
+       -0.6,
+       0.38
+      ],
+      [
+       0.28,
+       -0.62,
+       0.3
+      ],
+      [
+       0.36,
+       -0.58,
+       0.2
+      ]
+     ]
+    },
+    {
+     "type": "face",
+     "z": 0.5,
+     "eye": 0.07
+    }
+   ]
+  },
+  {
+   "id": 16,
+   "group": "Linh vật",
+   "name": "Gấu Trúc",
+   "profiles": {
+    "orb": [
+     [
+      0.22,
+      0.0
+     ],
+     [
+      0.4,
+      0.05
+     ],
+     [
+      0.58,
+      0.22
+     ],
+     [
+      0.63,
+      0.45
+     ],
+     [
+      0.58,
+      0.7
+     ],
+     [
+      0.45,
+      0.86
+     ],
+     [
+      0.43,
+      0.92
+     ],
+     [
+      0.46,
+      0.96
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "color": "#FAFAFA",
+     "roughness": 0.6,
+     "subsurface": 0.15
+    },
+    "black": {
+     "color": "#262626",
+     "roughness": 0.5
+    },
+    "eye_w": {
+     "color": "#FFFFFF",
+     "roughness": 0.1
+    },
+    "bamboo": {
+     "gradient": [
+      [
+       0.0,
+       "#5E9E3A"
+      ],
+      [
+       1.0,
+       "#8CCB5E"
+      ]
+     ],
+     "roughness": 0.4
+    },
+    "leaf": {
+     "color": "#6CBF5A",
+     "roughness": 0.35
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "orb",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "sphere",
+       "mat": "black",
+       "at": [
+        0.4,
+        0.0,
+        1.0
+       ],
+       "scale": 0.15,
+       "mirror": true
+      },
+      {
+       "shape": "sphere",
+       "mat": "black",
+       "surf": [
+        17,
+        0.55,
+        -0.01
+       ],
+       "flat": true,
+       "rot": null,
+       "scale": [
+        0.1,
+        0.13,
+        0.04
+       ],
+       "mirror": true
+      },
+      {
+       "shape": "sphere",
+       "mat": "black",
+       "surf": [
+        0,
+        0.43,
+        0.0
+       ],
+       "flat": true,
+       "scale": [
+        0.04,
+        0.03,
+        0.02
+       ]
+      }
+     ]
+    },
+    {
+     "type": "path",
+     "mat": "bamboo",
+     "radius": 0.04,
+     "points": [
+      [
+       0.55,
+       -0.1,
+       0.0
+      ],
+      [
+       0.62,
+       -0.1,
+       0.6
+      ],
+      [
+       0.66,
+       -0.08,
+       1.3
+      ]
+     ]
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "leaf",
+       "mat": "leaf",
+       "at": [
+        0.66,
+        -0.1,
+        1.15
+       ],
+       "rot": [
+        0,
+        50,
+        0
+       ],
+       "scale": 0.3
+      },
+      {
+       "shape": "leaf",
+       "mat": "leaf",
+       "at": [
+        0.65,
+        -0.1,
+        0.9
+       ],
+       "rot": [
+        0,
+        -40,
+        0
+       ],
+       "scale": 0.25
+      }
+     ]
+    },
+    {
+     "type": "face",
+     "z": 0.55,
+     "eye": 0.045,
+     "eye_mat": "eye_w",
+     "gap": 17
+    }
+   ]
+  },
+  {
+   "id": 17,
+   "group": "Linh vật",
+   "name": "Chim Cánh Cụt",
+   "profiles": {
+    "egg": [
+     [
+      0.25,
+      0.0
+     ],
+     [
+      0.45,
+      0.05
+     ],
+     [
+      0.55,
+      0.3
+     ],
+     [
+      0.53,
+      0.6
+     ],
+     [
+      0.44,
+      0.82
+     ],
+     [
+      0.4,
+      0.88
+     ],
+     [
+      0.42,
+      0.92
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#1E2750"
+      ],
+      [
+       1.0,
+       "#33407A"
+      ]
+     ],
+     "roughness": 0.35
+    },
+    "belly": {
+     "color": "#FFFFFF",
+     "roughness": 0.5
+    },
+    "beak": {
+     "color": "#FF9F1C",
+     "roughness": 0.3
+    },
+    "scarf": {
+     "color": "#E8424E",
+     "roughness": 0.6
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "egg",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "sphere",
+       "mat": "belly",
+       "surf": [
+        0,
+        0.42,
+        -0.03
+       ],
+       "flat": true,
+       "scale": [
+        0.36,
+        0.44,
+        0.08
+       ]
+      },
+      {
+       "shape": "cone",
+       "mat": "beak",
+       "surf": [
+        0,
+        0.58,
+        0.0
+       ],
+       "flat": true,
+       "scale": [
+        0.05,
+        0.05,
+        0.1
+       ]
+      },
+      {
+       "shape": "sphere",
+       "mat": "beak",
+       "at": [
+        0.17,
+        -0.35,
+        0.02
+       ],
+       "abs_z": true,
+       "scale": [
+        0.12,
+        0.17,
+        0.04
+       ],
+       "mirror": true
+      },
+      {
+       "shape": "petal",
+       "mat": "body",
+       "at": [
+        0.5,
+        0.0,
+        0.62
+       ],
+       "rot": [
+        0,
+        155,
+        0
+       ],
+       "scale": 0.42,
+       "mirror": true
+      }
+     ]
+    },
+    {
+     "type": "band",
+     "mat": "scarf",
+     "z": 0.78,
+     "rr": 0.045
+    },
+    {
+     "type": "face",
+     "z": 0.67,
+     "eye": 0.06,
+     "gap": 15
+    }
+   ]
+  },
+  {
+   "id": 18,
+   "group": "Linh vật",
+   "name": "Ếch Lá Sen",
+   "profiles": {
+    "squat": [
+     [
+      0.4,
+      0.0
+     ],
+     [
+      0.55,
+      0.05
+     ],
+     [
+      0.62,
+      0.25
+     ],
+     [
+      0.58,
+      0.45
+     ],
+     [
+      0.5,
+      0.55
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#5DB35A"
+      ],
+      [
+       1.0,
+       "#8ED87A"
+      ]
+     ],
+     "roughness": 0.3,
+     "coat": 0.5
+    },
+    "pad": {
+     "color": "#3E9B48",
+     "roughness": 0.5
+    },
+    "eye_w": {
+     "color": "#FFFFFF",
+     "roughness": 0.1
+    },
+    "pupil": {
+     "color": "#1F2A1A",
+     "roughness": 0.05,
+     "coat": 1.0
+    },
+    "lotus": {
+     "gradient": [
+      [
+       0.0,
+       "#F48FB1"
+      ],
+      [
+       1.0,
+       "#FFE0EC"
+      ]
+     ],
+     "roughness": 0.4
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "squat",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "cyl",
+       "mat": "pad",
+       "at": [
+        0,
+        0,
+        0.0
+       ],
+       "abs_z": true,
+       "scale": [
+        1.05,
+        1.0,
+        0.03
+       ],
+       "ground": true
+      },
+      {
+       "shape": "sphere",
+       "mat": "body",
+       "at": [
+        0.26,
+        -0.2,
+        1.1
+       ],
+       "scale": 0.17,
+       "mirror": true
+      },
+      {
+       "shape": "sphere",
+       "mat": "eye_w",
+       "at": [
+        0.26,
+        -0.32,
+        1.14
+       ],
+       "scale": 0.1,
+       "mirror": true
+      },
+      {
+       "shape": "sphere",
+       "mat": "pupil",
+       "at": [
+        0.26,
+        -0.4,
+        1.14
+       ],
+       "scale": 0.055,
+       "mirror": true
+      },
+      {
+       "shape": "sphere",
+       "mat": "face_blush",
+       "surf": [
+        40,
+        0.32,
+        -0.01
+       ],
+       "flat": true,
+       "scale": [
+        0.06,
+        0.04,
+        0.02
+       ],
+       "mirror": true
+      },
+      {
+       "shape": "petal",
+       "mat": "lotus",
+       "at": [
+        0.72,
+        -0.35,
+        0.04
+       ],
+       "abs_z": true,
+       "rot": [
+        35,
+        0,
+        0
+       ],
+       "scale": 0.22
+      },
+      {
+       "shape": "petal",
+       "mat": "lotus",
+       "at": [
+        0.72,
+        -0.35,
+        0.04
+       ],
+       "abs_z": true,
+       "rot": [
+        35,
+        0,
+        72
+       ],
+       "scale": 0.22
+      },
+      {
+       "shape": "petal",
+       "mat": "lotus",
+       "at": [
+        0.72,
+        -0.35,
+        0.04
+       ],
+       "abs_z": true,
+       "rot": [
+        35,
+        0,
+        144
+       ],
+       "scale": 0.22
+      },
+      {
+       "shape": "petal",
+       "mat": "lotus",
+       "at": [
+        0.72,
+        -0.35,
+        0.04
+       ],
+       "abs_z": true,
+       "rot": [
+        35,
+        0,
+        216
+       ],
+       "scale": 0.22
+      },
+      {
+       "shape": "petal",
+       "mat": "lotus",
+       "at": [
+        0.72,
+        -0.35,
+        0.04
+       ],
+       "abs_z": true,
+       "rot": [
+        35,
+        0,
+        288
+       ],
+       "scale": 0.22
+      },
+      {
+       "shape": "petal",
+       "mat": "lotus",
+       "at": [
+        0.72,
+        -0.35,
+        0.04
+       ],
+       "abs_z": true,
+       "rot": [
+        12,
+        0,
+        36
+       ],
+       "scale": 0.22
+      },
+      {
+       "shape": "petal",
+       "mat": "lotus",
+       "at": [
+        0.72,
+        -0.35,
+        0.04
+       ],
+       "abs_z": true,
+       "rot": [
+        12,
+        0,
+        180
+       ],
+       "scale": 0.22
+      }
+     ]
+    },
+    {
+     "type": "path",
+     "mat": "pupil",
+     "radius": 0.012,
+     "points": [
+      [
+       -0.16,
+       -0.62,
+       0.32
+      ],
+      [
+       0.0,
+       -0.66,
+       0.26
+      ],
+      [
+       0.16,
+       -0.62,
+       0.32
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": 19,
+   "group": "Linh vật",
+   "name": "Cú Mèo",
+   "profiles": {
+    "egg": [
+     [
+      0.25,
+      0.0
+     ],
+     [
+      0.45,
+      0.05
+     ],
+     [
+      0.55,
+      0.3
+     ],
+     [
+      0.53,
+      0.6
+     ],
+     [
+      0.44,
+      0.82
+     ],
+     [
+      0.4,
+      0.88
+     ],
+     [
+      0.42,
+      0.92
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#8B5A35"
+      ],
+      [
+       1.0,
+       "#B07A4E"
+      ]
+     ],
+     "roughness": 0.6
+    },
+    "feather": {
+     "color": "#D8B48A",
+     "roughness": 0.6
+    },
+    "disc": {
+     "color": "#FFF3DD",
+     "roughness": 0.5
+    },
+    "iris": {
+     "color": "#F2B33D",
+     "roughness": 0.1,
+     "coat": 1.0
+    },
+    "pupil": {
+     "color": "#1F150E",
+     "roughness": 0.05,
+     "coat": 1.0
+    },
+    "beak": {
+     "color": "#E08A2E",
+     "roughness": 0.35
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "egg",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "petals",
+     "mat": "feather",
+     "shape": "petal",
+     "count": 6,
+     "arc": 100,
+     "center": 0,
+     "z": 0.42,
+     "length": 0.16,
+     "width": 0.6,
+     "tilt": 165,
+     "off": 0.0,
+     "phase": 0.0
+    },
+    {
+     "type": "petals",
+     "mat": "feather",
+     "shape": "petal",
+     "count": 6,
+     "arc": 100,
+     "center": 0,
+     "z": 0.3,
+     "length": 0.16,
+     "width": 0.6,
+     "tilt": 165,
+     "off": 0.0,
+     "phase": 0.08
+    },
+    {
+     "type": "petals",
+     "mat": "feather",
+     "shape": "petal",
+     "count": 6,
+     "arc": 100,
+     "center": 0,
+     "z": 0.18,
+     "length": 0.16,
+     "width": 0.6,
+     "tilt": 165,
+     "off": 0.0,
+     "phase": 0.0
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "sphere",
+       "mat": "disc",
+       "surf": [
+        19,
+        0.64,
+        -0.02
+       ],
+       "flat": true,
+       "scale": [
+        0.17,
+        0.17,
+        0.05
+       ],
+       "mirror": true
+      },
+      {
+       "shape": "sphere",
+       "mat": "iris",
+       "surf": [
+        19,
+        0.64,
+        0.02
+       ],
+       "flat": true,
+       "scale": [
+        0.09,
+        0.09,
+        0.04
+       ],
+       "mirror": true
+      },
+      {
+       "shape": "sphere",
+       "mat": "pupil",
+       "surf": [
+        19,
+        0.64,
+        0.05
+       ],
+       "flat": true,
+       "scale": [
+        0.05,
+        0.05,
+        0.03
+       ],
+       "mirror": true
+      },
+      {
+       "shape": "cone",
+       "mat": "beak",
+       "surf": [
+        0,
+        0.52,
+        0.0
+       ],
+       "flat": true,
+       "scale": [
+        0.05,
+        0.05,
+        0.09
+       ]
+      },
+      {
+       "shape": "feather",
+       "mat": "body",
+       "at": [
+        0.3,
+        0.0,
+        0.98
+       ],
+       "rot": [
+        0,
+        22,
+        0
+       ],
+       "scale": 0.3,
+       "mirror": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 20,
+   "group": "Linh vật",
+   "name": "Heo Đất",
+   "profiles": {
+    "pig": [
+     [
+      0.3,
+      0.0
+     ],
+     [
+      0.5,
+      0.05
+     ],
+     [
+      0.66,
+      0.3
+     ],
+     [
+      0.62,
+      0.55
+     ],
+     [
+      0.48,
+      0.72
+     ],
+     [
+      0.44,
+      0.76
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#F48FB1"
+      ],
+      [
+       1.0,
+       "#FFC2D6"
+      ]
+     ],
+     "roughness": 0.25,
+     "coat": 0.6
+    },
+    "snout": {
+     "color": "#F07AA0",
+     "roughness": 0.3
+    },
+    "nostril": {
+     "color": "#A8405F",
+     "roughness": 0.35
+    },
+    "coin": {
+     "color": "#E8B53C",
+     "roughness": 0.22,
+     "metallic": 1.0
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "pig",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "cyl",
+       "mat": "snout",
+       "surf": [
+        0,
+        0.36,
+        -0.03
+       ],
+       "flat": true,
+       "scale": [
+        0.15,
+        0.11,
+        0.09
+       ]
+      },
+      {
+       "shape": "sphere",
+       "mat": "nostril",
+       "surf": [
+        5,
+        0.36,
+        0.06
+       ],
+       "flat": true,
+       "scale": [
+        0.025,
+        0.035,
+        0.02
+       ],
+       "mirror": true
+      },
+      {
+       "shape": "blade",
+       "mat": "body",
+       "at": [
+        0.3,
+        0.0,
+        0.94
+       ],
+       "rot": [
+        -15,
+        28,
+        0
+       ],
+       "scale": 0.26,
+       "mirror": true
+      },
+      {
+       "shape": "cyl",
+       "mat": "body",
+       "at": [
+        0.3,
+        -0.18,
+        0.0
+       ],
+       "abs_z": true,
+       "scale": [
+        0.1,
+        0.1,
+        0.08
+       ],
+       "mirror": true
+      },
+      {
+       "shape": "coin",
+       "mat": "coin",
+       "at": [
+        -0.45,
+        -0.1,
+        1.0
+       ],
+       "rot": [
+        0,
+        25,
+        0
+       ],
+       "scale": 0.2
+      }
+     ]
+    },
+    {
+     "type": "path",
+     "mat": "body",
+     "radius": 0.02,
+     "points": [
+      [
+       0.6,
+       0.25,
+       0.4
+      ],
+      [
+       0.75,
+       0.25,
+       0.42
+      ],
+      [
+       0.72,
+       0.28,
+       0.52
+      ],
+      [
+       0.8,
+       0.3,
+       0.5
+      ]
+     ]
+    },
+    {
+     "type": "face",
+     "z": 0.56,
+     "eye": 0.06,
+     "gap": 26
+    }
+   ]
+  },
+  {
+   "id": 21,
+   "group": "Thiên nhiên",
+   "name": "Nấm Rừng Đỏ",
+   "profiles": {
+    "mush_stem": [
+     [
+      0.36,
+      0.0
+     ],
+     [
+      0.44,
+      0.05
+     ],
+     [
+      0.47,
+      0.3
+     ],
+     [
+      0.45,
+      0.55
+     ],
+     [
+      0.42,
+      0.7
+     ],
+     [
+      0.44,
+      0.78
+     ]
+    ]
+   },
+   "materials": {
+    "stem": {
+     "gradient": [
+      [
+       0.0,
+       "#E8D8BE"
+      ],
+      [
+       1.0,
+       "#FFF6E6"
+      ]
+     ],
+     "roughness": 0.6,
+     "subsurface": 0.2
+    },
+    "cap": {
+     "gradient": [
+      [
+       0.0,
+       "#A80E1A"
+      ],
+      [
+       1.0,
+       "#E8343A"
+      ]
+     ],
+     "roughness": 0.3,
+     "coat": 0.6
+    },
+    "spot": {
+     "color": "#FFFDF5",
+     "roughness": 0.5
+    },
+    "firefly": {
+     "color": "#D8FF5A",
+     "emission": "#C8FF3A",
+     "emission_strength": 6
+    },
+    "grass": {
+     "gradient": [
+      [
+       0.0,
+       "#3E8E3A"
+      ],
+      [
+       1.0,
+       "#8ED96B"
+      ]
+     ]
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "mush_stem",
+     "mat": "stem",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "brim",
+     "mat": "cap",
+     "dots_mat": "spot",
+     "dots": 16,
+     "width": 0.5,
+     "height": 0.22
+    },
+    {
+     "type": "face",
+     "z": 0.42,
+     "eye": 0.075
+    },
+    {
+     "type": "minis",
+     "stem_mat": "stem",
+     "cap_mat": "cap",
+     "spots": [
+      [
+       -0.78,
+       1.0
+      ],
+      [
+       0.82,
+       0.75
+      ],
+      [
+       -0.5,
+       0.6
+      ]
+     ]
+    },
+    {
+     "type": "embers",
+     "mat": "firefly",
+     "count": 9,
+     "size": [
+      0.018,
+      0.03
+     ],
+     "box": [
+      1.1,
+      0.3,
+      1.6
+     ]
+    }
+   ],
+   "ref_id": 9
+  },
+  {
+   "id": 22,
+   "group": "Thiên nhiên",
+   "name": "Vỏ Sò Ngọc Trai",
+   "profiles": {
+    "cup": [
+     [
+      0.36,
+      0.0
+     ],
+     [
+      0.4,
+      0.04
+     ],
+     [
+      0.5,
+      0.3
+     ],
+     [
+      0.56,
+      0.6
+     ],
+     [
+      0.58,
+      0.72
+     ],
+     [
+      0.6,
+      0.76
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#F8D5E0"
+      ],
+      [
+       1.0,
+       "#FFF0F5"
+      ]
+     ],
+     "roughness": 0.15,
+     "metallic": 0.25,
+     "coat": 1.0
+    },
+    "shell": {
+     "gradient": [
+      [
+       0.0,
+       "#F2A7BE"
+      ],
+      [
+       1.0,
+       "#FFE6EE"
+      ]
+     ],
+     "roughness": 0.3,
+     "coat": 0.6
+    },
+    "pearl": {
+     "color": "#FFFDF8",
+     "roughness": 0.08,
+     "metallic": 0.3,
+     "coat": 1.0
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "cup",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "petals",
+     "mat": "shell",
+     "shape": "petal",
+     "count": 9,
+     "arc": 170,
+     "center": 180,
+     "z": 0.25,
+     "length": 1.0,
+     "width": 0.5,
+     "tilt": 12,
+     "len_var": 0.2
+    },
+    {
+     "type": "rim",
+     "mat": "pearl",
+     "rr": 0.04,
+     "scallops": 9,
+     "amp": 0.03
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "sphere",
+       "mat": "pearl",
+       "at": [
+        0.0,
+        -0.66,
+        0.1
+       ],
+       "abs_z": true,
+       "scale": 0.11
+      },
+      {
+       "shape": "sphere",
+       "mat": "pearl",
+       "at": [
+        0.22,
+        -0.62,
+        0.06
+       ],
+       "abs_z": true,
+       "scale": 0.06
+      },
+      {
+       "shape": "sphere",
+       "mat": "pearl",
+       "at": [
+        -0.2,
+        -0.63,
+        0.05
+       ],
+       "abs_z": true,
+       "scale": 0.05
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 23,
+   "group": "Thiên nhiên",
+   "name": "Tổ Ong",
+   "profiles": {
+    "skep": [
+     [
+      0.4,
+      0.0
+     ],
+     [
+      0.55,
+      0.05
+     ],
+     [
+      0.62,
+      0.3
+     ],
+     [
+      0.56,
+      0.6
+     ],
+     [
+      0.42,
+      0.8
+     ],
+     [
+      0.3,
+      0.9
+     ],
+     [
+      0.31,
+      0.92
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#E89A22"
+      ],
+      [
+       1.0,
+       "#F7C24A"
+      ]
+     ],
+     "roughness": 0.4
+    },
+    "hex": {
+     "color": "#C77A12",
+     "roughness": 0.4
+    },
+    "honey": {
+     "color": "#F2A81E",
+     "roughness": 0.05,
+     "transmission": 0.6,
+     "ior": 1.45
+    },
+    "bee_y": {
+     "color": "#FFD23C",
+     "roughness": 0.35
+    },
+    "bee_k": {
+     "color": "#1E1A16",
+     "roughness": 0.35
+    },
+    "wingg": {
+     "color": "#E6F4FF",
+     "roughness": 0.05,
+     "transmission": 0.8,
+     "ior": 1.45
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "skep",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "tiles",
+     "mat": "hex",
+     "shape": "hex",
+     "rows": 5,
+     "cols": 7,
+     "z": [
+      0.12,
+      0.72
+     ],
+     "arc": 170,
+     "size": 0.075,
+     "flat": 0.25
+    },
+    {
+     "type": "drips",
+     "mat": "honey",
+     "zs": [
+      0.97
+     ],
+     "count": 10
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "sphere",
+       "mat": "bee_y",
+       "at": [
+        0.62,
+        -0.25,
+        1.12
+       ],
+       "scale": [
+        0.09,
+        0.07,
+        0.07
+       ]
+      },
+      {
+       "shape": "sphere",
+       "mat": "bee_k",
+       "at": [
+        0.64,
+        -0.25,
+        1.12
+       ],
+       "scale": [
+        0.025,
+        0.072,
+        0.072
+       ]
+      },
+      {
+       "shape": "petal",
+       "mat": "wingg",
+       "at": [
+        0.6,
+        -0.22,
+        1.16
+       ],
+       "rot": [
+        0,
+        30,
+        0
+       ],
+       "scale": 0.12,
+       "mirror": false
+      },
+      {
+       "shape": "petal",
+       "mat": "wingg",
+       "at": [
+        0.6,
+        -0.22,
+        1.16
+       ],
+       "rot": [
+        0,
+        -20,
+        0
+       ],
+       "scale": 0.12
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 24,
+   "group": "Thiên nhiên",
+   "name": "Hang Pha Lê",
+   "profiles": {
+    "geode": [
+     [
+      0.42,
+      0.0
+     ],
+     [
+      0.6,
+      0.3
+     ],
+     [
+      0.6,
+      0.55
+     ],
+     [
+      0.48,
+      0.8
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#5B3A9E"
+      ],
+      [
+       1.0,
+       "#8E6BD8"
+      ]
+     ],
+     "roughness": 0.15,
+     "coat": 0.8
+    },
+    "amethyst": {
+     "color": "#B79CFF",
+     "roughness": 0.05,
+     "transmission": 0.7,
+     "ior": 1.45,
+     "emission": "#9B7BFF",
+     "emission_strength": 0.4
+    },
+    "aqua": {
+     "color": "#7FE0FF",
+     "roughness": 0.05,
+     "transmission": 0.7,
+     "ior": 1.45,
+     "emission": "#6FD0FF",
+     "emission_strength": 0.4
+    },
+    "rose": {
+     "color": "#FFB3D1",
+     "roughness": 0.05,
+     "transmission": 0.7,
+     "ior": 1.45
+    },
+    "spark": {
+     "color": "#FFFFFF",
+     "emission": "#FFFFFF",
+     "emission_strength": 5
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "geode",
+     "mat": "body",
+     "scale": 1.15,
+     "facets": 7,
+     "smooth": false
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "cone",
+       "mat": "amethyst",
+       "sides": 6,
+       "at": [
+        -0.35,
+        0.05,
+        0.85
+       ],
+       "rot": [
+        0,
+        -20,
+        0
+       ],
+       "scale": [
+        0.12,
+        0.12,
+        0.45
+       ]
+      },
+      {
+       "shape": "cone",
+       "mat": "aqua",
+       "sides": 6,
+       "at": [
+        0.33,
+        0.08,
+        0.85
+       ],
+       "rot": [
+        0,
+        25,
+        0
+       ],
+       "scale": [
+        0.1,
+        0.1,
+        0.55
+       ]
+      },
+      {
+       "shape": "cone",
+       "mat": "rose",
+       "sides": 6,
+       "at": [
+        0.0,
+        0.25,
+        0.85
+       ],
+       "rot": [
+        -15,
+        0,
+        0
+       ],
+       "scale": [
+        0.09,
+        0.09,
+        0.35
+       ]
+      },
+      {
+       "shape": "cone",
+       "mat": "amethyst",
+       "sides": 6,
+       "at": [
+        0.55,
+        -0.3,
+        0.0
+       ],
+       "abs_z": true,
+       "rot": [
+        0,
+        30,
+        0
+       ],
+       "scale": [
+        0.08,
+        0.08,
+        0.25
+       ],
+       "ground": true
+      }
+     ]
+    },
+    {
+     "type": "gems",
+     "mat": "aqua",
+     "z": 0.45,
+     "count": 3,
+     "size": 0.08,
+     "spread": 24
+    },
+    {
+     "type": "embers",
+     "mat": "spark",
+     "count": 8,
+     "size": [
+      0.01,
+      0.018
+     ]
+    }
+   ]
+  },
+  {
+   "id": 25,
+   "group": "Thiên nhiên",
+   "name": "Đám Mây Cầu Vồng",
+   "profiles": {
+    "short": [
+     [
+      0.4,
+      0.0
+     ],
+     [
+      0.5,
+      0.04
+     ],
+     [
+      0.55,
+      0.3
+     ],
+     [
+      0.52,
+      0.5
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "color": "#F7FAFF",
+     "roughness": 0.7,
+     "subsurface": 0.2
+    },
+    "red": {
+     "color": "#FF6B6B",
+     "roughness": 0.4
+    },
+    "yel": {
+     "color": "#FFD166",
+     "roughness": 0.4
+    },
+    "blu": {
+     "color": "#7FC8F8",
+     "roughness": 0.4
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "short",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "puffs",
+     "mat": "body",
+     "balls": [
+      [
+       -0.55,
+       -0.05,
+       0.25,
+       0.3
+      ],
+      [
+       0.55,
+       -0.05,
+       0.25,
+       0.3
+      ],
+      [
+       -0.35,
+       0.1,
+       0.65,
+       0.28
+      ],
+      [
+       0.35,
+       0.1,
+       0.65,
+       0.28
+      ],
+      [
+       0.0,
+       0.25,
+       0.7,
+       0.3
+      ],
+      [
+       -0.7,
+       0.1,
+       0.05,
+       0.22
+      ],
+      [
+       0.7,
+       0.1,
+       0.05,
+       0.22
+      ]
+     ]
+    },
+    {
+     "type": "path",
+     "mat": "red",
+     "radius": 0.045,
+     "points": [
+      [
+       -0.95,
+       0.35,
+       0.3
+      ],
+      [
+       -0.6649999999999999,
+       0.35,
+       0.9649999999999999
+      ],
+      [
+       0,
+       0.35,
+       1.25
+      ],
+      [
+       0.6649999999999999,
+       0.35,
+       0.9649999999999999
+      ],
+      [
+       0.95,
+       0.35,
+       0.3
+      ]
+     ]
+    },
+    {
+     "type": "path",
+     "mat": "yel",
+     "radius": 0.045,
+     "points": [
+      [
+       -0.85,
+       0.35,
+       0.3
+      ],
+      [
+       -0.595,
+       0.35,
+       0.895
+      ],
+      [
+       0,
+       0.35,
+       1.15
+      ],
+      [
+       0.595,
+       0.35,
+       0.895
+      ],
+      [
+       0.85,
+       0.35,
+       0.3
+      ]
+     ]
+    },
+    {
+     "type": "path",
+     "mat": "blu",
+     "radius": 0.045,
+     "points": [
+      [
+       -0.75,
+       0.35,
+       0.3
+      ],
+      [
+       -0.5249999999999999,
+       0.35,
+       0.825
+      ],
+      [
+       0,
+       0.35,
+       1.05
+      ],
+      [
+       0.5249999999999999,
+       0.35,
+       0.825
+      ],
+      [
+       0.75,
+       0.35,
+       0.3
+      ]
+     ]
+    },
+    {
+     "type": "face",
+     "z": 0.3,
+     "eye": 0.07,
+     "sleepy": true
+    }
+   ]
+  },
+  {
+   "id": 26,
+   "group": "Thiên nhiên",
+   "name": "Hoa Sen",
+   "profiles": {
+    "cup": [
+     [
+      0.36,
+      0.0
+     ],
+     [
+      0.4,
+      0.04
+     ],
+     [
+      0.5,
+      0.3
+     ],
+     [
+      0.56,
+      0.6
+     ],
+     [
+      0.58,
+      0.72
+     ],
+     [
+      0.6,
+      0.76
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#F7C1D3"
+      ],
+      [
+       1.0,
+       "#FFE6EE"
+      ]
+     ],
+     "roughness": 0.4,
+     "subsurface": 0.2
+    },
+    "petal": {
+     "gradient": [
+      [
+       0.0,
+       "#F06292"
+      ],
+      [
+       1.0,
+       "#FFD6E4"
+      ]
+     ],
+     "roughness": 0.35,
+     "subsurface": 0.3
+    },
+    "petal2": {
+     "gradient": [
+      [
+       0.0,
+       "#F8A5C2"
+      ],
+      [
+       1.0,
+       "#FFF0F5"
+      ]
+     ],
+     "roughness": 0.35,
+     "subsurface": 0.3
+    },
+    "pad": {
+     "color": "#3E9B48",
+     "roughness": 0.5
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "cup",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "petals",
+     "mat": "petal",
+     "count": 10,
+     "z": 0.12,
+     "length": 0.8,
+     "width": 0.5,
+     "tilt": 32
+    },
+    {
+     "type": "petals",
+     "mat": "petal2",
+     "count": 8,
+     "z": 0.42,
+     "length": 0.55,
+     "width": 0.5,
+     "tilt": 14,
+     "phase": 0.3
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "cyl",
+       "mat": "pad",
+       "at": [
+        0,
+        0,
+        0
+       ],
+       "abs_z": true,
+       "scale": [
+        1.1,
+        1.05,
+        0.03
+       ],
+       "ground": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 27,
+   "group": "Thiên nhiên",
+   "name": "Bí Ngô",
+   "profiles": {
+    "pumpkin": [
+     [
+      0.3,
+      0.0
+     ],
+     [
+      0.55,
+      0.06
+     ],
+     [
+      0.7,
+      0.3
+     ],
+     [
+      0.66,
+      0.55
+     ],
+     [
+      0.45,
+      0.72
+     ],
+     [
+      0.38,
+      0.75
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#E9771A"
+      ],
+      [
+       1.0,
+       "#FFA94D"
+      ]
+     ],
+     "roughness": 0.4,
+     "coat": 0.3
+    },
+    "stem": {
+     "color": "#6B7A2E",
+     "roughness": 0.6
+    },
+    "leaf": {
+     "color": "#6DBE55",
+     "roughness": 0.4
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "pumpkin",
+     "mat": "body",
+     "scale": 1.15,
+     "lobes": 10,
+     "lobe_amp": 0.07,
+     "lobe_sharp": 0.7
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "path",
+     "mat": "stem",
+     "radius": 0.05,
+     "taper": [
+      1.0,
+      0.8,
+      0.6
+     ],
+     "points": [
+      [
+       0.15,
+       0.2,
+       0.95
+      ],
+      [
+       0.2,
+       0.2,
+       1.12
+      ],
+      [
+       0.32,
+       0.2,
+       1.2
+      ]
+     ]
+    },
+    {
+     "type": "path",
+     "mat": "leaf",
+     "radius": 0.012,
+     "points": [
+      [
+       -0.3,
+       -0.1,
+       1.0
+      ],
+      [
+       -0.55,
+       -0.2,
+       1.05
+      ],
+      [
+       -0.6,
+       -0.3,
+       0.9
+      ],
+      [
+       -0.7,
+       -0.35,
+       1.0
+      ]
+     ]
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "leaf",
+       "mat": "leaf",
+       "at": [
+        -0.35,
+        -0.05,
+        1.0
+       ],
+       "rot": [
+        -60,
+        -50,
+        0
+       ],
+       "scale": 0.35
+      }
+     ]
+    },
+    {
+     "type": "face",
+     "z": 0.42,
+     "eye": 0.075
+    }
+   ]
+  },
+  {
+   "id": 28,
+   "group": "Thiên nhiên",
+   "name": "Quả Thông",
+   "profiles": {
+    "egg": [
+     [
+      0.25,
+      0.0
+     ],
+     [
+      0.45,
+      0.05
+     ],
+     [
+      0.55,
+      0.3
+     ],
+     [
+      0.53,
+      0.6
+     ],
+     [
+      0.44,
+      0.82
+     ],
+     [
+      0.4,
+      0.88
+     ],
+     [
+      0.42,
+      0.92
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#6E4528"
+      ],
+      [
+       1.0,
+       "#9C6B3F"
+      ]
+     ],
+     "roughness": 0.6
+    },
+    "scale_m": {
+     "gradient": [
+      [
+       0.0,
+       "#7A4E2E"
+      ],
+      [
+       1.0,
+       "#B2814F"
+      ]
+     ],
+     "roughness": 0.55
+    },
+    "berry": {
+     "color": "#D7192F",
+     "roughness": 0.15,
+     "coat": 0.8
+    },
+    "holly": {
+     "color": "#2F8A3E",
+     "roughness": 0.3
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "egg",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "petals",
+     "mat": "scale_m",
+     "shape": "petal",
+     "count": 12,
+     "z": 0.92,
+     "length": 0.22,
+     "width": 0.7,
+     "tilt": 150,
+     "off": 0.0,
+     "phase": 0.0
+    },
+    {
+     "type": "petals",
+     "mat": "scale_m",
+     "shape": "petal",
+     "count": 12,
+     "z": 0.78,
+     "length": 0.22,
+     "width": 0.7,
+     "tilt": 150,
+     "off": 0.0,
+     "phase": 0.26
+    },
+    {
+     "type": "petals",
+     "mat": "scale_m",
+     "shape": "petal",
+     "count": 12,
+     "z": 0.64,
+     "length": 0.22,
+     "width": 0.7,
+     "tilt": 150,
+     "off": 0.0,
+     "phase": 0.0
+    },
+    {
+     "type": "petals",
+     "mat": "scale_m",
+     "shape": "petal",
+     "count": 12,
+     "z": 0.5,
+     "length": 0.22,
+     "width": 0.7,
+     "tilt": 150,
+     "off": 0.0,
+     "phase": 0.26
+    },
+    {
+     "type": "petals",
+     "mat": "scale_m",
+     "shape": "petal",
+     "count": 12,
+     "z": 0.36,
+     "length": 0.22,
+     "width": 0.7,
+     "tilt": 150,
+     "off": 0.0,
+     "phase": 0.0
+    },
+    {
+     "type": "petals",
+     "mat": "scale_m",
+     "shape": "petal",
+     "count": 12,
+     "z": 0.22,
+     "length": 0.22,
+     "width": 0.7,
+     "tilt": 150,
+     "off": 0.0,
+     "phase": 0.26
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "sphere",
+       "mat": "berry",
+       "at": [
+        -0.35,
+        -0.2,
+        1.0
+       ],
+       "scale": 0.06
+      },
+      {
+       "shape": "sphere",
+       "mat": "berry",
+       "at": [
+        -0.27,
+        -0.25,
+        1.02
+       ],
+       "scale": 0.06
+      },
+      {
+       "shape": "leaf",
+       "mat": "holly",
+       "at": [
+        -0.32,
+        -0.2,
+        1.0
+       ],
+       "rot": [
+        -50,
+        -70,
+        0
+       ],
+       "scale": 0.25
+      },
+      {
+       "shape": "leaf",
+       "mat": "holly",
+       "at": [
+        -0.3,
+        -0.2,
+        1.0
+       ],
+       "rot": [
+        -50,
+        60,
+        0
+       ],
+       "scale": 0.25
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 29,
+   "group": "Thiên nhiên",
+   "name": "Bong Bóng Xà Phòng",
+   "profiles": {
+    "bub": [
+     [
+      0.2,
+      0.0
+     ],
+     [
+      0.45,
+      0.08
+     ],
+     [
+      0.62,
+      0.35
+     ],
+     [
+      0.62,
+      0.6
+     ],
+     [
+      0.48,
+      0.85
+     ],
+     [
+      0.4,
+      0.9
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "color": "#EAF6FF",
+     "roughness": 0.02,
+     "transmission": 0.95,
+     "ior": 1.33,
+     "coat": 1.0
+    },
+    "tint": {
+     "color": "#FFC6E8",
+     "roughness": 0.05,
+     "transmission": 0.8,
+     "ior": 1.45,
+     "emission": "#C6B2FF",
+     "emission_strength": 0.3
+    },
+    "ring": {
+     "color": "#C6B2FF",
+     "roughness": 0.2,
+     "coat": 1.0
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "bub",
+     "mat": "body",
+     "scale": 1.15,
+     "wall": 0.02
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "band",
+     "mat": "ring",
+     "z": 0.08,
+     "rr": 0.03
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "sphere",
+       "mat": "tint",
+       "at": [
+        0.7,
+        -0.1,
+        1.15
+       ],
+       "scale": 0.12
+      },
+      {
+       "shape": "sphere",
+       "mat": "body",
+       "at": [
+        -0.68,
+        0.0,
+        1.25
+       ],
+       "scale": 0.08
+      },
+      {
+       "shape": "sphere",
+       "mat": "tint",
+       "at": [
+        -0.8,
+        -0.2,
+        0.6
+       ],
+       "scale": 0.06
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 30,
+   "group": "Thiên nhiên",
+   "name": "Gốc Cây Rêu",
+   "profiles": {
+    "stump": [
+     [
+      0.66,
+      0.0
+     ],
+     [
+      0.58,
+      0.08
+     ],
+     [
+      0.53,
+      0.3
+     ],
+     [
+      0.53,
+      0.62
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#6B4428"
+      ],
+      [
+       1.0,
+       "#8E5E38"
+      ]
+     ],
+     "roughness": 0.8
+    },
+    "ring_w": {
+     "color": "#D9B38C",
+     "roughness": 0.7
+    },
+    "moss": {
+     "color": "#6DBE55",
+     "roughness": 0.9
+    },
+    "stem": {
+     "color": "#F3E3C3",
+     "roughness": 0.6
+    },
+    "cap": {
+     "color": "#D9363E",
+     "roughness": 0.3,
+     "coat": 0.5
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "stump",
+     "mat": "body",
+     "scale": 1.15,
+     "lobes": 14,
+     "lobe_amp": 0.03,
+     "lobe_sharp": 3
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "rim",
+     "mat": "ring_w",
+     "rr": 0.05
+    },
+    {
+     "type": "puffs",
+     "mat": "moss",
+     "balls": [
+      [
+       -0.45,
+       -0.25,
+       1.0,
+       0.13
+      ],
+      [
+       -0.3,
+       -0.42,
+       0.96,
+       0.11
+      ],
+      [
+       0.5,
+       -0.1,
+       0.98,
+       0.12
+      ],
+      [
+       0.25,
+       0.4,
+       1.0,
+       0.12
+      ]
+     ]
+    },
+    {
+     "type": "path",
+     "mat": "body",
+     "radius": 0.06,
+     "taper": [
+      1.0,
+      0.7,
+      0.3
+     ],
+     "mirror": true,
+     "points": [
+      [
+       0.45,
+       -0.2,
+       0.15
+      ],
+      [
+       0.7,
+       -0.3,
+       0.05
+      ],
+      [
+       0.85,
+       -0.35,
+       0.0
+      ]
+     ]
+    },
+    {
+     "type": "minis",
+     "stem_mat": "stem",
+     "cap_mat": "cap",
+     "spots": [
+      [
+       0.8,
+       0.8
+      ],
+      [
+       -0.7,
+       0.6
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": 31,
+   "group": "Gốm Á Đông",
+   "name": "Gốm Sứ Thanh Hoa",
+   "profiles": {
+    "meiping": [
+     [
+      0.22,
+      0.0
+     ],
+     [
+      0.28,
+      0.04
+     ],
+     [
+      0.34,
+      0.2
+     ],
+     [
+      0.48,
+      0.6
+     ],
+     [
+      0.52,
+      0.85
+     ],
+     [
+      0.44,
+      1.05
+     ],
+     [
+      0.26,
+      1.18
+     ],
+     [
+      0.22,
+      1.25
+     ],
+     [
+      0.27,
+      1.3
+     ]
+    ]
+   },
+   "materials": {
+    "porcelain": {
+     "gradient": [
+      [
+       0.0,
+       "#EEF1F7"
+      ],
+      [
+       1.0,
+       "#FFFFFF"
+      ]
+     ],
+     "roughness": 0.12,
+     "coat": 0.9
+    },
+    "cobalt": {
+     "color": "#1E4FA8",
+     "roughness": 0.2,
+     "coat": 0.6
+    },
+    "jade": {
+     "gradient": [
+      [
+       0.0,
+       "#2E8B6A"
+      ],
+      [
+       1.0,
+       "#7FD8B0"
+      ]
+     ],
+     "roughness": 0.25,
+     "subsurface": 0.4
+    },
+    "gold": {
+     "color": "#F2B830",
+     "metallic": 1,
+     "roughness": 0.22
+    }
+   },
+   "parts": [
+    {
+     "type": "stand",
+     "mat": "jade",
+     "height": 0.24,
+     "radius": 0.5,
+     "sides": 6
+    },
+    {
+     "type": "body",
+     "profile": "meiping",
+     "mat": "porcelain",
+     "scale": 1.0
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "rim",
+     "mat": "cobalt",
+     "rr": 0.03
+    },
+    {
+     "type": "band",
+     "mat": "cobalt",
+     "z": 0.08,
+     "rr": 0.02
+    },
+    {
+     "type": "band",
+     "mat": "cobalt",
+     "z": 0.62,
+     "rr": 0.018
+    },
+    {
+     "type": "band",
+     "mat": "cobalt",
+     "z": 0.86,
+     "rr": 0.016
+    },
+    {
+     "type": "filigree",
+     "mat": "cobalt",
+     "z": 0.36,
+     "amp": 0.07,
+     "waves": 5,
+     "spiral": 0.06,
+     "depth": 0.012
+    },
+    {
+     "type": "dots",
+     "mat": "cobalt",
+     "count": 10,
+     "ring": true,
+     "z": [
+      0.74,
+      0.74
+     ],
+     "size": [
+      0.025,
+      0.03
+     ],
+     "arc": 200
+    },
+    {
+     "type": "handles",
+     "mat": "gold",
+     "z": 0.83,
+     "r": 0.1,
+     "rr": 0.022
+    }
+   ],
+   "ref_id": 7
+  },
+  {
+   "id": 32,
+   "group": "Gốm Á Đông",
+   "name": "Sơn Mài Son Vàng",
+   "profiles": {
+    "box": [
+     [
+      0.55,
+      0.0
+     ],
+     [
+      0.6,
+      0.03
+     ],
+     [
+      0.6,
+      0.62
+     ],
+     [
+      0.56,
+      0.66
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#8E0F14"
+      ],
+      [
+       1.0,
+       "#C2161E"
+      ]
+     ],
+     "roughness": 0.08,
+     "coat": 1.0
+    },
+    "black": {
+     "color": "#141010",
+     "roughness": 0.08,
+     "coat": 1.0
+    },
+    "gold": {
+     "color": "#E8B53C",
+     "roughness": 0.22,
+     "metallic": 1.0
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "box",
+     "mat": "body",
+     "scale": 1.15,
+     "smooth": false,
+     "facets": 0
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "band",
+     "mat": "black",
+     "z": 0.08,
+     "rr": 0.05
+    },
+    {
+     "type": "band",
+     "mat": "black",
+     "z": 0.93,
+     "rr": 0.05
+    },
+    {
+     "type": "filigree",
+     "mat": "gold",
+     "z": 0.5,
+     "amp": 0.07,
+     "waves": 5,
+     "spiral": 0.06
+    },
+    {
+     "type": "dots",
+     "mat": "gold",
+     "count": 14,
+     "size": [
+      0.016,
+      0.02
+     ],
+     "z": [
+      0.82,
+      0.84
+     ],
+     "ring": true,
+     "arc": 220
+    },
+    {
+     "type": "rim",
+     "mat": "gold",
+     "rr": 0.025
+    }
+   ]
+  },
+  {
+   "id": 33,
+   "group": "Gốm Á Đông",
+   "name": "Đèn Lồng Hội An",
+   "profiles": {
+    "lantern": [
+     [
+      0.3,
+      0.0
+     ],
+     [
+      0.5,
+      0.1
+     ],
+     [
+      0.62,
+      0.35
+     ],
+     [
+      0.62,
+      0.5
+     ],
+     [
+      0.5,
+      0.75
+     ],
+     [
+      0.32,
+      0.86
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "color": "#E53935",
+     "roughness": 0.5,
+     "subsurface": 0.2,
+     "emission": "#FF5A2E",
+     "emission_strength": 0.6
+    },
+    "rib": {
+     "color": "#8E1B12",
+     "roughness": 0.4
+    },
+    "gold": {
+     "color": "#E8B53C",
+     "roughness": 0.22,
+     "metallic": 1.0
+    },
+    "tassel": {
+     "color": "#F2B33D",
+     "roughness": 0.6
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "lantern",
+     "mat": "body",
+     "scale": 1.15,
+     "lobes": 8,
+     "lobe_amp": 0.06,
+     "lobe_sharp": 0.5
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "meridians",
+     "mat": "rib",
+     "count": 8,
+     "radius": 0.016,
+     "z": [
+      0.08,
+      0.95
+     ],
+     "off": 0.02
+    },
+    {
+     "type": "rim",
+     "mat": "gold",
+     "rr": 0.045
+    },
+    {
+     "type": "foot",
+     "mat": "gold",
+     "rr": 0.045,
+     "step": true
+    },
+    {
+     "type": "path",
+     "mat": "tassel",
+     "radius": 0.02,
+     "mirror": true,
+     "points": [
+      [
+       0.62,
+       -0.05,
+       0.45
+      ],
+      [
+       0.7,
+       -0.05,
+       0.35
+      ],
+      [
+       0.72,
+       -0.05,
+       0.12
+      ]
+     ]
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "sphere",
+       "mat": "gold",
+       "at": [
+        0.66,
+        -0.05,
+        0.46
+       ],
+       "scale": 0.04,
+       "mirror": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 34,
+   "group": "Gốm Á Đông",
+   "name": "Trống Đồng",
+   "profiles": {
+    "drum": [
+     [
+      0.55,
+      0.0
+     ],
+     [
+      0.5,
+      0.1
+     ],
+     [
+      0.48,
+      0.35
+     ],
+     [
+      0.56,
+      0.6
+     ],
+     [
+      0.64,
+      0.66
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#7A5520"
+      ],
+      [
+       1.0,
+       "#C49A4A"
+      ]
+     ],
+     "roughness": 0.35,
+     "metallic": 0.85
+    },
+    "dark": {
+     "color": "#5A3C14",
+     "roughness": 0.5,
+     "metallic": 0.7
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "drum",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "band",
+     "mat": "dark",
+     "z": 0.15,
+     "rr": 0.014
+    },
+    {
+     "type": "band",
+     "mat": "dark",
+     "z": 0.3,
+     "rr": 0.014
+    },
+    {
+     "type": "band",
+     "mat": "dark",
+     "z": 0.62,
+     "rr": 0.014
+    },
+    {
+     "type": "band",
+     "mat": "dark",
+     "z": 0.78,
+     "rr": 0.014
+    },
+    {
+     "type": "band",
+     "mat": "dark",
+     "z": 0.9,
+     "rr": 0.014
+    },
+    {
+     "type": "tiles",
+     "mat": "dark",
+     "shape": "sphere",
+     "rows": 1,
+     "cols": 14,
+     "z": [
+      0.46,
+      0.46
+     ],
+     "arc": 240,
+     "size": 0.03,
+     "flat": 0.5
+    },
+    {
+     "type": "filigree",
+     "mat": "dark",
+     "z": 0.7,
+     "amp": 0.025,
+     "waves": 12,
+     "spiral": 0,
+     "depth": 0.009
+    },
+    {
+     "type": "handles",
+     "mat": "body",
+     "z": 0.72,
+     "r": 0.08,
+     "rr": 0.022
+    },
+    {
+     "type": "rim",
+     "mat": "body",
+     "rr": 0.03
+    }
+   ]
+  },
+  {
+   "id": 35,
+   "group": "Gốm Á Đông",
+   "name": "Rổ Tre Nón Lá",
+   "profiles": {
+    "basket": [
+     [
+      0.4,
+      0.0
+     ],
+     [
+      0.46,
+      0.06
+     ],
+     [
+      0.52,
+      0.28
+     ],
+     [
+      0.57,
+      0.48
+     ],
+     [
+      0.61,
+      0.6
+     ],
+     [
+      0.62,
+      0.62
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#C49A55"
+      ],
+      [
+       1.0,
+       "#E2C48A"
+      ]
+     ],
+     "roughness": 0.7
+    },
+    "weave": {
+     "color": "#A97F3E",
+     "roughness": 0.7
+    },
+    "nonla": {
+     "gradient": [
+      [
+       0.0,
+       "#E8D6A8"
+      ],
+      [
+       1.0,
+       "#F7EBCB"
+      ]
+     ],
+     "roughness": 0.7
+    },
+    "ribbon": {
+     "color": "#E8424E",
+     "roughness": 0.5
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "basket",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "meridians",
+     "mat": "weave",
+     "count": 18,
+     "twist": 0.7,
+     "radius": 0.013
+    },
+    {
+     "type": "meridians",
+     "mat": "weave",
+     "count": 18,
+     "twist": -0.7,
+     "radius": 0.013
+    },
+    {
+     "type": "rim",
+     "mat": "weave",
+     "rr": 0.04
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "cone",
+       "mat": "nonla",
+       "sides": 48,
+       "at": [
+        0.32,
+        0.4,
+        0.92
+       ],
+       "rot": [
+        -18,
+        0,
+        -20
+       ],
+       "scale": [
+        0.5,
+        0.5,
+        0.3
+       ]
+      }
+     ]
+    },
+    {
+     "type": "path",
+     "mat": "ribbon",
+     "radius": 0.012,
+     "points": [
+      [
+       0.6,
+       -0.05,
+       0.55
+      ],
+      [
+       0.55,
+       -0.25,
+       0.4
+      ],
+      [
+       0.5,
+       -0.3,
+       0.25
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": 36,
+   "group": "Gốm Á Đông",
+   "name": "Ấm Tử Sa",
+   "profiles": {
+    "teapot": [
+     [
+      0.35,
+      0.0
+     ],
+     [
+      0.45,
+      0.03
+     ],
+     [
+      0.6,
+      0.3
+     ],
+     [
+      0.58,
+      0.55
+     ],
+     [
+      0.45,
+      0.66
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#7E3F22"
+      ],
+      [
+       1.0,
+       "#A85C36"
+      ]
+     ],
+     "roughness": 0.55
+    },
+    "line": {
+     "color": "#5E2C16",
+     "roughness": 0.6
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "teapot",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "path",
+     "mat": "body",
+     "radius": 0.08,
+     "taper": [
+      1.0,
+      0.7,
+      0.5
+     ],
+     "points": [
+      [
+       0.5,
+       0.0,
+       0.4
+      ],
+      [
+       0.72,
+       0.0,
+       0.55
+      ],
+      [
+       0.82,
+       0.0,
+       0.8
+      ],
+      [
+       0.9,
+       0.0,
+       0.9
+      ]
+     ]
+    },
+    {
+     "type": "path",
+     "mat": "body",
+     "radius": 0.045,
+     "points": [
+      [
+       -0.52,
+       0.0,
+       0.75
+      ],
+      [
+       -0.82,
+       0.0,
+       0.78
+      ],
+      [
+       -0.86,
+       0.0,
+       0.45
+      ],
+      [
+       -0.55,
+       0.0,
+       0.28
+      ]
+     ]
+    },
+    {
+     "type": "band",
+     "mat": "line",
+     "z": 0.82,
+     "rr": 0.012
+    },
+    {
+     "type": "rim",
+     "mat": "body",
+     "rr": 0.04
+    },
+    {
+     "type": "filigree",
+     "mat": "line",
+     "z": 0.45,
+     "amp": 0.03,
+     "waves": 6,
+     "spiral": 0.04,
+     "depth": 0.008
+    }
+   ]
+  },
+  {
+   "id": 37,
+   "group": "Gốm Á Đông",
+   "name": "Hũ Men Nâu",
+   "profiles": {
+    "jar": [
+     [
+      0.3,
+      0.0
+     ],
+     [
+      0.42,
+      0.05
+     ],
+     [
+      0.58,
+      0.3
+     ],
+     [
+      0.6,
+      0.55
+     ],
+     [
+      0.5,
+      0.78
+     ],
+     [
+      0.3,
+      0.86
+     ],
+     [
+      0.28,
+      0.96
+     ],
+     [
+      0.3,
+      1.0
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#4A2612"
+      ],
+      [
+       1.0,
+       "#7A4422"
+      ]
+     ],
+     "roughness": 0.15,
+     "coat": 0.8
+    },
+    "glaze": {
+     "gradient": [
+      [
+       0.0,
+       "#C9884A"
+      ],
+      [
+       1.0,
+       "#E2A96A"
+      ]
+     ],
+     "roughness": 0.1,
+     "coat": 1.0
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "jar",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "drips",
+     "mat": "glaze",
+     "zs": [
+      0.75
+     ],
+     "count": 12
+    },
+    {
+     "type": "handles",
+     "mat": "body",
+     "z": 0.8,
+     "r": 0.06,
+     "rr": 0.02
+    },
+    {
+     "type": "rim",
+     "mat": "body",
+     "rr": 0.04
+    }
+   ]
+  },
+  {
+   "id": 38,
+   "group": "Gốm Á Đông",
+   "name": "Bình Men Ngọc",
+   "profiles": {
+    "celadon": [
+     [
+      0.24,
+      0.0
+     ],
+     [
+      0.3,
+      0.04
+     ],
+     [
+      0.5,
+      0.25
+     ],
+     [
+      0.55,
+      0.45
+     ],
+     [
+      0.46,
+      0.66
+     ],
+     [
+      0.3,
+      0.82
+     ],
+     [
+      0.24,
+      0.98
+     ],
+     [
+      0.28,
+      1.05
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#8EC4A2"
+      ],
+      [
+       1.0,
+       "#BFE3CC"
+      ]
+     ],
+     "roughness": 0.12,
+     "coat": 1.0,
+     "subsurface": 0.15
+    },
+    "line": {
+     "color": "#6FA886",
+     "roughness": 0.2
+    },
+    "wood": {
+     "color": "#5A2E1A",
+     "roughness": 0.4,
+     "coat": 0.5
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "celadon",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "stand",
+     "mat": "wood",
+     "height": 0.16,
+     "radius": 0.45,
+     "sides": 8
+    },
+    {
+     "type": "filigree",
+     "mat": "line",
+     "z": 0.35,
+     "amp": 0.05,
+     "waves": 4,
+     "spiral": 0.05,
+     "depth": 0.007
+    },
+    {
+     "type": "band",
+     "mat": "line",
+     "z": 0.66,
+     "rr": 0.012
+    },
+    {
+     "type": "rim",
+     "mat": "body",
+     "rr": 0.03
+    }
+   ]
+  },
+  {
+   "id": 39,
+   "group": "Gốm Á Đông",
+   "name": "Bát Tràng Men Lam",
+   "profiles": {
+    "bowl": [
+     [
+      0.28,
+      0.0
+     ],
+     [
+      0.32,
+      0.03
+     ],
+     [
+      0.4,
+      0.08
+     ],
+     [
+      0.62,
+      0.35
+     ],
+     [
+      0.72,
+      0.58
+     ],
+     [
+      0.74,
+      0.6
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "color": "#F6F8FC",
+     "roughness": 0.08,
+     "coat": 1.0
+    },
+    "blue": {
+     "color": "#2457B0",
+     "roughness": 0.1,
+     "coat": 1.0
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "bowl",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "filigree",
+     "mat": "blue",
+     "z": 0.55,
+     "amp": 0.09,
+     "waves": 6,
+     "spiral": 0.06
+    },
+    {
+     "type": "band",
+     "mat": "blue",
+     "z": 0.88,
+     "rr": 0.015
+    },
+    {
+     "type": "band",
+     "mat": "blue",
+     "z": 0.15,
+     "rr": 0.015
+    },
+    {
+     "type": "foot",
+     "mat": "blue",
+     "rr": 0.03
+    },
+    {
+     "type": "rim",
+     "mat": "body",
+     "rr": 0.025
+    }
+   ]
+  },
+  {
+   "id": 40,
+   "group": "Gốm Á Đông",
+   "name": "Bình Hồ Lô Đỏ",
+   "profiles": {
+    "gourd": [
+     [
+      0.3,
+      0.0
+     ],
+     [
+      0.5,
+      0.08
+     ],
+     [
+      0.58,
+      0.3
+     ],
+     [
+      0.45,
+      0.55
+     ],
+     [
+      0.3,
+      0.65
+     ],
+     [
+      0.38,
+      0.8
+     ],
+     [
+      0.36,
+      0.95
+     ],
+     [
+      0.24,
+      1.05
+     ],
+     [
+      0.26,
+      1.1
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#A3121A"
+      ],
+      [
+       1.0,
+       "#D92B2B"
+      ]
+     ],
+     "roughness": 0.08,
+     "coat": 1.0
+    },
+    "gold": {
+     "color": "#E8B53C",
+     "roughness": 0.22,
+     "metallic": 1.0
+    },
+    "tassel": {
+     "color": "#F2B33D",
+     "roughness": 0.6
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "gourd",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "band",
+     "mat": "gold",
+     "z": 0.59,
+     "rr": 0.035
+    },
+    {
+     "type": "filigree",
+     "mat": "gold",
+     "z": 0.25,
+     "amp": 0.05,
+     "waves": 5,
+     "spiral": 0.05
+    },
+    {
+     "type": "path",
+     "mat": "tassel",
+     "radius": 0.018,
+     "points": [
+      [
+       0.3,
+       -0.12,
+       0.65
+      ],
+      [
+       0.5,
+       -0.2,
+       0.5
+      ],
+      [
+       0.58,
+       -0.25,
+       0.3
+      ],
+      [
+       0.6,
+       -0.25,
+       0.12
+      ]
+     ]
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "sphere",
+       "mat": "gold",
+       "at": [
+        0.6,
+        -0.25,
+        0.14
+       ],
+       "scale": 0.045
+      }
+     ]
+    },
+    {
+     "type": "rim",
+     "mat": "gold",
+     "rr": 0.025
+    }
+   ]
+  },
+  {
+   "id": 41,
+   "group": "Thần thoại",
+   "name": "Phượng Hoàng Lửa",
+   "profiles": {
+    "urn": [
+     [
+      0.3,
+      0.0
+     ],
+     [
+      0.36,
+      0.04
+     ],
+     [
+      0.4,
+      0.12
+     ],
+     [
+      0.55,
+      0.35
+     ],
+     [
+      0.6,
+      0.55
+     ],
+     [
+      0.55,
+      0.78
+     ],
+     [
+      0.48,
+      0.88
+     ],
+     [
+      0.52,
+      0.95
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#7E1414"
+      ],
+      [
+       1.0,
+       "#D63B2B"
+      ]
+     ],
+     "roughness": 0.15,
+     "coat": 1.0
+    },
+    "wing": {
+     "gradient": [
+      [
+       0.0,
+       "#FF4A1C"
+      ],
+      [
+       0.6,
+       "#FF8A2A"
+      ],
+      [
+       1.0,
+       "#FFD24A"
+      ]
+     ],
+     "roughness": 0.4,
+     "emission_from_gradient": true,
+     "emission_strength": 0.35
+    },
+    "gold": {
+     "color": "#E8B53C",
+     "roughness": 0.22,
+     "metallic": 1.0
+    },
+    "ruby": {
+     "color": "#FF2D4A",
+     "roughness": 0.05,
+     "transmission": 0.4,
+     "ior": 1.45,
+     "emission": "#FF2D4A",
+     "emission_strength": 0.5
+    },
+    "spark": {
+     "color": "#FFB43C",
+     "emission": "#FFB43C",
+     "emission_strength": 8
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "urn",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "rim",
+     "mat": "gold",
+     "rr": 0.045,
+     "scallops": 10,
+     "amp": 0.08,
+     "power": 4
+    },
+    {
+     "type": "wings",
+     "mat": "wing",
+     "shape": "feather",
+     "z": 0.72,
+     "count": 7,
+     "layers": 2,
+     "length": 0.95,
+     "spread": [
+      8,
+      80
+     ],
+     "width": 0.34,
+     "curl": 0.2
+    },
+    {
+     "type": "tail",
+     "mat": "wing",
+     "shape": "flame",
+     "z": 0.8,
+     "count": 5,
+     "length": 1.0,
+     "spread": 50,
+     "width": 0.34
+    },
+    {
+     "type": "crest",
+     "mat": "wing",
+     "shape": "feather",
+     "count": 5,
+     "length": 0.4,
+     "spread": 30,
+     "width": 0.3,
+     "gem": "ruby",
+     "gem_size": 0.07
+    },
+    {
+     "type": "filigree",
+     "mat": "gold",
+     "z": 0.3,
+     "amp": 0.04,
+     "waves": 6,
+     "spiral": 0.045
+    },
+    {
+     "type": "gems",
+     "mat": "ruby",
+     "z": 0.55,
+     "count": 3,
+     "size": 0.08,
+     "spread": 22,
+     "bezel": "gold"
+    },
+    {
+     "type": "embers",
+     "mat": "spark",
+     "count": 14,
+     "size": [
+      0.01,
+      0.02
+     ]
+    }
+   ]
+  },
+  {
+   "id": 42,
+   "group": "Thần thoại",
+   "name": "Kỳ Lân",
+   "profiles": {
+    "urn": [
+     [
+      0.3,
+      0.0
+     ],
+     [
+      0.36,
+      0.04
+     ],
+     [
+      0.4,
+      0.12
+     ],
+     [
+      0.55,
+      0.35
+     ],
+     [
+      0.6,
+      0.55
+     ],
+     [
+      0.55,
+      0.78
+     ],
+     [
+      0.48,
+      0.88
+     ],
+     [
+      0.52,
+      0.95
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#EEF0FA"
+      ],
+      [
+       1.0,
+       "#FFFFFF"
+      ]
+     ],
+     "roughness": 0.15,
+     "coat": 1.0
+    },
+    "horn": {
+     "gradient": [
+      [
+       0.0,
+       "#F2C94C"
+      ],
+      [
+       1.0,
+       "#FFF3C4"
+      ]
+     ],
+     "roughness": 0.2,
+     "metallic": 0.6
+    },
+    "mane1": {
+     "gradient": [
+      [
+       0.0,
+       "#F7A8C4"
+      ],
+      [
+       1.0,
+       "#FFE0EC"
+      ]
+     ],
+     "roughness": 0.4
+    },
+    "mane2": {
+     "gradient": [
+      [
+       0.0,
+       "#B49CF7"
+      ],
+      [
+       1.0,
+       "#E6DCFF"
+      ]
+     ],
+     "roughness": 0.4
+    },
+    "gold": {
+     "color": "#E8B53C",
+     "roughness": 0.22,
+     "metallic": 1.0
+    },
+    "spark": {
+     "color": "#BFE6FF",
+     "emission": "#BFE6FF",
+     "emission_strength": 6
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "urn",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "petals",
+     "mat": "mane1",
+     "shape": "petal",
+     "count": 6,
+     "arc": 150,
+     "center": 180,
+     "z": 0.86,
+     "length": 0.55,
+     "width": 0.45,
+     "tilt": 25
+    },
+    {
+     "type": "petals",
+     "mat": "mane2",
+     "shape": "petal",
+     "count": 5,
+     "arc": 120,
+     "center": 180,
+     "z": 0.7,
+     "length": 0.5,
+     "width": 0.45,
+     "tilt": 35,
+     "phase": 0.15
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "horn",
+       "mat": "horn",
+       "at": [
+        0.0,
+        -0.3,
+        0.98
+       ],
+       "rot": [
+        -12,
+        0,
+        0
+       ],
+       "scale": [
+        0.07,
+        0.07,
+        0.42
+       ]
+      }
+     ]
+    },
+    {
+     "type": "ears",
+     "mat": "body",
+     "inner_mat": "mane1",
+     "length": 0.22,
+     "angle": 40
+    },
+    {
+     "type": "band",
+     "mat": "gold",
+     "z": 0.15,
+     "rr": 0.025
+    },
+    {
+     "type": "rim",
+     "mat": "gold",
+     "rr": 0.03
+    },
+    {
+     "type": "embers",
+     "mat": "spark",
+     "count": 10,
+     "size": [
+      0.01,
+      0.018
+     ]
+    },
+    {
+     "type": "face",
+     "z": 0.5,
+     "eye": 0.07,
+     "sleepy": true
+    }
+   ]
+  },
+  {
+   "id": 43,
+   "group": "Thần thoại",
+   "name": "Thiên Nga Ngọc",
+   "profiles": {
+    "urn": [
+     [
+      0.3,
+      0.0
+     ],
+     [
+      0.36,
+      0.04
+     ],
+     [
+      0.4,
+      0.12
+     ],
+     [
+      0.55,
+      0.35
+     ],
+     [
+      0.6,
+      0.55
+     ],
+     [
+      0.55,
+      0.78
+     ],
+     [
+      0.48,
+      0.88
+     ],
+     [
+      0.52,
+      0.95
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#EAF2FF"
+      ],
+      [
+       1.0,
+       "#FFFFFF"
+      ]
+     ],
+     "roughness": 0.12,
+     "coat": 1.0
+    },
+    "feather": {
+     "gradient": [
+      [
+       0.0,
+       "#E6EEFA"
+      ],
+      [
+       1.0,
+       "#FFFFFF"
+      ]
+     ],
+     "roughness": 0.45
+    },
+    "beak": {
+     "color": "#FF9F1C",
+     "roughness": 0.3
+    },
+    "eyek": {
+     "color": "#141414",
+     "roughness": 0.05
+    },
+    "gold": {
+     "color": "#E8B53C",
+     "roughness": 0.22,
+     "metallic": 1.0
+    },
+    "blue": {
+     "color": "#8FC4F5",
+     "roughness": 0.2,
+     "coat": 1.0
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "urn",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "wings",
+     "mat": "feather",
+     "shape": "feather",
+     "z": 0.7,
+     "count": 7,
+     "layers": 2,
+     "length": 0.85,
+     "spread": [
+      10,
+      70
+     ],
+     "width": 0.32,
+     "curl": 0.25
+    },
+    {
+     "type": "path",
+     "mat": "feather",
+     "radius": 0.06,
+     "taper": [
+      1.0,
+      0.8,
+      0.85
+     ],
+     "points": [
+      [
+       0.0,
+       -0.58,
+       0.35
+      ],
+      [
+       -0.15,
+       -0.68,
+       0.7
+      ],
+      [
+       0.05,
+       -0.62,
+       1.05
+      ],
+      [
+       0.12,
+       -0.55,
+       1.2
+      ]
+     ]
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "sphere",
+       "mat": "feather",
+       "at": [
+        0.12,
+        -0.55,
+        1.22
+       ],
+       "abs_z": false,
+       "scale": 0.08
+      },
+      {
+       "shape": "cone",
+       "mat": "beak",
+       "at": [
+        0.19,
+        -0.56,
+        1.2
+       ],
+       "rot": [
+        0,
+        100,
+        0
+       ],
+       "scale": [
+        0.03,
+        0.03,
+        0.08
+       ]
+      },
+      {
+       "shape": "sphere",
+       "mat": "eyek",
+       "at": [
+        0.14,
+        -0.62,
+        1.25
+       ],
+       "scale": 0.015
+      },
+      {
+       "shape": "cone",
+       "mat": "gold",
+       "sides": 5,
+       "at": [
+        0.1,
+        -0.55,
+        1.29
+       ],
+       "scale": [
+        0.04,
+        0.04,
+        0.05
+       ]
+      }
+     ]
+    },
+    {
+     "type": "band",
+     "mat": "blue",
+     "z": 0.3,
+     "rr": 0.02
+    },
+    {
+     "type": "rim",
+     "mat": "gold",
+     "rr": 0.03
+    }
+   ]
+  },
+  {
+   "id": 44,
+   "group": "Thần thoại",
+   "name": "Rồng Ngọc",
+   "profiles": {
+    "urn": [
+     [
+      0.3,
+      0.0
+     ],
+     [
+      0.36,
+      0.04
+     ],
+     [
+      0.4,
+      0.12
+     ],
+     [
+      0.55,
+      0.35
+     ],
+     [
+      0.6,
+      0.55
+     ],
+     [
+      0.55,
+      0.78
+     ],
+     [
+      0.48,
+      0.88
+     ],
+     [
+      0.52,
+      0.95
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#1F6E54"
+      ],
+      [
+       1.0,
+       "#3E9E7A"
+      ]
+     ],
+     "roughness": 0.1,
+     "coat": 1.0,
+     "subsurface": 0.1
+    },
+    "dragon": {
+     "gradient": [
+      [
+       0.0,
+       "#C9952A"
+      ],
+      [
+       1.0,
+       "#F2C94C"
+      ]
+     ],
+     "roughness": 0.25,
+     "metallic": 1.0
+    },
+    "spine": {
+     "color": "#E8424E",
+     "roughness": 0.3
+    },
+    "pearl": {
+     "color": "#FFF6E0",
+     "roughness": 0.1,
+     "emission": "#FFE8A8",
+     "emission_strength": 1.2
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "urn",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "coil",
+     "mat": "dragon",
+     "scale_mat": "spine",
+     "z": [
+      0.08,
+      0.95
+     ],
+     "turns": 1.0,
+     "start": -270,
+     "radius": 0.08,
+     "off": 0.07
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "sphere",
+       "mat": "dragon",
+       "at": [
+        0.7,
+        -0.05,
+        1.12
+       ],
+       "scale": [
+        0.13,
+        0.1,
+        0.1
+       ]
+      },
+      {
+       "shape": "horn",
+       "mat": "dragon",
+       "at": [
+        0.68,
+        0.0,
+        1.2
+       ],
+       "rot": [
+        0,
+        35,
+        0
+       ],
+       "scale": [
+        0.03,
+        0.03,
+        0.16
+       ],
+       "mirror": false
+      },
+      {
+       "shape": "horn",
+       "mat": "dragon",
+       "at": [
+        0.74,
+        0.04,
+        1.2
+       ],
+       "rot": [
+        0,
+        60,
+        0
+       ],
+       "scale": [
+        0.03,
+        0.03,
+        0.16
+       ]
+      },
+      {
+       "shape": "sphere",
+       "mat": "spine",
+       "at": [
+        0.78,
+        -0.13,
+        1.14
+       ],
+       "scale": 0.02
+      },
+      {
+       "shape": "sphere",
+       "mat": "pearl",
+       "at": [
+        -0.6,
+        -0.3,
+        1.2
+       ],
+       "scale": 0.1
+      }
+     ]
+    },
+    {
+     "type": "rim",
+     "mat": "dragon",
+     "rr": 0.035
+    }
+   ]
+  },
+  {
+   "id": 45,
+   "group": "Thần thoại",
+   "name": "Long Cung",
+   "profiles": {
+    "urn": [
+     [
+      0.3,
+      0.0
+     ],
+     [
+      0.36,
+      0.04
+     ],
+     [
+      0.4,
+      0.12
+     ],
+     [
+      0.55,
+      0.35
+     ],
+     [
+      0.6,
+      0.55
+     ],
+     [
+      0.55,
+      0.78
+     ],
+     [
+      0.48,
+      0.88
+     ],
+     [
+      0.52,
+      0.95
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#0E4C92"
+      ],
+      [
+       1.0,
+       "#2F8BD6"
+      ]
+     ],
+     "roughness": 0.1,
+     "coat": 1.0
+    },
+    "wave": {
+     "color": "#BFE6FF",
+     "roughness": 0.2
+    },
+    "coral": {
+     "gradient": [
+      [
+       0.0,
+       "#FF5E6C"
+      ],
+      [
+       1.0,
+       "#FFB0A8"
+      ]
+     ],
+     "roughness": 0.4
+    },
+    "kelp": {
+     "gradient": [
+      [
+       0.0,
+       "#2E9E6A"
+      ],
+      [
+       1.0,
+       "#7FD9A0"
+      ]
+     ],
+     "roughness": 0.4
+    },
+    "pearl": {
+     "color": "#FFFDF8",
+     "roughness": 0.08,
+     "metallic": 0.3,
+     "coat": 1.0
+    },
+    "bubble": {
+     "color": "#DDF3FF",
+     "roughness": 0.05,
+     "transmission": 0.9,
+     "ior": 1.45
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "urn",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "filigree",
+     "mat": "wave",
+     "z": 0.35,
+     "amp": 0.05,
+     "waves": 7,
+     "spiral": 0.05
+    },
+    {
+     "type": "filigree",
+     "mat": "wave",
+     "z": 0.65,
+     "amp": 0.04,
+     "waves": 7,
+     "spiral": 0
+    },
+    {
+     "type": "petals",
+     "mat": "coral",
+     "shape": "fin",
+     "count": 5,
+     "arc": 120,
+     "center": 180,
+     "z": 0.85,
+     "length": 0.5,
+     "width": 0.8,
+     "tilt": 15,
+     "len_var": 0.3
+    },
+    {
+     "type": "path",
+     "mat": "kelp",
+     "radius": 0.035,
+     "taper": [
+      1,
+      0.8,
+      0.2
+     ],
+     "mirror": true,
+     "points": [
+      [
+       0.55,
+       0.0,
+       0.1
+      ],
+      [
+       0.68,
+       -0.05,
+       0.4
+      ],
+      [
+       0.6,
+       -0.05,
+       0.7
+      ],
+      [
+       0.72,
+       -0.05,
+       1.0
+      ]
+     ]
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "sphere",
+       "mat": "pearl",
+       "surf": [
+        0,
+        0.5,
+        0.02
+       ],
+       "scale": 0.08
+      },
+      {
+       "shape": "sphere",
+       "mat": "bubble",
+       "at": [
+        -0.7,
+        -0.2,
+        0.6
+       ],
+       "scale": 0.06
+      },
+      {
+       "shape": "sphere",
+       "mat": "bubble",
+       "at": [
+        0.75,
+        -0.25,
+        0.4
+       ],
+       "scale": 0.045
+      }
+     ]
+    },
+    {
+     "type": "rim",
+     "mat": "pearl",
+     "rr": 0.035,
+     "scallops": 8,
+     "amp": 0.04
+    }
+   ]
+  },
+  {
+   "id": 46,
+   "group": "Thần thoại",
+   "name": "Cung Trăng",
+   "profiles": {
+    "urn": [
+     [
+      0.3,
+      0.0
+     ],
+     [
+      0.36,
+      0.04
+     ],
+     [
+      0.4,
+      0.12
+     ],
+     [
+      0.55,
+      0.35
+     ],
+     [
+      0.6,
+      0.55
+     ],
+     [
+      0.55,
+      0.78
+     ],
+     [
+      0.48,
+      0.88
+     ],
+     [
+      0.52,
+      0.95
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#F4EEDC"
+      ],
+      [
+       1.0,
+       "#FFFFFF"
+      ]
+     ],
+     "roughness": 0.12,
+     "coat": 1.0
+    },
+    "moon": {
+     "color": "#FFE08A",
+     "roughness": 0.3,
+     "emission": "#FFD45A",
+     "emission_strength": 1.5
+    },
+    "gold": {
+     "color": "#E8B53C",
+     "roughness": 0.22,
+     "metallic": 1.0
+    },
+    "star": {
+     "color": "#FFF3B0",
+     "emission": "#FFF3B0",
+     "emission_strength": 6
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "urn",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "path",
+     "mat": "moon",
+     "radius": 0.16,
+     "taper": [
+      0.05,
+      1.0,
+      0.05
+     ],
+     "per": 10,
+     "points": [
+      [
+       0.45,
+       0.4,
+       1.75
+      ],
+      [
+       -0.1,
+       0.4,
+       1.68
+      ],
+      [
+       -0.55,
+       0.4,
+       1.3
+      ],
+      [
+       -0.6,
+       0.4,
+       0.8
+      ],
+      [
+       -0.3,
+       0.4,
+       0.45
+      ]
+     ]
+    },
+    {
+     "type": "band",
+     "mat": "gold",
+     "z": 0.4,
+     "rr": 0.025
+    },
+    {
+     "type": "rim",
+     "mat": "gold",
+     "rr": 0.03
+    },
+    {
+     "type": "dots",
+     "mat": "gold",
+     "count": 3,
+     "size": [
+      0.03,
+      0.035
+     ],
+     "z": [
+      0.25,
+      0.25
+     ],
+     "ring": true,
+     "arc": 50
+    },
+    {
+     "type": "embers",
+     "mat": "star",
+     "count": 10,
+     "size": [
+      0.012,
+      0.022
+     ]
+    },
+    {
+     "type": "face",
+     "z": 0.6,
+     "eye": 0.07,
+     "sleepy": true
+    }
+   ]
+  },
+  {
+   "id": 47,
+   "group": "Thần thoại",
+   "name": "Đèn Thần",
+   "profiles": {
+    "lamp": [
+     [
+      0.34,
+      0.0
+     ],
+     [
+      0.44,
+      0.05
+     ],
+     [
+      0.58,
+      0.25
+     ],
+     [
+      0.62,
+      0.45
+     ],
+     [
+      0.55,
+      0.65
+     ],
+     [
+      0.45,
+      0.75
+     ],
+     [
+      0.48,
+      0.8
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#C9952A"
+      ],
+      [
+       1.0,
+       "#F2C94C"
+      ]
+     ],
+     "roughness": 0.2,
+     "metallic": 1.0
+    },
+    "ruby": {
+     "color": "#E8203A",
+     "roughness": 0.05,
+     "transmission": 0.4,
+     "ior": 1.45,
+     "emission": "#E8203A",
+     "emission_strength": 0.5
+    },
+    "smoke": {
+     "color": "#B49CF7",
+     "roughness": 0.5,
+     "transmission": 0.5,
+     "emission": "#C6B2FF",
+     "emission_strength": 0.8
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "lamp",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "path",
+     "mat": "body",
+     "radius": 0.07,
+     "taper": [
+      1.0,
+      0.6,
+      0.35
+     ],
+     "points": [
+      [
+       0.5,
+       0.0,
+       0.2
+      ],
+      [
+       0.78,
+       0.0,
+       0.3
+      ],
+      [
+       0.95,
+       0.0,
+       0.48
+      ],
+      [
+       1.05,
+       0.0,
+       0.56
+      ]
+     ]
+    },
+    {
+     "type": "path",
+     "mat": "body",
+     "radius": 0.035,
+     "points": [
+      [
+       -0.55,
+       0.0,
+       0.32
+      ],
+      [
+       -0.85,
+       0.0,
+       0.34
+      ],
+      [
+       -0.85,
+       0.0,
+       0.1
+      ],
+      [
+       -0.55,
+       0.0,
+       0.12
+      ]
+     ]
+    },
+    {
+     "type": "path",
+     "mat": "smoke",
+     "radius": 0.06,
+     "taper": [
+      0.4,
+      1.0,
+      0.3
+     ],
+     "points": [
+      [
+       1.05,
+       0.0,
+       0.6
+      ],
+      [
+       0.95,
+       0.0,
+       0.9
+      ],
+      [
+       1.1,
+       0.0,
+       1.15
+      ],
+      [
+       0.9,
+       0.0,
+       1.4
+      ],
+      [
+       1.0,
+       0.0,
+       1.6
+      ]
+     ]
+    },
+    {
+     "type": "gems",
+     "mat": "ruby",
+     "z": 0.5,
+     "count": 1,
+     "size": 0.08,
+     "bezel": "body"
+    },
+    {
+     "type": "rim",
+     "mat": "body",
+     "rr": 0.04
+    },
+    {
+     "type": "foot",
+     "mat": "body",
+     "rr": 0.04,
+     "step": true
+    }
+   ]
+  },
+  {
+   "id": 48,
+   "group": "Thần thoại",
+   "name": "Ngai Vàng Thiên Giới",
+   "profiles": {
+    "urn": [
+     [
+      0.3,
+      0.0
+     ],
+     [
+      0.36,
+      0.04
+     ],
+     [
+      0.4,
+      0.12
+     ],
+     [
+      0.55,
+      0.35
+     ],
+     [
+      0.6,
+      0.55
+     ],
+     [
+      0.55,
+      0.78
+     ],
+     [
+      0.48,
+      0.88
+     ],
+     [
+      0.52,
+      0.95
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#B07A1C"
+      ],
+      [
+       1.0,
+       "#F2C94C"
+      ]
+     ],
+     "roughness": 0.2,
+     "metallic": 1.0
+    },
+    "ray": {
+     "gradient": [
+      [
+       0.0,
+       "#FFD54F"
+      ],
+      [
+       1.0,
+       "#FFF3C4"
+      ]
+     ],
+     "roughness": 0.25,
+     "metallic": 0.6
+    },
+    "disc": {
+     "color": "#FFF3C4",
+     "roughness": 0.4,
+     "emission": "#FFE8A0",
+     "emission_strength": 0.6
+    },
+    "ruby": {
+     "color": "#E8203A",
+     "roughness": 0.05,
+     "transmission": 0.4,
+     "ior": 1.45,
+     "emission": "#E8203A",
+     "emission_strength": 0.5
+    },
+    "sapph": {
+     "color": "#2F7FC1",
+     "roughness": 0.05,
+     "transmission": 0.4,
+     "ior": 1.45,
+     "emission": "#2F7FC1",
+     "emission_strength": 0.4
+    },
+    "jade": {
+     "color": "#2E7D5B",
+     "roughness": 0.15,
+     "coat": 1.0
+    },
+    "spark": {
+     "color": "#FFF3B0",
+     "emission": "#FFF3B0",
+     "emission_strength": 6
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "urn",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "stand",
+     "mat": "jade",
+     "height": 0.18,
+     "radius": 0.55,
+     "sides": 8
+    },
+    {
+     "type": "halo",
+     "mat": "ray",
+     "ring_mat": "body",
+     "disc_mat": "disc",
+     "styles": [
+      "rays",
+      "disc"
+     ],
+     "shape": "spike",
+     "radius": 1.0,
+     "length": 0.5,
+     "z": 0.75,
+     "count": 24
+    },
+    {
+     "type": "rim",
+     "mat": "body",
+     "rr": 0.05,
+     "scallops": 8,
+     "amp": 0.12,
+     "power": 4
+    },
+    {
+     "type": "gems",
+     "mat": "ruby",
+     "z": 0.5,
+     "count": 1,
+     "size": 0.1,
+     "bezel": "body"
+    },
+    {
+     "type": "gems",
+     "mat": "sapph",
+     "z": 0.42,
+     "count": 2,
+     "size": 0.065,
+     "spread": 34,
+     "bezel": "body"
+    },
+    {
+     "type": "filigree",
+     "mat": "body",
+     "z": 0.2,
+     "amp": 0.03,
+     "waves": 8,
+     "spiral": 0.04
+    },
+    {
+     "type": "embers",
+     "mat": "spark",
+     "count": 12,
+     "size": [
+      0.01,
+      0.02
+     ]
+    }
+   ]
+  },
+  {
+   "id": 49,
+   "group": "Thần thoại",
+   "name": "Thiên Thần",
+   "profiles": {
+    "urn": [
+     [
+      0.3,
+      0.0
+     ],
+     [
+      0.36,
+      0.04
+     ],
+     [
+      0.4,
+      0.12
+     ],
+     [
+      0.55,
+      0.35
+     ],
+     [
+      0.6,
+      0.55
+     ],
+     [
+      0.55,
+      0.78
+     ],
+     [
+      0.48,
+      0.88
+     ],
+     [
+      0.52,
+      0.95
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#F7EEDC"
+      ],
+      [
+       1.0,
+       "#FFFDF8"
+      ]
+     ],
+     "roughness": 0.15,
+     "coat": 1.0,
+     "subsurface": 0.15
+    },
+    "feather": {
+     "gradient": [
+      [
+       0.0,
+       "#EEF2FA"
+      ],
+      [
+       1.0,
+       "#FFFFFF"
+      ]
+     ],
+     "roughness": 0.45
+    },
+    "gold": {
+     "color": "#E8B53C",
+     "roughness": 0.22,
+     "metallic": 1.0
+    },
+    "halo": {
+     "color": "#FFE08A",
+     "metallic": 0.6,
+     "roughness": 0.2,
+     "emission": "#FFD45A",
+     "emission_strength": 2.0
+    },
+    "spark": {
+     "color": "#FFF3B0",
+     "emission": "#FFF3B0",
+     "emission_strength": 6
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "urn",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "wings",
+     "mat": "feather",
+     "shape": "feather",
+     "z": 0.72,
+     "count": 8,
+     "layers": 3,
+     "length": 1.0,
+     "spread": [
+      5,
+      85
+     ],
+     "width": 0.34,
+     "curl": 0.22
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "torus",
+       "mat": "halo",
+       "at": [
+        0.0,
+        0.0,
+        1.42
+       ],
+       "rot": [
+        14,
+        0,
+        0
+       ],
+       "scale": [
+        0.32,
+        0.32,
+        0.12
+       ]
+      }
+     ]
+    },
+    {
+     "type": "band",
+     "mat": "gold",
+     "z": 0.18,
+     "rr": 0.025
+    },
+    {
+     "type": "rim",
+     "mat": "gold",
+     "rr": 0.03
+    },
+    {
+     "type": "embers",
+     "mat": "spark",
+     "count": 10,
+     "size": [
+      0.01,
+      0.018
+     ]
+    },
+    {
+     "type": "face",
+     "z": 0.55,
+     "eye": 0.07,
+     "sleepy": true
+    }
+   ]
+  },
+  {
+   "id": 50,
+   "group": "Thần thoại",
+   "name": "Hồ Điệp Tiên",
+   "profiles": {
+    "urn": [
+     [
+      0.3,
+      0.0
+     ],
+     [
+      0.36,
+      0.04
+     ],
+     [
+      0.4,
+      0.12
+     ],
+     [
+      0.55,
+      0.35
+     ],
+     [
+      0.6,
+      0.55
+     ],
+     [
+      0.55,
+      0.78
+     ],
+     [
+      0.48,
+      0.88
+     ],
+     [
+      0.52,
+      0.95
+     ]
+    ]
+   },
+   "materials": {
+    "body": {
+     "gradient": [
+      [
+       0.0,
+       "#C7B2F2"
+      ],
+      [
+       1.0,
+       "#EFE6FF"
+      ]
+     ],
+     "roughness": 0.15,
+     "coat": 1.0
+    },
+    "wingA": {
+     "gradient": [
+      [
+       0.0,
+       "#7FC8F8"
+      ],
+      [
+       0.5,
+       "#C6B2FF"
+      ],
+      [
+       1.0,
+       "#FFB0D8"
+      ]
+     ],
+     "roughness": 0.1,
+     "transmission": 0.55,
+     "ior": 1.4,
+     "emission_from_gradient": true,
+     "emission_strength": 0.4
+    },
+    "dark": {
+     "color": "#3A2A5E",
+     "roughness": 0.3
+    },
+    "gold": {
+     "color": "#E8B53C",
+     "roughness": 0.22,
+     "metallic": 1.0
+    },
+    "spark": {
+     "color": "#FFE6FF",
+     "emission": "#FFE6FF",
+     "emission_strength": 6
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "urn",
+     "mat": "body",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "wings",
+     "mat": "wingA",
+     "shape": "membrane",
+     "z": 0.75,
+     "count": 2,
+     "layers": 1,
+     "length": 1.05,
+     "spread": [
+      25,
+      60
+     ],
+     "width": 0.85,
+     "len_min": 0.7
+    },
+    {
+     "type": "wings",
+     "mat": "wingA",
+     "shape": "petal",
+     "z": 0.45,
+     "count": 2,
+     "layers": 1,
+     "length": 0.65,
+     "spread": [
+      100,
+      125
+     ],
+     "width": 0.6,
+     "len_min": 0.8
+    },
+    {
+     "type": "path",
+     "mat": "dark",
+     "radius": 0.012,
+     "mirror": true,
+     "points": [
+      [
+       0.12,
+       0.05,
+       1.0
+      ],
+      [
+       0.2,
+       0.0,
+       1.25
+      ],
+      [
+       0.32,
+       -0.05,
+       1.38
+      ]
+     ]
+    },
+    {
+     "type": "prop",
+     "items": [
+      {
+       "shape": "sphere",
+       "mat": "gold",
+       "at": [
+        0.32,
+        -0.05,
+        1.4
+       ],
+       "scale": 0.035,
+       "mirror": true
+      }
+     ]
+    },
+    {
+     "type": "filigree",
+     "mat": "gold",
+     "z": 0.3,
+     "amp": 0.04,
+     "waves": 6,
+     "spiral": 0.04
+    },
+    {
+     "type": "rim",
+     "mat": "gold",
+     "rr": 0.03
+    },
+    {
+     "type": "embers",
+     "mat": "spark",
+     "count": 12,
+     "size": [
+      0.01,
+      0.018
+     ]
+    },
+    {
+     "type": "face",
+     "z": 0.58,
+     "eye": 0.06
+    }
+   ]
+  }
+ ]
+}

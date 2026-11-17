@@ -26,10 +26,15 @@ Giai đoạn 0 + 1, lát cắt dọc: 1 tầng mây, 4 vị trí chậu, 6 giố
 
 ## Vướng mắc cần chủ dự án xử lý
 
-1. **Kho GitHub chưa tồn tại.** Phiên Claude không được phép tạo kho mới. Cần tạo kho trống công khai `phu-ba-trong-cay` (tài khoản `dungcu10`), rồi cấp quyền cho phiên Claude.
+1. ~~Kho GitHub chưa tồn tại~~ — đã tạo `dungcu10/phu-ba-trong-cay` ngày 16/11/2026.
 2. **Không cài được thư viện** (npm bị chặn trong phiên). Cần bật quyền cài gói trong cài đặt mạng của Claude và mở phiên mới; khi đó cài PixiJS v8 và làm phần vẽ.
 3. **Kiểm thử khói trên Safari iPad** (`ACCEPTANCE_CHECKLIST.md` mục C) cần thiết bị thật — developer không có iPad.
 
+## Nhánh
+
+- `main`: bộ quy tắc + tài liệu (chưa có mã đã nghiệm thu).
+- `feat/foundation`: giai đoạn 0 đang làm — lõi mô phỏng, dữ liệu, lưu trữ, kiểm thử.
+
 ## Việc tiếp theo
 
-Xem báo cáo mới nhất trong `docs/reports/`.
+Xem mục "Những gì CHƯA làm" trong báo cáo mới nhất ở `docs/reports/`.

@@ -1,0 +1,138 @@
+[
+  {
+    "id": "base:floor.cloud-meadow",
+    "name": {
+      "vi": "Đồng Mây Ngọc"
+    },
+    "unlockLevel": 1,
+    "unlockCost": 0,
+    "slotCount": 6,
+    "startingPot": "base:pot.terracotta",
+    "sprite": "floors/cloud-meadow",
+    "trait": null,
+    "maxSlots": 10,
+    "expandCosts": [
+      120,
+      350,
+      800,
+      1800
+    ],
+    "stars": [
+      {
+        "level": 3,
+        "coins": 200,
+        "items": {
+          "base:item.cotton-daisy": 10
+        }
+      },
+      {
+        "level": 6,
+        "coins": 900,
+        "items": {
+          "base:item.cherry-tomato": 12
+        }
+      },
+      {
+        "level": 10,
+        "coins": 3500,
+        "items": {
+          "base:item.sky-carrot": 15
+        }
+      }
+    ]
+  },
+  {
+    "id": "base:floor.tea-mist",
+    "name": {
+      "vi": "Vườn Trà Sương Sớm"
+    },
+    "unlockLevel": 5,
+    "unlockCost": 2000,
+    "slotCount": 6,
+    "startingPot": "base:pot.terracotta",
+    "sprite": "floors/tea-mist",
+    "trait": {
+      "family": "herb",
+      "stat": "speed",
+      "value": 0.1
+    },
+    "tint": "#CFE8D5",
+    "maxSlots": 10,
+    "expandCosts": [
+      1000,
+      2200,
+      4000,
+      7000
+    ],
+    "stars": [
+      {
+        "level": 6,
+        "coins": 1500,
+        "items": {
+          "base:item.cloud-mint": 12
+        }
+      },
+      {
+        "level": 9,
+        "coins": 4000,
+        "items": {
+          "base:item.sky-carrot": 15
+        }
+      },
+      {
+        "level": 13,
+        "coins": 9000,
+        "items": {
+          "base:item.cloud-mint": 30
+        }
+      }
+    ]
+  },
+  {
+    "id": "base:floor.golden-terrace",
+    "name": {
+      "vi": "Ruộng Bậc Thang Hoàng Kim"
+    },
+    "unlockLevel": 10,
+    "unlockCost": 8000,
+    "slotCount": 6,
+    "startingPot": "base:pot.terracotta",
+    "sprite": "floors/golden-terrace",
+    "trait": {
+      "family": "fruit",
+      "stat": "yield",
+      "value": 0.1
+    },
+    "tint": "#F5C84C",
+    "maxSlots": 10,
+    "expandCosts": [
+      3500,
+      7000,
+      12000,
+      20000
+    ],
+    "stars": [
+      {
+        "level": 11,
+        "coins": 6000,
+        "items": {
+          "base:item.cloud-strawberry": 12
+        }
+      },
+      {
+        "level": 14,
+        "coins": 12000,
+        "items": {
+          "base:item.golden-gerbera": 10
+        }
+      },
+      {
+        "level": 18,
+        "coins": 25000,
+        "items": {
+          "base:item.cloud-strawberry": 30
+        }
+      }
+    ]
+  }
+]

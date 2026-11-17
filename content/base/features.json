@@ -1,0 +1,50 @@
+[
+  {
+    "id": "orders",
+    "name": {
+      "vi": "Đơn khinh khí cầu"
+    },
+    "level": 2,
+    "tutorial": "tut.orders"
+  },
+  {
+    "id": "journal",
+    "name": {
+      "vi": "Sổ Tay"
+    },
+    "level": 2,
+    "tutorial": "tut.journal"
+  },
+  {
+    "id": "shop",
+    "name": {
+      "vi": "Lò Gốm"
+    },
+    "level": 3,
+    "tutorial": "tut.shop"
+  },
+  {
+    "id": "neighbors",
+    "name": {
+      "vi": "Phú Bà"
+    },
+    "level": 3,
+    "tutorial": "tut.neighbors"
+  },
+  {
+    "id": "event",
+    "name": {
+      "vi": "Lễ Hội"
+    },
+    "level": 3,
+    "tutorial": "tut.event"
+  },
+  {
+    "id": "stall",
+    "name": {
+      "vi": "Sạp"
+    },
+    "level": 4,
+    "tutorial": "tut.stall"
+  }
+]

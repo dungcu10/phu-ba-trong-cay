@@ -1,0 +1,180 @@
+{
+  "startingCoins": 30,
+  "startingLevel": 1,
+  "storageCapacity": 60,
+  "levels": {
+    "xpBase": 10,
+    "xpExponent": 1.6,
+    "xpGrowth": 1.06,
+    "xpGrowthUntil": 49,
+    "xpLinearAfter": 0.02,
+    "levelUp": {
+      "coinsHours": 0.25,
+      "milestones": [
+        {
+          "every": 5,
+          "gems": 2
+        },
+        {
+          "every": 10,
+          "gems": 3,
+          "items": {
+            "base:mat.cloud-clay": 3
+          }
+        }
+      ]
+    }
+  },
+  "water": {
+    "remainingTimeReduction": 0.1
+  },
+  "market": {
+    "dailyPriceVariation": 0.05
+  },
+  "startFloor": "base:floor.cloud-meadow",
+  "potAffinityBonus": 0.2,
+  "floorStarBonus": {
+    "speed": 0.05,
+    "xp": 0.05
+  },
+  "bonusCaps": {
+    "speed": 0.75,
+    "yield": 2.0,
+    "xp": 1.5,
+    "luck": 1.0,
+    "attract": 1.0,
+    "care": 1.5
+  },
+  "harvestMaterial": {
+    "item": "base:mat.cloud-clay",
+    "chance": 0.04
+  },
+  "collectionRewards": [
+    {
+      "lines": 2,
+      "gems": 2
+    },
+    {
+      "lines": 3,
+      "gems": 3
+    },
+    {
+      "lines": 4,
+      "gems": 4
+    },
+    {
+      "lines": 5,
+      "gems": 6
+    },
+    {
+      "lines": 7,
+      "gems": 10
+    }
+  ],
+  "floorGen": {
+    "names": [
+      "Đảo Mây Hồng",
+      "Thung Lũng Sương Bạc",
+      "Vườn Trăng Lơ Lửng",
+      "Đồi Cầu Vồng",
+      "Hồ Sen Mây",
+      "Rừng Tre Gió",
+      "Cung Mây Pha Lê",
+      "Bến Mây Hoàng Hôn"
+    ],
+    "sprites": [
+      "floors/cloud-meadow",
+      "floors/tea-mist",
+      "floors/golden-terrace"
+    ],
+    "tints": [
+      "#F6C9D8",
+      "#D5DDF0",
+      "#E6D9F7",
+      "#FBE3B8",
+      "#CFEDE6",
+      "#D8EBC4",
+      "#D9F0FA",
+      "#F7D2BC"
+    ],
+    "traits": [
+      {
+        "family": "flower",
+        "stat": "yield"
+      },
+      {
+        "family": "herb",
+        "stat": "speed"
+      },
+      {
+        "family": "fruit",
+        "stat": "xp"
+      },
+      {
+        "family": "flower",
+        "stat": "luck"
+      },
+      {
+        "family": "herb",
+        "stat": "yield"
+      },
+      {
+        "family": "fruit",
+        "stat": "speed"
+      }
+    ],
+    "traitValue": {
+      "base": 0.12,
+      "perFloor": 0.01,
+      "max": 0.3
+    },
+    "firstLevel": 16,
+    "levelStep": 3,
+    "levelStepGrowth": 0,
+    "slotCount": 6,
+    "maxSlots": 10,
+    "expandFactors": [
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "startingPot": "base:pot.terracotta",
+    "stars": [
+      {
+        "levelOffset": 1,
+        "costFactor": 0.5,
+        "qty": 15,
+        "qtyPerFloor": 5
+      },
+      {
+        "levelOffset": 4,
+        "costFactor": 1,
+        "qty": 20,
+        "qtyPerFloor": 5
+      },
+      {
+        "levelOffset": 8,
+        "costFactor": 2,
+        "qty": 30,
+        "qtyPerFloor": 8
+      }
+    ],
+    "costHours": 4,
+    "costHoursPerFloor": 5
+  },
+  "storageUpgrade": {
+    "perTier": 20,
+    "firstCost": 300,
+    "costExponent": 2.2
+  },
+  "cloudRain": {
+    "minutesPerGem": 15,
+    "minGemsPerPot": 1
+  },
+  "income": {
+    "visitMinutes": 30,
+    "potsPerFloor": 8,
+    "potBonus": 0.3
+  }
+}

@@ -1,0 +1,888 @@
+{
+ "name": "Chậu đặc trưng — thử nghiệm hướng sáng tạo",
+ "out_name": "signature_l50",
+ "profiles": {
+  "mush_stem": [
+   [
+    0.36,
+    0.0
+   ],
+   [
+    0.44,
+    0.05
+   ],
+   [
+    0.47,
+    0.3
+   ],
+   [
+    0.45,
+    0.55
+   ],
+   [
+    0.42,
+    0.7
+   ],
+   [
+    0.44,
+    0.78
+   ]
+  ],
+  "cake3": [
+   [
+    0.64,
+    0.0
+   ],
+   [
+    0.66,
+    0.02
+   ],
+   [
+    0.66,
+    0.3
+   ],
+   [
+    0.52,
+    0.31
+   ],
+   [
+    0.52,
+    0.6
+   ],
+   [
+    0.4,
+    0.61
+   ],
+   [
+    0.4,
+    0.9
+   ],
+   [
+    0.42,
+    0.92
+   ]
+  ],
+  "cat_orb": [
+   [
+    0.22,
+    0.0
+   ],
+   [
+    0.4,
+    0.05
+   ],
+   [
+    0.58,
+    0.22
+   ],
+   [
+    0.63,
+    0.45
+   ],
+   [
+    0.58,
+    0.7
+   ],
+   [
+    0.45,
+    0.86
+   ],
+   [
+    0.43,
+    0.92
+   ],
+   [
+    0.46,
+    0.96
+   ]
+  ],
+  "meiping": [
+   [
+    0.22,
+    0.0
+   ],
+   [
+    0.28,
+    0.04
+   ],
+   [
+    0.34,
+    0.2
+   ],
+   [
+    0.48,
+    0.6
+   ],
+   [
+    0.52,
+    0.85
+   ],
+   [
+    0.44,
+    1.05
+   ],
+   [
+    0.26,
+    1.18
+   ],
+   [
+    0.22,
+    1.25
+   ],
+   [
+    0.27,
+    1.3
+   ]
+  ],
+  "cup": [
+   [
+    0.36,
+    0.0
+   ],
+   [
+    0.38,
+    0.03
+   ],
+   [
+    0.44,
+    0.4
+   ],
+   [
+    0.5,
+    0.8
+   ],
+   [
+    0.53,
+    1.0
+   ],
+   [
+    0.55,
+    1.05
+   ]
+  ],
+  "fox_urn": [
+   [
+    0.26,
+    0.0
+   ],
+   [
+    0.4,
+    0.05
+   ],
+   [
+    0.55,
+    0.25
+   ],
+   [
+    0.6,
+    0.45
+   ],
+   [
+    0.54,
+    0.68
+   ],
+   [
+    0.42,
+    0.84
+   ],
+   [
+    0.45,
+    0.93
+   ],
+   [
+    0.52,
+    1.0
+   ]
+  ]
+ },
+ "pots": [
+  {
+   "id": 9,
+   "category": "Normal",
+   "name": "Nấm Rừng Đỏ",
+   "materials": {
+    "stem": {
+     "gradient": [
+      [
+       0.0,
+       "#E8D8BE"
+      ],
+      [
+       1.0,
+       "#FFF6E6"
+      ]
+     ],
+     "roughness": 0.6,
+     "subsurface": 0.2
+    },
+    "cap": {
+     "gradient": [
+      [
+       0.0,
+       "#A80E1A"
+      ],
+      [
+       1.0,
+       "#E8343A"
+      ]
+     ],
+     "roughness": 0.3,
+     "coat": 0.6
+    },
+    "spot": {
+     "color": "#FFFDF5",
+     "roughness": 0.5
+    },
+    "firefly": {
+     "color": "#D8FF5A",
+     "emission": "#C8FF3A",
+     "emission_strength": 6
+    },
+    "grass": {
+     "gradient": [
+      [
+       0.0,
+       "#3E8E3A"
+      ],
+      [
+       1.0,
+       "#8ED96B"
+      ]
+     ]
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "mush_stem",
+     "mat": "stem",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "brim",
+     "mat": "cap",
+     "dots_mat": "spot",
+     "dots": 16,
+     "width": 0.5,
+     "height": 0.22
+    },
+    {
+     "type": "face",
+     "z": 0.42,
+     "eye": 0.075
+    },
+    {
+     "type": "minis",
+     "stem_mat": "stem",
+     "cap_mat": "cap",
+     "spots": [
+      [
+       -0.78,
+       1.0
+      ],
+      [
+       0.82,
+       0.75
+      ],
+      [
+       -0.5,
+       0.6
+      ]
+     ]
+    },
+    {
+     "type": "embers",
+     "mat": "firefly",
+     "count": 9,
+     "size": [
+      0.018,
+      0.03
+     ],
+     "box": [
+      1.1,
+      0.3,
+      1.6
+     ]
+    }
+   ]
+  },
+  {
+   "id": 45,
+   "category": "Event",
+   "name": "Bánh Kem Sinh Nhật",
+   "materials": {
+    "sponge": {
+     "gradient": [
+      [
+       0.0,
+       "#FFC2D2"
+      ],
+      [
+       1.0,
+       "#FFE3EA"
+      ]
+     ],
+     "roughness": 0.55,
+     "subsurface": 0.2
+    },
+    "cream": {
+     "color": "#FFFBF6",
+     "roughness": 0.35,
+     "subsurface": 0.3
+    },
+    "berry": {
+     "color": "#E8203A",
+     "roughness": 0.25,
+     "coat": 0.6
+    },
+    "wax": {
+     "gradient": [
+      [
+       0.0,
+       "#7FD8FF"
+      ],
+      [
+       1.0,
+       "#FFB0D8"
+      ]
+     ],
+     "roughness": 0.4
+    },
+    "flame": {
+     "color": "#FFB43C",
+     "emission": "#FF9A1E",
+     "emission_strength": 10
+    },
+    "sprinkle": {
+     "color": "#FFD23C",
+     "roughness": 0.4
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "cake3",
+     "mat": "sponge",
+     "scale": 1.12,
+     "smooth": false
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "drips",
+     "mat": "cream",
+     "zs": [
+      0.315,
+      0.635,
+      0.97
+     ],
+     "count": 16
+    },
+    {
+     "type": "dots",
+     "mat": "berry",
+     "count": 7,
+     "size": [
+      0.05,
+      0.07
+     ],
+     "z": [
+      0.12,
+      0.25
+     ],
+     "flat": 0.9
+    },
+    {
+     "type": "dots",
+     "mat": "sprinkle",
+     "count": 12,
+     "size": [
+      0.015,
+      0.022
+     ],
+     "z": [
+      0.38,
+      0.55
+     ],
+     "seed": 4
+    },
+    {
+     "type": "face",
+     "z": 0.16,
+     "eye": 0.065,
+     "gap": 16
+    },
+    {
+     "type": "candles",
+     "mat": "wax",
+     "flame_mat": "flame",
+     "count": 5,
+     "height": 0.34
+    }
+   ]
+  },
+  {
+   "id": 38,
+   "category": "Event",
+   "name": "Phi Hành Gia Mèo",
+   "materials": {
+    "shell": {
+     "gradient": [
+      [
+       0.0,
+       "#E8ECF4"
+      ],
+      [
+       1.0,
+       "#FFFFFF"
+      ]
+     ],
+     "roughness": 0.18,
+     "coat": 0.8
+    },
+    "pink": {
+     "color": "#FF9EC0",
+     "roughness": 0.5
+    },
+    "ring": {
+     "gradient": [
+      [
+       0.0,
+       "#7FA8FF"
+      ],
+      [
+       1.0,
+       "#C8A0FF"
+      ]
+     ],
+     "roughness": 0.2,
+     "metallic": 0.6
+    },
+    "metal": {
+     "color": "#D9DDE3",
+     "metallic": 1,
+     "roughness": 0.2
+    },
+    "ball": {
+     "color": "#FF5A8A",
+     "emission": "#FF5A8A",
+     "emission_strength": 2
+    },
+    "moon": {
+     "color": "#FFE07A",
+     "emission": "#FFD23C",
+     "emission_strength": 1.5
+    },
+    "star": {
+     "color": "#FFF3B0",
+     "emission": "#FFF3B0",
+     "emission_strength": 6
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "cat_orb",
+     "mat": "shell",
+     "scale": 1.15
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "rim",
+     "mat": "metal",
+     "rr": 0.04
+    },
+    {
+     "type": "ears",
+     "mat": "shell",
+     "inner_mat": "pink",
+     "length": 0.34,
+     "angle": 52
+    },
+    {
+     "type": "face",
+     "z": 0.48,
+     "eye": 0.08,
+     "gap": 18
+    },
+    {
+     "type": "orbit",
+     "mat": "ring",
+     "z": 0.42,
+     "scale": 1.8,
+     "moons": 3,
+     "moon_mat": "moon"
+    },
+    {
+     "type": "antenna",
+     "mat": "metal",
+     "ball_mat": "ball",
+     "height": 0.5
+    },
+    {
+     "type": "embers",
+     "mat": "star",
+     "count": 10,
+     "size": [
+      0.012,
+      0.022
+     ]
+    }
+   ]
+  },
+  {
+   "id": 7,
+   "category": "Normal",
+   "name": "Gốm Sứ Thanh Hoa",
+   "materials": {
+    "porcelain": {
+     "gradient": [
+      [
+       0.0,
+       "#EEF1F7"
+      ],
+      [
+       1.0,
+       "#FFFFFF"
+      ]
+     ],
+     "roughness": 0.12,
+     "coat": 0.9
+    },
+    "cobalt": {
+     "color": "#1E4FA8",
+     "roughness": 0.2,
+     "coat": 0.6
+    },
+    "jade": {
+     "gradient": [
+      [
+       0.0,
+       "#2E8B6A"
+      ],
+      [
+       1.0,
+       "#7FD8B0"
+      ]
+     ],
+     "roughness": 0.25,
+     "subsurface": 0.4
+    },
+    "gold": {
+     "color": "#F2B830",
+     "metallic": 1,
+     "roughness": 0.22
+    }
+   },
+   "parts": [
+    {
+     "type": "stand",
+     "mat": "jade",
+     "height": 0.24,
+     "radius": 0.5,
+     "sides": 6
+    },
+    {
+     "type": "body",
+     "profile": "meiping",
+     "mat": "porcelain",
+     "scale": 1.0
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "rim",
+     "mat": "cobalt",
+     "rr": 0.03
+    },
+    {
+     "type": "band",
+     "mat": "cobalt",
+     "z": 0.08,
+     "rr": 0.02
+    },
+    {
+     "type": "band",
+     "mat": "cobalt",
+     "z": 0.62,
+     "rr": 0.018
+    },
+    {
+     "type": "band",
+     "mat": "cobalt",
+     "z": 0.86,
+     "rr": 0.016
+    },
+    {
+     "type": "filigree",
+     "mat": "cobalt",
+     "z": 0.36,
+     "amp": 0.07,
+     "waves": 5,
+     "spiral": 0.06,
+     "depth": 0.012
+    },
+    {
+     "type": "dots",
+     "mat": "cobalt",
+     "count": 10,
+     "ring": true,
+     "z": [
+      0.74,
+      0.74
+     ],
+     "size": [
+      0.025,
+      0.03
+     ],
+     "arc": 200
+    },
+    {
+     "type": "handles",
+     "mat": "gold",
+     "z": 0.83,
+     "r": 0.1,
+     "rr": 0.022
+    }
+   ]
+  },
+  {
+   "id": 37,
+   "category": "Event",
+   "name": "Trà Sữa Trân Châu",
+   "materials": {
+    "cup": {
+     "gradient": [
+      [
+       0.0,
+       "#E8D2B0"
+      ],
+      [
+       1.0,
+       "#FFF4E4"
+      ]
+     ],
+     "roughness": 0.12,
+     "transmission": 0.35,
+     "ior": 1.4
+    },
+    "boba": {
+     "color": "#2A160C",
+     "roughness": 0.15,
+     "coat": 1
+    },
+    "lid": {
+     "color": "#F4F8FF",
+     "roughness": 0.05,
+     "transmission": 0.7,
+     "ior": 1.45
+    },
+    "straw": {
+     "color": "#FF7FA8",
+     "roughness": 0.3,
+     "coat": 0.5
+    },
+    "heart": {
+     "color": "#FF4F8A",
+     "roughness": 0.3,
+     "coat": 0.6
+    },
+    "foam": {
+     "color": "#FFF8EC",
+     "roughness": 0.6
+    }
+   },
+   "parts": [
+    {
+     "type": "body",
+     "profile": "cup",
+     "mat": "cup",
+     "scale": 1.05
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "dots",
+     "mat": "boba",
+     "count": 22,
+     "size": [
+      0.05,
+      0.065
+     ],
+     "z": [
+      0.05,
+      0.3
+     ],
+     "arc": 300,
+     "flat": 0.85
+    },
+    {
+     "type": "band",
+     "mat": "foam",
+     "z": 0.92,
+     "rr": 0.03
+    },
+    {
+     "type": "lid",
+     "mat": "lid"
+    },
+    {
+     "type": "straw",
+     "mat": "straw",
+     "height": 0.95,
+     "radius": 0.055
+    },
+    {
+     "type": "face",
+     "z": 0.58,
+     "eye": 0.07,
+     "gap": 16
+    }
+   ]
+  },
+  {
+   "id": 46,
+   "category": "Event",
+   "name": "Cáo Chín Đuôi",
+   "materials": {
+    "porcelain": {
+     "gradient": [
+      [
+       0.0,
+       "#F2F6FF"
+      ],
+      [
+       1.0,
+       "#FFFFFF"
+      ]
+     ],
+     "roughness": 0.15,
+     "coat": 0.8
+    },
+    "tail": {
+     "gradient": [
+      [
+       0.0,
+       "#FFFFFF"
+      ],
+      [
+       0.5,
+       "#F4F8FF"
+      ],
+      [
+       1.0,
+       "#9FE8FF"
+      ]
+     ],
+     "roughness": 0.7,
+     "sheen": 1,
+     "emission_from_gradient": true,
+     "emission_strength": 0.15
+    },
+    "inner": {
+     "color": "#FFB0C8",
+     "roughness": 0.5
+    },
+    "foxfire": {
+     "color": "#7FF0FF",
+     "emission": "#3AD8FF",
+     "emission_strength": 7
+    },
+    "blue": {
+     "color": "#3AA8E8",
+     "roughness": 0.25,
+     "coat": 0.6
+    },
+    "silver": {
+     "color": "#D9DDE3",
+     "metallic": 1,
+     "roughness": 0.2
+    }
+   },
+   "parts": [
+    {
+     "type": "tail",
+     "mat": "tail",
+     "shape": "petal",
+     "z": 0.55,
+     "count": 9,
+     "length": 1.15,
+     "spread": 78,
+     "width": 0.5,
+     "y": 0.3,
+     "len_curve": "mid"
+    },
+    {
+     "type": "body",
+     "profile": "fox_urn",
+     "mat": "porcelain",
+     "scale": 1.12
+    },
+    {
+     "type": "soil",
+     "mat": "soil"
+    },
+    {
+     "type": "rim",
+     "mat": "silver",
+     "rr": 0.04
+    },
+    {
+     "type": "ears",
+     "mat": "porcelain",
+     "inner_mat": "inner",
+     "length": 0.36,
+     "angle": 42,
+     "tilt": 14
+    },
+    {
+     "type": "band",
+     "mat": "blue",
+     "z": 0.2,
+     "rr": 0.02
+    },
+    {
+     "type": "filigree",
+     "mat": "blue",
+     "z": 0.2,
+     "amp": 0.03,
+     "waves": 6,
+     "spiral": 0
+    },
+    {
+     "type": "face",
+     "z": 0.5,
+     "eye": 0.075,
+     "sleepy": true
+    },
+    {
+     "type": "embers",
+     "mat": "foxfire",
+     "count": 7,
+     "size": [
+      0.04,
+      0.06
+     ],
+     "box": [
+      1.2,
+      0.4,
+      1.8
+     ]
+    }
+   ]
+  }
+ ]
+}

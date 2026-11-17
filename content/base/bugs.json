@@ -1,0 +1,9 @@
+[
+  {
+    "id": "base:bug.ladybird",
+    "name": { "vi": "Bọ Rùa Mây" },
+    "growSecondsPerBug": 1800,
+    "maxPerCycle": 4,
+    "sprite": "bugs/ladybird"
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "packId": "base",
+  "contentVersion": 1,
+  "files": {
+    "config": "config.json",
+    "floors": "floors.json",
+    "pots": "pots.json",
+    "crops": "crops.json",
+    "bugs": "bugs.json",
+    "orders": "orders.json",
+    "surprises": "surprises.json",
+    "neighbors": "neighbors.json",
+    "potsets": "potsets.json",
+    "missions": "missions.json",
+    "materials": "materials.json",
+    "events": "events.json",
+    "quests": "quests.json",
+    "features": "features.json",
+    "tutorials": "tutorials.json"
+  }
+}
