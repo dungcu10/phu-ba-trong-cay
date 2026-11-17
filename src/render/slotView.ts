@@ -40,6 +40,8 @@ export class SlotView extends Container {
   readonly back = new Container();
   /** Soil line of the current pot picture (pt, negative = up) and its offset from the default. */
   private soilY: number = SLOT_GEOM.soilY;
+  private plantFit = 1;
+  private plantSink = 0;
   private readonly sparkles: Sprite[] = [];
   private tier: 0 | 1 | 2 = 0;
   private bloomT = -1;
@@ -124,7 +126,7 @@ export class SlotView extends Container {
   /** key identifies pot type + level; look is the picture (possibly a tinted stand-in); step is
    *  the number of small evolutions past the look's milestone: gold studs around the pot's foot
    *  and a slightly larger pot (POT_SYSTEM 2: every level shows). */
-  setPot(key: string, look: { texture: Texture; tint: number; soil?: number | null }, step = 0): void {
+  setPot(key: string, look: { texture: Texture; tint: number; soil?: number | null; mouth?: number | null }, step = 0): void {
     if (key === this.potKey) return;
     const changed = this.potKey !== '';
     this.potKey = key;
@@ -134,6 +136,10 @@ export class SlotView extends Container {
     this.potGrow = 1 + Math.min(step, 4) * 0.015;
     // Directive 03 step 3: plants stand on the frame's own soil line (atlas px @2x -> pt).
     this.soilY = look.soil != null ? -look.soil / 2 : SLOT_GEOM.soilY;
+    // The plant's root ball (about 44 pt wide) sinks into the soil and is scaled down for narrow
+    // mouths (vases, cups), so plants sit IN the pot instead of perching on its rim.
+    this.plantFit = look.mouth == null ? 1 : look.mouth < 40 ? 0.82 : look.mouth < 60 ? 0.9 : 1;
+    this.plantSink = look.soil != null ? 4 : 0;
     this.drawStuds(step);
     if (changed) this.popPot();
   }
@@ -291,7 +297,7 @@ export class SlotView extends Container {
       hop = k < 0.12 ? 1 + Math.sin((k / 0.12) * Math.PI) * 0.07 : 1;
     }
     const squash = 1 + Math.sin(t * 2.1 + this.phase) * 0.01;
-    this.plant.scale.set(this.plantPop / squash, this.plantPop * squash * hop);
+    this.plant.scale.set((this.plantPop * this.plantFit) / squash, this.plantPop * this.plantFit * squash * hop);
     this.pot.scale.set(this.potPop * this.potGrow);
     this.pot.y = this.dropY;
     this.studs.y = this.dropY;
@@ -299,7 +305,7 @@ export class SlotView extends Container {
     this.back.scale.set(this.scale.x, this.scale.y);
     this.back.visible = this.visible;
     const lift = this.soilY * this.potGrow - SLOT_GEOM.soilY;
-    this.plant.y = SLOT_GEOM.soilY + lift + this.dropY;
+    this.plant.y = SLOT_GEOM.soilY + lift + this.dropY + this.plantSink;
     this.studs.scale.set(this.potPop);
     if (this.tier > 0) {
       const pulse = 0.5 + 0.5 * Math.sin(t * 2.2 + this.phase);

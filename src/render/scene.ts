@@ -192,7 +192,7 @@ export class GameView {
           fv.container.alpha = Math.min(1, t * 1.6);
           fv.container.y = this.floorY(fi) + (1 - t) * 90;
         },
-        () => (fv.animating = false),
+        () => ((fv.animating = false), this.applyScroll()),
         fv.container,
       );
     });
@@ -433,6 +433,16 @@ export class GameView {
 
   private applyScroll(): void {
     this.world.y = this.baseY + this.scroll * this.scale;
+    // Giao diện fantasy: the floor in view is sharp; floors above and below fade back, so the one
+    // peeking in under the HUD reads as "the next floor" instead of pots colliding with the HUD.
+    const fade = (index: number) => {
+      const d = Math.abs(index * WORLD.floorGap - this.scroll) / WORLD.floorGap;
+      return d < 0.45 ? 1 : Math.max(0.32, 1 - (d - 0.45) * 1.4);
+    };
+    this.floors.forEach((fv, i) => {
+      if (!fv.animating) fv.container.alpha = fade(i);
+    });
+    if (this.locked) this.locked.container.alpha = fade(this.floors.length);
   }
 
   /** Smoothly moves the camera to a floor. */
@@ -457,7 +467,7 @@ export class GameView {
         fv.container.y = y + (1 - t) * 160;
         fv.container.alpha = Math.min(1, t * 1.5);
       },
-      () => (fv.animating = false),
+      () => ((fv.animating = false), this.applyScroll()),
       fv.container,
     );
     const open = TOKENS.world.floorOpen;

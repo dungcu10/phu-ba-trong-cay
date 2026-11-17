@@ -68,6 +68,13 @@ export function potSoil(frame: string): number | null {
   return typeof f?.soil === 'number' ? f.soil : null;
 }
 
+/** Width (atlas px @2x) of the visible soil in the pot mouth, measured from the picture, if known. */
+export function potMouth(frame: string): number | null {
+  const s = sheetOf(frame);
+  const f = s ? (atlasData[s].frames[frame] as unknown as { mouth?: number }) : null;
+  return typeof f?.mouth === 'number' ? f.mouth : null;
+}
+
 /** Frames the scene itself needs, besides those named by the content pack. */
 const SCENE_FRAMES = ['trunk'];
 
@@ -137,9 +144,9 @@ export class Art {
    * not made yet, the nearest earlier look that has art; lines with no art at all use the
    * terracotta picture tinted with their rarity colour ("chờ đồ họa").
    */
-  pot(def: PotDef, level: number, rarityColor: string): { texture: Texture; tint: number; placeholder: boolean; soil: number | null } {
+  pot(def: PotDef, level: number, rarityColor: string): { texture: Texture; tint: number; placeholder: boolean; soil: number | null; mouth?: number | null } {
     const frame = potFrame(def, level, (f) => this.has(f));
-    if (frame && this.has(frame)) return { texture: this.frames[frame]!, tint: 0xffffff, placeholder: false, soil: potSoil(frame) };
+    if (frame && this.has(frame)) return { texture: this.frames[frame]!, tint: 0xffffff, placeholder: false, soil: potSoil(frame), mouth: potMouth(frame) };
     return { texture: this.get('pots/terracotta/0'), tint: lighten(rarityColor, 0.35), placeholder: true, soil: null };
   }
 
