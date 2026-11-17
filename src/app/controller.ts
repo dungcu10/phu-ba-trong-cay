@@ -16,6 +16,7 @@ import { SettingsPanel } from '../ui/settings.ts';
 import { FloorPanel, PotShopPanel, type PotShopActions } from '../ui/potPanels.ts';
 import { BirdsPanel, type BirdActions } from '../ui/birdPanels.ts';
 import { WorkshopPanel, type WorkshopActions } from '../ui/workshopPanel.ts';
+import { CastingPanel, type CastingActions } from '../ui/castingPanel.ts';
 import { rentEndsSoon } from '../systems/birds.ts';
 import { JournalPanel, LettersPanel, NeighborsPanel, OrdersPanel, StallPanel, type WorldActions } from '../ui/worldPanels.ts';
 import { FeatureTutorialPanel, QuestCenterPanel, TODAY } from '../ui/questPanels.ts';
@@ -33,7 +34,7 @@ import type { Sfx } from './sfx.ts';
 /** How often the world is advanced while the game is open (orders return, neighbours act). */
 const TICK_MS = 5000;
 
-export class Controller implements WorkshopActions, BirdActions, PanelActions, PotShopActions, WorldActions, GardenActions, SeedTrayActions, PotSystemActions {
+export class Controller implements CastingActions, WorkshopActions, BirdActions, PanelActions, PotShopActions, WorldActions, GardenActions, SeedTrayActions, PotSystemActions {
   readonly toasts = new Toasts();
   readonly hud: Hud;
   private panel: Panel | null = null;
@@ -193,6 +194,17 @@ export class Controller implements WorkshopActions, BirdActions, PanelActions, P
 
   cancelListing(listingId: number): void {
     this.run({ type: 'cancelListing', listingId });
+  }
+
+  // --- Đúc chậu (chỉ thị 10 § 3.8) -----------------------------------------------------------
+
+  /** Opens the casting window (from the Lò Gốm; chỉ thị 11: the village kiln calls this too). */
+  openCasting(): void {
+    this.open(new CastingPanel(this.session, this));
+  }
+
+  castPot(potId: string): void {
+    this.run({ type: 'castPot', potId });
   }
 
   // --- Xưởng Bọ (chỉ thị 10 § 3.5) ------------------------------------------------------------
@@ -569,6 +581,12 @@ export class Controller implements WorkshopActions, BirdActions, PanelActions, P
           this.sfx.play('bug');
           fx.floatText(`+1 ${content.items.get(e.itemId)?.name.vi ?? ''}${e.better ? ' (hiếm hơn!)' : ''}`, p.x, p.y - 20, hex(TOKENS.color.brand.peach));
         }, 700);
+        break;
+      }
+      case 'potCast': {
+        this.sfx.play('upgrade');
+        const name = content.pots.get(e.potId)?.name.vi ?? 'Chậu';
+        this.toasts.show(e.perfect ? `Đúc thành công ${name} Hoàn Mỹ ★! Chậu đã vào kho chậu.` : `Đúc thành công ${name}! Chậu đã vào kho chậu.`, 'level', 3000);
         break;
       }
       case 'bugsSold':

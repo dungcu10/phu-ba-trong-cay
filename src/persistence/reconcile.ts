@@ -111,6 +111,7 @@ function reconcilePots(state: GameState, content: ContentPack, c: Checker): void
       continue;
     }
     pot.level = c.num(`cấp ${def.name.vi} (${id})`, pot.level, { min: 1, max: def.levels.length, int: true, fallback: 1 });
+    if (pot.stars !== undefined) pot.stars = c.num(`sao ${def.name.vi} (${id})`, pot.stars, { min: 0, max: 5, int: true, fallback: 0 });
   }
 }
 

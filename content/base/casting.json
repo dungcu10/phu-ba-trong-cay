@@ -1,0 +1,20 @@
+{
+  "_note": "Chỉ thị 10 § 3.8 (M7, luồng tính năng): đúc chậu ở Lò Gốm, mở ở cấp 12. Một bậc công thức cho mỗi độ hiếm của nhóm chậu 'crafted' (pots.json của CTO, chỉ đọc); người chơi chọn chậu muốn đúc. Khoáng càng hiếm thì chậu càng hiếm. Số khởi điểm, CTO chỉnh qua mô phỏng.",
+  "unlockLevel": 12,
+  "perfectChance": 0.1,
+  "perfectStars": 1,
+  "starStatBonus": 0.04,
+  "tiers": [
+    { "rarity": "rare", "coins": 3000, "items": { "base:mat.copper-bit": 4, "base:mat.cloud-stone": 2, "base:mat.cut-gem": 1 } },
+    { "rarity": "epic", "coins": 9000, "items": { "base:mat.silver-bit": 4, "base:mat.copper-bit": 2, "base:mat.cut-gem": 2 } },
+    { "rarity": "legendary", "coins": 25000, "items": { "base:mat.gold-dust": 4, "base:mat.raw-jade": 2, "base:mat.cut-gem": 3 } }
+  ],
+  "sources": {
+    "base:mat.cloud-stone": "Đào ở Biển Mây",
+    "base:mat.copper-bit": "Đào ở Biển Mây",
+    "base:mat.silver-bit": "Đào ở Biển Mây (lớp sâu)",
+    "base:mat.gold-dust": "Đào ở Biển Mây (lớp sâu nhất)",
+    "base:mat.raw-jade": "Đào ở Biển Mây, câu cá",
+    "base:mat.cut-gem": "Máy Mài Ngọc ở Xưởng Bọ"
+  }
+}

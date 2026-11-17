@@ -21,6 +21,8 @@ export function potStat(content: ContentPack, pot: PotInstance, stat: PotStatNam
   const def = content.pots.get(pot.potId);
   let v = potLevelDef(content, pot).stats[stat] ?? 0;
   if (def) for (const s of unlockedSkills(def, pot.level)) if (s.effect.kind === 'stat' && s.effect.stat === stat) v += s.effect.value;
+  // Pot stars ("Hoàn Mỹ" from casting; pot stars later): a share more of every stat per star.
+  if (pot.stars) v *= 1 + (content.casting?.starStatBonus ?? 0) * pot.stars;
   return v;
 }
 

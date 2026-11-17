@@ -99,9 +99,11 @@ export interface PotInstance {
   level: number;
   /** Game time it was obtained (POT_SYSTEM 8), and how. */
   obtainedAt?: number;
-  source?: 'start' | 'shop' | 'floor' | 'exchange' | 'event' | 'old-save' | 'quest';
+  source?: 'start' | 'shop' | 'floor' | 'exchange' | 'event' | 'old-save' | 'quest' | 'cast';
   /** Every level reached, with the time (kept small: one entry per level, at most 50). */
   history?: Array<{ level: number; at: number }>;
+  /** Pot stars (chỉ thị 10 § 3.8 "Hoàn Mỹ", chỉ thị 12 B7.2): each star raises every stat a little. */
+  stars?: number;
 }
 
 /** Collection record per pot line: survives even if the pot itself is gone. */

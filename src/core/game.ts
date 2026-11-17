@@ -20,6 +20,7 @@ import { expandCost, expandItems, nextStar } from '../systems/floors.ts';
 import { allMissionsClaimed, ensureMissions, localDay, missionDef, recordMissions } from '../systems/missions.ts';
 import { ensureQuestPeriods, questActive, questClaims, questReward, questView, recordQuests } from '../systems/quests.ts';
 import { botGarden, helpReward, helpsLeft, helpToday, type HelpKind } from '../systems/visit.ts';
+import { castPot } from '../systems/casting.ts';
 import { buyMachineSlot, collectWorkshop, startJob, upgradeMachine, type WorkshopError, type WorkshopEvent } from '../systems/workshop.ts';
 import { advanceBirds, buyMillet, feedAll, feedBird, obtainBird, placeBird, type BirdError, type BirdEvent } from '../systems/birds.ts';
 
@@ -79,7 +80,9 @@ export type Command =
   | { type: 'upgradeMachine'; machineId: string }
   | { type: 'buyMachineSlot'; machineId: string }
   /** Chỉ thị 12 B6.3: sell spare bugs to a BOT trader at a low price. */
-  | { type: 'sellBugs'; itemId: string; qty: number };
+  | { type: 'sellBugs'; itemId: string; qty: number }
+  /** Chỉ thị 10 § 3.8: cast a crafted pot at the Lò Gốm. */
+  | { type: 'castPot'; potId: string };
 
 export type GameEvent =
   | { type: 'planted'; slot: SlotRef; cropId: string; cost: number }
@@ -97,6 +100,7 @@ export type GameEvent =
   | { type: 'orderSkipped'; slot: number }
   | Exclude<OrderWorldEvent, { type: 'levelUp' }>
   | { type: 'bugsSold'; itemId: string; qty: number; coins: number }
+  | { type: 'potCast'; potInstanceId: string; potId: string; perfect: boolean }
   | { type: 'neighborsChipped'; slot: number; help: Array<{ botId: string; itemId: string; qty: number }> }
   | { type: 'journalClaimed'; cropId: string; gems: number; harvests: number }
   | { type: 'itemListed'; listingId: number; itemId: string; qty: number; price: number }
@@ -166,6 +170,7 @@ export type ErrorCode =
   | 'market_limit'
   | BirdError
   | 'help_used'
+  | 'not_castable'
   | 'bird_busy'
   | WorkshopError;
 
@@ -263,6 +268,10 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
       return birdResult(placeBird(content, state, cmd.birdId, cmd.floor, cmd.branch), []);
     case 'buyMillet':
       return birdResult(buyMillet(content, state, cmd.qty), []);
+    case 'castPot': {
+      const r = castPot(content, state, cmd.potId, now);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'potCast', potInstanceId: r.potInstanceId, potId: cmd.potId, perfect: r.perfect }] };
+    }
     case 'sellBugs': {
       const r = sellBugs(content, state, cmd.itemId, cmd.qty);
       return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'bugsSold', itemId: cmd.itemId, qty: cmd.qty, coins: r.coins }] };

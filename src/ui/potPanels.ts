@@ -13,6 +13,7 @@ export interface PotShopActions {
   buyPot(potId: string): void;
   unlockFloor(floorId: string): void;
   openCollection(): void;
+  openCasting(): void;
 }
 
 const coin = (size = 18) => svgIcon('coin', size + 4);
@@ -61,7 +62,7 @@ export class PotShopPanel extends Panel {
     clear(this.body);
     const { content, state } = this.session;
     const owned = (id: string) => Object.values(state.pots).filter((p) => p.potId === id).length;
-    this.body.append(h('div', { class: 'book-head' }, h('span', { class: 'lead' }, `Chậu mua về nằm trong kho chậu (${state.potStock.length}). Chạm vào chậu trống trên tầng để đặt.`), h('button', { class: 'candy small gold', 'data-test': 'open-collection', onclick: () => this.actions.openCollection() }, 'Bộ Sưu Tập Chậu')));
+    this.body.append(h('div', { class: 'book-head' }, h('span', { class: 'lead' }, `Chậu mua về nằm trong kho chậu (${state.potStock.length}). Chạm vào chậu trống trên tầng để đặt.`), h('button', { class: 'candy small gold', 'data-test': 'open-collection', onclick: () => this.actions.openCollection() }, 'Bộ Sưu Tập Chậu'), state.player.level >= (content.casting?.unlockLevel ?? Infinity) && h('button', { class: 'candy small gold', 'data-test': 'open-casting', onclick: () => this.actions.openCasting() }, 'Đúc Chậu')));
     // Directive 04: shop groups. Pots without a theme are the classic kiln line ("Cơ bản").
     const sold = content.potList.filter(isSoldInShop);
     const themes = [...new Set(sold.map((d) => d.theme ?? BASIC_THEME))];
