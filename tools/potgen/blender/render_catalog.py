@@ -159,7 +159,7 @@ def main():
     if a["style"].endswith("studio.json"):
         a["style"] = os.path.join(HERE, "..", "style", "studio_cream.json")
     CATALOG = json.load(open(a["line"], encoding="utf-8"))
-    style = json.load(open(a["style"], encoding="utf-8"))
+    style = P.load_style(a["style"])
     if a["samples"]:
         style["samples"] = int(a["samples"])
     ids = parse_ids(a["levels"]) if a["levels"] != "milestones" else list(range(1, 51))

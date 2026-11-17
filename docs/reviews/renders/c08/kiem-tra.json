@@ -1,0 +1,18 @@
+{
+ "seams": {
+  "seam_mean_jump": 9.57,
+  "inner_mean_jump": 9.82,
+  "alpha_rows_equal": false
+ },
+ "pedestals": {
+  "3": {
+   "min_margin_px": 59.1
+  },
+  "6": {
+   "min_margin_px": 60.2
+  },
+  "10": {
+   "min_margin_px": 97.6
+  }
+ }
+}
