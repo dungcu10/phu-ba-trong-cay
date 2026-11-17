@@ -147,7 +147,7 @@ export class Art {
   pot(def: PotDef, level: number, rarityColor: string): { texture: Texture; tint: number; placeholder: boolean; soil: number | null; mouth?: number | null } {
     const frame = potFrame(def, level, (f) => this.has(f));
     if (frame && this.has(frame)) return { texture: this.frames[frame]!, tint: 0xffffff, placeholder: false, soil: potSoil(frame), mouth: potMouth(frame) };
-    return { texture: this.get('pots/terracotta/0'), tint: lighten(rarityColor, 0.35), placeholder: true, soil: null };
+    return { texture: this.get('pots/terracotta/0'), tint: lighten(rarityColor, 0.35), placeholder: true, soil: potSoil('pots/terracotta/0'), mouth: potMouth('pots/terracotta/0') };
   }
 
   /** Floor picture; floors without their own art reuse the first floor's, tinted ("chờ đồ họa"). */

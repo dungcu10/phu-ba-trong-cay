@@ -886,7 +886,9 @@
    "anchor": {
     "x": 0.5,
     "y": 1.0
-   }
+   },
+   "soil": 119.0,
+   "mouth": 54
   },
   "pots/terracotta/1": {
    "frame": {
@@ -910,7 +912,9 @@
    "anchor": {
     "x": 0.5,
     "y": 1.0
-   }
+   },
+   "soil": 125.5,
+   "mouth": 62
   },
   "pots/terracotta/2": {
    "frame": {
@@ -934,7 +938,9 @@
    "anchor": {
     "x": 0.5,
     "y": 1.0
-   }
+   },
+   "soil": 139.5,
+   "mouth": 43
   },
   "pots/porcelain/0": {
    "frame": {
@@ -958,7 +964,9 @@
    "anchor": {
     "x": 0.5,
     "y": 1.0
-   }
+   },
+   "soil": 102.5,
+   "mouth": 114
   },
   "pots/porcelain/1": {
    "frame": {
@@ -982,7 +990,9 @@
    "anchor": {
     "x": 0.5,
     "y": 1.0
-   }
+   },
+   "soil": 104.0,
+   "mouth": 115
   },
   "pots/porcelain/2": {
    "frame": {
@@ -1006,7 +1016,9 @@
    "anchor": {
     "x": 0.5,
     "y": 1.0
-   }
+   },
+   "soil": 101.5,
+   "mouth": 116
   },
   "pots/jade-lotus/0": {
    "frame": {
@@ -1030,7 +1042,9 @@
    "anchor": {
     "x": 0.5,
     "y": 1.0
-   }
+   },
+   "soil": 102.0,
+   "mouth": 114
   },
   "pots/jade-lotus/1": {
    "frame": {
@@ -1054,7 +1068,9 @@
    "anchor": {
     "x": 0.5,
     "y": 1.0
-   }
+   },
+   "soil": 101.5,
+   "mouth": 115
   },
   "pots/jade-lotus/2": {
    "frame": {
@@ -1102,7 +1118,9 @@
    "anchor": {
     "x": 0.5,
     "y": 1.0
-   }
+   },
+   "soil": 155.0,
+   "mouth": 110
   },
   "pots/bronze-tripod/1": {
    "frame": {
@@ -1126,7 +1144,9 @@
    "anchor": {
     "x": 0.5,
     "y": 1.0
-   }
+   },
+   "soil": 156.0,
+   "mouth": 109
   },
   "pots/bronze-tripod/2": {
    "frame": {
@@ -1150,7 +1170,9 @@
    "anchor": {
     "x": 0.5,
     "y": 1.0
-   }
+   },
+   "soil": 159.0,
+   "mouth": 99
   },
   "bugs/ladybird/0": {
    "frame": {

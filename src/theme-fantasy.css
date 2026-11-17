@@ -130,8 +130,8 @@ body, button, input { font-family: 'Be Vietnam Pro', system-ui, sans-serif; }
 
 /* event button on the right */
 .hud-right .side-btn { width: 64px; height: 64px; border-radius: 50%; background: rgba(40, 34, 80, 0.82); border: 1px solid var(--fx-line); box-shadow: var(--fx-shadow); color: var(--fx-gold); }
-.hud-right .side-btn .side-label { position: absolute; bottom: -20px; white-space: nowrap; color: #F6EFE2; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8); }
-.ev-timer { position: absolute; bottom: -36px; left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: 11px; font-weight: 700; color: var(--fx-gold); text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8); }
+.hud-right .side-btn .side-label { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); white-space: nowrap; color: #F6EFE2; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8); }
+.ev-timer { position: absolute; top: auto; bottom: -38px; left: 50%; transform: translateX(-50%); padding: 0; border-radius: 0; background: none; white-space: nowrap; font-size: 11px; font-weight: 700; color: var(--fx-gold); text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8); }
 
 /* ---------- HUD: bottom dock (Rương · Gieo hạt · Lò Gốm) ---------- */
 .hud-arc {
