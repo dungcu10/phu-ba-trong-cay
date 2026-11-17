@@ -132,10 +132,10 @@
   {
     "id": "base:mat.cut-gem",
     "name": {
-      "vi": "Đá Quý Mài"
+      "vi": "Ngọc Mây"
     },
     "desc": {
-      "vi": "Thành phẩm của Máy Mài Ngọc, dùng đúc chậu hiếm."
+      "vi": "Mài từ khoáng sản ở Máy Mài Ngọc. Dùng để đúc chậu."
     },
     "icon": "art:icon/cloud-gem"
   },

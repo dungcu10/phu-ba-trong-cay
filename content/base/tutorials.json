@@ -60,6 +60,16 @@
     "target": "open-birds"
   },
   {
+    "id": "tut.workshop",
+    "title": {
+      "vi": "Mở khóa: Xưởng Bọ"
+    },
+    "text": {
+      "vi": "Bọ thợ chế biến nông sản thành hàng giá cao: 3 hoa thành Hoa Sấy, quả thành Hũ Mứt. Máy chạy cả khi bạn tắt game."
+    },
+    "target": "open-workshop"
+  },
+  {
     "id": "tut.stall",
     "title": {
       "vi": "Mở khóa: Sạp Phú Bà"

@@ -17,6 +17,7 @@
     "quests": "quests.json",
     "features": "features.json",
     "tutorials": "tutorials.json",
-    "birds": "birds.json"
+    "birds": "birds.json",
+    "workshop": "workshop.json"
   }
 }

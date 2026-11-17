@@ -48,6 +48,9 @@ export const ERROR_TEXT: Record<ErrorCode, string> = {
   wrong_food: 'Chim này không ăn món đó. Cho ăn Hạt Kê Mây hoặc nông sản đúng họ cây.',
   already_full: 'Chim đang no rồi.',
   bad_perch: 'Cành này chưa mở.',
+  queue_full: 'Hàng chờ của máy đã đầy. Đợi máy làm xong, hoặc mua thêm khe.',
+  unknown_machine: 'Không thấy máy này.',
+  unknown_recipe: 'Không thấy công thức này.',
 };
 
 const numberFormat = new Intl.NumberFormat('vi-VN');
@@ -65,6 +68,15 @@ export function formatDuration(ms: number): string {
   if (h > 0) return m > 0 ? `${h} giờ ${m} phút` : `${h} giờ`;
   if (m > 0) return `${m} phút ${String(s).padStart(2, '0')} giây`;
   return `${s} giây`;
+}
+
+/** Whole minutes for planned durations: "5 phút", "2 giờ", "1 giờ 30 phút". */
+export function formatMinutes(ms: number): string {
+  const total = Math.max(1, Math.round(ms / 60_000));
+  const h = Math.floor(total / 60);
+  const m = total % 60;
+  if (h === 0) return `${m} phút`;
+  return m > 0 ? `${h} giờ ${m} phút` : `${h} giờ`;
 }
 
 /** Short form for labels under pots: "45s", "4:05", "1:20:00". */

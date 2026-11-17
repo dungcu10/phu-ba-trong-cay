@@ -1,0 +1,161 @@
+{
+  "machines": [
+    {
+      "id": "base:machine.dryer",
+      "name": {
+        "vi": "Máy Sấy Hoa"
+      },
+      "worker": "base:bug.ladybird",
+      "unlockLevel": 6,
+      "recipes": [
+        {
+          "id": "base:recipe.dryer.cotton-daisy",
+          "inputs": {
+            "base:item.cotton-daisy": 3
+          },
+          "output": "base:good.dried-flowers.cotton-daisy",
+          "minutes": 5
+        },
+        {
+          "id": "base:recipe.dryer.golden-gerbera",
+          "inputs": {
+            "base:item.golden-gerbera": 3
+          },
+          "output": "base:good.dried-flowers.golden-gerbera",
+          "minutes": 120
+        }
+      ]
+    },
+    {
+      "id": "base:machine.jam-pot",
+      "name": {
+        "vi": "Nồi Mứt"
+      },
+      "worker": "base:bug.jade-beetle",
+      "unlockLevel": 7,
+      "recipes": [
+        {
+          "id": "base:recipe.jam-pot.cloud-strawberry",
+          "inputs": {
+            "base:item.cloud-strawberry": 4
+          },
+          "output": "base:good.jam.cloud-strawberry",
+          "minutes": 45
+        }
+      ]
+    },
+    {
+      "id": "base:machine.juicer",
+      "name": {
+        "vi": "Máy Ép Nước"
+      },
+      "worker": "base:bug.dew-hopper",
+      "unlockLevel": 10,
+      "recipes": [
+        {
+          "id": "base:recipe.juicer.sky-carrot",
+          "inputs": {
+            "base:item.sky-carrot": 3,
+            "base:item.cherry-tomato": 1
+          },
+          "output": "base:good.juice.sky-carrot",
+          "minutes": 30
+        }
+      ]
+    },
+    {
+      "id": "base:machine.gem-grinder",
+      "name": {
+        "vi": "Máy Mài Ngọc"
+      },
+      "worker": "base:bug.gold-scarab",
+      "unlockLevel": 16,
+      "recipes": [
+        {
+          "id": "base:recipe.gem-grinder.stone",
+          "inputs": {
+            "base:mat.cloud-stone": 3
+          },
+          "output": "base:mat.cut-gem",
+          "minutes": 60
+        },
+        {
+          "id": "base:recipe.gem-grinder.jade",
+          "inputs": {
+            "base:mat.raw-jade": 1,
+            "base:mat.cloud-stone": 1
+          },
+          "output": "base:mat.cut-gem",
+          "minutes": 40
+        }
+      ]
+    }
+  ],
+  "goods": [
+    {
+      "id": "base:good.dried-flowers.cotton-daisy",
+      "name": {
+        "vi": "Hoa Sấy Cúc Bông Gòn"
+      },
+      "icon": "art:icon/dried-flowers",
+      "sellPrice": 4,
+      "machine": "base:machine.dryer"
+    },
+    {
+      "id": "base:good.dried-flowers.golden-gerbera",
+      "name": {
+        "vi": "Hoa Sấy Đồng Tiền Vàng"
+      },
+      "icon": "art:icon/dried-flowers",
+      "sellPrice": 315,
+      "machine": "base:machine.dryer"
+    },
+    {
+      "id": "base:good.jam.cloud-strawberry",
+      "name": {
+        "vi": "Hũ Mứt Dâu Tây Mây"
+      },
+      "icon": "art:icon/jam",
+      "sellPrice": 192,
+      "machine": "base:machine.jam-pot"
+    },
+    {
+      "id": "base:good.juice.sky-carrot",
+      "name": {
+        "vi": "Chai Nước Ép Cà Rốt Mây"
+      },
+      "icon": "art:icon/juice",
+      "sellPrice": 64,
+      "machine": "base:machine.juicer"
+    }
+  ],
+  "rules": {
+    "slotsStart": 2,
+    "slotsMax": 4,
+    "slotCost": [
+      1500,
+      5000
+    ],
+    "stars": [
+      {
+        "coins": 1000,
+        "bugs": 5
+      },
+      {
+        "coins": 3000,
+        "bugs": 12
+      },
+      {
+        "coins": 8000,
+        "bugs": 25
+      },
+      {
+        "coins": 20000,
+        "bugs": 50
+      }
+    ],
+    "starSpeed": 0.05,
+    "starOrderBonus": 0.05,
+    "valueCap": 1.6
+  }
+}

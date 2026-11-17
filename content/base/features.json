@@ -54,5 +54,13 @@
     },
     "level": 3,
     "tutorial": "tut.birds"
+  },
+  {
+    "id": "workshop",
+    "name": {
+      "vi": "Xưởng Bọ"
+    },
+    "level": 6,
+    "tutorial": "tut.workshop"
   }
 ]
