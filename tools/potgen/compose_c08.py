@@ -14,7 +14,8 @@ import sys
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-OUT08 = os.path.join(ROOT, "tools", "potgen", "out", "c08")
+OUT08 = os.path.join(ROOT, "tools", "potgen", "out", os.environ.get("C08_DIR", "c08v2"))
+POTS08 = os.path.join(ROOT, "tools", "potgen", "out", "c08")
 FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 WORLD = {"floorCenterX": 650, "floorGap": 430, "potRowSpan": 940, "potScale10": 0.9, "potScaleStep": 0.085,
          "potScaleMax": 1.25, "trunkX": 40}
@@ -167,9 +168,9 @@ def draw_trunk_column(canvas, x_axis, y_top, y_bottom, floor_bands, pcs, front=T
 
 # ------------------------------------------------------------------ floors
 
-def floor_assets(theme="meadow"):
-    fl = load(os.path.join(OUT08, "floor", f"floor_{theme}.png"))
-    fm = json.load(open(os.path.join(OUT08, "floor", f"floor_{theme}.json")))
+def floor_assets(theme="meadow", variant="a"):
+    fl = load(os.path.join(OUT08, "floor", f"floor_{theme}_{variant}.png"))
+    fm = json.load(open(os.path.join(OUT08, "floor", f"floor_{theme}_{variant}.json")))
     pm = json.load(open(os.path.join(OUT08, "floor", f"pedestals_{theme}.json")))
     peds = [(load(os.path.join(OUT08, "floor", p["name"] + ".png")), p) for p in pm["pedestals"]]
     return fl, fm, peds
@@ -205,11 +206,10 @@ def label(canvas, text, xy, size=40, fill=(255, 255, 255, 255), stroke=(22, 26, 
     d = ImageDraw.Draw(canvas)
     d.text(xy, text, font=font(size), fill=fill, stroke_width=max(2, size // 12), stroke_fill=stroke)
 
-
 # ------------------------------------------------------------------ outputs
 
 def scene_ipad(out, pots, pcs):
-    fl, fm, peds = floor_assets()
+    variants = [floor_assets(variant=v) for v in "ab"]
     # same fit as Scene.layout(): the view band (world x -100..1180) fills 97 % of the width
     k = 2 * (SCREEN[0] / 2 * 0.97) / (1180 - (-100))
     canvas = sky()
@@ -222,6 +222,7 @@ def scene_ipad(out, pots, pcs):
     draw_trunk_column(canvas, trunk_x, -50, SCREEN[1] + 50, bands, pcs)
     keys = ["pots/sig/01/50", "pots/sig/11/50", "pots/sig/16/50", "pots/sig/38/50", "pots/sig/41/50", "pots/sig/48/50"]
     for i, (fx, fy) in enumerate(floors):
+        fl, fm, peds = variants[i % 2]
         draw_floor(canvas, (fx, fy), k, (8, 6)[i], fl, fm, peds, pots, keys[i:] + keys[:i], seed=i)
     print('k', round(k, 3), 'trunk_x', round(trunk_x))
     cat = load(os.path.join(OUT08, "pet", "cloud_cat_idle.png"))
@@ -294,7 +295,7 @@ def pots_two_presets(out):
         y = 120 + row * 500
         label(canvas, {"studio_cream": "studio_cream (mặc định chậu, đã duyệt)", "world": "world (preset mới của chỉ thị 08)"}[st], (60, y - 90), 40)
         for i, pid in enumerate(keys):
-            im = load(os.path.join(OUT08, f"pots_{st}", "signature_all", "master", f"pot_{pid:02d}.png"))
+            im = load(os.path.join(POTS08, f"pots_{st}", "signature_all", "master", f"pot_{pid:02d}.png"))
             im = im.crop(im.getbbox())
             im = scaled(im, 380 / im.height)
             x = 80 + i * 380 + (380 - im.width) // 2

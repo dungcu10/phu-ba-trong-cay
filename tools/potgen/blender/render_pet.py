@@ -146,6 +146,16 @@ def build_cat(phase=0.0, happy=False):
     fur = fur_mat()
     cl = cloud_mat()
     eye = mat("eye", "#24151C", rough=0.08, coat=1.0)
+    nt_i = W.NT("iris")
+    tci = nt_i.n("ShaderNodeTexCoord")
+    sepi = nt_i.n("ShaderNodeSeparateXYZ")
+    nt_i.l(tci.outputs["Object"], sepi.inputs[0])
+    fi = nt_i.n("ShaderNodeMapRange")
+    fi.inputs["From Min"].default_value = -1.0
+    fi.inputs["From Max"].default_value = 1.0
+    nt_i.l(sepi.outputs["Z"], fi.inputs["Value"])
+    iris = nt_i.done(nt_i.principled(nt_i.ramp(fi.outputs[0], [(0.0, "#4FD8C4"), (0.45, "#3A6FB8"), (1.0, "#2A1E50")]),
+                                     rough=0.05, coat=1.0, emit="#3FD8C0", emit_str=0.15))
     hi = mat("hi", "#FFFFFF", emit="#FFFFFF", emit_str=2.0)
     blush = mat("blush", "#FF8FAB", rough=0.7)
     pink = mat("pink", "#FFA7BE", rough=0.5, sss=0.3, sss_radius=(1, 0.4, 0.4))
@@ -169,6 +179,9 @@ def build_cat(phase=0.0, happy=False):
             own(ellipsoid("pawpad", (0.335, -0.31, 0.51), (0.045, 0.02, 0.045), pink))
         else:
             own(ellipsoid("paw", (0.12 * s, -0.22, 0.06), (0.085, 0.1, 0.07), fur))
+            for t_ in (-1, 1):
+                own(tube("toe", [(0.12 * s + 0.025 * t_, -0.318, 0.1), (0.12 * s + 0.028 * t_, -0.322, 0.06)], 0.005,
+                         mat("toe", "#D9B9C4", rough=0.7), sides=6))
         own(ellipsoid("foot", (0.26 * s, -0.08, 0.07), (0.1, 0.13, 0.075), fur))
     # cloud bib on the chest: billows of mixed size, not a ring of beads
     rnd = random.Random(3)
@@ -184,8 +197,22 @@ def build_cat(phase=0.0, happy=False):
     hz = 0.83 + 0.02 * br
     tilt = math.radians(8 if happy else 0)
     head = own(ellipsoid("head", (0, -0.02, hz), (0.45, 0.39, 0.35), fur, rot=(0, tilt, 0)))
-    for s in (-1, 1):  # cheek fluff
+    for s in (-1, 1):  # cheek fluff with pointed tufts
         own(ellipsoid("cheek", (0.36 * s, -0.12, hz - 0.13), (0.13, 0.12, 0.1), fur))
+        for j, (dz, ln) in enumerate(((-0.06, 0.07), (-0.11, 0.06))):
+            t = own(ellipsoid("tuft", (0.43 * s, -0.12, hz - 0.13 + dz), (ln, 0.04, 0.035), fur, rot=(0, s * (0.35 + 0.35 * j), 0)))
+            for v in t.data.vertices:
+                if v.co.x * s > 0.2:
+                    k = (v.co.x * s - 0.2) / 0.8
+                    v.co.y *= 1 - 0.8 * k
+                    v.co.z *= 1 - 0.8 * k
+    for j, dx in enumerate((-0.05, 0.0, 0.05)):  # little forehead tuft
+        t = own(ellipsoid("ftuft", (dx, -0.06, hz + 0.33), (0.035, 0.03, 0.07), fur, rot=(0.25, dx * 4, 0)))
+        for v in t.data.vertices:
+            if v.co.z > 0.2:
+                k = (v.co.z - 0.2) / 0.8
+                v.co.x *= 1 - 0.8 * k
+                v.co.y *= 1 - 0.8 * k
     # ears: rounded cones with pink inside
     for s in (-1, 1):
         lift = 0.04 if happy else 0.0
@@ -207,9 +234,20 @@ def build_cat(phase=0.0, happy=False):
             pts = [(0.15 * s + 0.07 * math.cos(math.pi * k / 10), fy - 0.01, hz - 0.01 + 0.055 * math.sin(math.pi * k / 10)) for k in range(11)]
             own(tube("eyeclosed", pts, 0.017, eye))
         else:
-            own(ellipsoid("eye", (0.16 * s, fy + 0.02, hz - 0.03), (0.098, 0.05, 0.122), eye))
-            own(ellipsoid("hi1", (0.16 * s - 0.018, fy - 0.03, hz + 0.02), (0.032, 0.012, 0.034), hi))
-            own(ellipsoid("hi2", (0.16 * s + 0.03, fy - 0.03, hz - 0.075), (0.016, 0.008, 0.017), hi))
+            ex_, ez_ = 0.16 * s, hz - 0.03
+            own(ellipsoid("eye", (ex_, fy + 0.02, ez_), (0.098, 0.05, 0.122), eye))
+            # iris: deep violet-teal at the top, glowing lighter at the bottom, with a dark pupil
+            own(ellipsoid("iris", (ex_, fy - 0.022, ez_ - 0.008), (0.078, 0.012, 0.1), iris))
+            own(ellipsoid("pupil", (ex_, fy - 0.03, ez_ + 0.004), (0.044, 0.008, 0.06), eye))
+            own(ellipsoid("hi1", (ex_ - 0.022, fy - 0.04, ez_ + 0.045), (0.032, 0.008, 0.036), hi))
+            own(ellipsoid("hi2", (ex_ + 0.03, fy - 0.04, ez_ - 0.05), (0.016, 0.006, 0.017), hi))
+            own(ellipsoid("hi3", (ex_ - 0.035, fy - 0.038, ez_ - 0.06), (0.008, 0.004, 0.008), hi))
+            # upper lid line with a flick of lashes at the outer corner
+            pts = [(ex_ + 0.102 * math.cos(math.pi * k / 12), fy + 0.0, ez_ + 0.125 * math.sin(math.pi * k / 12) - 0.005) for k in range(13)]
+            own(tube("lid", pts, 0.0085, eye))
+            ox = ex_ + s * 0.1
+            for j in range(2):
+                own(tube("lash", [(ox, fy + 0.01, ez_ + 0.03 - 0.03 * j), (ox + s * 0.035, fy + 0.012, ez_ + 0.055 - 0.03 * j)], 0.006, eye))
         own(ellipsoid("blush", (0.25 * s, fy + 0.045, hz - 0.13), (0.065, 0.018, 0.035), blush, rot=(0, 0, -0.5 * s)))
     own(ellipsoid("nose", (0, fy - 0.022, hz - 0.085), (0.026, 0.015, 0.018), pink))
     mw = 1.25 if happy else 1.0
@@ -229,18 +267,18 @@ def build_cat(phase=0.0, happy=False):
     sway = math.radians(5) * br + (math.radians(12) if happy else 0)
     tb = []
     rnd = random.Random(9)
-    for k in range(16):
-        f = k / 15
-        a = 0.2 + f * 3.4
-        x = 0.30 + 0.20 * f + 0.13 * math.sin(a)
-        z = 0.15 + 0.62 * f + 0.07 * math.cos(a)
+    for k in range(10):  # a curl of distinct billows, biggest in the middle, a small one at the tip
+        f = k / 9
+        a = 0.2 + f * 3.6
+        x = 0.30 + 0.22 * f + 0.14 * math.sin(a)
+        z = 0.15 + 0.66 * f + 0.08 * math.cos(a)
         x, z = x * math.cos(sway) - (z - 0.15) * math.sin(sway), 0.15 + x * math.sin(sway) + (z - 0.15) * math.cos(sway)
-        r = 0.07 + 0.07 * math.sin(math.pi * min(1.0, f * 1.15)) + rnd.uniform(-0.012, 0.02)
+        r = 0.065 + 0.075 * math.sin(math.pi * min(1.0, f * 1.1)) + rnd.uniform(-0.008, 0.012)
         tb.append((x, 0.2 - 0.05 * f, z, r))
-        for q in range(2):  # billows on the outside of the tail
+        if k % 2 == 0 and 0 < k < 9:
             a_ = rnd.uniform(0, 2 * math.pi)
-            tb.append((x + math.cos(a_) * r * 0.8, 0.2 - 0.05 * f - r * 0.3, z + math.sin(a_) * r * 0.8, r * rnd.uniform(0.45, 0.62)))
-    own(puffs("tail", tb, cl, voxel=0.012, smooth=8))
+            tb.append((x + math.cos(a_) * r * 0.85, 0.17 - 0.05 * f, z + math.sin(a_) * r * 0.85, r * 0.6))
+    own(puffs("tail", tb, cl, voxel=0.01, smooth=6))
     root.rotation_euler = (0, 0, -TURN)
     return root
 

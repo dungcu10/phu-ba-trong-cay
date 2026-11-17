@@ -1,8 +1,8 @@
 {
  "seams": {
-  "seam_mean_jump": 9.57,
-  "inner_mean_jump": 9.82,
-  "alpha_rows_equal": false
+  "seam_mean_jump": 9.71,
+  "inner_mean_jump": 9.54,
+  "alpha_rows_equal": true
  },
  "pedestals": {
   "3": {

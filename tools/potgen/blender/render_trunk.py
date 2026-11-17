@@ -61,6 +61,14 @@ def bark_material(H, shift):
     nt.l(moss_amt, mr.inputs["Value"])
     moss_col = nt.ramp(fine.outputs["Fac"], [(0.3, "#3F7F4C"), (0.55, "#62A657"), (0.75, "#9AD46E")])
     color = nt.mix(mr.outputs[0], col, moss_col)
+    # lichen: small pale rosettes scattered on the plates (periodic like the rest of the bark)
+    lic = nt.n("ShaderNodeTexVoronoi", Scale=7.0, Randomness=1.0)
+    lic.voronoi_dimensions = "4D"
+    nt.l(vec, lic.inputs["Vector"])
+    nt.l(w, lic.inputs["W"])
+    lich = nt.math("MULTIPLY", nt.math("LESS_THAN", lic.outputs["Distance"], 0.13),
+                   nt.math("GREATER_THAN", patch.outputs["Fac"], 0.52))
+    color = nt.mix(nt.math("MULTIPLY", lich, 0.85), color, "#C9D8B0")
     b = nt.principled(color, rough=0.8, sheen=0.3)
     bump = nt.n("ShaderNodeBump", Strength=0.7, Distance=0.05)
     hgt = nt.math("ADD", nt.math("MULTIPLY", crack.outputs[0], 0.8), nt.math("ADD", nt.math("MULTIPLY", grain.outputs["Fac"], 0.5),
@@ -171,71 +179,52 @@ def render_tile(out, st):
 
 # ----------------------------------------------------------------------------- pieces
 
-def leaf_outline(kind):
-    """Polar outline r(t) for t in [0, 2pi], blade from x=0 (stalk) to x=1 (tip); returns xy points."""
-    pts = []
-    N = 72
-    for k in range(N):
-        t = 2 * math.pi * k / N
-        s = math.sin(t)
-        x = (1 - math.cos(t)) / 2  # 0..1 along the blade, both edges
-        side = 1 if t < math.pi else -1
-        if kind == "ovate":
-            w = 0.36 * math.sin(math.pi * x ** 0.8) * (1 - 0.15 * x)
-        elif kind == "lance":
-            w = 0.18 * math.sin(math.pi * x ** 0.65)
-        elif kind == "heart":
-            w = 0.42 * math.sin(math.pi * x ** 0.9) + 0.10 * math.exp(-((x - 0.08) / 0.07) ** 2)
-        elif kind == "ivy":
-            w = 0.30 * math.sin(math.pi * x ** 0.85) + 0.17 * math.exp(-((x - 0.42) / 0.12) ** 2)
-            w *= 1 + 0.12 * math.cos(x * 9)
-        elif kind == "round":
-            w = 0.44 * math.sin(math.pi * x)
-        elif kind == "serrate":
-            w = 0.27 * math.sin(math.pi * x ** 0.75) * (1 + 0.07 * max(0, math.sin(x * 46)))
-        else:
-            raise ValueError(kind)
-        pts.append((x, side * w * abs(s) ** 0.05))
-    return pts
+def leaf_width(kind, x):
+    """Half-width of the blade at x in [0, 1] (0 = stalk end, 1 = tip)."""
+    if kind == "ovate":
+        return 0.36 * math.sin(math.pi * x ** 0.8) * (1 - 0.15 * x)
+    if kind == "lance":
+        return 0.18 * math.sin(math.pi * x ** 0.65)
+    if kind == "heart":
+        return 0.40 * math.sin(math.pi * (0.06 + 0.94 * x) ** 0.9) + 0.06 * math.exp(-((x - 0.05) / 0.06) ** 2)
+    if kind == "ivy":
+        w = 0.30 * math.sin(math.pi * x ** 0.85) + 0.16 * math.exp(-((x - 0.4) / 0.11) ** 2)
+        return w * (1 + 0.1 * math.cos(x * 9))
+    if kind == "round":
+        return 0.44 * math.sin(math.pi * x)
+    if kind == "serrate":
+        return 0.27 * math.sin(math.pi * x ** 0.75) * (1 + 0.08 * max(0.0, math.sin(x * 46)))
+    raise ValueError(kind)
 
 
 def leaf_mesh(name, kind, L, mat, curl=0.18, fold=0.12, twist=0.0, seed=0):
+    """Blade as a grid along its length (no pinched centre vertex): cupped along the midrib, tip curled,
+    edges slightly wavy. UV: u along the blade, v across (0.5 = midrib)."""
     rnd = random.Random(seed)
-    outline = leaf_outline(kind)
-    rings = 9
-    verts, faces, uvs = [(0.0, 0.0, 0.0)], [], [(0.0, 0.5)]
-    cx = 0.5
-    for r in range(1, rings + 1):
-        f = r / rings
-        for (x, y) in outline:
-            px = cx + (x - cx) * f if r < rings else x
-            py = y * f
-            # keep the stalk end pinned at x = 0
-            px = px * (1 - (1 - f) * 0.0)
-            z = curl * px ** 2 - fold * abs(py) * 1.6 + 0.02 * math.sin(px * 7 + seed)
-            yy = py * (1 + twist * px)
-            verts.append((px * L, yy * L, z * L))
-            uvs.append((px, 0.5 + py))
-    N = len(outline)
-    for k in range(N):
-        faces.append((0, 1 + k, 1 + (k + 1) % N))
-    for r in range(rings - 1):
-        for k in range(N):
-            a = 1 + r * N + k
-            b = 1 + r * N + (k + 1) % N
-            faces.append((a, b, b + N, a + N))
-    # centre ring vertex sits at blade middle; move it to keep a nice midrib
-    verts[0] = (cx * L, 0.0, (curl * cx ** 2) * L)
+    NU, NV = 36, 14
+    verts, faces, uvs = [], [], []
+    wav = rnd.uniform(0.0, 6.0)
+    for i in range(NU + 1):
+        x = i / NU
+        w = max(leaf_width(kind, x), 0.004)
+        for j in range(NV + 1):
+            v = j / NV * 2 - 1  # -1..1 across
+            y = v * w
+            z = curl * x ** 2 - fold * abs(y) * 1.6 + 0.012 * math.sin(x * 9 + wav) * abs(v) ** 2
+            y *= 1 + twist * x
+            verts.append((x * L, y * L, z * L))
+            uvs.append((x, 0.5 + v * 0.5))
+    for i in range(NU):
+        for j in range(NV):
+            a = i * (NV + 1) + j
+            faces.append((a, a + 1, a + NV + 2, a + NV + 1))
     ob = W.mesh_from(name, verts, faces, mat=mat)
     uv = ob.data.uv_layers.new(name="UVMap")
     for poly in ob.data.polygons:
         for li in poly.loop_indices:
             uv.data[li].uv = uvs[ob.data.loops[li].vertex_index]
     sol = ob.modifiers.new("t", "SOLIDIFY")
-    sol.thickness = 0.012 * L
-    sub = ob.modifiers.new("s", "SUBSURF")
-    sub.levels = sub.render_levels = 1
-    # stalk
+    sol.thickness = 0.01 * L
     st = W.mesh_from(name + "_stalk", *stalk(L), mat=mat)
     return [ob, st]
 
@@ -259,32 +248,45 @@ def stalk(L):
 
 
 def leaf_material(name, base, tip, vein):
+    """Glossy blade: colour shifts base->tip and between leaves, midrib plus curved secondary veins that
+    fade towards the edge, lighter rim, a little light passing through."""
     nt = W.NT(name)
     uvn = nt.n("ShaderNodeUVMap")
     sep = nt.n("ShaderNodeSeparateXYZ")
     nt.l(uvn.outputs[0], sep.inputs[0])
     u, v = sep.outputs[0], sep.outputs[1]
-    dv = nt.math("ABSOLUTE", nt.math("SUBTRACT", v, 0.5))
-    col = nt.ramp(u, [(0.0, base), (1.0, tip)])
-    # pinnate veins: lines along u - k*|v|, plus the midrib
-    vl = nt.math("FRACT", nt.math("MULTIPLY", nt.math("SUBTRACT", u, nt.math("MULTIPLY", dv, 1.1)), 5.0))
-    vline = nt.math("MULTIPLY", nt.math("LESS_THAN", nt.math("ABSOLUTE", nt.math("SUBTRACT", vl, 0.5)), 0.05), nt.math("LESS_THAN", dv, 0.3))
-    mid = nt.math("LESS_THAN", dv, 0.012)
-    veins = nt.math("MAXIMUM", vline, mid)
-    col = nt.mix(nt.math("MULTIPLY", veins, 0.55), col, vein)
-    # lighter rim on the edge of the blade
-    edge = nt.math("GREATER_THAN", dv, 0.0)
-    b = nt.principled(col, rough=0.38, spec=0.45, coat=0.15)
+    dv = nt.math("ABSOLUTE", nt.math("SUBTRACT", v, 0.5))  # 0 at midrib, 0.5 at edge
+    tc = nt.n("ShaderNodeTexCoord")
+    mott = nt.n("ShaderNodeTexNoise", Scale=9.0, Detail=4.0)
+    nt.l(tc.outputs["Object"], mott.inputs["Vector"])
+    col = nt.ramp(nt.math("ADD", u, nt.math("MULTIPLY", nt.math("SUBTRACT", mott.outputs["Fac"], 0.5), 0.5)), [(0.0, base), (1.0, tip)])
+    # secondary veins curve towards the tip: lines of u - 0.9*dv^0.8
+    curve = nt.math("SUBTRACT", u, nt.math("MULTIPLY", nt.math("POWER", dv, 0.8), 0.9))
+    vl = nt.math("FRACT", nt.math("MULTIPLY", curve, 6.0))
+    sec = nt.math("LESS_THAN", nt.math("ABSOLUTE", nt.math("SUBTRACT", vl, 0.5)), 0.035)
+    fade = nt.n("ShaderNodeMapRange")
+    fade.inputs["From Min"].default_value = 0.42
+    fade.inputs["From Max"].default_value = 0.15
+    nt.l(dv, fade.inputs["Value"])
+    sec = nt.math("MULTIPLY", sec, fade.outputs[0])
+    mid = nt.math("LESS_THAN", dv, nt.math("MULTIPLY", nt.math("SUBTRACT", 1.0, u), 0.02))
+    veins = nt.math("MAXIMUM", nt.math("MULTIPLY", sec, 0.7), mid)
+    col = nt.mix(nt.math("MULTIPLY", veins, 0.6), col, vein)
+    rim = nt.n("ShaderNodeMapRange")
+    rim.inputs["From Min"].default_value = 0.44
+    rim.inputs["From Max"].default_value = 0.5
+    nt.l(dv, rim.inputs["Value"])
+    col = nt.mix(nt.math("MULTIPLY", rim.outputs[0], 0.5), col, tip)
+    b = nt.principled(col, rough=0.32, spec=0.5, coat=0.25)
     tr = nt.n("ShaderNodeBsdfTranslucent")
-    nt.l(nt.mix(0.4, col, "#E8F57A"), tr.inputs["Color"])
+    nt.l(nt.mix(0.45, col, "#E8F57A"), tr.inputs["Color"])
     mixs = nt.n("ShaderNodeMixShader")
-    mixs.inputs[0].default_value = 0.22
+    mixs.inputs[0].default_value = 0.25
     nt.l(b.outputs[0], mixs.inputs[1])
     nt.l(tr.outputs[0], mixs.inputs[2])
-    bump = nt.n("ShaderNodeBump", Strength=0.25, Distance=0.01)
-    nt.l(veins, bump.inputs["Height"])
+    bump = nt.n("ShaderNodeBump", Strength=0.3, Distance=0.008)
+    nt.l(nt.math("SUBTRACT", 0.0, veins), bump.inputs["Height"])
     nt.l(bump.outputs["Normal"], b.inputs["Normal"])
-    del edge
     nt.l(mixs.outputs[0], nt.out.inputs["Surface"])
     return nt.m
 
@@ -345,7 +347,18 @@ def build_piece(kind, idx, side):
         root.rotation_euler.y = math.radians(rnd.uniform(-12, 12))
         return
     if kind == "branch":
-        wood = simple_mat("twig", "#7A5038", rough=0.75)
+        nt = W.NT("twig")
+        tc = nt.n("ShaderNodeTexCoord")
+        nz = nt.n("ShaderNodeTexNoise", Scale=40.0, Detail=6.0)
+        nz_vec = nt.n("ShaderNodeMapping")
+        nz_vec.inputs["Scale"].default_value = (1.0, 6.0, 6.0)
+        nt.l(tc.outputs["Object"], nz_vec.inputs["Vector"])
+        nt.l(nz_vec.outputs[0], nz.inputs["Vector"])
+        tw = nt.principled(nt.ramp(nz.outputs["Fac"], [(0.3, "#5A3A34"), (0.55, "#8A5A3E"), (0.75, "#A87650")]), rough=0.75)
+        bump = nt.n("ShaderNodeBump", Strength=0.5)
+        nt.l(nz.outputs["Fac"], bump.inputs["Height"])
+        nt.l(bump.outputs["Normal"], tw.inputs["Normal"])
+        wood = nt.done(tw)
         length = (0.75, 0.95, 1.15)[idx]
         pts = []
         for k in range(14):
@@ -355,7 +368,7 @@ def build_piece(kind, idx, side):
             pts.append((x, -0.05 * f, z))
         tube_path("twig", pts, 0.045, wood)
         mats = [leaf_material(f"bl{i}", *LEAVES[i][2:]) for i in range(3)]
-        nleaf = (3, 4, 5)[idx]
+        nleaf = (4, 6, 7)[idx]
         for i in range(nleaf):
             f = 0.35 + 0.65 * i / max(1, nleaf - 1)
             px, py, pz = pts[int(f * 13)]

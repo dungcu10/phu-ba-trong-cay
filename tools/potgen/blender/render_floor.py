@@ -96,20 +96,125 @@ def earth(outline, thick, mats):
 
 
 def soil_mat(th):
+    """Side of the earth slab: a turf band under the lawn, then soil strata with small pebbles."""
     nt = W.NT("soil")
     tc = nt.n("ShaderNodeTexCoord")
+    sep = nt.n("ShaderNodeSeparateXYZ")
+    nt.l(tc.outputs["Object"], sep.inputs[0])
     n = nt.n("ShaderNodeTexNoise", Scale=3.0, Detail=6.0)
     nt.l(tc.outputs["Object"], n.inputs["Vector"])
-    col = nt.ramp(n.outputs["Fac"], [(0.35, th["soil"][0]), (0.65, th["soil"][1])])
+    wave = nt.n("ShaderNodeTexWave", Scale=1.2, Distortion=6.0, Detail=3.0)
+    wave.wave_type = "BANDS"
+    wave.bands_direction = "Z"
+    nt.l(tc.outputs["Object"], wave.inputs["Vector"])
+    col = nt.ramp(nt.math("ADD", nt.math("MULTIPLY", n.outputs["Fac"], 0.6), nt.math("MULTIPLY", wave.outputs["Fac"], 0.4)),
+                  [(0.3, "#5A3A3A"), (0.5, th["soil"][0]), (0.7, th["soil"][1]), (0.85, "#A27458")])
+    vor = nt.n("ShaderNodeTexVoronoi", Scale=6.0, Randomness=1.0)
+    nt.l(tc.outputs["Object"], vor.inputs["Vector"])
+    peb = nt.math("LESS_THAN", vor.outputs["Distance"], 0.1)
+    col = nt.mix(nt.math("MULTIPLY", peb, 0.6), col, "#B79A8A")
+    turf = nt.n("ShaderNodeMapRange")
+    turf.inputs["From Min"].default_value = -0.11
+    turf.inputs["From Max"].default_value = -0.05
+    nt.l(nt.math("ADD", sep.outputs["Z"], nt.math("MULTIPLY", n.outputs["Fac"], 0.06)), turf.inputs["Value"])
+    col = nt.mix(turf.outputs[0], col, "#3F7F45")
     geo = nt.n("ShaderNodeNewGeometry")
-    sep = nt.n("ShaderNodeSeparateXYZ")
-    nt.l(geo.outputs["Normal"], sep.inputs[0])
-    top = nt.math("GREATER_THAN", sep.outputs["Z"], 0.6)
-    col = nt.mix(top, col, th["grass"][1])
-    return nt.done(nt.principled(col, rough=0.9))
+    nz = nt.n("ShaderNodeSeparateXYZ")
+    nt.l(geo.outputs["Normal"], nz.inputs[0])
+    col = nt.mix(nt.math("GREATER_THAN", nz.outputs["Z"], 0.6), col, th["grass"][1])
+    b = nt.principled(col, rough=0.9)
+    bump = nt.n("ShaderNodeBump", Strength=0.5)
+    nt.l(nt.math("ADD", n.outputs["Fac"], nt.math("MULTIPLY", peb, 0.4)), bump.inputs["Height"])
+    nt.l(bump.outputs["Normal"], b.inputs["Normal"])
+    return nt.done(b)
+
+
+def rim_overhang(outline, th, seed):
+    """Lawn spilling over the edge of the slab: blades rooted at the rim leaning out and down."""
+    rnd = random.Random(seed + 5)
+    pal = [P.hex_rgb(c) for c in th["grass"]]
+    n = len(outline)
+    cx = sum(p[0] for p in outline) / n
+    verts, faces, cols = [], [], []
+    for k in range(n):
+        x, y = outline[k]
+        x2, y2 = outline[(k + 1) % n]
+        tx, ty = x2 - x, y2 - y
+        L = math.hypot(tx, ty) or 1
+        nx, ny = ty / L, -tx / L  # outward normal (outline is counter-clockwise)
+        for j in range(int(L / 0.012)):
+            f = j * 0.012 / L
+            px, py = x + tx * f - nx * 0.03, y + ty * f - ny * 0.03
+            h = rnd.uniform(0.06, 0.16)
+            out = rnd.uniform(0.08, 0.2)
+            droop = rnd.uniform(-0.2, -0.02)
+            w = 0.018
+            b = len(verts)
+            verts += [(px - tx / L * w, py - ty / L * w, 0.0), (px + tx / L * w, py + ty / L * w, 0.0),
+                      (px + nx * out * 0.6, py + ny * out * 0.6, h * 0.5 + droop * 0.3), (px + nx * out, py + ny * out, h * 0.45 + droop)]
+            faces += [(b, b + 1, b + 2), (b, b + 2, b + 3)]
+            t = rnd.randrange(3)
+            cols += [pal[t], pal[t], pal[t + 1], pal[min(3, t + 1)]]
+    del cx
+    W.mesh_from("rim_grass", verts, faces, mat=grass_mat(), smooth=False, colors=cols)
+
+
+def roots(outline, seed):
+    """A few fine roots hanging from the underside of the slab, mostly hidden by the cloud."""
+    rnd = random.Random(seed + 9)
+    m = W.NT("root")
+    m = m.done(m.principled("#7A5038", rough=0.8))
+    for k in range(0, len(outline), 9):
+        x, y = outline[k]
+        if y > 0 or rnd.random() < 0.45:
+            continue
+        L = rnd.uniform(0.15, 0.45)
+        pts = []
+        for j in range(10):
+            f = j / 9
+            pts.append((x + 0.06 * math.sin(f * 5 + k), y * 0.98 - 0.02 * f, -0.22 - L * f))
+        verts, faces = [], []
+        for i, pnt in enumerate(pts):
+            r = 0.018 * (1 - 0.8 * i / 9)
+            for a in range(6):
+                ang = 2 * math.pi * a / 6
+                verts.append((pnt[0] + r * math.cos(ang), pnt[1] + r * math.sin(ang), pnt[2]))
+        for i in range(9):
+            for a in range(6):
+                faces.append((i * 6 + a, i * 6 + (a + 1) % 6, (i + 1) * 6 + (a + 1) % 6, (i + 1) * 6 + a))
+        W.mesh_from("root", verts, faces, mat=m)
+
+
+def mushrooms(spots, seed):
+    """Tiny cream mushrooms with pink spots: a point of interest, a few per floor."""
+    rnd = random.Random(seed + 13)
+    cap = W.NT("mcap")
+    tc = cap.n("ShaderNodeTexCoord")
+    vor = cap.n("ShaderNodeTexVoronoi", Scale=22.0)
+    cap.l(tc.outputs["Object"], vor.inputs["Vector"])
+    col = cap.mix(cap.math("LESS_THAN", vor.outputs["Distance"], 0.22), "#F7A3A8", "#FFF3E2")
+    capm = cap.done(cap.principled(col, rough=0.45, sss=0.3, sss_radius=(1, 0.6, 0.5), coat=0.3))
+    stem = W.NT("mstem")
+    stemm = stem.done(stem.principled("#FFF6EA", rough=0.6, sss=0.3, sss_radius=(1, 0.8, 0.6)))
+    for (x, y) in spots:
+        for i in range(rnd.randint(2, 3)):
+            s = rnd.uniform(0.6, 1.0)
+            px, py = x + rnd.uniform(-0.12, 0.12), y + rnd.uniform(-0.08, 0.08)
+            bpy.ops.mesh.primitive_cylinder_add(radius=0.025 * s, depth=0.12 * s, location=(px, py, 0.06 * s), vertices=12)
+            bpy.context.active_object.data.materials.append(stemm)
+            bpy.ops.mesh.primitive_uv_sphere_add(radius=0.07 * s, location=(px, py, 0.12 * s), segments=24, ring_count=12)
+            c = bpy.context.active_object
+            c.scale = (1.0, 1.0, 0.6)
+            for v in c.data.vertices:
+                if v.co.z < 0:
+                    v.co.z *= 0.25
+            for poly in c.data.polygons:
+                poly.use_smooth = True
+            c.data.materials.append(capm)
 
 
 def cloud_mat():
+    """Soft but defined: shallow subsurface, lavender in the creases between billows, fine fluff bump."""
     nt = W.NT("cloud")
     tc = nt.n("ShaderNodeTexCoord")
     sep = nt.n("ShaderNodeSeparateXYZ")
@@ -121,8 +226,28 @@ def cloud_mat():
     f.inputs["From Min"].default_value = -3.4
     f.inputs["From Max"].default_value = 0.3
     nt.l(zz, f.inputs["Value"])
-    col = nt.ramp(f.outputs[0], [(0.0, "#B9A8D6"), (0.30, "#D7B9D8"), (0.55, "#F6C9B9"), (0.82, "#FFE3D2"), (1.0, "#FFF6E8")])
-    b = nt.principled(col, rough=0.95, sss=1.0, sss_radius=(1.0, 0.75, 0.6), sss_scale=0.35, sheen=0.6, spec=0.2)
+    col = nt.ramp(f.outputs[0], [(0.0, "#B4A2D4"), (0.30, "#D6B6D8"), (0.55, "#F7C7B6"), (0.82, "#FFE2D0"), (1.0, "#FFF7EA")])
+    ao = nt.n("ShaderNodeAmbientOcclusion", Distance=0.6)
+    ao.samples = 8
+    crease = nt.n("ShaderNodeMapRange")
+    crease.inputs["From Min"].default_value = 0.35
+    crease.inputs["From Max"].default_value = 0.95
+    nt.l(ao.outputs["AO"], crease.inputs["Value"])
+    col = nt.mix(nt.math("MULTIPLY", nt.math("SUBTRACT", 1.0, crease.outputs[0]), 1.0), col, "#9C84C6")
+    # each billow: sunlit ivory on top, cool lavender underneath (reads as a cloud, not a bubble)
+    geo = nt.n("ShaderNodeNewGeometry")
+    nz = nt.n("ShaderNodeSeparateXYZ")
+    nt.l(geo.outputs["Normal"], nz.inputs[0])
+    up = nt.math("POWER", nt.math("MAXIMUM", nz.outputs["Z"], 0.0), 1.5)
+    dn = nt.math("MAXIMUM", nt.math("SUBTRACT", 0.0, nz.outputs["Z"]), 0.0)
+    col = nt.mix(nt.math("MULTIPLY", up, 0.65), col, "#FFF6EA")
+    col = nt.mix(nt.math("MULTIPLY", dn, 0.6), col, "#A893D2")
+    b = nt.principled(col, rough=0.72, sss=0.6, sss_radius=(1.0, 0.8, 0.7), sss_scale=0.05, sheen=0.9, spec=0.35)
+    fluff = nt.n("ShaderNodeTexNoise", Scale=14.0, Detail=6.0, Roughness=0.6)
+    nt.l(tc.outputs["Object"], fluff.inputs["Vector"])
+    bump = nt.n("ShaderNodeBump", Strength=0.18, Distance=0.02)
+    nt.l(fluff.outputs["Fac"], bump.inputs["Height"])
+    nt.l(bump.outputs["Normal"], b.inputs["Normal"])
     return nt.done(b)
 
 
@@ -133,9 +258,34 @@ def holdout_mat():
     return nt.m
 
 
-def sphere_cloud(name, balls, voxel=0.05, mat=None):
+def connected(balls):
+    """Keep only puffs joined (overlapping) to the largest group, so no puff floats on its own."""
+    n = len(balls)
+    parent = list(range(n))
+
+    def find(i):
+        while parent[i] != i:
+            parent[i] = parent[parent[i]]
+            i = parent[i]
+        return i
+    for i in range(n):
+        xi, yi, zi, ri = balls[i][:4]
+        for j in range(i + 1, n):
+            xj, yj, zj, rj = balls[j][:4]
+            if (xi - xj) ** 2 + (yi - yj) ** 2 + (zi - zj) ** 2 < (0.8 * (ri + rj)) ** 2:
+                parent[find(i)] = find(j)
+    groups = {}
+    for i in range(n):
+        groups.setdefault(find(i), []).append(i)
+    keep = max(groups.values(), key=lambda g: sum(balls[i][3] ** 3 for i in g))
+    print(f"[world08] puffs {n} -> {len(keep)} connected", flush=True)
+    return [balls[i] for i in sorted(keep)]
+
+
+def sphere_cloud(name, balls, voxel=0.04, mat=None, keep_all=False):
     """Many spheres of many sizes -> one voxel remesh -> smoothing: billowy, no seams between puffs."""
     import bmesh as _bm
+    balls = balls if keep_all else connected(balls)
     bm = _bm.new()
     for (x, y, z, r, sx, sy, sz) in balls:
         m = _bm.ops.create_icosphere(bm, subdivisions=3, radius=r)
@@ -152,7 +302,7 @@ def sphere_cloud(name, balls, voxel=0.05, mat=None):
     rm.mode = "VOXEL"
     rm.voxel_size = voxel
     sm = ob.modifiers.new("smooth", "CORRECTIVE_SMOOTH")
-    sm.factor, sm.iterations, sm.use_only_smooth = 0.8, 12, True
+    sm.factor, sm.iterations, sm.use_only_smooth = 0.75, 8, True
     sm.smooth_type = "LENGTH_WEIGHTED"
     for poly in me.polygons:
         poly.use_smooth = True
@@ -183,7 +333,7 @@ def cloud_balls(outline, seed):
     balls = [(x, y, z, r, 1, 1, 1) for x, y, z, r in big]
     # medium puffs on the surface of the masses, mostly front, sides and below
     for (bx, by, bz, br) in big:
-        for k in range(rnd.randint(5, 8)):
+        for k in range(rnd.randint(8, 12)):
             th = rnd.uniform(-math.pi * 0.95, -math.pi * 0.05) if rnd.random() < 0.8 else rnd.uniform(0, math.pi)
             ph = rnd.uniform(-1.1, 0.35)
             d = Vector((math.cos(th) * math.cos(ph), math.sin(th) * math.cos(ph) * 1.0, math.sin(ph))).normalized()
@@ -191,15 +341,16 @@ def cloud_balls(outline, seed):
             c = Vector((bx, by, bz)) + d * (br * 0.82)
             if c.z + r > -0.12:
                 continue  # would poke through the lawn; dropping it keeps every puff attached
-            balls.append((c.x, c.y, c.z, r, 1, 1, 1))
-            # small curls on the front of the medium puffs
-            if d.y < -0.2:
-                for j in range(rnd.randint(1, 3)):
+            st_ = rnd.uniform(1.05, 1.35)
+            balls.append((c.x, c.y, c.z, r, st_, 1.0, 1.0 / st_ ** 0.6))
+            # small curls on every visible side of the medium puffs (front, sides, underneath)
+            if d.y < 0.3:
+                for j in range(rnd.randint(2, 4)):
                     d2 = (d + Vector((rnd.uniform(-0.6, 0.6), rnd.uniform(-0.3, 0.1), rnd.uniform(-0.5, 0.5)))).normalized()
                     r2 = r * rnd.uniform(0.32, 0.5)
                     c2 = c + d2 * r * 0.85
                     if c2.z + r2 < -0.12:
-                        balls.append((c2.x, c2.y, c2.z, r2, 1, 1, 1))
+                        balls.append((c2.x, c2.y, c2.z, r2, 1.2, 1.0, 0.85))
     # rim: the earth sinks into the cloud. Irregular clusters (not a bead string): a run of puffs of
     # mixed size, then a gap, each cluster bridged down into the body by a bigger puff below it.
     k = 0
@@ -242,8 +393,8 @@ def cloud_balls(outline, seed):
 def collar_balls(cx, cy, seed):
     rnd = random.Random(seed)
     out = []
-    for k in range(13):
-        a = 2 * math.pi * k / 13 + rnd.uniform(-0.15, 0.15)
+    for k in range(17):
+        a = 2 * math.pi * k / 17 + rnd.uniform(-0.12, 0.12)
         r = rnd.uniform(0.33, 0.6)
         rad = TRUNK_R + 0.25 + r * 0.4
         out.append((cx + rad * math.cos(a), cy + rad * math.sin(a) * 0.9, rnd.uniform(-0.15, 0.08), r, 1, 1, 1))
@@ -387,11 +538,15 @@ def build_floor(theme, seed=8):
     cm = cloud_mat()
     sphere_cloud("cloud", cloud_balls(outline, seed), mat=cm)
     ty = 0.35
-    sphere_cloud("collar", collar_balls(TRUNK_X, ty, seed), voxel=0.04, mat=cm)
+    sphere_cloud("collar", collar_balls(TRUNK_X, ty, seed), voxel=0.035, mat=cm, keep_all=True)
     avoid = [(TRUNK_X, ty, TRUNK_R + 0.1)]
     grass(outline, th, seed, avoid=avoid)
+    rim_overhang(outline, th, seed)
+    roots(outline, seed)
     flowers(outline, th, seed, avoid=avoid)
-    rm = rock_mat(th["rock"])
+    xs_ = [p[0] for p in outline]
+    mushrooms([(min(xs_) + 2.3, -1.5), (max(xs_) - 2.2, -1.6)], seed)
+    rm = stone_mat("#ADA4A6", "#7D7480", 5)
     rnd = random.Random(seed + 1)
     for i, (x, y, s) in enumerate([(x0 + 1.0, -1.6, 0.42), (x0 + 1.5, -2.05, 0.24), (x1 - 1.1, -1.4, 0.5),
                                    (x1 - 0.7, -1.9, 0.26), (-1.7, -2.15, 0.2), (3.9, 2.0, 0.34), (-6.3, 1.9, 0.28)]):
@@ -411,18 +566,19 @@ def build_floor(theme, seed=8):
     return outline, ty
 
 
-def render_floor(out, st, theme):
+def render_floor(out, st, theme, seed=8, suffix=""):
     W.scene(st)
     W.directional_lights(st)
-    outline, ty = build_floor(theme)
+    outline, ty = build_floor(theme, seed)
     xs = [p[0] for p in outline]
     left, right = min(xs) - 0.9, max(xs) + 0.9
     top, bottom = 2.0, -5.6  # screen extent in units around z (approx; tilt is small)
     cxw = (left + right) / 2
     wpx = int(round((right - left) * PX2_PER_UNIT / 8)) * 8
     hpx = int(round((top - bottom) * PX2_PER_UNIT / 8)) * 8
-    W.camera_frame((cxw, 0.0, (top + bottom) / 2), wpx, hpx, px_per_unit=PX2_PER_UNIT)
-    path = os.path.join(out, f"floor_{theme}.png")
+    pv = float(os.environ.get("C08_PREVIEW", "1"))
+    W.camera_frame((cxw, 0.0, (top + bottom) / 2), int(wpx * pv), int(hpx * pv), px_per_unit=PX2_PER_UNIT * pv)
+    path = os.path.join(out, f"floor_{theme}{suffix}.png")
     W.render(path)
     origin = W.pixel_of((0.0, 0.0, 0.0))
     trunk_top = W.pixel_of((TRUNK_X, ty, 0.0))
@@ -432,8 +588,8 @@ def render_floor(out, st, theme):
         slots[n] = [round(W.pixel_of((-SLOT_SPAN / 2 + i * sp, 0.0, 0.0))[0], 1) for i in range(n)]
     # plateau x-extent along the slot line y = 0, to check pedestals stay on the grass
     on_line = [x for x in [left + k * 0.02 for k in range(int((right - left) / 0.02))] if inside((x, 0.0), outline)]
-    W.save_json(os.path.join(out, f"floor_{theme}.json"), {
-        "theme": theme, "w": wpx, "h": hpx, "scale": 2, "px_per_unit": PX2_PER_UNIT,
+    W.save_json(os.path.join(out, f"floor_{theme}{suffix}.json"), {
+        "theme": theme, "seed": seed, "w": wpx, "h": hpx, "scale": 2, "px_per_unit": PX2_PER_UNIT,
         "origin_px": [round(origin[0], 1), round(origin[1], 1)],
         "note": "origin_px = điểm (0,0) của tầng trong code (tâm hàng chậu, chân chậu). Ảnh @2x.",
         "trunk": {"x_px": round(trunk_top[0], 1), "y_px": round(trunk_top[1], 1), "x_pt_from_origin": -610},
@@ -444,18 +600,92 @@ def render_floor(out, st, theme):
 
 # ----------------------------------------------------------------------------- pedestals
 
+def stone_mat(base, dark, seed):
+    """Worn stone: cool-warm grey, dark crevices from AO, speckles, soft fuzzy moss on edges and low side."""
+    nt = W.NT(f"stone{seed}")
+    tc = nt.n("ShaderNodeTexCoord")
+    n = nt.n("ShaderNodeTexNoise", Scale=5.0, Detail=8.0, Roughness=0.6)
+    nt.l(tc.outputs["Object"], n.inputs["Vector"])
+    big = nt.n("ShaderNodeTexNoise", Scale=1.6, Detail=2.0)
+    nt.l(tc.outputs["Object"], big.inputs["Vector"])
+    col = nt.ramp(nt.math("ADD", nt.math("MULTIPLY", n.outputs["Fac"], 0.6), nt.math("MULTIPLY", big.outputs["Fac"], 0.4)),
+                  [(0.3, dark), (0.55, base), (0.75, "#E3D8CC")])
+    vor = nt.n("ShaderNodeTexVoronoi", Scale=40.0)
+    nt.l(tc.outputs["Object"], vor.inputs["Vector"])
+    col = nt.mix(nt.math("MULTIPLY", nt.math("LESS_THAN", vor.outputs["Distance"], 0.12), 0.35), col, "#6E6260")
+    crk = nt.n("ShaderNodeTexVoronoi", Scale=3.2, Randomness=1.0)
+    crk.feature = "DISTANCE_TO_EDGE"
+    nt.l(tc.outputs["Object"], crk.inputs["Vector"])
+    crack = nt.math("LESS_THAN", nt.math("ADD", crk.outputs["Distance"], nt.math("MULTIPLY", n.outputs["Fac"], 0.03)), 0.035)
+    col = nt.mix(nt.math("MULTIPLY", crack, 0.5), col, "#5E4A58")
+    ao = nt.n("ShaderNodeAmbientOcclusion", Distance=0.12)
+    ao.samples = 8
+    col = nt.mix(nt.math("MULTIPLY", nt.math("SUBTRACT", 1.0, ao.outputs["AO"]), 0.9), col, "#5E4A58")
+    # moss: where the surface is near the rim (normal turning sideways) and low, with a soft noisy border
+    geo = nt.n("ShaderNodeNewGeometry")
+    nz = nt.n("ShaderNodeSeparateXYZ")
+    nt.l(geo.outputs["Normal"], nz.inputs[0])
+    edge = nt.math("SUBTRACT", 1.0, nt.math("ABSOLUTE", nz.outputs["Z"]))
+    mn = nt.n("ShaderNodeTexNoise", Scale=7.0, Detail=10.0, Roughness=0.7)
+    nt.l(tc.outputs["Object"], mn.inputs["Vector"])
+    mamt = nt.math("ADD", nt.math("MULTIPLY", edge, 0.55), nt.math("MULTIPLY", mn.outputs["Fac"], 1.0))
+    mr = nt.n("ShaderNodeMapRange")
+    mr.inputs["From Min"].default_value = 0.88
+    mr.inputs["From Max"].default_value = 1.02
+    nt.l(mamt, mr.inputs["Value"])
+    moss = nt.ramp(mn.outputs["Fac"], [(0.35, "#3F7A44"), (0.6, "#6FA85E"), (0.8, "#A9D37A")])
+    col = nt.mix(mr.outputs[0], col, moss)
+    b = nt.principled(col, rough=0.85, sheen=0.2)
+    bump = nt.n("ShaderNodeBump", Strength=0.6, Distance=0.02)
+    nt.l(nt.math("SUBTRACT", nt.math("ADD", n.outputs["Fac"], nt.math("MULTIPLY", mr.outputs[0], 0.6)), nt.math("MULTIPLY", crack, 0.5)), bump.inputs["Height"])
+    nt.l(bump.outputs["Normal"], b.inputs["Normal"])
+    return nt.done(b)
+
+
+def slab(name, at, radius, height, mat, seed, squash=0.84):
+    """Stone slab with steep worn sides and a flat-ish top."""
+    bpy.ops.mesh.primitive_cylinder_add(radius=radius, depth=height, location=at, vertices=48)
+    o = bpy.context.active_object
+    o.name = name
+    o.scale = (1.0, squash, 1.0)
+    rnd = random.Random(seed)
+    for v in o.data.vertices:  # irregular outline
+        a = math.atan2(v.co.y, v.co.x)
+        k = 1.0 + 0.07 * math.sin(3 * a + seed) + 0.04 * math.sin(7 * a + seed * 2)
+        v.co.x *= k
+        v.co.y *= k
+        if v.co.z > 0:
+            v.co.z += 0.015 * math.sin(2 * a + seed)
+    bev = o.modifiers.new("bev", "BEVEL")
+    bev.width, bev.segments, bev.limit_method = height * 0.38, 5, "ANGLE"
+    sub = o.modifiers.new("sub", "SUBSURF")
+    sub.levels = sub.render_levels = 2
+    tex = bpy.data.textures.new(f"stone_disp{seed}", "CLOUDS")
+    tex.noise_scale = 0.18
+    disp = o.modifiers.new("disp", "DISPLACE")
+    disp.texture = tex
+    disp.strength = 0.025
+    disp.mid_level = 0.5
+    for poly in o.data.polygons:
+        poly.use_smooth = True
+    o.data.materials.append(mat)
+    del rnd
+    return o
+
+
 def pedestal(theme, variant, th):
-    rnd = random.Random(variant * 7 + 3)
+    """A low worn stone the pot stands on: visible thickness, rounded edges, moss on the sides."""
     if theme == "meadow":
-        rm = rock_mat("#D2C3B2" if variant == 0 else "#C4B8AE", moss="#6FA85E", moss_at=0.63)
-        if variant == 0:  # one broad worn stone
-            o = rock("ped", (0, 0, 0.0), 0.82, rm, 11, flat=0.24)
-            o.scale = (1.0, 0.82, 1.0)
-            top = 0.82 * 0.24 * 1.05
-        else:  # two stacked flat stones, the lower one shifted
-            rock("ped_lo", (0.12, 0.05, -0.02), 0.86, rm, 21, flat=0.17).scale = (1.0, 0.8, 1.0)
-            rock("ped_hi", (-0.05, -0.02, 0.12), 0.74, rm, 23, flat=0.17).scale = (1.0, 0.82, 1.0)
-            top = 0.12 + 0.74 * 0.17 * 1.05
+        if variant == 0:  # one broad slab, slightly tilted
+            m = stone_mat("#ADA4A6", "#7D7480", 11)
+            o = slab("ped", (0, 0, 0.07), 0.78, 0.2, m, 11)
+            o.rotation_euler = (0.03, -0.035, 0.25)
+            top = 0.17
+        else:  # a slab resting on a lower, wider one, shifted and turned
+            m = stone_mat("#B3A9A6", "#827783", 23)
+            slab("ped_lo", (0.12, 0.06, 0.02), 0.84, 0.14, m, 21, squash=0.8).rotation_euler = (0, 0, 0.6)
+            slab("ped_hi", (-0.05, -0.03, 0.15), 0.66, 0.15, m, 23).rotation_euler = (0.02, 0.03, -0.3)
+            top = 0.225
         return top
     raise ValueError(theme)
 
@@ -483,6 +713,16 @@ def pedestal_grass(th, seed):
             c0, c1 = pal[rnd.randrange(2)], pal[2 + rnd.randrange(2)]
             cols += [c0, c0, c1]
     W.mesh_from("pgrass", verts, faces, mat=grass_mat(), smooth=False, colors=cols)
+    fm = W.NT("pflower")
+    fm = fm.done(fm.principled(th["flowers"][seed % len(th["flowers"])], rough=0.45, sss=0.3, sss_radius=(1, 0.6, 0.6)))
+    for k in range(3):
+        a = rnd.uniform(-2.6, -0.5)
+        x, y = math.cos(a) * 0.88, math.sin(a) * 0.72
+        for p_ in range(5):
+            aa = 2 * math.pi * p_ / 5
+            bpy.ops.mesh.primitive_uv_sphere_add(radius=0.022, segments=8, ring_count=5,
+                                                 location=(x + math.cos(aa) * 0.026, y, 0.1 + math.sin(aa) * 0.022))
+            bpy.context.active_object.data.materials.append(fm)
 
 
 def shadow_catcher():
@@ -502,25 +742,26 @@ def render_pedestals(out, st, theme):
         top = pedestal(theme, v, th)
         pedestal_grass(th, 40 + v)
         shadow_catcher()
-        W.camera_frame((0.0, 0.0, 0.05), 256, 128, px_per_unit=PX2_PER_UNIT)
+        W.camera_frame((0.0, 0.0, 0.1), 256, 160, px_per_unit=PX2_PER_UNIT)
         name = f"ped_{theme}_{v}"
         W.render(os.path.join(out, name + ".png"))
         ax, ay = W.pixel_of((0, 0, 0))
         tx, tyy = W.pixel_of((0, 0, top))
-        meta.append({"name": name, "w": 256, "h": 128, "anchor_px": [round(ax, 1), round(ay, 1)],
+        meta.append({"name": name, "w": 256, "h": 160, "anchor_px": [round(ax, 1), round(ay, 1)],
                      "pot_base_px": [round(tx, 1), round(tyy, 1)], "top_units": round(top, 3)})
     W.save_json(os.path.join(out, f"pedestals_{theme}.json"), {"scale": 2, "pedestals": meta})
 
 
 def main():
     a = W.args({"out": os.path.join(W.HERE, "..", "out", "c08", "floor"), "samples": 64,
-                "what": "floor,pedestals", "theme": "meadow"})
+                "what": "floor,pedestals", "theme": "meadow", "seeds": "8,21"})
     st = W.style("world", a["samples"])
     os.makedirs(a["out"], exist_ok=True)
     if "pedestals" in a["what"]:
         render_pedestals(a["out"], st, a["theme"])
     if "floor" in a["what"]:
-        render_floor(a["out"], st, a["theme"])
+        for i, seed in enumerate(int(x) for x in str(a["seeds"]).split(",")):
+            render_floor(a["out"], st, a["theme"], seed, "_" + "abcdefgh"[i])
 
 
 if __name__ == "__main__":
