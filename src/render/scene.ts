@@ -5,6 +5,7 @@
 // The view draws a GardenModel: the player's own garden or a neighbour's while visiting. It reads
 // state and reports input; it never changes state itself.
 
+import { canOpenFloor, floorItemNeeds } from '../systems/floors.ts';
 import { Application, Container, Graphics, Point, Rectangle, Sprite, Text, Texture, type FederatedPointerEvent } from 'pixi.js';
 import type { FloorDef } from '../core/content.ts';
 import type { SlotRef } from '../core/game.ts';
@@ -39,6 +40,14 @@ const WORLD = {
   potScale10: 0.9,
   potScaleStep: 0.085,
   potScaleMax: 1.25,
+  /** Chỉ thị 11 D5: front row size, the back row (up to 4) lifted, 8% smaller, slightly dimmed. */
+  frontRow: 6,
+  backRowMax: 4,
+  backRowLift: 112,
+  /** Pot scale cap when a floor has a back row, so the two rows never touch. */
+  twoRowScale: 1.08,
+  backRowScale: 0.92,
+  backRowTint: 0xdedede,
   signY: 96,
   trunk: { x: 40, y: 430 },
   /** Region of one floor that must stay on screen: trunk to last pot, markers to the sign. */
@@ -383,16 +392,33 @@ export class GameView {
       this.ringBackLayer.addChild(ring.back);
       ringBack = ring.back;
     }
+    // Chỉ thị 11 đính chính D5: 6 → 10 positions. Front row up to 6, back row (positions 7–10)
+    // staggered between them, 8% smaller and slightly dimmed; every position has a stone pedestal.
     const positions = f.pots.length + (f.expandCost !== null ? 1 : 0);
-    const scale = Math.min(WORLD.potScaleMax, WORLD.potScale10 + (10 - positions) * WORLD.potScaleStep);
-    const spacing = positions > 1 ? WORLD.potRowSpan / (positions - 1) : 0;
-    const xs = w10 ? slotXs(artId, positions) : null;
-    const x = (i: number) => (xs ? xs[i]! : -WORLD.potRowSpan / 2 + i * spacing);
+    const frontN = Math.min(positions, WORLD.frontRow);
+    const backN = positions - frontN;
+    const scale = Math.min(backN > 0 ? WORLD.twoRowScale : WORLD.potScaleMax, WORLD.potScale10 + (10 - frontN) * WORLD.potScaleStep);
+    const spacing = frontN > 1 ? WORLD.potRowSpan / (frontN - 1) : 0;
+    const xs = w10 ? slotXs(artId, frontN) : Array.from({ length: frontN }, (_, i) => -WORLD.potRowSpan / 2 + i * spacing);
+    const gap = frontN > 1 ? (xs[frontN - 1]! - xs[0]!) / (frontN - 1) : 0;
+    // Back pots sit in the gaps between front pots (offsets in gaps from the row centre), symmetric:
+    // 1 → centre, 2 → ±1, 3 → −2, 0, +2, 4 → ±1, ±2. Never straight behind a front pot.
+    const BACK_GAPS: Record<number, number[]> = { 1: [0], 2: [-1, 1], 3: [-2, 0, 2], 4: [-2, -1, 1, 2] };
+    const centre = (xs[0]! + xs[frontN - 1]!) / 2;
+    const place = (i: number) => {
+      if (i < frontN) return { x: xs[i]!, y: 4, k: scale, back: false };
+      const off = BACK_GAPS[backN]?.[i - frontN] ?? 0;
+      return { x: centre + off * gap, y: 4 - WORLD.backRowLift, k: scale * WORLD.backRowScale, back: true };
+    };
     const slots: SlotView[] = [];
-    // Pots of the whole floor sit in one layer under all plants and markers (directive 03 step 4).
+    // Back row first (behind), then the front row; pots of a row sit under all plants (directive 03 step 4).
+    const backPed = new Container();
+    const backPot = new Container();
     const pedLayer = new Container();
     const potLayer = new Container();
-    container.addChild(pedLayer, potLayer);
+    container.addChild(backPed, backPot);
+    const backViews = new Container();
+    container.addChild(backViews, pedLayer, potLayer);
     const pets: PetActor[] = [];
     if (fi < PET_SPECIES.length) {
       // One pet per floor for the first floors, wandering on the lawn in front of the pots.
@@ -404,24 +430,31 @@ export class GameView {
     }
     f.pots.forEach((_, i) => {
       const view = new SlotView(fi, i, this.art, this.tweens, this.dot, this.glow);
+      const pl = place(i);
       if (w10) {
         // Chỉ thị 10: one stone pedestal under every pot position; the pot stands on its top face.
         const ped = pedestalSprite(this.art, artId, i + fi);
-        ped.position.set(x(i), 4);
-        ped.scale.set(scale * PEDESTAL_SCALE);
-        pedLayer.addChild(ped);
+        ped.position.set(pl.x, pl.y);
+        ped.scale.set(pl.k * PEDESTAL_SCALE);
+        if (pl.back) ped.tint = WORLD.backRowTint;
+        (pl.back ? backPed : pedLayer).addChild(ped);
       }
-      view.position.set(x(i), 4);
-      view.scale.set(scale);
+      view.position.set(pl.x, pl.y);
+      view.scale.set(pl.k);
+      if (pl.back) {
+        view.tint = WORLD.backRowTint;
+        view.back.tint = WORLD.backRowTint;
+      }
       slots.push(view);
-      potLayer.addChild(view.back);
-      container.addChild(view);
+      (pl.back ? backPot : potLayer).addChild(view.back);
+      (pl.back ? backViews : container).addChild(view);
     });
     let ghost: Container | null = null;
     if (f.expandCost !== null) {
-      ghost = this.buildGhost(f.expandCost, scale);
-      ghost.position.set(x(f.pots.length), 4);
-      container.addChild(ghost);
+      const pl = place(f.pots.length);
+      ghost = this.buildGhost(f.expandCost, pl.k);
+      ghost.position.set(pl.x, pl.y);
+      (pl.back ? backViews : container).addChild(ghost);
     }
     const sign = this.buildSign(f);
     container.addChild(sign);
@@ -502,8 +535,9 @@ export class GameView {
     if (!this.locked) return;
     const { def, info } = this.locked;
     const p = this.session.state.player;
-    const ready = p.level >= def.unlockLevel && p.coins >= def.unlockCost;
-    const text = ready ? 'Chạm để mở tầng mới!' : `Cấp ${def.unlockLevel} · ${formatNumber(def.unlockCost)} xu`;
+    const ready = canOpenFloor(def, this.session.state);
+    const items = floorItemNeeds(def, this.session.state.inventory).map((n) => `${n.need} ${this.session.content.items.get(n.itemId)?.name.vi ?? ''}`);
+    const text = ready ? 'Chạm để mở tầng mới!' : [`Cấp ${def.unlockLevel}`, `${formatNumber(def.unlockCost)} xu`, ...items].join(' · ');
     if (info.text !== text) info.text = text;
   }
 

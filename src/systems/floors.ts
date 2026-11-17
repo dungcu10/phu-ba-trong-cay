@@ -10,6 +10,16 @@ export function expandCost(def: FloorDef, floor: FloorState): number | null {
   return def.expandCosts[i] ?? null;
 }
 
+/** Chỉ thị 10 § 3.1: the items a floor asks to open, with how many the player has. */
+export function floorItemNeeds(def: FloorDef, inventory: Record<string, number>): Array<{ itemId: string; need: number; have: number }> {
+  return Object.entries(def.unlockItems ?? {}).map(([itemId, need]) => ({ itemId, need, have: inventory[itemId] ?? 0 }));
+}
+
+/** Level, coins and items all there to open this floor. */
+export function canOpenFloor(def: FloorDef, state: GameState): boolean {
+  return state.player.level >= def.unlockLevel && state.player.coins >= def.unlockCost && floorItemNeeds(def, state.inventory).every((n) => n.have >= n.need);
+}
+
 /** Items asked with the coins for the next slot (Sợi Mây Kết), or none. */
 export function expandItems(def: FloorDef, floor: FloorState): Record<string, number> {
   const i = floor.slots.length - def.slotCount;
