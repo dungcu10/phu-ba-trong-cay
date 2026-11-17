@@ -10,6 +10,12 @@ export function expandCost(def: FloorDef, floor: FloorState): number | null {
   return def.expandCosts[i] ?? null;
 }
 
+/** Items asked with the coins for the next slot (Sợi Mây Kết), or none. */
+export function expandItems(def: FloorDef, floor: FloorState): Record<string, number> {
+  const i = floor.slots.length - def.slotCount;
+  return (i >= 0 && def.expandItems?.[i]) || {};
+}
+
 /** Requirements of the next star, or null at max stars. */
 export function nextStar(def: FloorDef, floor: FloorState) {
   return def.stars[floor.stars] ?? null;

@@ -46,5 +46,13 @@
     },
     "level": 4,
     "tutorial": "tut.stall"
+  },
+  {
+    "id": "birds",
+    "name": {
+      "vi": "Chim Bắt Sâu"
+    },
+    "level": 3,
+    "tutorial": "tut.birds"
   }
 ]

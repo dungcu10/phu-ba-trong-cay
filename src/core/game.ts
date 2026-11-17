@@ -16,7 +16,7 @@ import { createFloorState } from './state.ts';
 import { canDeliver, refillOrders } from '../systems/orders.ts';
 import { coinGiftAmount, nextMilestone, recordHarvest, rollGift, rollMutation, type Gift } from '../systems/surprises.ts';
 import { playerPrice, simulateNeighbors, snapshotRanks, type NeighborEvent } from '../systems/neighbors.ts';
-import { expandCost, nextStar } from '../systems/floors.ts';
+import { expandCost, expandItems, nextStar } from '../systems/floors.ts';
 import { allMissionsClaimed, ensureMissions, localDay, missionDef, recordMissions } from '../systems/missions.ts';
 import { ensureQuestPeriods, questActive, questClaims, questReward, questView, recordQuests } from '../systems/quests.ts';
 import { botGarden, helpReward, helpsLeft, helpToday, type HelpKind } from '../systems/visit.ts';
@@ -356,7 +356,10 @@ function expandFloor(content: ContentPack, state: GameState, index: number): Res
   const cost = expandCost(def, floor);
   if (cost === null) return fail('max_slots');
   if (state.player.coins < cost) return fail('not_enough_coins');
+  const items = expandItems(def, floor);
+  if (!canAfford(state, { coins: 0, items })) return fail('not_enough_items');
   state.player.coins -= cost;
+  for (const [id, q] of Object.entries(items)) removeItem(state, id, q);
   const slot = floor.slots.length;
   let potInstanceId = index === 0 ? `pot-${slot + 1}` : `pot-f${index + 1}-${slot + 1}`;
   while (state.pots[potInstanceId]) potInstanceId += '-n';
@@ -512,6 +515,11 @@ function harvest(content: ContentPack, state: GameState, ref: SlotRef, now: numb
   if (potDef?.shard && randomFor(state.seed, 'shard', planting.id, planting.harvestsDone) < potDef.shard.chance * (1 + luck)) found.push({ itemId: potDef.shard.item, qty: 1 });
   const hm = content.config.harvestMaterial;
   if (hm && randomFor(state.seed, 'clay', planting.id, planting.harvestsDone) < hm.chance * (1 + luck)) found.push({ itemId: hm.item, qty: 1 });
+  // Chỉ thị 10 § 3.1: Sợi Mây Kết / Giọt Sương Trời for opening floors (2% a harvest).
+  const fm = content.config.floorMaterialDrop;
+  if (fm && fm.items.length > 0 && randomFor(state.seed, 'floorMat', planting.id, planting.harvestsDone) < fm.chance * (1 + luck)) {
+    found.push({ itemId: fm.items[Math.floor(randomFor(state.seed, 'floorMatKind', planting.id, planting.harvestsDone) * fm.items.length)]!, qty: 1 });
+  }
   for (const f of found) addItem(state, f.itemId, f.qty);
   if (gift?.kind === 'gems') {
     // Daily gem budget for surprise gifts (plan C): past it the gift is coins instead, so big
@@ -644,7 +652,10 @@ function unlockFloor(content: ContentPack, state: GameState, floorId: string): R
   if (!def || def.id !== floorId) return fail('not_next_floor');
   if (def.unlockLevel > state.player.level) return fail('locked');
   if (state.player.coins < def.unlockCost) return fail('not_enough_coins');
+  const items = def.unlockItems ?? {};
+  if (!canAfford(state, { coins: 0, items })) return fail('not_enough_items');
   state.player.coins -= def.unlockCost;
+  for (const [id, q] of Object.entries(items)) removeItem(state, id, q);
   const index = state.floors.length;
   state.floors.push(createFloorState(def, state.pots, index));
   return { ok: true, events: [{ type: 'floorUnlocked', floorId, index, cost: def.unlockCost }] };

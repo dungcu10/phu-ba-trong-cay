@@ -12,7 +12,7 @@ Người ban hành: CTO/Game Director · Ngày 17/11/2026 · Chủ dự án đã
 2. **Mọi hình ảnh do chủ dự án vẽ bằng Gemini**, CTO duyệt. Mày không tự vẽ, không tự sáng tác, không dùng hình tạm làm bản cuối. Thiếu hình thì ghi vào mục "CẦN HÌNH" trong báo cáo.
 3. **Bộ hình `PhuBa_BoHinh_v1` là đủ cho bản cập nhật này.** Tính năng nào chưa có hình riêng thì phải dùng lại hình đã có, đúng như hướng dẫn ở mục 2.
 4. **Một bản cập nhật duy nhất**, nhưng làm và tự kiểm theo đúng thứ tự các mốc ở mục 6. Nộp một lần, CTO nghiệm thu một lần.
-5. Không merge vào `main`. Không xóa save của người chơi. Không đổi giá hạt giống và giá bán nông sản hiện có.
+5. Merge: được **tự merge vào `main` qua PR** (chủ dự án cho phép 18/11/2026), với điều kiện: typecheck sạch, toàn bộ test xanh, build chạy, migration save cũ đã test, bản thử gh-pages chạy được; mỗi lần merge ghi 1 dòng vào CHANGELOG.md và gắn tag `m-<chỉ-thị>-<mốc>` để quay lại được. Không xóa save của người chơi. Không đổi giá hạt giống và giá bán nông sản hiện có.
 
 ---
 
@@ -51,6 +51,7 @@ Quy tắc cảm giác: mỗi hành động có phản hồi ngay (dưới 100 ms
 | `4_nhan-vat/bo_8-loai.png` | 8 loại sâu bọ (thứ tự ở mục 3.2). |
 | `4_nhan-vat/chim_4-loai_dau-va-bay.png` | 4 loài chim. Hàng trên là dáng đậu, hàng dưới là dáng bay (mục 3.3). |
 | `4_nhan-vat/xu-xu_4-dang.png` | Xu Xu: đứng vui, vẫy tay, ngủ, ngạc nhiên (mục 3.11). |
+| `4_nhan-vat/thu-cung_*.png` | **Chưa dùng trong chỉ thị này.** Dành cho chỉ thị 11. |
 | `5_tham-khao_KHONG-DUA-VAO-GAME/` | **Chỉ để tham khảo** cách ghép tầng, cây leo và bệ. Không đưa vào game. |
 
 ### 2.2. Xử lý ảnh (làm bằng script, đặt trong `tools/art/`, chạy lại được)
@@ -303,7 +304,11 @@ Tương đương "đào mỏ" của game gốc. **Dùng lại hình mây có s�
 - Xu Xu xuất hiện ở góc màn hình kèm bong bóng thoại ngắn **mỗi khi mở khóa tính năng mới** (bảng mục 5). Bấm để xem hướng dẫn 2–3 bước, có thể bỏ qua.
 - Chạm vào Xu Xu thì nó phản ứng, tối đa 1 lần thưởng nhỏ mỗi giờ.
 
-### 3.12. Những hệ thống đã có: giữ và nối vào hệ mới
+### 3.12. Thú cưng đồng hành
+
+Không làm trong chỉ thị này. 4 thú cưng (Mèo Mây Con, Cáo Lửa Con, Sẻ Mầm, Rồng Ngọc Con) làm riêng ở **CHI_THI_11_TONG_LANG_THU_CUNG.md**, sau khi chỉ thị 10 được nghiệm thu. Lưu trữ phiên bản 12 chừa sẵn chỗ: `pets: []` và `activePets: []`, để trống.
+
+### 3.13. Những hệ thống đã có: giữ và nối vào hệ mới
 
 - **Chợ Mây và 40 Phú Bà:** thêm vào danh sách mua bán các món: hàng chế biến, Sợi Mây, Giọt Sương, khoáng sản, mồi câu. **Không** mua bán chim, không mua bán bọ Rất hiếm.
 - **Hàng xóm giúp đỡ:** BOT ghé giúp bắt bọ (đã có), góp hàng cho đơn (mới).
@@ -430,15 +435,9 @@ Dữ liệu nằm trong `features.json`. Tính năng chưa mở thì không hi�
 
 ---
 
-## 9. CẦN HÌNH (chủ dự án vẽ bằng Gemini; trong lúc chờ, dùng biểu tượng tạm và ghi rõ trong ASSET_SOURCES)
+## 9. BIỂU TƯỢNG VẬT PHẨM
 
-Biểu tượng cho vật phẩm mới, mỗi nhóm là một tờ:
-- Hàng chế biến: Hoa Sấy, Hũ Mứt, Chai Nước Ép, Ngọc Mây.
-- Khoáng sản: Đá Mây, Mảnh Đồng, Mảnh Bạc, Vàng Vụn, Ngọc Thô.
-- Vật phẩm mở tầng: Sợi Mây Kết, Giọt Sương Trời. Thức ăn chim: Hạt Kê Mây. Mồi câu: Mồi Thường, Mồi Thơm. Năng Lượng Gió.
-- 5 loại cá mây.
-
-CTO sẽ gửi câu lệnh Gemini cho các tờ này. Mọi biểu tượng tạm phải được thay **trước khi merge**.
+Đã có đủ trong `7_bieu-tuong/`. Bảng thứ tự hình và cách xử lý ở **CHI_THI_11_TONG_LANG_THU_CUNG.md, phần K**. Thay toàn bộ biểu tượng tạm.
 
 ## 10. CẤM
 
@@ -446,4 +445,4 @@ CTO sẽ gửi câu lệnh Gemini cho các tờ này. Mọi biểu tượng tạ
 - Không đổi giá hạt giống và giá bán nông sản hiện có. Không có nạp tiền, không có quảng cáo.
 - Không phạt người chơi vì vắng mặt: chim không chết, cây không héo, không mất đồ.
 - Không viết luồng code riêng cho BOT. Không viết luồng bắt bọ thứ hai cho chim.
-- Không merge vào `main`. Không xóa asset cũ.
+- Merge vào `main`: được **tự merge vào `main` qua PR** (chủ dự án cho phép 18/11/2026), với điều kiện: typecheck sạch, toàn bộ test xanh, build chạy, migration save cũ đã test, bản thử gh-pages chạy được; mỗi lần merge ghi 1 dòng vào CHANGELOG.md và gắn tag `m-<chỉ-thị>-<mốc>` để quay lại được. Không xóa asset cũ.

@@ -5,9 +5,9 @@ import { dispatch } from '../src/core/game.ts';
 import { createNewGame } from '../src/core/state.ts';
 import { buildContentPack, loadBase, MIN, readRaw, T0 } from './helpers.ts';
 
-test('gói nội dung gốc hợp lệ: 3 tầng × 6–10 chậu, 7 dòng chậu gốc trở lên, 6 giống cây, 8 loại Bọ Mây (chỉ thị 10)', async () => {
+test('gói nội dung gốc hợp lệ: 4 tầng làm tay × 6–10 chậu, 7 dòng chậu gốc trở lên, 6 giống cây, 8 loại Bọ Mây (chỉ thị 10)', async () => {
   const c = await loadBase();
-  assert.equal(c.floors.size, 3);
+  assert.equal(c.floors.size, 4); // chỉ thị 10: tầng 4 Vườn Trăng Lơ Lửng làm tay
   for (const f of c.floorList) {
     assert.equal(f.slotCount, 6);
     assert.equal(f.maxSlots, 10);

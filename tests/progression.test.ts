@@ -12,7 +12,7 @@ import { MemoryStore } from '../src/persistence/store.ts';
 import { simulateProgression } from '../tools/progression.ts';
 import { floorAtIndex } from '../src/core/floorgen.ts';
 import { slotBonus } from '../src/systems/modifiers.ts';
-import { DAISY, HOUR, loadBase, MIN, newGame, T0 } from './helpers.ts';
+import { DAISY, HOUR, loadBase, MIN, newGame, T0, giveFloorItems } from './helpers.ts';
 
 const content = await loadBase();
 
@@ -70,6 +70,7 @@ test('mở tầng nối tiếp qua lệnh thật, lưu rồi tải lại vẫn g
   const s = newGame(content, { level: 120, coins: 1e12 });
   for (let i = 0; i < 7; i++) {
     const nf = nextFloor(content, s)!;
+    giveFloorItems(content, s, nf.id);
     assert.ok(dispatch(content, s, { type: 'unlockFloor', floorId: nf.id }, T0).ok, nf.id);
   }
   assert.equal(s.floors.length, 8);

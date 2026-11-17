@@ -57,7 +57,7 @@
     "desc": {
       "vi": "Thức ăn của chim bắt sâu: +50 độ no. Mua ở cửa hàng."
     },
-    "icon": "tmp:Kê:#E9B44C"
+    "icon": "art:icon/cloud-millet"
   },
   {
     "id": "base:mat.cloud-thread",
@@ -67,7 +67,7 @@
     "desc": {
       "vi": "Vật phẩm mở tầng mây mới và mở rộng ô chậu."
     },
-    "icon": "tmp:Sợi:#B9A8D6"
+    "icon": "art:icon/cloud-thread"
   },
   {
     "id": "base:mat.sky-dew",
@@ -77,7 +77,7 @@
     "desc": {
       "vi": "Vật phẩm mở tầng mây mới."
     },
-    "icon": "tmp:Sương:#7FC8F0"
+    "icon": "art:icon/sky-dew"
   },
   {
     "id": "base:mat.cloud-stone",
@@ -87,7 +87,7 @@
     "desc": {
       "vi": "Khoáng thường dưới Biển Mây. Dùng mài ngọc và đúc chậu."
     },
-    "icon": "tmp:Đá:#A9A2A8"
+    "icon": "art:icon/cloud-stone"
   },
   {
     "id": "base:mat.copper-bit",
@@ -97,7 +97,7 @@
     "desc": {
       "vi": "Khoáng dưới Biển Mây."
     },
-    "icon": "tmp:Đồng:#C67B4A"
+    "icon": "art:icon/copper-ore"
   },
   {
     "id": "base:mat.silver-bit",
@@ -107,7 +107,7 @@
     "desc": {
       "vi": "Khoáng dưới Biển Mây."
     },
-    "icon": "tmp:Bạc:#C9CED8"
+    "icon": "art:icon/silver-ore"
   },
   {
     "id": "base:mat.gold-dust",
@@ -117,7 +117,7 @@
     "desc": {
       "vi": "Khoáng hiếm dưới Biển Mây."
     },
-    "icon": "tmp:Vàng:#F2C14E"
+    "icon": "art:icon/gold-nugget"
   },
   {
     "id": "base:mat.raw-jade",
@@ -127,7 +127,7 @@
     "desc": {
       "vi": "Khoáng rất hiếm dưới Biển Mây."
     },
-    "icon": "tmp:Ngọc:#2BC4A0"
+    "icon": "art:icon/raw-jade"
   },
   {
     "id": "base:mat.cut-gem",
@@ -137,7 +137,7 @@
     "desc": {
       "vi": "Thành phẩm của Máy Mài Ngọc, dùng đúc chậu hiếm."
     },
-    "icon": "tmp:Quý:#E5527A"
+    "icon": "art:icon/cloud-gem"
   },
   {
     "id": "base:mat.bait",
@@ -147,7 +147,7 @@
     "desc": {
       "vi": "Mồi câu cá mây. Chế từ 2 Rau Thảo."
     },
-    "icon": "tmp:Mồi:#8BCF6A"
+    "icon": "art:icon/bait"
   },
   {
     "id": "base:mat.sweet-bait",
@@ -157,7 +157,7 @@
     "desc": {
       "vi": "Mồi câu thơm, dễ gặp cá hiếm. Chế từ 1 Hũ Mứt."
     },
-    "icon": "tmp:Thơm:#FF8FAB"
+    "icon": "art:icon/sweet-bait"
   },
   {
     "id": "base:decor.lantern",
@@ -167,7 +167,7 @@
     "desc": {
       "vi": "Đặt vào khe trang trí của tầng: +2% EXP khi thu hoạch trên tầng đó."
     },
-    "icon": "tmp:Đèn:#FF8A3D"
+    "icon": "art:vine/lantern0"
   },
   {
     "id": "base:decor.crystal",
@@ -177,6 +177,6 @@
     "desc": {
       "vi": "Đặt vào khe trang trí của tầng: +2% xu khi thu hoạch trên tầng đó."
     },
-    "icon": "tmp:Pha:#5FD3E0"
+    "icon": "art:icon/crystal"
   }
 ]

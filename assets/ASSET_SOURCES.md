@@ -49,3 +49,22 @@ Giọt nước báo khát, thanh tiến độ, hạt lấp lánh, khung gỗ/gi�
 | `assets/art/pots_signature.webp/.json` | 50 chậu đặc trưng ở cấp 50 (`pots/sig/<số>/50`), 5 nhóm: Đồ ăn, Linh vật, Thiên nhiên, Gốm Á Đông, Thần thoại | Dựng thủ tục bằng **bpy 5.3.0 (Blender dạng mô-đun Python), Cycles CPU**, cùng script `tools/potgen/blender/render_catalog.py` và cùng cảnh `studio_cream` (96 mẫu, 1024 px, OIDN) như hai atlas trên. Thông số chậu sinh từ `tools/potgen/tools/build_signature_all.py` → `tools/potgen/lines/signature_all.json`. Đóng gói bằng `tools/potgen/tools/pack_pots.py`, WebP chất lượng 90 giữ kênh alpha. Không dùng ảnh hay mô hình bên ngoài — tài sản tự tạo hoàn toàn, thuộc dự án. CTO chấp nhận dùng bpy 5.3 CPU thay cho Blender 5.2 CUDA (Review 03). |
 
 Tái tạo: xem `tools/potgen/README.md` và `docs/reviews/2026-11-17-directive-03-chau-blender.md`.
+
+## Bộ hình của chủ dự án `PhuBa_BoHinh_v1` (chỉ thị 10/11, 2026-11-18)
+
+Hình gốc do chủ dự án vẽ bằng Gemini, lưu ở `tools/art/src/`. Thuộc dự án. Chỉ xử lý bằng các thao tác chỉ thị cho phép: tách nền, cắt, phóng to (Real-ESRGAN anime 6B ×4, Lanczos), chỉnh màu vùng mây ở gốc cây, độ bão hòa ngọn cây, sửa vết nối thân cây. Tái tạo: `tools/art/build.py` (`--only floors,vine,rings,chars,icons`).
+
+| File | Nội dung | Nguồn |
+|---|---|---|
+| `assets/art/world10_floor_<t1–t4>_<L/R>@1x/@2x` | 4 tầng mây | `1_tang-may/tang*.png` |
+| `assets/art/world10_vine*`, `world10_rings*` | Thân dây leo lát liền, gốc, ngọn, lá, nụ, tua, đèn lồng; vòng mây nắng/trăng | `2_cay-leo/*`, `1_tang-may/vong-may-om-cay_nang-va-trang.png` |
+| `assets/art/world10_pedestals*` | 3 kiểu bệ đá × 2 | `3_be-chau/be-chau_3-kieu-x2.png` |
+| `assets/art/world10_chars*` | 8 bọ, 4 chim (đậu/bay), Xu Xu 4 dáng | `4_nhan-vat/*` |
+| `assets/art/world10_icons*` | 32 biểu tượng: hàng chế biến, Sợi Mây Kết, Giọt Sương Trời, Hạt Kê Mây, Năng Lượng Gió, 5 khoáng, 2 mồi, Mảnh Trứng Rồng, 5 cá, phao, 4 Huy Hiệu, Điểm sự kiện, Rương Mây Trôi, 4 Huy Chương Độ Cao. Tờ khoáng có chữ chú thích tiếng Anh: dải chữ được xóa trước khi cắt, không đưa chữ vào game. | `7_bieu-tuong/to1…to5` |
+| `icon/crystal` (trong `world10_icons`) | Trang trí "pha lê": viên pha lê treo dưới tầng 1, cắt ra và bỏ phần mây sau dây treo, phóng to ×4 | `1_tang-may/tang1_dong-may-ngoc.png` |
+
+**Biểu tượng tạm:** không còn. Mọi vật phẩm dùng hình đã duyệt (`art:<frame>` trong `materials.json`).
+
+**CẦN HÌNH (còn thiếu):**
+- Cành đậu cho chim ở mép phải tầng (hiện chim đậu thẳng trên mây).
+- Bát hạt khi chim đói (hiện dùng chữ "z z" vẽ bằng code).

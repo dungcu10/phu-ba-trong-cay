@@ -9,7 +9,7 @@ import { bugsInCycle, cropStatus } from '../src/systems/growth.ts';
 import { slotBonus } from '../src/systems/modifiers.ts';
 import { migrate } from '../src/persistence/migrations.ts';
 import { reconcile } from '../src/persistence/reconcile.ts';
-import { DAISY, loadBase, MIN, MINT, newGame, T0, TOMATO } from './helpers.ts';
+import { DAISY, giveFloorItems, loadBase, MIN, MINT, newGame, T0, TOMATO } from './helpers.ts';
 
 const content = await loadBase();
 const TEA = 'base:floor.tea-mist';
@@ -26,6 +26,9 @@ test('mở tầng: đúng thứ tự, cần đủ cấp và xu, tạo 6 vị tr�
   s.player.coins = 1999;
   assert.deepEqual(dispatch(content, s, { type: 'unlockFloor', floorId: TEA }, T0), { ok: false, error: 'not_enough_coins' });
   s.player.coins = 2000;
+  // Chỉ thị 10 § 3.1: 3 Sợi Mây Kết + 2 Giọt Sương Trời on top of the coins.
+  assert.deepEqual(dispatch(content, s, { type: 'unlockFloor', floorId: TEA }, T0), { ok: false, error: 'not_enough_items' });
+  giveFloorItems(content, s, TEA);
   const r = dispatch(content, s, { type: 'unlockFloor', floorId: TEA }, T0);
   assert.ok(r.ok && r.events[0]!.type === 'floorUnlocked');
   assert.equal(s.player.coins, 0);
@@ -67,6 +70,7 @@ test('hệ ưa thích: Chậu Sứ (ưa Hoa) giúp Cúc lớn nhanh hơn Cà Chu
 
 test('đặc tính tầng: Vườn Trà làm Bạc Hà (Rau Thảo) lớn nhanh hơn 10%, không ảnh hưởng Cúc', () => {
   const s = newGame(content, { level: 5, coins: 5000 });
+  giveFloorItems(content, s, TEA);
   dispatch(content, s, { type: 'unlockFloor', floorId: TEA }, T0);
   dispatch(content, s, { type: 'plant', cropId: MINT, ...at(0, 0) }, T0);
   dispatch(content, s, { type: 'plant', cropId: MINT, ...at(1, 0) }, T0);

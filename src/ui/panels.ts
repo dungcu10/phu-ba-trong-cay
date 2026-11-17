@@ -156,7 +156,9 @@ export class StoragePanel extends Panel {
     const price = sellPrice(content, state, id, this.session.now());
     const box = h('div', { class: 'scale' }, h('div', { class: 'pack-name' }, `${item.name.vi} ×${have}`));
     if (price === null) {
-      box.append(h('p', { class: 'note' }, 'Bọ Mây là nguyên liệu nâng cấp chậu ở Bàn Thợ Gốm, không bán được.'));
+      // Materials say what they are for (materials.json desc); bugs are pot-upgrade material.
+      const desc = content.materials.get(id)?.desc?.vi ?? (content.bugs.has(id) ? `${item.name.vi} là nguyên liệu nâng cấp chậu ở Lò Gốm.` : null);
+      box.append(h('p', { class: 'note' }, `${desc ?? 'Vật phẩm dùng trong game.'} Không bán được.`));
       return box;
     }
     const qtyEl = h('span', { class: 'qty' }, String(this.qty));

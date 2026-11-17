@@ -6,7 +6,7 @@ import type { ContentPack, CropDef } from '../core/content.ts';
 import type { GameState, Planting } from '../core/state.ts';
 import { randomFor } from '../core/rng.ts';
 
-export type Gift = { kind: 'coins' | 'gems' | 'bug'; amount: number; itemId?: string };
+export type Gift = { kind: 'coins' | 'gems' | 'bug' | 'item'; amount: number; itemId?: string };
 
 /** The mutation of this harvest, if any. Luck multiplies every chance. Rarest is checked first. */
 export function rollMutation(content: ContentPack, state: GameState, planting: Planting, luck: number, multiplier = 1): string | null {
@@ -31,6 +31,8 @@ export function rollGift(content: ContentPack, state: GameState, planting: Plant
   const n = (g.min ?? 1) + Math.floor(r('amount') * span);
   if (g.kind === 'coins') return { kind: 'coins', amount: coinGiftAmount(content, state) };
   if (g.kind === 'gems') return { kind: 'gems', amount: n };
+  // Chỉ thị 10 § 3.1 / 12 B1.3: a real find — one floor material (Sợi Mây Kết, Giọt Sương Trời).
+  if (g.kind === 'item' && g.items && g.items.length > 0) return { kind: 'item', amount: n, itemId: g.items[Math.floor(r('item') * g.items.length)]! };
   return { kind: 'bug', amount: n, itemId: content.bugList[0]?.id ?? '' };
 }
 

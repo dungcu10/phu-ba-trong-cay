@@ -8,7 +8,7 @@
 
 import { isSoldInShop, type ContentPack, type CropDef } from '../src/core/content.ts';
 import { cloudRainCost, dispatch, nextFloor, type Command } from '../src/core/game.ts';
-import { storageUpgradeCost } from '../src/systems/economy.ts';
+import { storageFree, storageUpgradeCost } from '../src/systems/economy.ts';
 import { questActive, questView } from '../src/systems/quests.ts';
 import { createNewGame, type GameState } from '../src/core/state.ts';
 import { canDeliver } from '../src/systems/orders.ts';
@@ -33,6 +33,12 @@ export interface DayReport {
   /** Progress moments this day: a floor opened, a slot added, a floor star, a new crop, a new pot
    *  line bought, a pot reaching a milestone level, a Rương Mây tier. */
   milestones: number;
+  /** GAME_SYSTEMS § 6 metrics: bugs caught this day by rarity, signature pots owned, share of visits
+   *  that found the produce storage full, orders delivered this day. */
+  bugsByRarity: Record<string, number>;
+  signaturePots: number;
+  storageFullShare: number;
+  ordersDelivered: number;
 }
 
 const T0 = Date.parse('2026-11-17T08:00:00+07:00');
@@ -71,10 +77,24 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
     return (c.sellPrice * c.yield * c.harvests - c.seedPrice) / (first + (c.harvests - 1) * regrow);
   };
   const out: DayReport[] = [];
+  const bookCount = () => {
+    const by: Record<string, number> = {};
+    for (const [id, e] of Object.entries(s.collections.bugs)) {
+      const r = content.bugs.get(id)?.rarity ?? 'common';
+      by[r] = (by[r] ?? 0) + e.count;
+    }
+    return by;
+  };
   for (let day = 0; day < days; day++) {
+    const bugsBefore = bookCount();
+    const ordersBefore = s.stats.ordersDone;
+    let visits = 0;
+    let fullVisits = 0;
     for (let m = 0; m <= 14 * 60; m += visitMinutes) {
       const t = T0 + day * 86_400_000 + m * 60_000;
       run({ type: 'tick' }, t);
+      visits++;
+      if (storageFree(content, s) <= 0) fullVisits++;
       s.floors.forEach((f, floor) =>
         f.slots.forEach((_, slot) => {
           for (let k = 0; k < 5; k++) if (!run({ type: 'catchBug', floor, slot }, t).ok) break;
@@ -140,7 +160,13 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
         if (!id || !run({ type: 'upgradePot', potInstanceId: id }, t).ok) break;
       }
     }
-    out.push({ day: day + 1, level: s.player.level, coins: s.player.coins, gems: s.player.gems, quests: questsClaimed, gemsEarned, unit: content.income.unit(s.player.level), floors: s.floors.length, pots: Object.keys(s.pots).length, harvests: s.stats.harvests, milestones });
+    const bugsAfter = bookCount();
+    const bugsByRarity = Object.fromEntries(Object.keys(bugsAfter).map((r) => [r, bugsAfter[r]! - (bugsBefore[r] ?? 0)]));
+    const signaturePots = new Set(Object.values(s.pots).map((p) => p.potId).filter((id) => content.pots.get(id)?.sprite.startsWith('pots/sig/'))).size;
+    out.push({
+      day: day + 1, level: s.player.level, coins: s.player.coins, gems: s.player.gems, quests: questsClaimed, gemsEarned, unit: content.income.unit(s.player.level), floors: s.floors.length, pots: Object.keys(s.pots).length, harvests: s.stats.harvests, milestones,
+      bugsByRarity, signaturePots, storageFullShare: visits ? fullVisits / visits : 0, ordersDelivered: s.stats.ordersDone - ordersBefore,
+    });
     milestones = 0;
     gemsEarned = 0;
     questsClaimed = 0;
