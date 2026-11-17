@@ -29,6 +29,20 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] CTO — Bot mô phỏng dùng chỗ tiêu bọ mới (B6)
+- Bot chạy Xưởng mỗi lần ghé (ưu tiên hàng đơn đang cần), cuối ngày bán bọ dư quá 40 con mỗi loại cho thương lái.
+- Bọ tồn ngày 30: 22,6 → 1,4 ngày bắt; ngày 60 giữ ~250 con. Bật chặn chỉ số này.
+- Cổng XANH, 191/191 test.
+- Còn: Xu/U 2,8–57,6 (ngày 30 ôm ~700 nghìn xu). Bán bọ lấy xu làm xu càng dư; cần chỗ tiêu xu lặp lại.
+- Trạng thái nghiệm thu: Chờ
+
+### [2026-11-18] CTO — Bật 3 núm A6.4–A6.5 và cân lại (tag `m-cto-cay-trong-2`)
+- Hoa Trăng Non lớn nhanh ×1,5 ban đêm (đề xuất ×2 làm nó lời nhất mọi kiểu chơi). Giá bán Hoa Trăng Non 260, XP 75.
+- Thông Thạo: ★1 +2% sản lượng, ★2 +3% XP, ★3 +3% may mắn, ★4 +3% sản lượng.
+- Cây Hot: đơn có cây Hot +20% xu. **Giá bán ở Rương giữ nguyên (sellBonus 0)**: +30% làm giá Rương mua lại cao hơn giá Chợ, tạo vòng mua ở Chợ bán vào Rương ra lãi (test market đỏ).
+- Bù: xpExponent 2,9, Cà Chua Bi XP 8, Bạc Hà Mây XP 14, Ve Ngọc ×1,25.
+- Cổng số liệu XANH (cấp 5/15/26, Bọ Rất hiếm 0,29, chậu chữ ký 14, đơn 13,3).
+- `tests/world.test.ts`: tiền khinh khí cầu so với `flightFor` (có thưởng Cây Hot) thay vì `order.coins`.
 ### [2026-11-18] B6 phần code — chỗ tiêu bọ lặp lại: Xưởng tốn bọ thợ, bán bọ cho thương lái; tăng tốc BOT (tag `m-12-b6-code`)
 - Loại: Thêm / Tối ưu
 - Mô tả: (1) mỗi mẻ Xưởng tốn bọ thợ của máy — trường mới `workerBugs` trong công thức (`workshop.json`, sinh bởi `tools/make-workshop.py`, đang là 1), thiếu bọ thì không làm được, cửa sổ Xưởng hiện bọ thợ như một nguyên liệu. (2) Bán bọ cho thương lái BOT: trường mới `neighbors.json` → `market.bugTrader` { factor 0,5, rarityValue thường 30 / khá 80 / hiếm 250 / rất hiếm 800 } — giá = `market.values` (Bọ Rùa 30) hoặc theo độ hiếm, × factor; lệnh `sellBugs`; Rương Mây có nút "Bán cho thương lái". (3) Cho thú cưng ăn bọ: để tới khi làm thú cưng (chỉ thị 11).

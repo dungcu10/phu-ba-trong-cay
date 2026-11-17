@@ -53,7 +53,7 @@
     "harvests": 2,
     "yield": 3,
     "sellPrice": 7,
-    "xp": 6,
+    "xp": 8,
     "stages": 5,
     "produce": {
       "id": "base:item.cherry-tomato",
@@ -94,7 +94,7 @@
     "harvests": 3,
     "yield": 3,
     "sellPrice": 7,
-    "xp": 11,
+    "xp": 14,
     "stages": 5,
     "produce": {
       "id": "base:item.cloud-mint",
@@ -257,7 +257,7 @@
       },
       {
         "id": "base:bug.jade-cicada",
-        "weight": 0.25
+        "weight": 0.32
       }
     ]
   },
@@ -429,7 +429,7 @@
       },
       {
         "id": "base:bug.jade-cicada",
-        "weight": 0.06
+        "weight": 0.075
       }
     ]
   },
@@ -445,8 +445,8 @@
     "regrowSeconds": 10800,
     "harvests": 2,
     "yield": 2,
-    "sellPrice": 310,
-    "xp": 88,
+    "sellPrice": 260,
+    "xp": 75,
     "stages": 5,
     "produce": {
       "id": "base:item.crescent-flower",
@@ -474,7 +474,7 @@
       },
       {
         "id": "base:bug.jade-cicada",
-        "weight": 0.25
+        "weight": 0.32
       }
     ]
   },
@@ -523,7 +523,7 @@
       },
       {
         "id": "base:bug.jade-cicada",
-        "weight": 0.06
+        "weight": 0.075
       }
     ]
   },
@@ -568,7 +568,7 @@
       },
       {
         "id": "base:bug.jade-cicada",
-        "weight": 0.25
+        "weight": 0.32
       }
     ]
   },
@@ -617,7 +617,7 @@
       },
       {
         "id": "base:bug.jade-cicada",
-        "weight": 0.075
+        "weight": 0.1
       }
     ]
   }

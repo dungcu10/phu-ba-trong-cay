@@ -51,6 +51,7 @@ export interface DayReport {
 
 const T0 = Date.parse('2026-11-17T08:00:00+07:00');
 const RESERVE = 300;
+const BUG_RESERVE = 40;
 
 /** The crop whose produce is this item, if any. */
 function cropOf(content: ContentPack, itemId: string): CropDef | undefined {
@@ -154,6 +155,15 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
           for (let k = 0; k < 3; k++) if (!run({ type: 'harvest', floor, slot }, t).ok) break;
         }),
       );
+      // Xưởng Bọ (B6): fill every free machine slot, goods the open orders ask for first, then the
+      // best-paying recipe whose produce and worker bugs are in the bag.
+      if (content.recipes) {
+        const wanted = new Set(s.orders.slots.flatMap((sl) => Object.keys(sl.order?.items ?? {})));
+        const recipes = [...content.recipes.values()]
+          .filter(({ machine }) => machine.unlockLevel <= s.player.level)
+          .sort((a, b) => Number(wanted.has(b.recipe.output)) - Number(wanted.has(a.recipe.output)) || (content.items.get(b.recipe.output)?.sellPrice ?? 0) - (content.items.get(a.recipe.output)?.sellPrice ?? 0));
+        for (const { recipe } of recipes) for (let k = 0; k < 4; k++) if (!run({ type: 'startJob', recipeId: recipe.id }, t).ok) break;
+      }
       for (const [id, q] of Object.entries(s.inventory)) {
         if (!content.items.get(id)?.countsTowardStorage) continue;
         const need = s.orders.slots.reduce((a, sl) => a + (sl.order?.items[id] ?? 0), 0);
@@ -243,6 +253,11 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
         });
         if (!id || !run({ type: 'upgradePot', potInstanceId: id }, t).ok) break;
       }
+    }
+    // Bugs beyond a working reserve (pot upgrades, Xưởng workers) go to the bug trader at day's end.
+    for (const id of content.bugs.keys()) {
+      const extra = (s.inventory[id] ?? 0) - BUG_RESERVE;
+      if (extra > 0) run({ type: 'sellBugs', itemId: id, qty: extra }, T0 + day * 86_400_000 + 86_399_000);
     }
     const bugsAfter = bookCount();
     const bugsByRarity = Object.fromEntries(Object.keys(bugsAfter).map((r) => [r, bugsAfter[r]! - (bugsBefore[r] ?? 0)]));

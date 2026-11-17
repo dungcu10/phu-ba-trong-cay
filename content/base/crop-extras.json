@@ -1,26 +1,28 @@
 {
-  "_note": "Bổ sung A6.4–A6.5 (luồng tính năng; crops.json là của CTO). Code và test đã đủ (test dùng số riêng). Ba núm kinh tế để trung tính cho CTO bật khi chỉnh số (bật riêng từng núm đã làm lệch cổng: cấp ngày 7 = 16, Bọ Rất hiếm 0,04–0,17): nightGrowth đề xuất {crescent-flower: 1.0} (ban đêm lớn nhanh gấp đôi); mastery.value đề xuất 0.03 yield / 0.05 xp / 0.05 luck / 0.05 yield; hot đề xuất sellBonus 0.3, orderBonus 0.2. Sao Thông Thạo vẫn đếm và hiện trong Sổ Tay.",
-  "nightGrowth": {},
+  "_note": "Bổ sung A6.4–A6.5. Số thật do CTO chỉnh qua mô phỏng; _proposed chỉ dùng cho test tính năng. sellBonus để 0: giá bán ở Rương cao hơn giá Chợ sẽ tạo vòng mua–bán ra lãi.",
+  "nightGrowth": {
+    "base:crop.crescent-flower": 0.5
+  },
   "mastery": [
     {
       "harvests": 10,
       "stat": "yield",
-      "value": 0
+      "value": 0.02
     },
     {
       "harvests": 50,
       "stat": "xp",
-      "value": 0
+      "value": 0.03
     },
     {
       "harvests": 200,
       "stat": "luck",
-      "value": 0
+      "value": 0.03
     },
     {
       "harvests": 1000,
       "stat": "yield",
-      "value": 0
+      "value": 0.03
     },
     {
       "harvests": 3000,
@@ -30,7 +32,7 @@
   ],
   "hot": {
     "sellBonus": 0,
-    "orderBonus": 0
+    "orderBonus": 0.2
   },
   "_proposed": {
     "nightGrowth": {

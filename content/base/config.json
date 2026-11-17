@@ -4,7 +4,7 @@
   "storageCapacity": 60,
   "levels": {
     "xpBase": 3,
-    "xpExponent": 2.85,
+    "xpExponent": 2.9,
     "xpGrowth": 1.06,
     "xpGrowthUntil": 25,
     "xpLinearAfter": 0.02,
