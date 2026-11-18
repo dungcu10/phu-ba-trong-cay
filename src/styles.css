@@ -973,3 +973,8 @@ html, body {
 .zone-banner.show{animation:zoneShow 2s ease-out forwards}
 @keyframes zoneShow{0%{opacity:0;transform:translate(-50%,-40%)}15%{opacity:1;transform:translate(-50%,-50%)}70%{opacity:1}100%{opacity:0;transform:translate(-50%,-55%)}}
 .alt-home.on{background:#5fb36f;box-shadow:0 0 10px rgba(255,255,255,.9)}
+/* Chỉ thị 12 B4/B5: visit bar chips */
+.visit-info{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.visit-chip{padding:3px 10px;border-radius:999px;background:rgba(255,255,255,.12);font-size:13px;font-weight:600;white-space:nowrap}
+.visit-chip.enemy{background:rgba(230,90,70,.85);color:#fff}
+.visit-chip.warn{background:rgba(255,190,90,.25)}

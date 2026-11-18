@@ -128,6 +128,13 @@ export const MIGRATIONS: Record<number, Migration> = {
     data.errands = { day: -1, rerolls: 0, list: [] };
     return data;
   },
+  // 13 -> 14 (chỉ thị 12 B4/B5): stealing and helping. Steal turns start full (reconcile fills the
+  // count from the content); no enemies, nothing taken, no trial seeds. Crops and bugs are kept.
+  13: (data) => {
+    const at = typeof data.maxSeenAt === 'number' ? data.maxSeenAt : 0;
+    data.social = { steal: { tokens: -1, at, day: -1, pots: {}, streak: [], double: false }, help: { day: -1, used: 0 }, enemies: {}, taken: { day: -1, count: 0, log: [] }, trialSeeds: {} };
+    return data;
+  },
 };
 
 export function migrate(

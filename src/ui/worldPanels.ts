@@ -1,6 +1,7 @@
 // Windows for orders, the stall, neighbours, the plant journal and letters (DESIGN_SYSTEM 6).
 // They only read state and send commands through the actions interface.
 
+import { isEnemy } from '../systems/social.ts';
 import { itemIcon } from './icons.ts';
 import { svgIcon } from './icons.ts';
 import type { GameSession } from '../app/session.ts';
@@ -455,6 +456,7 @@ export class NeighborsPanel extends Panel {
       const prev = state.ranks.prev[r.id];
       const move = prev ? prev - r.rank : 0;
       const helps = s ? helpsLeft(content, s, now) : 0;
+      const enemyOf = (id: string) => !!id && isEnemy(state, id, now);
       const moveText = move > 0 ? `▲${move}` : move < 0 ? `▼${-move}` : '–';
       const moveLabel = move > 0 ? `lên ${move} hạng` : move < 0 ? `xuống ${-move} hạng` : 'giữ hạng';
       list.append(
@@ -473,7 +475,8 @@ export class NeighborsPanel extends Panel {
           !you && s && h('span', { class: 'hearts', title: 'Thân thiết' }, '♥'.repeat(Math.min(5, Math.floor(s.friendship / 2))) || '♡'),
           h('span', { class: 'tag' }, coin(16), formatNumber(r.wealth)),
           !you && s && s.stall.length > 0 && h('button', { class: 'candy small', 'data-test': `stall-of-${r.id}`, onclick: () => this.openStall(r.id) }, `Ghé sạp · ${s.stall.length}`),
-          !you && h('button', { class: `candy small ${helps > 0 ? 'gold' : ''}`, 'data-test': `visit-${r.id}`, onclick: () => this.visit(r.id) }, helps > 0 ? `Ghé vườn · ${helps}` : 'Ghé vườn'),
+          // Chỉ thị 12 B4: an enemy's garden is the one to visit (steal back, free and doubled).
+          !you && h('button', { class: `candy small ${enemyOf(r.id) || helps > 0 ? 'gold' : ''}`, 'data-test': `visit-${r.id}`, onclick: () => this.visit(r.id) }, enemyOf(r.id) ? 'Trả đũa!' : helps > 0 && !content.neighbors.steal ? `Ghé vườn · ${helps}` : 'Ghé vườn'),
         ),
       );
     }

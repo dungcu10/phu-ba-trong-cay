@@ -1,6 +1,7 @@
 // REDESIGN_V2 windows and bars: floor sign (stars, expansion, pot sets), daily missions,
 // the seed tray at the bottom (drag a seed onto pots), and the bar shown while visiting.
 
+import { catchChance, gardenBugs, helpsLeftToday, isEnemy, nextStealTurnAt, stealTurns } from '../systems/social.ts';
 import { itemIcon } from './icons.ts';
 import type { GameSession } from '../app/session.ts';
 import type { MissionDef } from '../core/content.ts';
@@ -257,18 +258,20 @@ export class SeedTray {
   render(): void {
     const { content, state } = this.session;
     const hot = hotCrop(content, state, state.player.level, this.session.now());
-    const key = `${state.player.level}|${state.player.coins >= 0 ? content.cropList.map((c) => c.seedPrice <= state.player.coins).join() : ''}|${this.selected}|${hot?.id ?? ''}`;
+    const key = `${state.player.level}|${state.player.coins >= 0 ? content.cropList.map((c) => c.seedPrice <= state.player.coins).join() : ''}|${this.selected}|${hot?.id ?? ''}|${JSON.stringify(state.social.trialSeeds)}`;
     if (key === this.lastKey) return;
     this.lastKey = key;
     clear(this.row);
     for (const crop of content.cropList) {
-      const locked = crop.unlockLevel > state.player.level;
-      const poor = crop.seedPrice > state.player.coins;
+      // Chỉ thị 12 B4.2.1: a seed found while stealing plants a higher crop once.
+      const trial = crop.unlockLevel > state.player.level ? (state.social.trialSeeds[crop.id] ?? 0) : 0;
+      const locked = crop.unlockLevel > state.player.level && trial === 0;
+      const poor = trial === 0 && crop.seedPrice > state.player.coins;
       const chip = h(
         'button',
         { class: `seed-chip${locked ? ' locked' : ''}${poor && !locked ? ' poor' : ''}${this.selected === crop.id ? ' on' : ''}`, 'data-test': `tray-${crop.id}`, 'aria-label': crop.name.vi },
         icon(`${crop.sprite}/${crop.stages - 1}`, 54),
-        h('span', { class: 'chip-price' }, locked ? `Cấp ${crop.unlockLevel}` : crop.seedPrice === 0 ? 'Miễn phí' : formatNumber(crop.seedPrice)),
+        h('span', { class: 'chip-price' }, locked ? `Cấp ${crop.unlockLevel}` : trial > 0 ? `Hạt thử ×${trial}` : crop.seedPrice === 0 ? 'Miễn phí' : formatNumber(crop.seedPrice)),
         // Bổ sung A6.5: today's hot crop sells and delivers for more.
         !locked && hot?.id === crop.id && h('span', { class: 'hot-tag' }, 'Hot hôm nay'),
       );
@@ -334,8 +337,28 @@ export class VisitBar {
 
   update(): void {
     const { content, state } = this.session;
+    const now = this.session.now();
     const s = state.neighbors[this.botId]!;
-    const left = helpsLeft(content, s, this.session.now());
+    // Chỉ thị 12 B4/B5: steal turns, helps left today, the bugs waiting here, enemy status.
+    if (content.neighbors.steal) {
+      const turns = stealTurns(content, state, now);
+      const next = nextStealTurnAt(content, state, now);
+      const helps = content.neighbors.help.perDay !== undefined ? helpsLeftToday(content, state, now) : helpsLeft(content, s, now);
+      const bugs = gardenBugs(content, state, this.botId, now)
+        .slice(0, 3)
+        .map((b) => `${content.items.get(b.bugId)?.name.vi ?? ''} ×${b.count}`);
+      const enemy = isEnemy(state, this.botId, now);
+      const caught = catchChance(content, state, this.botId, now);
+      this.info.replaceChildren(
+        h('span', { class: `visit-chip${enemy ? ' enemy' : ''}` }, enemy ? 'Kẻ thù: trộm lại miễn phí, gấp đôi' : `Trộm: còn ${turns} lượt${next ? ` (thêm lượt sau ${formatClock(next - now)})` : ''}`),
+        h('span', { class: 'visit-chip' }, `Giúp: còn ${helps} lượt`),
+        ...(caught > 0 ? [h('span', { class: 'visit-chip warn' }, `Có thú canh: ${Math.round(caught * 100)}% bị bắt`)] : []),
+        h('span', { class: 'visit-chip' }, bugs.length ? `Vườn này đang có: ${bugs.join(', ')}` : 'Vườn này không có bọ'),
+        h('span', { class: 'note' }, `Cấp ${s.level} · Chạm cây chín để trộm, chạm chậu khát/có bọ để giúp`),
+      );
+      return;
+    }
+    const left = helpsLeft(content, s, now);
     const r = helpReward(content, s);
     this.info.textContent = left > 0 ? `Cấp ${s.level} · Chạm chậu khát nước hoặc có Bọ Mây để giúp · còn ${left} lượt (+${formatNumber(r.coins)} xu mỗi lượt)` : `Cấp ${s.level} · Hôm nay đã giúp đủ, mai ghé tiếp nhé!`;
   }

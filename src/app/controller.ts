@@ -476,8 +476,10 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
     const pot = visitGarden(this.session.content, this.session.state, botId, this.session.now()).floors[ref.floor]?.pots[ref.slot];
     const st = pot?.status;
     const kind = st?.bug && (target === 'bug' || !st.thirsty) ? 'bug' : st?.thirsty ? 'water' : null;
+    // Chỉ thị 12 B4: a ripe pot is for stealing (not while sweeping: stealing is always a deliberate tap).
+    if (!kind && st?.ripe && !st.stolen && !fromSwipe) return void this.run({ type: 'stealCrop', botId, floor: ref.floor, slot: ref.slot });
     if (!kind) {
-      if (!fromSwipe) this.toasts.show(st?.ripe ? 'Cây của hàng xóm đã chín, để họ tự thu nhé.' : 'Chậu này đang ổn.', 'info', 1600);
+      if (!fromSwipe) this.toasts.show(st?.stolen ? 'Chậu này đã có dấu chân rồi.' : 'Chậu này đang ổn.', 'info', 1600);
       return;
     }
     this.run({ type: 'helpNeighbor', botId, floor: ref.floor, slot: ref.slot, kind }, fromSwipe);
@@ -1126,9 +1128,40 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
         const p = at({ floor: e.floor, slot: e.slot });
         fx.burst(this.view.dot, p.x, p.y, 12, { scale: 0.5, speed: 260, tint: hex(e.kind === 'water' ? TOKENS.color.brand.sky : TOKENS.color.brand.peach) });
         fx.floatText(`+${formatNumber(e.coins)} xu`, p.x, p.y - 20, hex(TOKENS.color.brand.gold));
-        fx.floatText(e.kind === 'water' ? 'Đã tưới giúp!' : 'Đã bắt bọ giúp!', p.x, p.y + 20, hex(TOKENS.color.brand.cream));
+        fx.floatText(e.kind === 'water' ? 'Đã tưới giúp!' : e.bugId ? `+1 ${content.items.get(e.bugId)?.name.vi ?? 'bọ'}` : 'Đã bắt bọ giúp!', p.x, p.y + 20, hex(TOKENS.color.brand.cream));
         break;
       }
+      // Chỉ thị 12 B4: stealing.
+      case 'cropStolen': {
+        this.sfx.play(e.mutation ? 'levelUp' : 'harvest');
+        const p = at({ floor: e.floor, slot: e.slot });
+        fx.burst(this.view.dot, p.x, p.y, e.mutation ? 26 : 12, { scale: 0.55, speed: 300, tint: hex(e.mutation ? TOKENS.color.brand.gold : TOKENS.color.brand.peach) });
+        fx.floatText(`+${e.qty} ${content.items.get(e.itemId)?.name.vi ?? ''}`, p.x, p.y - 20, hex(e.mutation ? TOKENS.color.brand.gold : TOKENS.color.brand.cream));
+        if (e.double && !e.enemy) this.toasts.show('Cú Đúp! Trộm gấp đôi, trúng hàng biến dị!', 'level', 2400);
+        else if (e.enemy) this.toasts.show('Trả đũa kẻ thù: không tốn lượt, gấp đôi!', 'success', 2000);
+        if (e.seed) this.toasts.show(`Nhặt được hạt ${content.crops.get(e.seed)?.name.vi ?? ''}! Gieo thử được một lần dù chưa tới cấp.`, 'level', 3200);
+        this.visitBar?.update();
+        break;
+      }
+      case 'stealCaught': {
+        this.sfx.play('error');
+        const p = at({ floor: e.floor, slot: e.slot });
+        fx.floatText('Bị bắt quả tang!', p.x, p.y - 20, hex(TOKENS.color.brand.peach));
+        this.view.shake(320);
+        this.toasts.show(`Thú cưng nhà ${content.bots.get(e.botId)?.name.vi ?? 'hàng xóm'} đuổi chạy mất dép! Mất lượt, không mất đồ.`, 'error', 2600);
+        this.visitBar?.update();
+        break;
+      }
+      case 'takenWhileAway': {
+        const byBot = new Map<string, string[]>();
+        for (const t of e.list) byBot.set(t.botId, [...(byBot.get(t.botId) ?? []), `${t.qty} ${content.items.get(t.itemId)?.name.vi ?? ''}`]);
+        for (const [id, what] of byBot) this.toasts.show(`${content.bots.get(id)?.name.vi ?? 'Hàng xóm'} đã trộm ${what.join(', ')} của bạn. Ghé trả đũa trong 24 giờ: gấp đôi, không tốn lượt!`, 'info', 4200);
+        break;
+      }
+      case 'friendGift':
+        this.sfx.play('levelUp');
+        this.toasts.show(`${content.bots.get(e.botId)?.name.vi ?? 'Hàng xóm'} quý bạn (thân thiết ${e.at}): tặng ${formatNumber(e.coins)} xu${Object.keys(e.items).length ? ' và quà' : ''}!`, 'level', 3000);
+        break;
       case 'levelUp': {
         this.sfx.play('levelUp');
         const reward = levelUpReward(content, e.level);

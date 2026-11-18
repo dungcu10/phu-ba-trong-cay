@@ -7,6 +7,7 @@ import type { BazaarSlot, GameState, SlotState } from './state.ts';
 import { adjustedOffset, gameTime } from './clock.ts';
 import { stochasticRound } from './rng.ts';
 import { cropStatus, cycleDurationMs } from '../systems/growth.ts';
+import { friendGifts, helpsLeftToday, isEnemy, steal, stealWhileAway, useHelp, visitBug } from '../systems/social.ts';
 import { addItem, addXp, removeItem, sellPrice, storageCapacity, storageFree, storageUpgradeCost } from '../systems/economy.ts';
 import { canAfford, doubleYieldChance, grantPot, isMilestone, mutationMultiplier, nextUpgradeCost, noteInBook, upgradeBlock } from '../systems/pots.ts';
 import { randomFor } from './rng.ts';
@@ -68,6 +69,7 @@ export type Command =
   | { type: 'claimMissionBonus' }
   /** Helps one pot while visiting a neighbour's garden. */
   | { type: 'helpNeighbor'; botId: string; floor: number; slot: number; kind: HelpKind }
+  | { type: 'stealCrop'; botId: string; floor: number; slot: number }
   /** Gets a non-shop pot by exchanging items (mission seals). */
   | { type: 'obtainPot'; potId: string }
   | { type: 'claimEventMilestone'; eventId: string }
@@ -194,7 +196,11 @@ export type GameEvent =
   | { type: 'missionDone'; index: number; missionId: string }
   | { type: 'missionClaimed'; index: number; coins: number; xp: number; gems: number }
   | { type: 'missionBonusClaimed'; coins: number; xp: number; gems: number }
-  | { type: 'neighborHelped'; botId: string; floor: number; slot: number; kind: HelpKind; coins: number; xp: number }
+  | { type: 'neighborHelped'; botId: string; floor: number; slot: number; kind: HelpKind; coins: number; xp: number; bugId?: string }
+  | { type: 'cropStolen'; botId: string; floor: number; slot: number; itemId: string; qty: number; mutation: string | null; seed: string | null; enemy: boolean; double: boolean }
+  | { type: 'stealCaught'; botId: string; floor: number; slot: number }
+  | { type: 'takenWhileAway'; list: Array<{ botId: string; itemId: string; qty: number; at: number }> }
+  | { type: 'friendGift'; botId: string; at: number; coins: number; items: Record<string, number> }
   | { type: 'materialFound'; slot: SlotRef; itemId: string; qty: number }
   | { type: 'potObtained'; potInstanceId: string; potId: string; source: 'exchange' | 'event' }
   | { type: 'eventPoints'; eventId: string; points: number; total: number }
@@ -238,6 +244,12 @@ export type ErrorCode =
   | 'unknown_neighbor'
   | 'no_help_needed'
   | 'help_limit'
+  | 'enemy_garden'
+  | 'not_ripe'
+  | 'already_stolen'
+  | 'no_steal_turns'
+  | 'not_available'
+  | 'unknown_neighbor'
   | 'level_not_open'
   | 'not_obtainable'
   | 'nothing_growing'
@@ -322,12 +334,18 @@ export function updateWorld(content: ContentPack, state: GameState, now: number)
 }
 
 export function dispatch(content: ContentPack, state: GameState, cmd: Command, realNow: number): Result {
+  const seen = state.maxSeenAt;
   const now = advanceTime(state, realNow);
+  // Chỉ thị 12 B4.2.3: neighbours only come for your crops while the game was closed (a long gap).
+  const taken = stealWhileAway(content, state, seen, now);
   ensureMissions(content, state, now);
   ensureQuestPeriods(content, state, now);
   // Birds work in time order up to now, before the player acts, with the player's own catchBug.
   const birdEvents = [...runBirds(content, state, now), ...runPets(content, state, now), ...collectWorkshop(content, state, now)];
+  if (taken.length > 0) birdEvents.push({ type: 'takenWhileAway', list: taken });
   const ran = run(content, state, cmd, now);
+  // Chỉ thị 12 B5: friendship marks (3, 6, 10) bring a gift, whatever raised the friendship.
+  if (ran.ok) for (const id of Object.keys(state.neighbors)) for (const g of friendGifts(content, state, id)) ran.events.push({ type: 'friendGift', botId: id, ...g });
   // Bird catches count for missions even when the player's command itself fails.
   const result: Result = ran.ok ? { ok: true, events: [...birdEvents, ...ran.events] } : { ok: true, events: birdEvents };
   if (result.events.length > 0) {
@@ -642,6 +660,12 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
       return claimMissionBonus(content, state);
     case 'helpNeighbor':
       return helpNeighbor(content, state, cmd, now);
+    case 'stealCrop': {
+      const r = steal(content, state, cmd.botId, cmd.floor, cmd.slot, now);
+      if (typeof r === 'string') return fail(r as ErrorCode);
+      if (r.caught) return { ok: true, events: [{ type: 'stealCaught', botId: cmd.botId, floor: cmd.floor, slot: cmd.slot }] };
+      return { ok: true, events: [{ type: 'cropStolen', botId: cmd.botId, floor: cmd.floor, slot: cmd.slot, itemId: r.itemId!, qty: r.qty, mutation: r.mutation, seed: r.seed, enemy: r.enemy, double: r.double }] };
+    }
     case 'obtainPot':
       return obtainPot(content, state, cmd.potId, now);
     case 'claimEventMilestone':
@@ -769,15 +793,26 @@ function claimMissionBonus(content: ContentPack, state: GameState): Result {
 function helpNeighbor(content: ContentPack, state: GameState, cmd: { botId: string; floor: number; slot: number; kind: HelpKind }, now: number): Result {
   const bot = state.neighbors[cmd.botId];
   if (!bot || !content.bots.has(cmd.botId)) return fail('unknown_neighbor');
-  if (helpsLeft(content, bot, now) <= 0) return fail('help_limit');
+  // Chỉ thị 12 B5: one daily allowance over all gardens (perDay); older content keeps the per-garden one.
+  const global = content.neighbors.help.perDay !== undefined;
+  if (global ? helpsLeftToday(content, state, now) <= 0 : helpsLeft(content, bot, now) <= 0) return fail('help_limit');
   const pot = botGarden(content, state, cmd.botId, now)[cmd.floor]?.pots[cmd.slot];
   if (!pot) return fail('bad_slot');
   if (pot.need !== cmd.kind) return fail('no_help_needed');
+  // Catching bugs for an enemy gives nothing (B4.2.4): say so instead of using a turn.
+  if (isEnemy(state, cmd.botId, now)) return fail('enemy_garden');
   const day = localDay(content, now);
-  bot.help = { day, pots: [...helpToday(content, bot, now), pot.key] };
+  bot.help = { day, pots: [...helpToday(content, bot, now).filter(() => bot.help.day === day), pot.key] };
+  if (global) useHelp(content, state, now);
   bot.friendship += content.neighbors.help.friendship;
   const r = helpReward(content, bot);
-  const events: GameEvent[] = [{ type: 'neighborHelped', botId: cmd.botId, floor: cmd.floor, slot: cmd.slot, kind: cmd.kind, ...r }];
+  // B5: the bug caught in a neighbour's garden goes to the player's own bag.
+  const bugId = cmd.kind === 'bug' && global ? visitBug(content, state, cmd.botId, pot, now) : undefined;
+  if (bugId) {
+    addItem(state, bugId, 1);
+    state.stats.bugsCaught += 1;
+  }
+  const events: GameEvent[] = [{ type: 'neighborHelped', botId: cmd.botId, floor: cmd.floor, slot: cmd.slot, kind: cmd.kind, ...r, ...(bugId ? { bugId } : {}) }];
   giveReward(content, state, { ...r, gems: 0 }, events);
   return { ok: true, events };
 }
@@ -788,17 +823,22 @@ function plant(content: ContentPack, state: GameState, ref: SlotRef, cropId: str
   if (slot.planting) return fail('slot_busy');
   const crop = content.crops.get(cropId);
   if (!crop) return fail('unknown_crop');
-  if (crop.unlockLevel > state.player.level) return fail('locked');
-  if (state.player.coins < crop.seedPrice) return fail('not_enough_coins');
-  state.player.coins -= crop.seedPrice;
+  // Chỉ thị 12 B4.2.1: a seed found while stealing plants a crop above the player's level once (free).
+  const trial = crop.unlockLevel > state.player.level && (state.social.trialSeeds[cropId] ?? 0) > 0;
+  if (crop.unlockLevel > state.player.level && !trial) return fail('locked');
+  if (!trial && state.player.coins < crop.seedPrice) return fail('not_enough_coins');
+  if (trial) {
+    state.social.trialSeeds[cropId]! -= 1;
+    if (state.social.trialSeeds[cropId]! <= 0) delete state.social.trialSeeds[cropId];
+  } else state.player.coins -= crop.seedPrice;
   // Chỉ thị 11 § E1: Sẻ Mầm Nhặt Hạt on its floor — a chance to get the seed money back.
   const pick = activeSkill(content, state, 'pickSeeds', now, ref.floor);
-  const refunded = !!pick && crop.seedPrice > 0 && randomFor(state.seed, 'pickSeeds', state.nextId) < pick.value;
+  const refunded = !trial && !!pick && crop.seedPrice > 0 && randomFor(state.seed, 'pickSeeds', state.nextId) < pick.value;
   if (refunded) state.player.coins += crop.seedPrice;
   slot.planting = {
     id: state.nextId++,
     cropId,
-    seedCost: crop.seedPrice,
+    seedCost: trial ? 0 : crop.seedPrice,
     cycleStartedAt: now,
     harvestsDone: 0,
     bonusMs: 0,
@@ -900,7 +940,9 @@ function harvest(content: ContentPack, state: GameState, ref: SlotRef, now: numb
   // Rồng Ban Lộc (§ E1): once a day the next harvest on the dragon's floor is doubled.
   const bless = activeSkill(content, state, 'blessing', now, ref.floor);
   const blessed = !!bless && dailyLeft(content, bless.pet, 'blessing', Math.max(1, Math.round(bless.value)), now) > 0;
-  const qty = (doubled ? baseQty * 2 : baseQty) * (blessed ? 2 : 1);
+  // Chỉ thị 12 B4.2.3: what neighbours took while the game was closed (never from a mutated harvest).
+  const taken = mutation ? 0 : (planting.stolen ?? 0);
+  const qty = Math.max(1, (doubled ? baseQty * 2 : baseQty) * (blessed ? 2 : 1) - taken);
   const xp = stochasticRound(crop.xp * (1 + slotBonus(content, state, slot, crop, 'xp')) * xpScale, state.seed, 'xp', planting.id, planting.harvestsDone);
   if (storageFree(content, state) < qty) return fail('storage_full');
   if (blessed) dailyLeft(content, bless.pet, 'blessing', Math.max(1, Math.round(bless.value)), now, true);
@@ -946,6 +988,7 @@ function harvest(content: ContentPack, state: GameState, ref: SlotRef, now: numb
   } else {
     planting.cycleStartedAt = now;
     planting.bonusMs = 0;
+    delete planting.stolen;
     planting.wateredStages = [];
     planting.caughtBugs = {};
     seasonHead(content, state, slot, ref.floor, now);

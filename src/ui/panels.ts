@@ -51,8 +51,9 @@ export class SeedPanel extends Panel {
     this.body.append(h('p', { class: 'lead' }, this.slot ? `Gieo vào chậu số ${this.slot.slot + 1}` : empty > 0 ? `Gieo cả tầng: ${empty} chậu trống` : 'Tầng này không còn chậu trống'));
     const shelf = h('div', { class: 'shelf' });
     for (const crop of content.cropList) {
-      const locked = crop.unlockLevel > state.player.level;
-      const poor = crop.seedPrice > state.player.coins;
+      const trial = crop.unlockLevel > state.player.level ? (state.social.trialSeeds[crop.id] ?? 0) : 0;
+      const locked = crop.unlockLevel > state.player.level && trial === 0;
+      const poor = trial === 0 && crop.seedPrice > state.player.coins;
       const pack = h(
         'button',
         {
@@ -67,7 +68,7 @@ export class SeedPanel extends Panel {
         icon(`${crop.sprite}/${crop.stages - 1}`, 64),
         h('span', { class: 'pack-name' }, crop.name.vi),
         h('span', { class: 'pack-info' }, `${formatDuration(crop.growSeconds * 1000)} · ${crop.harvests > 1 ? `thu ${crop.harvests} lần` : 'thu 1 lần'}`),
-        h('span', { class: 'tag' }, coin(18), crop.seedPrice === 0 ? 'Miễn phí' : formatNumber(crop.seedPrice)),
+        trial > 0 ? h('span', { class: 'tag' }, `Hạt thử ×${trial}`) : h('span', { class: 'tag' }, coin(18), crop.seedPrice === 0 ? 'Miễn phí' : formatNumber(crop.seedPrice)),
         locked && h('span', { class: 'cloth' }, `Mở ở cấp ${crop.unlockLevel}`),
       );
       shelf.append(pack);

@@ -11,7 +11,7 @@ import { adoptQuestsForOldSave, emptyQuestState } from '../systems/quests.ts';
 import type { ContentPack } from '../core/content.ts';
 import { genFloorNumber } from '../core/floorgen.ts';
 import { orderSlotsFor } from '../systems/orders.ts';
-import { emptyV12Parts, emptyV13Parts, newNeighbors, type GameState, type Planting, type SlotState } from '../core/state.ts';
+import { emptySocial, emptyV12Parts, emptyV13Parts, newNeighbors, type GameState, type Planting, type SlotState } from '../core/state.ts';
 import { SaveFormatError } from './serializer.ts';
 
 export type ReconcileMode = 'import' | 'local';
@@ -81,6 +81,7 @@ export function reconcile(input: GameState, content: ContentPack, mode: Reconcil
   reconcileWorld(state, content, c);
   reconcileV12(state, content, c);
   reconcileV13(state, content);
+  reconcileV14(state, content);
 
   // nextId must stay above every planting id so new plantings never reuse random keys.
   for (const f of state.floors) for (const s of f.slots) if (s.planting) state.nextId = Math.max(state.nextId, s.planting.id + 1);
@@ -454,4 +455,30 @@ function reconcileV12(state: GameState, content: ContentPack, c: Checker): void 
     const have = (state.inventory[b.id] ?? 0) > 0;
     if (have && !col.bugs[b.id]) col.bugs[b.id] = { firstAt: state.maxSeenAt, count: state.inventory[b.id] ?? 0 };
   }
+}
+
+/** Save 14 (chỉ thị 12 B4/B5): steal turns 0–max (−1 from the migration = full), known neighbours and crops only. */
+function reconcileV14(state: GameState, content: ContentPack): void {
+  const max = content.neighbors.steal?.turnsMax ?? 0;
+  const at = state.maxSeenAt || state.createdAt || 0;
+  const d = emptySocial(at, max);
+  const s = obj(state.social) ? state.social : d;
+  const num = (x: unknown, f: number) => (typeof x === 'number' && Number.isFinite(x) ? x : f);
+  const st = obj(s.steal) ? s.steal : d.steal;
+  const tokens = num(st.tokens, max);
+  const ids = (x: unknown) => (Array.isArray(x) ? x.filter((v): v is string => typeof v === 'string') : []);
+  const pots: Record<string, string[]> = {};
+  for (const [id, list] of Object.entries(obj(st.pots) ? st.pots : {})) if (content.bots.has(id)) pots[id] = ids(list);
+  const enemies: Record<string, number> = {};
+  for (const [id, until] of Object.entries(obj(s.enemies) ? s.enemies : {})) if (content.bots.has(id) && typeof until === 'number') enemies[id] = until;
+  const tk = obj(s.taken) ? s.taken : d.taken;
+  const seeds: Record<string, number> = {};
+  for (const [id, q] of Object.entries(obj(s.trialSeeds) ? s.trialSeeds : {})) if (content.crops.has(id) && Number.isInteger(q) && (q as number) > 0) seeds[id] = q as number;
+  state.social = {
+    steal: { tokens: tokens < 0 ? max : Math.min(max, Math.max(0, Math.floor(tokens))), at: num(st.at, at), day: num(st.day, -1), pots, streak: ids(st.streak).filter((id) => content.bots.has(id)), double: st.double === true },
+    help: obj(s.help) ? { day: num(s.help.day, -1), used: Math.max(0, num(s.help.used, 0)) } : d.help,
+    enemies,
+    taken: { day: num(tk.day, -1), count: Math.max(0, num(tk.count, 0)), log: (Array.isArray(tk.log) ? tk.log : []).filter((e) => obj(e) && content.bots.has(e.botId) && content.items.has(e.itemId)).slice(-20) },
+    trialSeeds: seeds,
+  };
 }

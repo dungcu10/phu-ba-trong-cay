@@ -4,7 +4,7 @@ import type { ContentPack, FloorDef } from './content.ts';
 import { newSeed } from './rng.ts';
 import { emptyQuestState, type QuestState } from '../systems/quests.ts';
 
-export const SAVE_VERSION = 13;
+export const SAVE_VERSION = 14;
 
 export interface Planting {
   /** Unique per planting, used as a key for deterministic randomness. */
@@ -22,6 +22,8 @@ export interface Planting {
   wateredStages: number[];
   /** Bọ Mây caught in this cycle, per bug id. */
   caughtBugs: Record<string, number>;
+  /** Chỉ thị 12 B4.2.3: produce neighbours took from this cycle while the game was closed. */
+  stolen?: number;
   /**
    * Chỉ thị 10 (save 12): player level when planted. Its presence means the bugs of this planting are
    * of several kinds (§ 3.2); plantings from older saves keep attracting only Bọ Rùa Mây.
@@ -166,6 +168,8 @@ export interface BotState {
   lastAction: { kind: string; reason: string; at: number } | null;
   /** Pots the player helped in this neighbour's garden today (local day number, pot keys). */
   help: { day: number; pots: string[] };
+  /** Chỉ thị 12 B5: friendship marks already rewarded (count of friendMilestones reached). */
+  friendGifts?: number;
   /** Chợ Mây (save 11): what this neighbour has laid out for the player to buy. */
   stall: BotListing[];
   /** Chỉ thị 11 D1: the neighbour's birds (same rules as the player's) and the bugs they caught. */
@@ -248,6 +252,8 @@ export interface GameState {
   pets: PetState[];
   /** Chỉ thị 11 § E3: today's errands board. */
   errands: { day: number; rerolls: number; list: ErrandSlot[] };
+  /** Chỉ thị 12 B4/B5 (save 14): stealing, helping, enemies, trial seeds. */
+  social: SocialState;
   /** Chỉ thị 10 § 3.11: when Xu Xu last gave its small gift. */
   xuxu?: { giftAt: number; taps: number };
   /** Chỉ thị 12 B2: the Sạp Săn Hàng board (optional; rolled when first opened). */
@@ -278,6 +284,22 @@ export interface GameState {
 }
 
 /** Save 13 defaults for the chỉ thị 11 parts (new games and old saves alike). */
+/** Chỉ thị 12 B4/B5 (save 14): stealing, helping, enemies, what neighbours took, trial seeds. */
+export interface SocialState {
+  steal: { tokens: number; at: number; day: number; pots: Record<string, string[]>; streak: string[]; double: boolean };
+  help: { day: number; used: number };
+  /** Neighbour → until when they are an enemy (they stole from the player). */
+  enemies: Record<string, number>;
+  /** What neighbours took while the game was closed (shown once, then cleared), and today's count. */
+  taken: { day: number; count: number; log: Array<{ botId: string; itemId: string; qty: number; at: number }> };
+  /** Seeds of crops above the player's level, found while stealing (one planting each). */
+  trialSeeds: Record<string, number>;
+}
+
+export function emptySocial(now: number, turns: number): SocialState {
+  return { steal: { tokens: turns, at: now, day: -1, pots: {}, streak: [], double: false }, help: { day: -1, used: 0 }, enemies: {}, taken: { day: -1, count: 0, log: [] }, trialSeeds: {} };
+}
+
 export function emptyV13Parts(): Pick<GameState, 'buildings' | 'village' | 'pets' | 'errands'> {
   return { buildings: {}, village: { seenZones: [], medals: [], checkIn: { day: -1, count: 0 } }, pets: [], errands: { day: -1, rerolls: 0, list: [] } };
 }
@@ -343,6 +365,7 @@ export function createNewGame(content: ContentPack, now: number, entropy = now):
     ranks: { day: -1, prev: {} },
     ...emptyV12Parts(now),
     ...emptyV13Parts(),
+    social: emptySocial(now, content.neighbors.steal?.turnsMax ?? 0),
   };
 }
 

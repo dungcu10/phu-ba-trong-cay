@@ -29,6 +29,21 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Chỉ thị 12 TỔNG B4 + B5 — Trộm vườn, giúp vườn, Kẻ Thù (tag `m-12-b4b5`)
+- Loại: Thêm / Thay đổi
+- Mô tả:
+  - **Trộm vườn Phú Bà** (chạm cây chín khi ghé vườn): 5 lượt, 3 giờ hồi 1 lượt; mỗi lượt 1 chậu, 1–2 nông sản và không quá 25% sản lượng chậu; chậu đã trộm có **dấu chân** (không trộm lại trong ngày). 8% ra nông sản biến dị (Vàng; 15% trong đó là Ngọc), 3% ra **hạt thử** của cây cao hơn cấp mình (gieo được 1 lần, không tốn xu, hiện trong khay hạt "Hạt thử ×N").
+  - **Bị bắt quả tang:** vườn có thú cưng ở nhà 20%, Phú Bà khó tính 20%, cả hai 35%; Cáo Lửa Con mình đang dắt giảm 10%. Bị bắt: mất lượt, không mất đồ, rung màn hình + thông báo.
+  - **Kẻ Thù / trả đũa:** ai trộm của mình thành kẻ thù 24 giờ; trộm lại không tốn lượt, không bị bắt, gấp đôi; nút "Trả đũa!" trên Bảng Phú Bà; bắt sâu giúp vườn kẻ thù không được thưởng.
+  - **Cú Đúp:** trộm thành công 3 vườn khác nhau liên tiếp → lần sau gấp đôi và chắc chắn biến dị.
+  - **BOT trộm vườn mình** chỉ khi tắt game (khoảng vắng > 10 phút), tối đa 3 lần/ngày, mỗi lần 10% một chậu chín (lần thu hoạch đó ít đi, không dưới 1), không bao giờ lấy hàng biến dị, không phải Phú Bà thân thiết (≥ 3); Mèo Mây Con canh tầng đó giảm 50%. Vào game có thông báo "Bà … đã trộm 2 … của bạn". **Mặc định tắt** (`botSteal.chancePerHour` = 0), xem dưới.
+  - **Giúp vườn (B5):** 10 lượt/ngày chung mọi vườn (thay 3 lượt mỗi nhà); bắt sâu thì **con bọ vào Túi Nguyên Liệu của mình**, đúng loại cây bot đó trồng (theo danh sách bọ của cây, cấp bot, ngày/đêm); thanh ghé vườn hiện "Vườn này đang có: Châu Chấu Sương ×3", lượt trộm, lượt giúp, tỉ lệ bị bắt.
+  - **Mốc thân thiết 3 / 6 / 10:** quà xu một lần mỗi mốc (dù thân thiết tăng từ đâu).
+- Số liệu: `neighbors.json` thêm `help.perDay`, `steal`, `botSteal`, `friendMilestones` (giữ `perBotPerDay` cho nội dung cũ). CTO chỉnh qua mô phỏng.
+- File/Module: src/systems/social.ts (mới), game.ts (lệnh `stealCrop`, `helpNeighbor` đổi luật, trộm khi vắng ở bước đầu `dispatch`, quà thân thiết, hạt thử trong `plant`, phần bị trộm trong `harvest`), state.ts (`social`, `Planting.stolen`, `BotState.friendGifts`), migrations.ts (13 → 14), reconcile.ts, content.ts (kiểu + kiểm tra), visit/garden (bọ theo cây, dấu chân), slotView.ts (dấu chân), gardenPanels.ts (thanh ghé vườn, khay hạt), panels.ts, worldPanels.ts (nút Trả đũa), controller.ts, scene.ts (`shake`), text.ts, styles.css, tests/steal12.test.ts (11 test); sửa test cũ theo luật mới (redesign: lượt giúp chung; market: cộng quà thân thiết).
+- Ảnh hưởng save: **Có — SAVE_VERSION 13 → 14** (migration thêm `social`; lượt trộm đầy; giữ nguyên chậu, bọ, xu).
+- Quyết định tự chọn: (1) **BOT trộm khi tắt game để tắt** (chancePerHour 0): bật 0,12 thì mô phỏng 30 ngày lệch chỉ số chặn (chậu chữ ký 16–18, Bọ Rất hiếm 0,38) — CTO bật và chỉnh; luật và test đã đủ. (2) Quà thân thiết chỉ xu nhỏ (0,25 / 0,5 / 1 U): quà Sợi Mây/Giọt Sương làm lệch nhịp cấp và chậu. (3) Trộm không chạy khi vuốt (luôn là một lần chạm). (4) Kẻ thù không cần bắt sâu giúp: báo trước thay vì tốn lượt.
+
 ### [2026-11-18] Chỉ thị 11 TỔNG N8 — Kiểm tổng, tài liệu, báo cáo (tag `m-11-n8`)
 - Loại: Thêm
 - Mô tả: `docs/FEATURE_WEB.md` (bảng mạng liên kết + sơ đồ + vòng xu, có chỗ trong mã); `tools/economy-11.ts` → `docs/reviews/economy-11.md` (30 ngày, 3 kiểu người chơi, 5 ràng buộc phần H, biểu đồ xu / cấp / Cấp Làng); báo cáo `docs/reports/2026-11-18-chi-thi-11/` với 6 ảnh 2388×1668. `tools/progression.ts` chỉ thêm trường báo cáo (villageLevel, pets, petBugs, errands), không đổi hành vi bot. Test hiệu năng 40 BOT × 7 ngày đổi ngưỡng 250 ms theo chỉ thị 11 § I (đủ mọi hệ).
