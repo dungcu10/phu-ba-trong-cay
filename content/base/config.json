@@ -73,13 +73,22 @@
   ],
   "floorGen": {
     "names": [
-      "Đảo Mây Hồng",
-      "Thung Lũng Sương Bạc",
-      "Đồi Cầu Vồng",
-      "Hồ Sen Mây",
-      "Rừng Tre Gió",
-      "Cung Mây Pha Lê",
-      "Bến Mây Hoàng Hôn"
+      "Đồi Gió Nhẹ",
+      "Thềm Nắng Mật",
+      "Vườn Hướng Dương Mây",
+      "Đảo Chuông Vàng",
+      "Bậc Thềm Hổ Phách",
+      "Sân Mây Kim Tuyến",
+      "Thung Lũng Oải Hương",
+      "Hồ Tím Hoàng Hôn",
+      "Rặng Mây Hồng Đào",
+      "Cầu Ráng Chiều",
+      "Vườn Cẩm Tú Cầu",
+      "Bến Đom Đóm",
+      "Đồi Sao Băng",
+      "Vườn Cực Quang",
+      "Đài Ngân Hà",
+      "Đỉnh Thiên Giới"
     ],
     "sprites": [
       "floors/cloud-meadow",

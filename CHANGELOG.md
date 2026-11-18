@@ -29,6 +29,19 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Chỉ thị 11 TỔNG N2 (phần 1) — Trời nhiều lớp, 20 tầng theo vùng trời, thước đo độ cao (tag `m-11-n2a`)
+- Loại: Thêm / Thay đổi
+- Mô tả:
+  - **Bầu trời thị sai:** 4 tấm trời (Trời Thấp, Trời Vàng Kim, Hoàng Hôn Tím, Thiên Giới Đêm — đã xử lý ở N1) xếp chồng, chồng 12% bằng dải mờ; vị trí tính theo chiều cao thế giới: tầng 1–5 thấy trời thấp, 6–10 trời vàng, 11–15 hoàng hôn, 16–20 đêm, chuyển mượt giữa các vùng. Ảnh tải lười; chưa tải xong thì hiện trời cũ.
+  - **Tầng 5 trở lên:** dùng lại 4 hình tầng mây, vòng chẵn lật ngang; màu phủ theo vùng (trời vàng ấm, hoàng hôn hồng tím, đêm xanh tím, 6–12%); bệ đá theo vùng (đá xám / sa thạch / đá trăng). Tầng 1–4 giữ như chỉ thị 10.
+  - **16 tên tầng 5–20 (gửi CTO duyệt):** 5 Đồi Gió Nhẹ · 6 Thềm Nắng Mật · 7 Vườn Hướng Dương Mây · 8 Đảo Chuông Vàng · 9 Bậc Thềm Hổ Phách · 10 Sân Mây Kim Tuyến · 11 Thung Lũng Oải Hương · 12 Hồ Tím Hoàng Hôn · 13 Rặng Mây Hồng Đào · 14 Cầu Ráng Chiều · 15 Vườn Cẩm Tú Cầu · 16 Bến Đom Đóm · 17 Đồi Sao Băng · 18 Vườn Cực Quang · 19 Đài Ngân Hà · 20 Đỉnh Thiên Giới. Trên tầng 20 lặp lại kèm số La Mã (Đồi Gió Nhẹ II …). Chỉ đổi `floorGen.names` trong config.json, không đổi số.
+  - **Thước đo độ cao** (mép phải): chấm cho từng tầng đã mở + nút nhà (mở Làng), chấm sáng là tầng đang xem, tầng có cây chín hoặc chim đói viền vàng nhấp nháy, "Độ cao: 1.250 m" (250 m/tầng); chạm chấm thì máy quay bay tới trong 0,6 giây. Ẩn khi đi thăm vườn hàng xóm. Cập nhật theo sự kiện và khi máy quay đổi tầng.
+  - **Vào vùng trời mới lần đầu:** tên vùng hiện lớn giữa màn hình, mờ dần trong 2 giây (Huy Chương Độ Cao đã có từ N4).
+  - **Vuốt nhanh:** máy quay trôi theo đà rồi dừng đúng ở một tầng (khi xem 1 tầng).
+- File/Module: src/render/sky.ts, src/render/zones.ts, src/ui/altitude.ts (mới); scene.ts (trời, màu phủ, lật hình, bệ theo vùng, dừng ở tầng, `onCamera`), world10.ts (bệ theo vùng), controller.ts, styles.css, content/base/config.json (`floorGen.names`), tests/floors20.test.ts.
+- Ảnh hưởng save: Không. Vùng trời đã xem lưu ở localStorage của máy (chỉ để không hiện lại tên vùng).
+- Quyết định tự chọn: (1) cảnh làng dưới tầng 1 (nen0), cây leo mọc dài có hoạt ảnh, mây trôi/đàn chim/tia nắng/sao/cực quang theo vùng: phần 2; (2) nút nhà trên thước mở bảng Làng như nút nhà ở HUD, tới khi có cảnh làng.
+
 ### [2026-11-18] Chỉ thị 11 TỔNG N6 — Kết hợp thú cưng, túi quà mỗi ngày của Sẻ (tag `m-11-n6`)
 - Loại: Thêm
 - Mô tả:

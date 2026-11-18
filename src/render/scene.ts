@@ -20,6 +20,7 @@ import { homeGarden, type GardenFloor, type GardenModel } from './garden.ts';
 import { SLOT_GEOM, SlotView } from './slotView.ts';
 import { ease, Tweens } from './tween.ts';
 import { PetActor } from './worldArt.ts';
+import { SkyStrip, ZONES, zoneOf } from './sky.ts';
 
 /** New pet pictures are 150 pt wide; drawn at about 0.6 × a pot (§ E5). */
 const PET_SCALE = 0.62;
@@ -141,6 +142,13 @@ export class GameView {
   private birds = new Map<string, BirdActor>();
   private swayers: Swayer[] = [];
   private readonly sky: Sprite;
+  /** Chỉ thị 11 § C2: the four skies in parallax (the static sky shows until they load). */
+  private readonly skyStrip = new SkyStrip();
+  /** A fling was let go: when it slows down the camera settles on the nearest floor (§ C3). */
+  private coasting = false;
+  /** Called when the camera floor changes (altitude gauge, zone banner). */
+  onCamera: ((floor: number) => void) | null = null;
+  private lastCameraFloor = -1;
   private readonly ambience: Ambience;
   private floors: FloorView[] = [];
   private locked: { container: Container; def: FloorDef; info: Text } | null = null;
@@ -175,7 +183,11 @@ export class GameView {
     this.sky = new Sprite(art.sky);
     this.sky.anchor.set(0.5);
     this.ambience = new Ambience(this.glow);
-    app.stage.addChild(this.sky, this.ambience.back);
+    app.stage.addChild(this.sky, this.skyStrip.root, this.ambience.back);
+    void this.skyStrip.load().then(() => {
+      this.sky.visible = !this.skyStrip.ready;
+      this.applyScroll();
+    });
     // Chỉ thị 10 § 2.3 layer order: ring backs, vine, floors (ring fronts, pedestals, pots inside), effects.
     this.world.addChild(this.ringBackLayer, this.trunkLayer, this.floorsLayer, this.birdLayer, this.effects);
     app.stage.addChild(this.world, this.ambience.front);
@@ -384,7 +396,13 @@ export class GameView {
     container.position.set(WORLD.floorCenterX, this.floorY(fi));
     const w10 = hasWorld10(this.art);
     const artId = floorArtId(fi);
-    container.addChild(w10 ? floorPicture(this.art, artId) : this.cloudSprite(f.def));
+    const pic = w10 ? floorPicture(this.art, artId) : this.cloudSprite(f.def);
+    // § C2: floors past the first four reuse the four pictures; every second round is mirrored.
+    if (w10 && Math.floor(fi / 4) % 2 === 1) pic.scale.x *= -1;
+    container.addChild(pic);
+    // § C2: the sky zone's colour wash (6–12 %) over the floor and everything on it.
+    const zone = ZONES[zoneOf(fi)]!;
+    container.tint = zone.tint;
     let ringBack: Sprite | null = null;
     if (w10) {
       // The vine passes through the left edge of the floor; a ring of cloud hugs it there.
@@ -445,7 +463,7 @@ export class GameView {
       const pl = place(i);
       if (w10) {
         // Chỉ thị 10: one stone pedestal under every pot position; the pot stands on its top face.
-        const ped = pedestalSprite(this.art, artId, i + fi);
+        const ped = pedestalSprite(this.art, artId, i + fi, fi >= 4 ? zone.pedestal : undefined);
         ped.position.set(pl.x, pl.y);
         ped.scale.set(pl.k * PEDESTAL_SCALE);
         if (pl.back) ped.tint = WORLD.backRowTint;
@@ -589,6 +607,7 @@ export class GameView {
     const k = Math.max(w / this.art.sky.width, h / this.art.sky.height);
     this.sky.scale.set(k);
     this.sky.position.set(w / 2, h / 2);
+    this.skyStrip.resize(w, h);
     this.ambience.resize(w, h);
     const v = WORLD.view;
     const hud = TOKENS.touch.primary + (TOKENS.space[5] ?? 0);
@@ -614,8 +633,23 @@ export class GameView {
     this.applyScroll();
   }
 
+  /** The floor the camera is on (the middle of the view when zoomed out), fractional. */
+  get cameraFloor(): number {
+    return this.scroll / WORLD.floorGap + (this.floorsInView - 1) / 2;
+  }
+
+  get floorCount(): number {
+    return this.floors.length;
+  }
+
   private applyScroll(): void {
     this.world.y = this.baseY + this.scroll * this.scale;
+    this.skyStrip.update(this.cameraFloor);
+    const cf = Math.round(this.scroll / WORLD.floorGap);
+    if (cf !== this.lastCameraFloor) {
+      this.lastCameraFloor = cf;
+      this.onCamera?.(cf);
+    }
     // Giao diện fantasy: the floor in view is sharp; floors above and below fade back, so the one
     // peeking in under the HUD reads as "the next floor" instead of pots colliding with the HUD.
     // With zoom, every floor inside the view is sharp; the fade starts past its top and bottom.
@@ -870,6 +904,7 @@ export class GameView {
     }
     const d = this.drag;
     this.drag = null;
+    if (d?.mode === 'climb') this.coasting = true;
     if (!d || d.mode !== 'undecided') return;
     if (d.start >= 0) return this.handlers?.onTap({ floor: d.floor, slot: d.start }, d.target);
     const hit = (c: Container | null) => c !== null && c.getBounds().containsPoint(d.x0, d.y0);
@@ -919,6 +954,11 @@ export class GameView {
     if (!this.drag && Math.abs(this.scrollVelocity) > 0.5) {
       this.setScroll(this.scroll + this.scrollVelocity);
       this.scrollVelocity *= 0.92;
+    } else if (this.coasting && !this.drag) {
+      // § C3: a fling coasts, then settles on a floor.
+      this.coasting = false;
+      this.scrollVelocity = 0;
+      if (this.floorsInView < 1.5) this.focusFloor(Math.round(this.scroll / WORLD.floorGap), 260);
     }
     this.effects.update(dt);
     this.ambience.update(dt, this.scroll);
