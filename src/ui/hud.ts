@@ -2,6 +2,7 @@
 // garden services (top-left), embroidered coin and gem pouches (top-centre), letters and gear
 // (top-right), main buttons in a thumb arc (bottom-right). Under 15% of the screen.
 
+import { luckReady } from '../systems/sessionLuck.ts';
 import { svgIcon } from './icons.ts';
 import { lineIcon } from './lineIcons.ts';
 import type { GameSession } from '../app/session.ts';
@@ -33,6 +34,9 @@ export interface HudActions {
   tapXuxu(): void;
   openVillage(): void;
   openLetters(): void;
+  /** Chỉ thị 12 B1: Hẹn giờ and Lộc Phiên. */
+  openTimers(): void;
+  claimLuck(): void;
   openMissions(): void;
   openEvent(): void;
   toggleTray(): void;
@@ -92,6 +96,8 @@ export class Hud {
     );
     const letters = h('button', { class: 'knob icon-knob', 'aria-label': 'Thư Mây', 'data-test': 'open-letters', onclick: () => actions.openLetters() }, lineIcon('letter', 22), this.letterBadge);
     const gear = h('button', { class: 'knob icon-knob', 'aria-label': 'Cài đặt', onclick: () => actions.openSettings() }, lineIcon('gear', 22));
+    const clock = h('button', { class: 'knob icon-knob', 'aria-label': 'Hẹn giờ', 'data-test': 'open-timers', onclick: () => actions.openTimers() }, h('span', { class: 'clock-glyph' }, '⏰'));
+    this.luckBtn = h('button', { class: 'luck-pill hidden', 'data-test': 'claim-luck', onclick: () => actions.claimLuck() }, h('span', { class: 'luck-glyph' }, '🧧'), h('span', {}, 'Lộc Phiên'));
     // Chỉ thị 11: the village (houses, Cấp Làng, check-in); a mark when a house has something waiting.
     this.villageBadge = h('span', { class: 'badge hidden' }, '!');
     const village = h('button', { class: 'knob icon-knob', 'aria-label': 'Làng Phú Bà', 'data-test': 'open-village', onclick: () => actions.openVillage() }, lineIcon('house', 22), this.villageBadge);
@@ -144,9 +150,9 @@ export class Hud {
     this.el = h(
       'div',
       { class: 'hud' },
-      h('div', { class: 'hud-right' }, this.eventBtn),
+      h('div', { class: 'hud-right' }, this.eventBtn, this.luckBtn),
       h('div', { class: 'xuxu-wrap' }, this.xuxuBubble, this.xuxuBtn),
-      h('div', { class: 'hud-top' }, levelBox, h('div', { class: 'pouches' }, this.pouch, this.gemPouch), village, letters, gear),
+      h('div', { class: 'hud-top' }, levelBox, h('div', { class: 'pouches' }, this.pouch, this.gemPouch), village, clock, letters, gear),
       this.hint,
       services,
       h('div', { class: 'hud-arc' }, this.storageButton, seeds, shop),
@@ -158,6 +164,7 @@ export class Hud {
   private trackedTrack: string | undefined;
   private readonly xuxuPic: HTMLElement;
   private readonly villageBadge: HTMLElement;
+  private readonly luckBtn: HTMLElement;
   private readonly xuxuBubble: HTMLElement;
   private readonly xuxuGift: HTMLElement;
   private readonly xuxuBtn: HTMLElement;
@@ -206,6 +213,7 @@ export class Hud {
     if (Date.now() > this.poseUntil) this.setXuxuPose(isNight(content, this.session.now()) ? 'sleep' : 'wave');
     this.xuxuGift.classList.toggle('hidden', !xuxuGiftReady(content, state, this.session.now()));
     this.villageBadge.classList.toggle('hidden', houseAlerts(content, state, this.session.now()).length === 0);
+    this.luckBtn.classList.toggle('hidden', !luckReady(content, state, this.session.now()));
     const need = xpToNextLevel(content, p.level);
     this.level.textContent = String(p.level);
     this.vineFill.style.width = `${Math.min(100, (p.xp / need) * 100)}%`;

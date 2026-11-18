@@ -11,6 +11,7 @@ import { canAfford, nextUpgradeCost, upgradeBlock } from './pots.ts';
 import { energyMax } from './sea.ts';
 import { freeBaitReady } from './fishing.ts';
 import { foodAt as petFood } from './pets.ts';
+import { luckReady } from './sessionLuck.ts';
 
 export type HouseAlert = { house: string; text: string };
 
@@ -28,6 +29,8 @@ export function houseAlerts(content: ContentPack, state: GameState, now: number)
   if (potReady) add('kiln', 'Đủ đồ nâng chậu');
   if (state.birds.some((b) => hungryAt(content, b) <= now || rentEndsSoon(content, b, now))) add('birds', 'Chim đói hoặc sắp hết hạn thuê');
   if (state.stall.length < content.neighbors.stallSlots + houseBonus(content, state, 'market', 'stallSlots')) add('market', 'Sạp còn chỗ bày hàng');
+  // Chỉ thị 12 B1.1: Lộc Phiên waiting at the Đình.
+  if (luckReady(content, state, now)) add('hall', 'Lộc Phiên đang chờ');
   if (state.errands.list.some((e) => e.pet && !e.done && (e.endsAt ?? Infinity) <= now)) add('pets', 'Bé đi việc vặt đã về');
   else if (content.pets && state.pets.some((p) => p.active && petFood(content, p, now) <= 0)) add('pets', 'Thú cưng đói');
   if (Object.values(state.workshop).some((m) => m.queue.length === 0)) add('workshop', 'Máy đang nghỉ');

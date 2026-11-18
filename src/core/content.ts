@@ -699,6 +699,8 @@ export interface HouseDef {
   effects: Partial<Record<HouseEffect, number>>;
 }
 export interface VillageRules {
+  /** Chỉ thị 12 B1.1: Lộc Phiên at the Đình. */
+  sessionLuck?: { perDay: number; gapHours: number; rewards: Array<{ coinsU?: number; bazaarReroll?: number; stealTurn?: number; gemsIfFull?: number; gems?: number }> };
   upgradeFromLevel: number;
   minutes: number[];
   buildSlots: number;

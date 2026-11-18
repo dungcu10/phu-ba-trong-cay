@@ -260,6 +260,8 @@ export interface GameState {
   league: LeagueState;
   /** Chỉ thị 10 § 3.11: when Xu Xu last gave its small gift. */
   xuxu?: { giftAt: number; taps: number };
+  /** Chỉ thị 12 B1.1: Lộc Phiên taken today (optional: absent = none yet). */
+  sessionLuck?: { day: number; count: number; at: number };
   /** Chỉ thị 12 B2: the Sạp Săn Hàng board (optional; rolled when first opened). */
   bazaar?: BazaarState;
   /** Phú Bà board (save 11): everyone's rank at the start of local day `day`, for the arrows. */
@@ -427,6 +429,8 @@ export interface BazaarState {
   rerolls: number;
   /** Vận May counter per pity rarity. */
   luck: Record<string, number>;
+  /** Chỉ thị 12 B1.1: free rerolls from Lộc Phiên (used before paid ones). */
+  free?: number;
 }
 
 /** Chỉ thị 11 § E: one pet. Food runs down from `food` at `fedAt`; bond never goes down. */

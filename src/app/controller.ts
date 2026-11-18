@@ -1,5 +1,6 @@
 // Connects player input to game commands, and game events to feedback (effects, sound, HUD).
 
+import { TimersPanel } from '../ui/timersPanel.ts';
 import { AltitudeGauge } from '../ui/altitude.ts';
 import type { Command, GameEvent, Result, SlotRef } from '../core/game.ts';
 import { nextFloor } from '../core/game.ts';
@@ -77,6 +78,8 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
       openSea: () => this.openSea(),
       tapXuxu: () => this.tapXuxu(),
       openVillage: () => this.openVillage(),
+      openTimers: () => this.open(new TimersPanel(this.session)),
+      claimLuck: () => this.run({ type: 'claimSessionLuck' }),
       openLetters: () => {
         this.open(new LettersPanel(this.session));
         this.run({ type: 'readNotices' }, true);
@@ -102,7 +105,7 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
       this.hud.update();
       // Countdowns on the order board move every second.
       if (this.panel instanceof OrdersPanel || this.panel instanceof MissionsPanel || this.panel instanceof QuestCenterPanel || this.panel instanceof BirdsPanel || this.panel instanceof WorkshopPanel) this.panel.render();
-      if (this.panel instanceof SeaPanel || this.panel instanceof VillagePanel || this.panel instanceof PetPanel) this.panel.tick();
+      if (this.panel instanceof SeaPanel || this.panel instanceof VillagePanel || this.panel instanceof PetPanel || this.panel instanceof TimersPanel) this.panel.tick();
       this.warnRent();
       this.visitBar?.update();
       // A feature that just opened is introduced once nothing else is on screen.
@@ -1156,6 +1159,12 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
         const byBot = new Map<string, string[]>();
         for (const t of e.list) byBot.set(t.botId, [...(byBot.get(t.botId) ?? []), `${t.qty} ${content.items.get(t.itemId)?.name.vi ?? ''}`]);
         for (const [id, what] of byBot) this.toasts.show(`${content.bots.get(id)?.name.vi ?? 'Hàng xóm'} đã trộm ${what.join(', ')} của bạn. Ghé trả đũa trong 24 giờ: gấp đôi, không tốn lượt!`, 'info', 4200);
+        break;
+      }
+      case 'luckClaimed': {
+        this.sfx.play('coin');
+        const what = [e.coins ? `${formatNumber(e.coins)} xu` : '', e.bazaarReroll ? `${e.bazaarReroll} lượt đặt lại Sạp Săn Hàng miễn phí` : '', e.stealTurn ? `${e.stealTurn} lượt trộm` : '', e.gems ? `${e.gems} ngọc` : ''].filter(Boolean).join(', ');
+        this.toasts.show(`Lộc Phiên lần ${e.index + 1}: ${what}!`, 'level', 2800);
         break;
       }
       case 'leagueSettled': {

@@ -29,6 +29,17 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Chỉ thị 12 TỔNG B1 — Lộc Phiên, Hẹn giờ (tag `m-12-b1`)
+- Loại: Thêm
+- Mô tả:
+  - **Lộc Phiên** (Đình): mỗi ngày tối đa 3 lần, cách nhau ít nhất 2 giờ; lần 1 xu, lần 2 một lượt đặt lại Sạp Săn Hàng miễn phí (không tính vào giá đặt lại trong ngày), lần 3 một lượt trộm thêm (đầy lượt thì 1 ngọc). Nút đỏ "Lộc Phiên" nảy dưới nút Lễ Hội khi có quà; bong bóng trên mái Đình.
+  - **Hẹn giờ** (nút đồng hồ trên HUD): danh sách việc sắp xong theo giờ máy: tầng nào chín, khinh khí cầu về, Sạp Săn Hàng tự làm mới, lượt trộm hồi, xưởng làm xong, thú cưng đi việc vặt về, nhà nâng cấp xong, Năng Lượng Gió đầy, Lộc Phiên lần tới.
+  - **Khay hạt** hiện "Chín 14:30" (gieo bây giờ thì chín lúc mấy giờ, theo thời gian lớn gốc); cây Hot trong ngày ghi "Hot · 14:30".
+  - Thước đo độ cao dịch xuống một chút để không đè nút Lộc Phiên.
+- Số liệu: `village.json › sessionLuck` (perDay 3, gapHours 2, quà). CTO chỉnh.
+- File/Module: src/systems/sessionLuck.ts, src/systems/timers.ts, src/ui/timersPanel.ts (mới); game.ts (lệnh `claimSessionLuck`), bazaar.ts (`free` rerolls), state.ts (`sessionLuck` tùy chọn, `BazaarState.free`), reconcile.ts, content.ts, villageAlerts.ts, hud.ts, controller.ts, gardenPanels.ts, styles.css; tests/session12.test.ts (2 test).
+- Ảnh hưởng save: Không đổi đời (trường tùy chọn).
+
 ### [2026-11-18] Chỉ thị 12 TỔNG B3 — Phú Bà động (60 người) và Giải Phú Bà theo tuần (tag `m-12-b3`)
 - Loại: Thêm / Thay đổi
 - Mô tả:
