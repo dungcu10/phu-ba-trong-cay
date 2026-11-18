@@ -29,6 +29,12 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Sửa: bản thử không lên vì test hiệu năng trên máy CI
+- Loại: Sửa
+- Mô tả: từ 17/11 22:00 bản thử không cập nhật (dừng ở 30c66dc), vì 2 test hiệu năng trượt trên máy GitHub (2 nhân, chạy mọi file test cùng lúc, chậm 2–4×): 241 ms > 150 và 619 ms > 400. Trên máy dev vẫn 110–170 ms. Nay hai test lấy lần nhanh nhất trong 3 sau 1 lần chạy nóng, và trên CI ngưỡng ×3 (`PERF_SLACK` trong tests/helpers.ts). Mục tiêu iPad giữ nguyên trong tên test.
+- File/Module: tests/helpers.ts, tests/market.test.ts, tests/botBirds11.test.ts.
+- Ảnh hưởng save: Không.
+
 ### [2026-11-18] Chỉ thị 12 TỔNG B2 + A3 — Chỗ tiêu xu, phần code (tag `m-12-a3b2-code`)
 - Loại: Thêm
 - Mô tả:

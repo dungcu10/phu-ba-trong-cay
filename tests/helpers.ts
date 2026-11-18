@@ -54,3 +54,20 @@ export const BUG = 'base:bug.ladybird';
 export function giveFloorItems(content: ContentPack, s: GameState, floorId: string): void {
   for (const [id, q] of Object.entries(content.floors.get(floorId)?.unlockItems ?? {})) s.inventory[id] = (s.inventory[id] ?? 0) + q;
 }
+
+/** Time budgets for performance tests. GitHub's shared 2-core runners run every test file at once and
+ *  are 2–4× slower than a dev machine, so on CI the budget is tripled (the iPad target stays in the
+ *  test name; this only keeps a slow runner from blocking the trial deploy). */
+export const PERF_SLACK = process.env.CI ? 3 : 1;
+
+/** Best of `runs` timings of `fn` after one warm-up run, in ms. */
+export function bestOf(runs: number, fn: (k: number) => void): number {
+  fn(-1);
+  let ms = Infinity;
+  for (let k = 0; k < runs; k++) {
+    const t = performance.now();
+    fn(k);
+    ms = Math.min(ms, performance.now() - t);
+  }
+  return ms;
+}
