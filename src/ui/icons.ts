@@ -4,8 +4,8 @@
 
 import { TOKENS } from './tokens.ts';
 import type { ContentPack } from '../core/content.ts';
-import { itemFrame } from '../render/assets.ts';
-import { icon } from './dom.ts';
+import { itemFrame, potFrame } from '../render/assets.ts';
+import { h, icon } from './dom.ts';
 
 const C = TOKENS.color;
 const OUT = C.ui.wood;
@@ -168,6 +168,14 @@ export function itemIcon(content: ContentPack, itemId: string, size: number): El
   const good = content.goods?.get(itemId);
   if (good?.icon.startsWith('art:')) return icon(good.icon.slice(4), size);
   if (mat?.icon.startsWith('tmp:')) return tempIcon(mat.icon, size);
+  // Chỉ thị 12 B7: a pot shard is its pot's picture broken along a jagged line (CSS clip, no new art).
+  const shardOf = content.items.get(itemId)?.potId;
+  const pot = shardOf ? content.pots.get(shardOf) : undefined;
+  if (pot) {
+    const pic = icon(potFrame(pot, 1) ?? 'pots/terracotta/0', size);
+    pic.classList.add('shard-pic');
+    return h('span', { class: `shard-icon ${pot.rarity}`, style: `width:${size}px;height:${size}px` }, pic);
+  }
   // Chỉ thị 10: bugs with approved art use it (one frame).
   const bug = content.bugs.get(itemId);
   if (bug?.art) return icon(bug.art, size);

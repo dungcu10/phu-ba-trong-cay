@@ -214,6 +214,8 @@ export class Art {
     }
     for (const id of content.items.keys()) {
       if (content.materials.has(id)) continue;
+      // Chỉ thị 12 B7: a pot shard is drawn from its pot's own picture (checked with the pots).
+      if (content.items.get(id)?.potId) continue;
       // Chỉ thị 10 § 3.5: processed goods use an approved icon ("art:<frame>").
       const good = content.goods?.get(id);
       if (good) need.push(good.icon.startsWith('art:') ? good.icon.slice(4) : good.icon);

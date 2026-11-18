@@ -23,6 +23,7 @@ export interface PanelActions {
   sell(itemId: string, qty: number): void;
   sellBugs(itemId: string, qty: number): void;
   quickSell(): void;
+  combineShards(potId: string): void;
   upgradePot(potInstanceId: string): void;
   placePot(slot: SlotRef, potInstanceId: string): void;
   openBench(slot: SlotRef): void;
@@ -192,6 +193,17 @@ export class StoragePanel extends Panel {
     const trader = content.bugs.has(id) ? bugTraderPrice(content, id) : null;
     const price = sellPrice(content, state, id, this.session.now()) ?? trader;
     const box = h('div', { class: 'scale' }, h('div', { class: 'pack-name' }, `${item.name.vi} ×${have}`));
+    // Chỉ thị 12 B7: shards say what they are for, and put a pot together once there are enough.
+    const shardPot = item.potId ? content.pots.get(item.potId) : undefined;
+    if (shardPot && content.potStars) {
+      const need = content.potStars.combineShards;
+      const ok = have >= need;
+      box.append(
+        h('p', { class: 'note' }, `Mảnh của ${shardPot.name.vi}: dùng nâng sao chậu cùng loại (mở cửa sổ chậu), hoặc gom ${need} mảnh để ghép thành 1 chậu.`),
+        h('div', { class: 'candy-wrap' }, h('button', { class: `candy ${ok ? 'gold' : 'blocked'}`, 'data-test': `combine-${item.potId}`, disabled: ok ? undefined : true, onclick: () => this.actions.combineShards(item.potId!) }, `Ghép chậu · ${Math.min(have, need)}/${need} mảnh`)),
+      );
+      return box;
+    }
     if (price === null || have <= 0) {
       // Materials say what they are for (materials.json desc); bugs are pot-upgrade material.
       const desc = content.materials.get(id)?.desc?.vi ?? (content.bugs.has(id) ? `${item.name.vi} là nguyên liệu nâng cấp chậu ở Lò Gốm.` : null);

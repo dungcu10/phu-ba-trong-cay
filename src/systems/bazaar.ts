@@ -12,7 +12,8 @@ import { randomFor } from '../core/rng.ts';
 import { tidy } from '../core/income.ts';
 import { localDay } from './missions.ts';
 import { addItem, storageFree } from './economy.ts';
-import { grantPot, nextUpgradeCost } from './pots.ts';
+import { nextUpgradeCost } from './pots.ts';
+import { obtainPot } from './potStars.ts';
 import { addNotice, bugTraderPrice } from './neighbors.ts';
 
 export type BazaarError = 'locked' | 'bad_slot' | 'already_bought' | 'not_enough_coins' | 'not_enough_gems' | 'storage_full';
@@ -186,7 +187,7 @@ export function rerollBazaar(content: ContentPack, state: GameState, now: number
 }
 
 /** Buys one slot (once). Coins go to the Phú Bà who laid it out. */
-export function buyBazaar(content: ContentPack, state: GameState, index: number, now: number): BazaarError | { slot: BazaarSlot; potInstanceId?: string } {
+export function buyBazaar(content: ContentPack, state: GameState, index: number, now: number): BazaarError | { slot: BazaarSlot; potInstanceId?: string; shards?: { itemId: string; qty: number } } {
   if (!bazaarOpen(content, state)) return 'locked';
   ensureBazaar(content, state, now);
   const slot = state.bazaar?.slots[index];
@@ -202,11 +203,15 @@ export function buyBazaar(content: ContentPack, state: GameState, index: number,
   }
   slot.sold = true;
   let potInstanceId: string | undefined;
-  if (slot.kind === 'pot') potInstanceId = grantPot(state, slot.id, 'bazaar', now);
-  else addItem(state, slot.id, slot.qty);
+  let shards: { itemId: string; qty: number } | undefined;
+  if (slot.kind === 'pot') {
+    const got = obtainPot(content, state, slot.id, 'bazaar', now);
+    if ('potInstanceId' in got) potInstanceId = got.potInstanceId;
+    else shards = got.shards;
+  } else addItem(state, slot.id, slot.qty);
   if (slot.rarity === 'legendary') {
     const name = slot.kind === 'pot' ? content.pots.get(slot.id)?.name.vi : content.items.get(slot.id)?.name.vi;
     addNotice(state, now, `Bạn vừa săn được ${name ?? 'món Huyền Thoại'} ở Chợ Mây!`);
   }
-  return potInstanceId ? { slot, potInstanceId } : { slot };
+  return { slot, ...(potInstanceId ? { potInstanceId } : {}), ...(shards ? { shards } : {}) };
 }

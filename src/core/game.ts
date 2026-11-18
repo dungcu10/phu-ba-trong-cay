@@ -21,6 +21,7 @@ import { floorUnlockCost } from '../systems/coinSinks.ts';
 import { buyBazaar, ensureBazaar, rerollBazaar } from '../systems/bazaar.ts';
 import { blowCloud, settleEnergy } from '../systems/sea.ts';
 import { quickSellPlan } from '../systems/storage.ts';
+import { combineShards, obtainPot as obtainPotFrom, starUpPot } from '../systems/potStars.ts';
 import { allMissionsClaimed, ensureMissions, localDay, missionDef, recordMissions } from '../systems/missions.ts';
 import { ensureQuestPeriods, questActive, questClaims, questReward, questView, recordQuests } from '../systems/quests.ts';
 import { botGarden, helpReward, helpsLeft, helpToday, type HelpKind } from '../systems/visit.ts';
@@ -90,7 +91,9 @@ export type Command =
   | { type: 'rerollBazaar' }
   | { type: 'buyBazaar'; slot: number }
   | { type: 'blowCloud'; cell: number }
-  | { type: 'quickSell' };
+  | { type: 'quickSell' }
+  | { type: 'starUpPot'; potInstanceId: string }
+  | { type: 'combineShards'; potId: string };
 
 export type GameEvent =
   | { type: 'planted'; slot: SlotRef; cropId: string; cost: number }
@@ -111,6 +114,9 @@ export type GameEvent =
   | { type: 'potCast'; potInstanceId: string; potId: string; perfect: boolean }
   | { type: 'bazaarRerolled'; coins: number; best: BazaarSlot['rarity']; sure: BazaarSlot['rarity'] | null }
   | { type: 'bazaarRefreshed' }
+  | { type: 'potStarred'; potInstanceId: string; stars: number; shards: number }
+  | { type: 'potCombined'; potInstanceId: string; potId: string }
+  | { type: 'potToShards'; potId: string; itemId: string; qty: number }
   | { type: 'quickSold'; items: Array<{ itemId: string; qty: number }>; coins: number }
   | { type: 'cloudBlown'; cell: number; finds: Array<{ itemId: string; qty: number }>; chest?: number; potInstanceId?: string; cleared?: { gems: number } }
   | { type: 'bazaarBought'; slot: number; rarity: BazaarSlot['rarity']; kind: 'item' | 'pot'; itemId: string; qty: number; currency: 'coins' | 'gems'; price: number; potInstanceId?: string }
@@ -186,6 +192,7 @@ export type ErrorCode =
   | 'not_castable'
   | 'already_bought'
   | 'nothing_to_sell'
+  | 'pot_max_stars'
   | 'bad_cell'
   | 'already_open'
   | 'no_energy'
@@ -305,7 +312,9 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
       const r = buyBazaar(content, state, cmd.slot, now);
       if (typeof r === 'string') return fail(r);
       const s = r.slot;
-      return { ok: true, events: [{ type: 'bazaarBought', slot: cmd.slot, rarity: s.rarity, kind: s.kind, itemId: s.id, qty: s.qty, currency: s.currency, price: s.price, ...(r.potInstanceId ? { potInstanceId: r.potInstanceId } : {}) }] };
+      const events: GameEvent[] = [{ type: 'bazaarBought', slot: cmd.slot, rarity: s.rarity, kind: s.kind, itemId: s.id, qty: s.qty, currency: s.currency, price: s.price, ...(r.potInstanceId ? { potInstanceId: r.potInstanceId } : {}) }];
+      if (r.shards) events.push({ type: 'potToShards', potId: s.id, ...r.shards });
+      return { ok: true, events };
     }
     case 'sellBugs': {
       const r = sellBugs(content, state, cmd.itemId, cmd.qty);
@@ -325,6 +334,14 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
       return harvest(content, state, cmd, now);
     case 'sell':
       return sell(content, state, cmd.itemId, cmd.qty, now);
+    case 'starUpPot': {
+      const r = starUpPot(content, state, cmd.potInstanceId);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'potStarred', potInstanceId: cmd.potInstanceId, ...r }] };
+    }
+    case 'combineShards': {
+      const r = combineShards(content, state, cmd.potId, now);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'potCombined', potInstanceId: r.potInstanceId, potId: cmd.potId }] };
+    }
     case 'quickSell': {
       // Chỉ thị 12 A2: sell all of the Kho Nông Sản beyond what the open orders still need.
       const plan = quickSellPlan(content, state, now);
@@ -421,8 +438,8 @@ function claimEventMilestone(content: ContentPack, state: GameState, eventId: st
   for (const [id, q] of Object.entries(r.items ?? {})) addItem(state, id, q);
   const events: GameEvent[] = [{ type: 'eventMilestoneClaimed', eventId, index: prog.claimed - 1, coins: r.coins ?? 0, gems: r.gems ?? 0, items: r.items ?? {}, pot: r.pot ?? null }];
   if (r.pot) {
-    const potInstanceId = grantPot(state, r.pot, 'event', now);
-    events.push({ type: 'potObtained', potInstanceId, potId: r.pot, source: 'event' });
+    const got = obtainPotFrom(content, state, r.pot, 'event', now);
+    events.push('potInstanceId' in got ? { type: 'potObtained', potInstanceId: got.potInstanceId, potId: r.pot, source: 'event' } : { type: 'potToShards', potId: r.pot, ...got.shards });
   }
   return { ok: true, events };
 }
@@ -688,8 +705,9 @@ function claimQuest(content: ContentPack, state: GameState, questId: string, now
   state.player.coins += r.coins;
   state.player.gems += r.gems;
   for (const [id, n] of Object.entries(r.items)) addItem(state, id, n);
-  if (r.pot) grantPot(state, r.pot, 'quest', now);
+  const got = r.pot ? obtainPotFrom(content, state, r.pot, 'quest', now) : null;
   const events: GameEvent[] = [{ type: 'questClaimed', questId, tier, coins: r.coins, gems: r.gems, xp: r.xp, items: r.items, pot: r.pot }];
+  if (got && 'shards' in got) events.push({ type: 'potToShards', potId: r.pot!, ...got.shards });
   for (const level of addXp(content, state, r.xp)) events.push({ type: 'levelUp', level });
   return { ok: true, events };
 }

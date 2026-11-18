@@ -55,6 +55,7 @@ export const ERROR_TEXT: Record<ErrorCode, string> = {
   bird_busy: 'Chú chim này đang bay theo một khinh khí cầu khác.',
   not_castable: 'Chậu này không đúc được.',
   already_bought: 'Ô này đã có người mua rồi.',
+  pot_max_stars: 'Chậu này đã đủ sao.',
   nothing_to_sell: 'Không có nông sản thừa: những gì trong kho đều đang cần cho đơn hàng.',
   bad_cell: 'Ô này không có trên bản đồ.',
   already_open: 'Mây ở đây đã tan rồi.',

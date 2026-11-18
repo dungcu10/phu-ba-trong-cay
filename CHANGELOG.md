@@ -29,6 +29,18 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Chỉ thị 12 TỔNG B7 phần code — Mảnh chậu, ghép chậu, sao chậu (tag `m-12-b7-code`)
+- Loại: Thêm
+- Mô tả:
+  - Mỗi loại chậu có **Mảnh** riêng (món trong Túi Nguyên Liệu, hình là chính ảnh chậu cắt vỡ bằng CSS, không vẽ mới).
+  - **Chậu trùng thành mảnh:** nhận chậu đã có cùng loại từ Chợ Mây (Sạp Săn Hàng), Rương Biển Mây, sự kiện, nhiệm vụ thì tự đổi thành 10 mảnh; có thông báo. Mua ở Lò Gốm, đúc chậu, đổi chậu luôn ra chậu nguyên.
+  - **Sao chậu ★0 → ★5:** nút ở cửa sổ chậu, tốn mảnh cùng loại (10/20/30/40/50). Mỗi sao cộng `casting.starStatBonus` (4%) chỉ số chính; chậu có sao thì sáng hơn trong vườn (★1 có hào quang, ★3 có hạt sáng bay quanh — dùng hiệu ứng code sẵn có).
+  - **Ghép chậu:** đủ 10 mảnh một loại thì bấm "Ghép chậu" ở Túi Nguyên Liệu ra 1 chậu nguyên.
+  - Số liệu ở `content/base/pot-stars.json` (mới): maxStars, duplicateShards, combineShards, starShards, convertSources. CTO chỉnh số.
+- File/Module: src/systems/potStars.ts (mới), content.ts (món mảnh, PotStarRules), game.ts (lệnh starUpPot, combineShards; sự kiện potStarred, potCombined, potToShards; sự kiện và nhiệm vụ đi qua obtainPot), bazaar.ts, sea.ts, render/garden.ts, render/assets.ts (bỏ mảnh khỏi danh sách hình bắt buộc), ui/icons.ts, ui/potSystemPanels.ts, ui/panels.ts, controller.ts, styles.css, tests/potStars12.test.ts (4 test).
+- Ảnh hưởng save: Không (dùng `PotInstance.stars` đã có; mảnh là món trong `inventory`).
+- Quyết định tự chọn: (1) chậu người chơi tự chọn (Lò Gốm, đúc, đổi Ấn, ghép mảnh) luôn ra chậu nguyên, chỉ nguồn may mắn mới đổi chậu trùng thành mảnh — để không mất tiền mua chậu thứ hai cho ô khác; (2) Lò Gốm thôi bán chậu chữ ký/Sử Thi là phần số liệu của CTO (`pots.json`), mày không đụng; (3) chưa thêm mảnh vào bảng thưởng Chợ/Biển Mây — chờ CTO quyết tỉ lệ.
+
 ### [2026-11-18] Chỉ thị 12 TỔNG A2 — Tách 2 kho, Bán nhanh; surprises.giftChanceMin (tag `m-12-a2`)
 - Loại: Thêm
 - Mô tả:
