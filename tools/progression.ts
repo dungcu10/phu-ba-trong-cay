@@ -209,6 +209,8 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
             if (!food || !run({ type: 'feedPet', species: p.species, itemId: food }, t).ok) break;
           }
           run({ type: 'patPet', species: p.species }, t);
+          // A Sẻ owner turns Gieo Lại Như Cũ on (off by default): the numbers must hold with it on.
+          if (p.species === 'pet.sprout-sparrow' && p.skillAt.replantOn !== 1) run({ type: 'toggleReplant', on: true }, t);
           if (i < slots && !p.active) run({ type: 'walkPet', species: p.species, active: true }, t);
           if (p.active) run({ type: 'guardFloor', species: p.species, floor: Math.max(0, s.floors.length - 1 - i) }, t);
           if (m === 0) while (run({ type: 'starUpPet', species: p.species }, t).ok);

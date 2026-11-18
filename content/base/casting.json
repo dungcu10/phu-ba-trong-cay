@@ -7,7 +7,7 @@
   "tiers": [
     { "rarity": "rare", "coins": 3000, "items": { "base:mat.copper-bit": 12, "base:mat.cloud-stone": 6, "base:mat.cut-gem": 2 } },
     { "rarity": "epic", "coins": 9000, "items": { "base:mat.silver-bit": 30, "base:mat.copper-bit": 10, "base:mat.cut-gem": 8 } },
-    { "rarity": "legendary", "coins": 25000, "items": { "base:mat.gold-dust": 45, "base:mat.raw-jade": 10, "base:mat.cut-gem": 12 } }
+    { "rarity": "legendary", "coins": 25000, "items": { "base:mat.gold-dust": 60, "base:mat.raw-jade": 12, "base:mat.cut-gem": 15 } }
   ],
   "sources": {
     "base:mat.cloud-stone": "Đào ở Biển Mây",

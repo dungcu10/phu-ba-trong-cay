@@ -39,6 +39,12 @@ Phân loại:
 - File/Module: pets.ts (activeCombos, comboValue, sparrowDailyGift, jadeRainCooldownMs có kết hợp), game.ts (seasonHead khi gieo và khi bắt đầu vụ mới, sự kiện sparrowGift), neighbors.ts (Thương Đoàn), content.ts (kiểu + kiểm tra), petPanel.ts, controller.ts, styles.css, tests/petCombos11.test.ts (5 test).
 - Ảnh hưởng save: Không đổi đời.
 - Quyết định tự chọn: (1) Mùa Màng tính lúc gieo/bắt đầu vụ (rút sẵn 8% thời gian lớn, lưu trong chậu) chứ không đổi tốc độ liên tục — để thời gian lớn không đổi ngược khi bé đói hay đi việc vặt; (2) Lửa và Nước tính lúc dùng Mưa Ngọc; (3) túi quà của Sẻ cần Sẻ được dắt (giống kỹ năng Nhặt Hạt).
+### [2026-11-18] CTO — N5 phần 2b: số giữ được khi người chơi BẬT Sẻ Gieo Lại
+- Luồng thực thi để Gieo Lại Như Cũ mặc định tắt cho cổng xanh. Giữ mặc định tắt (người chơi tự chọn), nhưng bot mô phỏng giờ bật nó khi có Sẻ: số liệu phải đúng cho người bật.
+- Khi bật: chậu chữ ký 16, Bọ Rất hiếm 0,20. Bù: đúc Huyền Thoại 60 bụi vàng + 12 ngọc thô + 15 ngọc mài (trước 45 / 10 / 12); Ve Ngọc ×1,15. Kết quả: chậu chữ ký 15, Bọ Rất hiếm 0,24.
+- Trả lời câu chờ CTO: phần "Lửa Ấm — ban đêm bọ hiếm hơn một bậc" KHÔNG làm (đụng thẳng chỉ số Bọ Rất hiếm, Cáo đã có Vồ Bọ).
+- Cổng XANH, typecheck sạch, 257/257 test.
+- Trạng thái nghiệm thu: Chờ
 
 ### [2026-11-18] Chỉ thị 11 TỔNG N5 (phần 2b) — Kỹ năng 2–3 của thú cưng, bé tránh che chậu chín (tag `m-11-n5c`)
 - Loại: Thêm
