@@ -29,6 +29,16 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Chỉ thị 11 TỔNG N5 (phần 2a) — Việc vặt thú cưng + mục tiêu cho cấp 19–27 (tag `m-11-n5b`)
+- Loại: Thêm / Thay đổi
+- Mô tả:
+  - **Việc vặt (§ E3):** mỗi ngày 4 việc (thêm việc theo Nhà Thú Cưng), làm mới lúc 0 giờ; 6 loại: Đi chợ xa, Săn bọ, Tìm hạt, Gom sương, Đưa thư, Dò Biển Mây. Chọn bé ở Nhà Thú Cưng rồi "Sai …"; bé đi vắng (kỹ năng thụ động nghỉ), về đúng giờ kể cả khi tắt game, bấm "Nhận túi quà" (xu theo cấp, bọ Khá/Hiếm, vật liệu, Năng Lượng Gió, thân thiết hàng xóm, có thể rơi Huy Hiệu đúng loài, EXP thú cưng). Bé **hợp nghề** mang về thêm 50%. Đổi miễn phí 1 việc/ngày. Việc đang làm qua ngày vẫn giữ để nhận.
+  - **Mục tiêu cấp cao:** thêm hành trình Nâng nhà, Thú cưng, Cấp thú cưng, Sao thú cưng, Huy Chương, Thu hoạch tầng 4+ (từ cấp 19); nhiệm vụ tuần Việc vặt và Cho bé ăn (85 nhiệm vụ).
+  - Test "40 BOT × 7 ngày" nới ngưỡng 150 → 200 ms theo yêu cầu CTO.
+- Số liệu: khối `errands` trong `content/base/pets.json` (perDay 4, freeRerolls 1, fitBonus 0,5, badgeChance 0,15, petXp 10). CTO chỉnh qua mô phỏng.
+- File/Module: src/systems/pets.ts (ensureErrands/sendErrand/rerollErrand/claimErrand), game.ts (3 lệnh, 3 sự kiện), state.ts (`errands`), migrations.ts (12 → 13 thêm `errands`), reconcile.ts, content.ts, questdefs.ts + quests.ts (trigger petErrand/feedPet, 5 measure mới), tools/make-quests.py, petPanel.ts (mục "Việc vặt hôm nay" có đồng hồ đếm ngược), controller.ts, styles.css, text.ts, tests/errands11.test.ts (5 test).
+- Ảnh hưởng save: Không đổi đời (vẫn 13; save 13 đã có nhận `errands` rỗng qua reconcile).
+- Quyết định tự chọn: (1) mỗi bé chỉ làm một việc một lúc; (2) thân thiết từ việc Đưa thư cộng cho một hàng xóm chọn theo seed; (3) thưởng của các nhiệm vụ mới chỉ có xu (không ngọc, không Đất Sét): khi bot nuôi thú cưng, thưởng ngọc/Đất Sét đẩy chậu chữ ký lên 16 và Bọ Rất hiếm chạm mép 0,34 — CTO thêm ngọc qua mô phỏng nếu muốn; (4) bot mô phỏng chưa làm việc vặt nên chỉ số "mốc tiến bộ ngày 10–30" vẫn còn ngày 0 (cảnh báo, không chặn) — để CTO quyết có thêm việc vặt vào bot hay không.
 ### [2026-11-18] CTO — 11 TỔNG N5 phần 1: bot nuôi thú cưng, kiểm số
 - Bot mô phỏng: nhận thú cưng khi có gấp 3 giá xu / còn 20 ngọc / đủ mảnh; mỗi lần ghé cho ăn khi no < 60 (món thích trước), vuốt 1 lần, dắt theo số khe, trông tầng cao nhất; lên sao mỗi ngày. Mốc tiến bộ đếm thêm nhận thú cưng và thú cưng lên cấp.
 - Kết quả ngày 30: cả 4 bé (Mèo, Cáo, Sẻ cấp 10, Rồng cấp 6), 2 sao, Thân Thiết 100. Ngọc giữ 29–82, không phình. Kinh tế không lệch: cổng XANH, không phải đổi số trong `pets.json`.

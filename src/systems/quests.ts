@@ -89,6 +89,17 @@ export function measureValue(state: GameState, m: QuestMeasure): number {
       return state.player.level;
     case 'floors':
       return state.floors.length;
+    // Chỉ thị 11: village and pets (goals for the high levels).
+    case 'houseUpgrades':
+      return Object.values(state.buildings).reduce((a, b) => a + b.level - 1, 0);
+    case 'pets':
+      return state.pets.length;
+    case 'petStars':
+      return state.pets.reduce((a, p) => a + p.stars, 0);
+    case 'petLevels':
+      return state.pets.reduce((a, p) => a + p.level, 0);
+    case 'medals':
+      return state.village.medals.length;
     case 'stars':
       return state.floors.reduce((a, f) => a + f.stars, 0);
     case 'potLines':
@@ -271,6 +282,10 @@ function hitsOf(content: ContentPack, state: GameState, e: GameEvent): Hit[] {
       return [{ trigger: 'starPot', amount: 1 }];
     case 'bazaarBought':
       return [{ trigger: 'huntBazaar', amount: 1 }];
+    case 'errandClaimed':
+      return [{ trigger: 'petErrand', amount: 1 }];
+    case 'petFed':
+      return [{ trigger: 'feedPet', amount: 1 }];
     default:
       return [];
   }

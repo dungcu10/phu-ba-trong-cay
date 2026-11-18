@@ -940,3 +940,10 @@ html, body {
 .food-btn{position:relative;display:flex;flex-direction:column;align-items:center;padding:4px 6px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.04);color:inherit;font:inherit;cursor:pointer}
 .food-btn.liked{border-color:#f27aa0}
 .food-btn .heart{position:absolute;top:-4px;right:-2px;color:#f27aa0}
+.errand-card{margin-top:12px}
+.errand-list{display:flex;flex-direction:column;gap:6px}
+.errand{display:grid;grid-template-columns:200px 1fr auto auto;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;background:rgba(255,255,255,.05)}
+.errand.done{opacity:.5}
+.errand-fit{display:inline-flex;align-items:center;gap:4px;font-size:13px}
+.errand-act{display:flex;gap:6px;align-items:center}
+@media (max-width:1000px){.errand{grid-template-columns:1fr 1fr}}

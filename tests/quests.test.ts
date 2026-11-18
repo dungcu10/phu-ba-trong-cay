@@ -91,6 +91,8 @@ test('mỗi trigger đều được đếm từ đúng sự kiện game', async 
     catchFish: { type: 'fishReeled', fishId: 'base:fish.pink', landed: true, first: true },
     castPot: { type: 'potCast', potInstanceId: pot, potId: 'x', perfect: false },
     starPot: { type: 'potStarred', potInstanceId: pot, stars: 1, shards: 10 },
+    petErrand: { type: 'errandClaimed', index: 0, species: 'pet.fire-fox', coins: 0, items: {}, friendship: 0, energy: 0, badge: false, fit: false, levelUps: [] },
+    feedPet: { type: 'petFed', species: 'pet.fire-fox', liked: true, bond: 6, levelUps: [], milestones: [] },
     huntBazaar: { type: 'bazaarBought', slot: 0, rarity: 'common', kind: 'item', itemId: tomatoItem, qty: 1, currency: 'coins', price: 1 },
   };
   assert.deepEqual(Object.keys(events).sort(), [...QUEST_TRIGGERS].sort(), 'bảng thử phủ đủ mọi trigger');

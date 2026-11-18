@@ -694,6 +694,32 @@
       "minLevel": 12
     },
     {
+      "id": "weekly.errands",
+      "track": "weekly",
+      "name": {
+        "vi": "Sai thú cưng đi việc vặt"
+      },
+      "trigger": "petErrand",
+      "target": 6,
+      "reward": {
+        "coinsHours": 2
+      },
+      "minLevel": 4
+    },
+    {
+      "id": "weekly.petfood",
+      "track": "weekly",
+      "name": {
+        "vi": "Cho thú cưng ăn"
+      },
+      "trigger": "feedPet",
+      "target": 10,
+      "reward": {
+        "coinsHours": 2
+      },
+      "minLevel": 4
+    },
+    {
       "id": "monthly.harvest",
       "track": "monthly",
       "name": {
@@ -982,6 +1008,142 @@
       "reward": {
         "coinsHours": 3,
         "gems": 2
+      }
+    },
+    {
+      "id": "journey.houses",
+      "track": "journey",
+      "name": {
+        "vi": "Làng ngày càng đẹp"
+      },
+      "desc": {
+        "vi": "Tổng số lần nâng nhà trong làng."
+      },
+      "measure": "houseUpgrades",
+      "minLevel": 5,
+      "tiers": {
+        "base": 2,
+        "step": 3,
+        "rewardGrowth": 1.0
+      },
+      "reward": {
+        "coinsHours": 2
+      }
+    },
+    {
+      "id": "journey.pets",
+      "track": "journey",
+      "name": {
+        "vi": "Gia đình thú cưng"
+      },
+      "desc": {
+        "vi": "Số thú cưng đang nuôi."
+      },
+      "measure": "pets",
+      "minLevel": 4,
+      "tiers": {
+        "targets": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "reward": {
+        "coinsHours": 2
+      }
+    },
+    {
+      "id": "journey.petlevels",
+      "track": "journey",
+      "name": {
+        "vi": "Thú cưng lớn khôn"
+      },
+      "desc": {
+        "vi": "Tổng cấp của các thú cưng."
+      },
+      "measure": "petLevels",
+      "minLevel": 4,
+      "tiers": {
+        "base": 10,
+        "step": 10,
+        "rewardGrowth": 1.0
+      },
+      "reward": {
+        "coinsHours": 2
+      }
+    },
+    {
+      "id": "journey.petstars",
+      "track": "journey",
+      "name": {
+        "vi": "Thú cưng lấp lánh"
+      },
+      "desc": {
+        "vi": "Tổng số sao của các thú cưng."
+      },
+      "measure": "petStars",
+      "minLevel": 6,
+      "tiers": {
+        "targets": [
+          3,
+          5,
+          7,
+          9,
+          12,
+          15,
+          18,
+          20
+        ]
+      },
+      "reward": {
+        "coinsHours": 3
+      }
+    },
+    {
+      "id": "journey.medals",
+      "track": "journey",
+      "name": {
+        "vi": "Huy Chương Độ Cao"
+      },
+      "desc": {
+        "vi": "Số Huy Chương Độ Cao (mở tầng 5, 10, 15, 20)."
+      },
+      "measure": "medals",
+      "minLevel": 16,
+      "tiers": {
+        "targets": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "reward": {
+        "coinsHours": 4
+      }
+    },
+    {
+      "id": "journey.high",
+      "track": "journey",
+      "name": {
+        "vi": "Vườn trên trời cao"
+      },
+      "desc": {
+        "vi": "Thu hoạch ở tầng thứ 5 trở lên."
+      },
+      "trigger": "harvest",
+      "filter": {
+        "floorMin": 4
+      },
+      "minLevel": 19,
+      "tiers": {
+        "base": 40,
+        "growth": 2.5,
+        "rewardGrowth": 1.0
+      },
+      "reward": {
+        "coinsHours": 2
       }
     },
     {

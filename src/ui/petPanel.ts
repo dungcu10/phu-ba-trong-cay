@@ -22,6 +22,9 @@ export interface PetActions {
   guardFloor(species: string, floor: number): void;
   starUpPet(species: string): void;
   jadeRain(): void;
+  sendErrand(index: number, species: string): void;
+  rerollErrand(index: number): void;
+  claimErrand(index: number): void;
 }
 
 const pose = (sp: PetSpeciesDef, p: 'stand' | 'run' | 'sleep' | 'happy') => `${sp.art}/${sp.poses[p]}`;
@@ -45,6 +48,16 @@ export class PetPanel extends Panel {
     this.render();
   }
 
+  /** Countdowns only (every second). */
+  tick(): void {
+    const now = this.session.now();
+    for (const el of this.body.querySelectorAll<HTMLElement>('[data-ends]')) {
+      const left = Number(el.dataset.ends) - now;
+      if (left <= 0 && el.dataset.done !== '1') ((el.dataset.done = '1'), this.render());
+      else el.textContent = formatClock(Math.max(0, left));
+    }
+  }
+
   render(): void {
     clear(this.body);
     const { content, state } = this.session;
@@ -64,6 +77,45 @@ export class PetPanel extends Panel {
     if (!sp) return;
     const p = petOf(state, sp.id);
     this.body.append(p ? this.owned(sp, p, now) : this.shop(sp));
+    if (state.pets.length > 0) this.body.append(this.errands(now));
+  }
+
+  /** § E3: today's errands. The chosen pet is the one sent. */
+  private errands(now: number): HTMLElement {
+    const { content, state } = this.session;
+    const er = content.pets?.errands;
+    const box = h('section', { class: 'card errand-card' }, h('h3', {}, 'Việc vặt hôm nay'));
+    if (!er) return box;
+    if (state.errands.day < 0 || state.errands.list.length === 0) {
+      box.append(h('p', { class: 'note' }, 'Bảng việc vặt sẽ có trong giây lát.'));
+      return box;
+    }
+    const chosen = petOf(state, this.chosen);
+    const chosenDef = content.pets?.species.find((s) => s.id === this.chosen);
+    box.append(h('p', { class: 'note' }, `Bé đi việc vặt thì kỹ năng thụ động nghỉ. Bé hợp nghề mang về nhiều hơn ${Math.round(er.fitBonus * 100)}%. Đổi miễn phí ${er.freeRerolls} việc mỗi ngày (còn ${Math.max(0, er.freeRerolls - state.errands.rerolls)}).`));
+    const list = h('div', { class: 'errand-list' });
+    state.errands.list.forEach((slot, i) => {
+      const def = er.list.find((e) => e.id === slot.errand);
+      if (!def) return;
+      const fits = def.fit.map((id) => content.pets!.species.find((s) => s.id === id)).filter((x): x is NonNullable<typeof x> => !!x);
+      const reward = [def.coinsU ? 'xu' : '', def.bugs ? 'bọ Khá/Hiếm' : '', ...Object.keys(def.items ?? {}).map((id) => content.items.get(id)?.name.vi ?? ''), ...(def.pick ?? []).flatMap((pk) => Object.keys(pk.items).map((id) => `có thể ${content.items.get(id)?.name.vi ?? ''}`)), def.friendship ? 'thân thiết hàng xóm' : '', def.energy ? 'Năng Lượng Gió' : '', 'Huy Hiệu (may mắn)'].filter(Boolean).join(', ');
+      const row = h('div', { class: `errand${slot.done ? ' done' : ''}`, 'data-test': `errand-${i}` }, h('strong', {}, `${def.name.vi} · ${def.hours} giờ`), h('span', { class: 'note' }, reward), h('span', { class: 'errand-fit' }, fits.length ? 'Hợp: ' : 'Bé nào cũng được', ...fits.map((f) => icon(`${f.art}/${f.poses.stand}`, 30))));
+      const act = h('div', { class: 'errand-act' });
+      if (slot.done) act.append(h('span', { class: 'tag' }, 'Đã nhận'));
+      else if (slot.pet) {
+        const who = content.pets!.species.find((s) => s.id === slot.pet);
+        if ((slot.endsAt ?? 0) <= now) act.append(h('button', { class: 'candy small gold', 'data-test': `claim-errand-${i}`, onclick: () => this.actions.claimErrand(i) }, who ? icon(`${who.art}/${who.poses.happy}`, 26) : null, ' Nhận túi quà'));
+        else act.append(h('span', { class: 'tag' }, who ? icon(`${who.art}/${who.poses.run}`, 26) : null, ' Về sau ', h('span', { 'data-ends': String(slot.endsAt) }, formatClock((slot.endsAt ?? now) - now))));
+      } else {
+        const busy = !!chosen && ((chosen.awayUntil ?? 0) > now || state.errands.list.some((e) => e.pet === chosen.species && !e.done));
+        if (chosen && chosenDef) act.append(h('button', { class: `candy small ${busy ? 'blocked' : 'primary'}`, disabled: busy ? true : undefined, 'data-test': `send-errand-${i}`, onclick: () => this.actions.sendErrand(i, chosen.species) }, `Sai ${chosenDef.name.vi}`));
+        if (state.errands.rerolls < er.freeRerolls) act.append(h('button', { class: 'candy small plain', 'data-test': `reroll-errand-${i}`, onclick: () => this.actions.rerollErrand(i) }, 'Đổi việc'));
+      }
+      row.append(act);
+      list.append(row);
+    });
+    box.append(list);
+    return box;
   }
 
   private shop(sp: PetSpeciesDef): HTMLElement {

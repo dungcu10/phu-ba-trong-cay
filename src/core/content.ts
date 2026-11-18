@@ -571,7 +571,29 @@ export interface PetRules {
   bond: { max: number; perFeed: number; feedsPerDay: number; perPat: number; patsPerHour: number; milestones: number[]; badgeAt: number[] };
   xp: { perFeed: number; perSkill: number; perPat: number };
   stars: Array<{ minLevel: number; badges: number; bugRarity: string; bugs: number; coins: number }>;
+  errands?: ErrandRules;
   species: PetSpeciesDef[];
+}
+export interface ErrandDef {
+  id: string;
+  name: LocalizedText;
+  hours: number;
+  fit: string[];
+  coinsU?: number;
+  items?: Record<string, number>;
+  bugs?: { rarities: string[]; qty: [number, number] };
+  friendship?: number;
+  energy?: number;
+  badgeChance?: number;
+  pick?: Array<{ items: Record<string, number>; chance: number }>;
+}
+export interface ErrandRules {
+  perDay: number;
+  freeRerolls: number;
+  fitBonus: number;
+  badgeChance: number;
+  petXp: number;
+  list: ErrandDef[];
 }
 
 /** Chỉ thị 11 TỔNG § D: the village — 8 houses, Cấp Làng, Huy Chương Độ Cao, 7-day check-in. */
@@ -1244,6 +1266,10 @@ export function buildContentPack(raw: RawContent): ContentPack {
       if (!Array.isArray(sp.skills) || sp.skills.length !== 3) problems.push(`pets.${sp.id}: cần 3 kỹ năng`);
       for (const id of sp.likes?.items ?? []) if (!items.has(id)) problems.push(`pets.${sp.id}: món thích "${id}" không tồn tại`);
       if (sp.price.shards && !items.has(sp.price.shards.item)) problems.push(`pets.${sp.id}: mảnh "${sp.price.shards.item}" không tồn tại`);
+    }
+    for (const e of pets.errands?.list ?? []) {
+      if (!(e.hours > 0)) problems.push(`pets.errands.${e.id}: hours > 0`);
+      for (const id of [...Object.keys(e.items ?? {}), ...(e.pick ?? []).flatMap((x) => Object.keys(x.items))]) if (!items.has(id)) problems.push(`pets.errands.${e.id}: món "${id}" không tồn tại`);
     }
   }
 

@@ -38,11 +38,14 @@ export const QUEST_TRIGGERS = [
   'castPot',
   'starPot',
   'huntBazaar',
+  // Chỉ thị 11: pets and the village.
+  'petErrand',
+  'feedPet',
 ] as const;
 export type QuestTrigger = (typeof QUEST_TRIGGERS)[number];
 
 /** Values read from the save, for quests like "reach level 10" (progress is never stored). */
-export const QUEST_MEASURES = ['level', 'floors', 'stars', 'potLines', 'cropKinds', 'maxPotLevel', 'storageTier', 'totalHarvests', 'bestFriendship'] as const;
+export const QUEST_MEASURES = ['level', 'floors', 'stars', 'potLines', 'cropKinds', 'maxPotLevel', 'storageTier', 'totalHarvests', 'bestFriendship', 'houseUpgrades', 'pets', 'petStars', 'petLevels', 'medals'] as const;
 export type QuestMeasure = (typeof QUEST_MEASURES)[number];
 
 export interface QuestFilter {

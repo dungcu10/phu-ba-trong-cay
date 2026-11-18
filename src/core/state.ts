@@ -240,6 +240,8 @@ export interface GameState {
   village: { seenZones: number[]; medals: number[]; checkIn: { day: number; count: number } };
   /** Chỉ thị 11 § E (save 13): the player's pets. */
   pets: PetState[];
+  /** Chỉ thị 11 § E3: today's errands board. */
+  errands: { day: number; rerolls: number; list: ErrandSlot[] };
   /** Chỉ thị 10 § 3.11: when Xu Xu last gave its small gift. */
   xuxu?: { giftAt: number; taps: number };
   /** Chỉ thị 12 B2: the Sạp Săn Hàng board (optional; rolled when first opened). */
@@ -270,8 +272,8 @@ export interface GameState {
 }
 
 /** Save 13 defaults for the chỉ thị 11 parts (new games and old saves alike). */
-export function emptyV13Parts(): Pick<GameState, 'buildings' | 'village' | 'pets'> {
-  return { buildings: {}, village: { seenZones: [], medals: [], checkIn: { day: -1, count: 0 } }, pets: [] };
+export function emptyV13Parts(): Pick<GameState, 'buildings' | 'village' | 'pets' | 'errands'> {
+  return { buildings: {}, village: { seenZones: [], medals: [], checkIn: { day: -1, count: 0 } }, pets: [], errands: { day: -1, rerolls: 0, list: [] } };
 }
 
 /** Save 12 defaults for the chỉ thị 10 parts (new games and old saves alike). */
@@ -396,4 +398,14 @@ export interface PetState {
   patHour: { hour: number; n: number };
   /** Bond milestones already rewarded. */
   milestones: number[];
+}
+
+/** One errand of the day: open, out with a pet (back at endsAt), or done (reward collected). */
+export interface ErrandSlot {
+  errand: string;
+  /** Random key for this slot's reward. */
+  key: number;
+  pet: string | null;
+  endsAt: number | null;
+  done: boolean;
 }

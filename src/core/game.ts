@@ -25,6 +25,7 @@ import { combineShards, obtainPot as obtainPotFrom, starUpPot } from '../systems
 import { castLine, claimFishBook, claimFreeBait, craftBait, exchangeFish, reelFish } from '../systems/fishing.ts';
 import { buyDecor, placeDecor } from '../systems/decor.ts';
 import { tapXuxu } from '../systems/xuxu.ts';
+import { claimErrand, ensureErrands, rerollErrand, sendErrand, type ErrandReward } from '../systems/pets.ts';
 import { activeSkill, advancePets, feedPet, giftKitten, guardFloor, jadeRainCooldownMs, obtainPet, patPet, starUpPet, walkPet } from '../systems/pets.ts';
 import { awardMedals, claimCheckIn, houseBonus, potBuyPrice, settleBuildings, upgradeHouse } from '../systems/village.ts';
 import { allMissionsClaimed, ensureMissions, localDay, missionDef, recordMissions } from '../systems/missions.ts';
@@ -107,6 +108,9 @@ export type Command =
   | { type: 'guardFloor'; species: string; floor: number }
   | { type: 'starUpPet'; species: string }
   | { type: 'jadeRain' }
+  | { type: 'sendErrand'; index: number; species: string }
+  | { type: 'rerollErrand'; index: number }
+  | { type: 'claimErrand'; index: number }
   | { type: 'starUpPot'; potInstanceId: string }
   | { type: 'combineShards'; potId: string }
   | { type: 'claimFreeBait' }
@@ -144,6 +148,9 @@ export type GameEvent =
   | { type: 'petGuards'; species: string; floor: number }
   | { type: 'petStarred'; species: string; stars: number }
   | { type: 'petCaught'; species: string; itemId: string; floor: number }
+  | { type: 'errandSent'; index: number; species: string; endsAt: number }
+  | { type: 'errandRerolled'; index: number; errand: string }
+  | ({ type: 'errandClaimed'; index: number; species: string } & ErrandReward)
   | { type: 'jadeRained'; floor: number; pots: number; savedMs: number }
   | { type: 'seedRefunded'; slot: SlotRef; coins: number }
   | { type: 'houseUpgradeStarted'; house: string; level: number; endsAt: number; coins: number }
@@ -252,6 +259,9 @@ export type ErrorCode =
   | 'cooldown'
   | 'pet_away'
   | 'pet_asleep'
+  | 'errand_busy'
+  | 'not_back'
+  | 'no_reroll'
   | 'house_max_level'
   | 'busy'
   | 'no_build_slot'
@@ -299,6 +309,7 @@ export function updateWorld(content: ContentPack, state: GameState, now: number)
   settleEnergy(content, state, now);
   for (const d of settleBuildings(content, state, now)) events.push({ type: 'houseUpgraded', ...d });
   for (const m of awardMedals(content, state, now)) events.push({ type: 'medalAwarded', ...m });
+  ensureErrands(content, state, now);
   if (giftKitten(content, state, now)) events.push({ type: 'petObtained', species: state.pets.at(-1)!.species, gift: true });
   events.push(...simulateNeighbors(content, state, now));
   return events;
@@ -444,6 +455,19 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
     }
     case 'jadeRain':
       return jadeRain(content, state, now);
+    case 'sendErrand': {
+      const r = sendErrand(content, state, cmd.index, cmd.species, now);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'errandSent', index: cmd.index, species: cmd.species, endsAt: r.endsAt }] };
+    }
+    case 'rerollErrand': {
+      const r = rerollErrand(content, state, cmd.index, now);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'errandRerolled', index: cmd.index, errand: r.errand }] };
+    }
+    case 'claimErrand': {
+      const species = state.errands.list[cmd.index]?.pet ?? '';
+      const r = claimErrand(content, state, cmd.index, now);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'errandClaimed', index: cmd.index, species, ...r }] };
+    }
     case 'upgradeHouse': {
       const r = upgradeHouse(content, state, cmd.house, now);
       return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'houseUpgradeStarted', house: cmd.house, ...r }] };

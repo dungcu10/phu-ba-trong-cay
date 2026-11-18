@@ -9,7 +9,8 @@ import type { ContentPack, PetSkillDef, PetSpeciesDef } from '../core/content.ts
 import type { GameState, PetState } from '../core/state.ts';
 import { addItem, removeItem } from './economy.ts';
 import { localDay } from './missions.ts';
-import { houseLevel } from './village.ts';
+import { houseBonus, houseLevel } from './village.ts';
+import { randomFor } from '../core/rng.ts';
 
 export type PetError = 'locked' | 'unknown_pet' | 'have_it' | 'no_pet' | 'not_enough_coins' | 'not_enough_gems' | 'not_enough_items' | 'cannot_eat' | 'pet_full' | 'no_walk_slot' | 'bad_floor' | 'pet_max_stars' | 'pet_level_low' | 'cooldown' | 'pet_away' | 'pet_asleep';
 
@@ -311,4 +312,122 @@ export function jadeRainCooldownMs(content: ContentPack, p: PetState): number {
 export function jadeRainReadyAt(content: ContentPack, state: GameState): number | null {
   const p = state.pets.find((x) => speciesDef(content, x.species)?.skills.some((s) => s.id === 'jadeRain'));
   return p ? (p.skillAt.jadeRain ?? 0) : null;
+}
+
+// --- errands (§ E3) ------------------------------------------------------------------------------
+
+export type ErrandError = 'locked' | 'bad_slot' | 'no_pet' | 'pet_away' | 'errand_busy' | 'not_back' | 'already_claimed' | 'no_reroll';
+
+/** Errands a day: errands.perDay plus the Nhà Thú Cưng level bonus. */
+export function errandsPerDay(content: ContentPack, state: GameState): number {
+  return (content.pets?.errands?.perDay ?? 0) + houseBonus(content, state, 'pets', 'errandsPerDay');
+}
+
+function rollErrand(content: ContentPack, state: GameState, day: number, k: number): string {
+  const list = content.pets!.errands!.list;
+  return list[Math.floor(randomFor(state.seed, 'errand', day, k) * list.length)]!.id;
+}
+
+/** Lays out today's board at local midnight (unfinished errands out with a pet stay until they come back). */
+export function ensureErrands(content: ContentPack, state: GameState, now: number): boolean {
+  if (!content.pets?.errands || state.pets.length === 0) return false;
+  const day = localDay(content, now);
+  if (state.errands.day === day) return false;
+  const out = state.errands.list.filter((e) => e.pet !== null && !e.done);
+  const n = errandsPerDay(content, state);
+  const fresh = Array.from({ length: n }, (_, k) => ({ errand: rollErrand(content, state, day, k), key: day * 100 + k, pet: null, endsAt: null, done: false }));
+  state.errands = { day, rerolls: 0, list: [...out, ...fresh] };
+  return true;
+}
+
+export function sendErrand(content: ContentPack, state: GameState, index: number, species: string, now: number): ErrandError | { endsAt: number } {
+  const er = content.pets?.errands;
+  if (!er) return 'locked';
+  ensureErrands(content, state, now);
+  const slot = state.errands.list[index];
+  if (!slot || slot.done) return 'bad_slot';
+  if (slot.pet) return 'errand_busy';
+  const p = petOf(state, species);
+  if (!p) return 'no_pet';
+  if ((p.awayUntil ?? 0) > now || state.errands.list.some((e) => e.pet === species && !e.done)) return 'pet_away';
+  const def = er.list.find((e) => e.id === slot.errand)!;
+  slot.pet = species;
+  slot.endsAt = now + def.hours * HOUR;
+  p.awayUntil = slot.endsAt;
+  return { endsAt: slot.endsAt };
+}
+
+/** Free swap of one open errand a day. */
+export function rerollErrand(content: ContentPack, state: GameState, index: number, now: number): ErrandError | { errand: string } {
+  const er = content.pets?.errands;
+  if (!er) return 'locked';
+  ensureErrands(content, state, now);
+  const slot = state.errands.list[index];
+  if (!slot || slot.done || slot.pet) return 'bad_slot';
+  if (state.errands.rerolls >= er.freeRerolls) return 'no_reroll';
+  state.errands.rerolls += 1;
+  slot.key += 7;
+  slot.errand = rollErrand(content, state, slot.key, 99);
+  return { errand: slot.errand };
+}
+
+export interface ErrandReward {
+  coins: number;
+  items: Record<string, number>;
+  friendship: number;
+  energy: number;
+  badge: boolean;
+  fit: boolean;
+  levelUps: number[];
+}
+
+/** The pet is back: collect the bag. Fit pets bring ×(1 + fitBonus). */
+export function claimErrand(content: ContentPack, state: GameState, index: number, now: number): ErrandError | ErrandReward {
+  const er = content.pets?.errands;
+  if (!er) return 'locked';
+  const slot = state.errands.list[index];
+  if (!slot || !slot.pet) return 'bad_slot';
+  if (slot.done) return 'already_claimed';
+  if ((slot.endsAt ?? Infinity) > now) return 'not_back';
+  const def = er.list.find((e) => e.id === slot.errand)!;
+  const p = petOf(state, slot.pet);
+  const fit = def.fit.includes(slot.pet);
+  const k = 1 + (fit ? er.fitBonus : 0);
+  const r = (...x: Array<string | number>) => randomFor(state.seed, 'errandBag', slot.key, ...x);
+  const items: Record<string, number> = {};
+  const add = (id: string, q: number) => (items[id] = (items[id] ?? 0) + q);
+  for (const [id, q] of Object.entries(def.items ?? {})) add(id, Math.max(1, Math.round(q * k)));
+  if (def.bugs) {
+    const n = Math.round((def.bugs.qty[0] + Math.floor(r('n') * (def.bugs.qty[1] - def.bugs.qty[0] + 1))) * k);
+    for (let i = 0; i < n; i++) {
+      const rar = def.bugs.rarities[Math.floor(r('rar', i) * def.bugs.rarities.length)]!;
+      const bugs = content.bugList.filter((b) => b.rarity === rar && b.unlockLevel <= state.player.level).sort((a, b) => a.id.localeCompare(b.id));
+      const bug = bugs[Math.floor(r('bug', i) * bugs.length)];
+      if (bug) add(bug.id, 1);
+    }
+  }
+  for (const [j, pk] of (def.pick ?? []).entries()) if (r('pick', j) < pk.chance * k) for (const [id, q] of Object.entries(pk.items)) add(id, q);
+  const coins = def.coinsU ? Math.round(def.coinsU * content.income.unit(state.player.level) * k) : 0;
+  const sp = p ? speciesDef(content, p.species) : undefined;
+  const badge = !!sp && r('badge') < (def.badgeChance ?? er.badgeChance);
+  if (badge && sp) add(sp.badge, 1);
+  for (const [id, q] of Object.entries(items)) addItem(state, id, q);
+  state.player.coins += coins;
+  state.stats.coinsEarned += coins;
+  let friendship = 0;
+  if (def.friendship) {
+    const bots = Object.keys(state.neighbors).sort();
+    const bot = state.neighbors[bots[Math.floor(r('bot') * bots.length)]!];
+    friendship = Math.round(def.friendship * k);
+    if (bot) bot.friendship += friendship;
+  }
+  let energy = 0;
+  if (def.energy) {
+    energy = Math.round(def.energy * k);
+    state.energy.value = Math.min(content.sea?.energy.cap ?? state.energy.value + energy, state.energy.value + energy);
+  }
+  slot.done = true;
+  if (p) p.awayUntil = null;
+  const levelUps = p ? addPetXp(content, p, er.petXp) : [];
+  return { coins, items, friendship, energy, badge, fit, levelUps };
 }

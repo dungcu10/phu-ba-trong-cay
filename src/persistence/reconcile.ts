@@ -363,6 +363,19 @@ function reconcileV13(state: GameState, content: ContentPack): void {
       patHour: obj(p.patHour) && Number.isInteger(p.patHour.hour) && Number.isInteger(p.patHour.n) ? { hour: p.patHour.hour, n: p.patHour.n } : { hour: -1, n: 0 },
       milestones: nums(p.milestones),
     }));
+  // Errands: known errands only; a pet out on an errand must exist (else the slot is open again).
+  const knownErrands = new Set((content.pets?.errands?.list ?? []).map((e) => e.id));
+  const er = obj(state.errands) ? state.errands : d.errands;
+  state.errands = {
+    day: Number.isInteger(er.day) ? er.day : -1,
+    rerolls: Number.isInteger(er.rerolls) && er.rerolls >= 0 ? er.rerolls : 0,
+    list: (Array.isArray(er.list) ? er.list : [])
+      .filter((x) => obj(x) && knownErrands.has(x.errand))
+      .map((x) => {
+        const pet = typeof x.pet === 'string' && state.pets.some((p) => p.species === x.pet) ? x.pet : null;
+        return { errand: x.errand, key: Number.isInteger(x.key) ? x.key : 0, pet, endsAt: pet && typeof x.endsAt === 'number' ? x.endsAt : null, done: x.done === true };
+      }),
+  };
 }
 
 /**
