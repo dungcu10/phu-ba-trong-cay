@@ -62,5 +62,13 @@
     },
     "level": 6,
     "tutorial": "tut.workshop"
+  },
+  {
+    "id": "sea",
+    "name": {
+      "vi": "Biển Mây Bí Ẩn"
+    },
+    "level": 8,
+    "tutorial": "tut.sea"
   }
 ]

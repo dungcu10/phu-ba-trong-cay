@@ -19,6 +19,7 @@ import { playerPrice, sellBugs, simulateNeighbors, snapshotRanks, type NeighborE
 import { expandCost, expandItems, nextStar } from '../systems/floors.ts';
 import { floorUnlockCost } from '../systems/coinSinks.ts';
 import { buyBazaar, ensureBazaar, rerollBazaar } from '../systems/bazaar.ts';
+import { blowCloud, settleEnergy } from '../systems/sea.ts';
 import { allMissionsClaimed, ensureMissions, localDay, missionDef, recordMissions } from '../systems/missions.ts';
 import { ensureQuestPeriods, questActive, questClaims, questReward, questView, recordQuests } from '../systems/quests.ts';
 import { botGarden, helpReward, helpsLeft, helpToday, type HelpKind } from '../systems/visit.ts';
@@ -86,7 +87,8 @@ export type Command =
   /** Chỉ thị 10 § 3.8: cast a crafted pot at the Lò Gốm. */
   | { type: 'castPot'; potId: string }
   | { type: 'rerollBazaar' }
-  | { type: 'buyBazaar'; slot: number };
+  | { type: 'buyBazaar'; slot: number }
+  | { type: 'blowCloud'; cell: number };
 
 export type GameEvent =
   | { type: 'planted'; slot: SlotRef; cropId: string; cost: number }
@@ -107,6 +109,7 @@ export type GameEvent =
   | { type: 'potCast'; potInstanceId: string; potId: string; perfect: boolean }
   | { type: 'bazaarRerolled'; coins: number; best: BazaarSlot['rarity']; sure: BazaarSlot['rarity'] | null }
   | { type: 'bazaarRefreshed' }
+  | { type: 'cloudBlown'; cell: number; finds: Array<{ itemId: string; qty: number }>; chest?: number; potInstanceId?: string; cleared?: { gems: number } }
   | { type: 'bazaarBought'; slot: number; rarity: BazaarSlot['rarity']; kind: 'item' | 'pot'; itemId: string; qty: number; currency: 'coins' | 'gems'; price: number; potInstanceId?: string }
   | { type: 'neighborsChipped'; slot: number; help: Array<{ botId: string; itemId: string; qty: number }> }
   | { type: 'journalClaimed'; cropId: string; gems: number; harvests: number }
@@ -179,6 +182,9 @@ export type ErrorCode =
   | 'help_used'
   | 'not_castable'
   | 'already_bought'
+  | 'bad_cell'
+  | 'already_open'
+  | 'no_energy'
   | 'bird_busy'
   | WorkshopError;
 
@@ -212,6 +218,7 @@ export function updateWorld(content: ContentPack, state: GameState, now: number)
   if (arrived.length > 0) events.push({ type: 'ordersArrived', slots: arrived });
   snapshotRanks(content, state, localDay(content, now));
   if (ensureBazaar(content, state, now)) events.push({ type: 'bazaarRefreshed' });
+  settleEnergy(content, state, now);
   events.push(...simulateNeighbors(content, state, now));
   return events;
 }
@@ -280,6 +287,11 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
     case 'castPot': {
       const r = castPot(content, state, cmd.potId, now);
       return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'potCast', potInstanceId: r.potInstanceId, potId: cmd.potId, perfect: r.perfect }] };
+    }
+    case 'blowCloud': {
+      const r = blowCloud(content, state, cmd.cell, now);
+      if (typeof r === 'string') return fail(r);
+      return { ok: true, events: [{ type: 'cloudBlown', ...r }] };
     }
     case 'rerollBazaar': {
       const r = rerollBazaar(content, state, now);

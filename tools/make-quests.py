@@ -125,6 +125,7 @@ features=[
  {"id":"birds","name":{"vi":"Chim Bắt Sâu"},"level":3,"tutorial":"tut.birds"},
  # Chỉ thị 10 § 3.5 + chỉ thị 11 G: Xưởng Bọ mở ở cấp 6 (Máy Sấy Hoa).
  {"id":"workshop","name":{"vi":"Xưởng Bọ"},"level":6,"tutorial":"tut.workshop"},
+ {"id":"sea","name":{"vi":"Biển Mây Bí Ẩn"},"level":8,"tutorial":"tut.sea"},
 ]
 json.dump(features,open('content/base/features.json','w'),ensure_ascii=False,indent=2)
 tut=[
@@ -135,6 +136,7 @@ tut=[
  {"id":"tut.event","title":{"vi":"Mở khóa: Lễ Hội"},"text":{"vi":"Lễ hội có hạn: chơi như thường để tích điểm, đạt mốc nhận quà độc quyền."},"target":"open-event"},
  {"id":"tut.birds","title":{"vi":"Mở khóa: Chim Bắt Sâu"},"text":{"vi":"Thuê Sẻ Mây đậu ở mép tầng: chim tự bắt bọ trên cây Hoa, cả khi bạn tắt game. Nhớ cho chim ăn Hạt Kê Mây, chim đói thì ngủ."},"target":"open-birds"},
  {"id":"tut.workshop","title":{"vi":"Mở khóa: Xưởng Bọ"},"text":{"vi":"Bọ thợ chế biến nông sản thành hàng giá cao: 3 hoa thành Hoa Sấy, quả thành Hũ Mứt. Máy chạy cả khi bạn tắt game."},"target":"open-workshop"},
+ {"id":"tut.sea","title":{"vi":"Mở khóa: Biển Mây Bí Ẩn"},"text":{"vi":"Xu Xu thổi tan từng cụm mây để tìm khoáng, Sợi Mây, Giọt Sương, bọ hiếm và rương. Mỗi lần thổi tốn 1 Năng Lượng Gió; gió tự hồi cả khi bạn tắt game."},"target":"open-sea"},
  {"id":"tut.stall","title":{"vi":"Mở khóa: Sạp Phú Bà"},"text":{"vi":"Bày nông sản lên sạp với giá bạn chọn. Hàng xóm ghé mua theo sở thích — giá càng hời bán càng nhanh."},"target":"open-stall"},
 ]
 json.dump(tut,open('content/base/tutorials.json','w'),ensure_ascii=False,indent=2)

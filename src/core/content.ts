@@ -501,6 +501,26 @@ export interface CastingRules {
   sources: Record<string, string>;
 }
 
+/** Chỉ thị 10 § 3.7: Biển Mây Bí Ẩn. */
+export interface SeaDrop {
+  kind: 'empty' | 'item' | 'bug';
+  weight: number;
+  id?: string;
+  rarity?: string;
+  qty?: [number, number];
+}
+export interface SeaRules {
+  unlockLevel: number;
+  cols: number;
+  rows: number;
+  energy: { max: number; regenMinutes: number; daily: number; cap: number };
+  /** How many 2×2 chests a map has, [min, max]. */
+  chests: [number, number];
+  cells: SeaDrop[];
+  chest: { rolls: number; table: SeaDrop[]; potChance: number; potRarities: string[] };
+  clear: { items: Record<string, number>; gems: number };
+}
+
 /** Chỉ thị 12 TỔNG B2: the Sạp Săn Hàng (8 slots, free refresh, paid reroll, Vận May pity). */
 export type BazaarRarity = 'common' | 'good' | 'rare' | 'epic' | 'legendary';
 export const BAZAAR_RARITIES: BazaarRarity[] = ['common', 'good', 'rare', 'epic', 'legendary'];
@@ -584,6 +604,7 @@ export interface ContentPack {
   cropExtras?: CropExtras;
   casting?: CastingRules;
   market?: MarketRules;
+  sea?: SeaRules;
   missions: MissionsConfig;
   materials: Map<string, MaterialDef>;
   events: EventDef[];
@@ -618,6 +639,7 @@ export interface RawContent {
   cropExtras?: unknown;
   casting?: unknown;
   market?: unknown;
+  sea?: unknown;
 }
 
 export class ContentError extends Error {
@@ -633,7 +655,7 @@ type ReadJson = (relativePath: string) => Promise<unknown>;
 export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> {
   const manifest = (await readJson('manifest.json')) as {
     contentVersion: number;
-    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions' | 'materials' | 'events' | 'quests' | 'features' | 'tutorials', string> & Partial<Record<'birds' | 'workshop' | 'cropExtras' | 'casting' | 'market', string>>;
+    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions' | 'materials' | 'events' | 'quests' | 'features' | 'tutorials', string> & Partial<Record<'birds' | 'workshop' | 'cropExtras' | 'casting' | 'market' | 'sea', string>>;
   };
   const raw: RawContent = {
     contentVersion: manifest.contentVersion,
@@ -657,6 +679,7 @@ export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> 
     cropExtras: manifest.files.cropExtras ? await readJson(manifest.files.cropExtras) : undefined,
     casting: manifest.files.casting ? await readJson(manifest.files.casting) : undefined,
     market: manifest.files.market ? await readJson(manifest.files.market) : undefined,
+    sea: manifest.files.sea ? await readJson(manifest.files.sea) : undefined,
   };
   return buildContentPack(raw);
 }
@@ -1025,6 +1048,27 @@ export function buildContentPack(raw: RawContent): ContentPack {
     if (lp && (['floorUnlockU', 'floorExpandU', 'machineStarU', 'machineSlotU'] as const).some((k) => !isNum(lp[k]) || lp[k] < 0)) problems.push('market.levelPricing: hệ số ≥ 0');
   }
 
+  let sea: SeaRules | undefined;
+  if (isObj(raw.sea)) {
+    sea = raw.sea as unknown as SeaRules;
+    const e = sea.energy;
+    if (!(sea.cols >= 2 && sea.rows >= 2) || !isNum(sea.unlockLevel)) problems.push('sea: cần cols, rows ≥ 2 và unlockLevel');
+    if (!isObj(e) || !(e.max > 0) || !(e.regenMinutes > 0) || !(e.daily >= 0) || !(e.cap >= e.max)) problems.push('sea.energy: max > 0, regenMinutes > 0, daily ≥ 0, cap ≥ max');
+    if (!Array.isArray(sea.chests) || !(sea.chests[0]! >= 0 && sea.chests[1]! >= sea.chests[0]!)) problems.push('sea.chests: [min, max]');
+    const drops = (list: unknown, where: string) => {
+      if (!Array.isArray(list) || list.length === 0) return void problems.push(`${where}: cần danh sách`);
+      for (const d of list as SeaDrop[]) {
+        if (!['empty', 'item', 'bug'].includes(d.kind) || !(d.weight > 0)) problems.push(`${where}: kind và weight > 0`);
+        if (d.kind === 'item' && (!d.id || !items.has(d.id))) problems.push(`${where}: món "${d.id}" không tồn tại`);
+        if (d.kind === 'bug' && !['common', 'good', 'rare', 'epic'].includes(d.rarity ?? '')) problems.push(`${where}: bọ cần rarity`);
+        if (d.qty && !(d.qty[0] >= 1 && d.qty[1] >= d.qty[0])) problems.push(`${where}: qty [min, max]`);
+      }
+    };
+    drops(sea.cells, 'sea.cells');
+    drops(sea.chest?.table, 'sea.chest.table');
+    for (const id of Object.keys(sea.clear?.items ?? {})) if (!items.has(id)) problems.push(`sea.clear: món "${id}" không tồn tại`);
+  }
+
   if (problems.length > 0) throw new ContentError(problems);
   const handFloors = [...floors.values()].sort((a, b) => a.unlockLevel - b.unlockLevel);
   const income = new IncomeModel(config.income, [...crops.values()], handFloors, config.floorGen);
@@ -1054,6 +1098,7 @@ export function buildContentPack(raw: RawContent): ContentPack {
     cropExtras,
     casting,
     market,
+    sea,
     potSets,
     missions,
     materials,

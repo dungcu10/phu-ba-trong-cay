@@ -1,0 +1,36 @@
+{
+  "_note": "Chỉ thị 10 § 3.7 Biển Mây Bí Ẩn. Lưới cols × rows cụm mây; chạm 1 cụm tốn 1 Năng Lượng Gió và lộ ô bên dưới. Năng Lượng Gió: tối đa max, hồi 1 điểm mỗi regenMinutes (cả khi tắt game), mỗi ngày tặng thêm daily (được vượt max tới cap). Rương chiếm 2×2 ô, thổi tan đủ 4 ô thì mở. Dọn hết bản đồ thì có thưởng lớn và mở bản đồ mới. Bản đồ tạo từ seed + ngày tạo + số thứ tự bản đồ. Số liệu thưởng là số khởi điểm, CTO chỉnh.",
+  "unlockLevel": 8,
+  "cols": 6,
+  "rows": 8,
+  "energy": { "max": 30, "regenMinutes": 6, "daily": 10, "cap": 40 },
+  "chests": [2, 3],
+  "cells": [
+    { "kind": "empty", "weight": 46 },
+    { "kind": "item", "id": "base:mat.cloud-stone", "weight": 14, "qty": [1, 2] },
+    { "kind": "item", "id": "base:mat.copper-bit", "weight": 11, "qty": [1, 2] },
+    { "kind": "item", "id": "base:mat.silver-bit", "weight": 6, "qty": [1, 1] },
+    { "kind": "item", "id": "base:mat.gold-dust", "weight": 3, "qty": [1, 1] },
+    { "kind": "item", "id": "base:mat.raw-jade", "weight": 1.5, "qty": [1, 1] },
+    { "kind": "item", "id": "base:mat.cloud-thread", "weight": 8, "qty": [1, 1] },
+    { "kind": "item", "id": "base:mat.sky-dew", "weight": 5, "qty": [1, 1] },
+    { "kind": "bug", "rarity": "rare", "weight": 1.5, "qty": [1, 1] }
+  ],
+  "chest": {
+    "rolls": 2,
+    "table": [
+      { "kind": "item", "id": "base:mat.silver-bit", "weight": 4, "qty": [2, 3] },
+      { "kind": "item", "id": "base:mat.gold-dust", "weight": 3, "qty": [1, 2] },
+      { "kind": "item", "id": "base:mat.raw-jade", "weight": 2, "qty": [1, 2] },
+      { "kind": "item", "id": "base:mat.sky-dew", "weight": 3, "qty": [1, 2] },
+      { "kind": "item", "id": "base:mat.cloud-thread", "weight": 3, "qty": [2, 3] },
+      { "kind": "bug", "rarity": "rare", "weight": 1, "qty": [1, 1] }
+    ],
+    "potChance": 0.03,
+    "potRarities": ["common", "rare"]
+  },
+  "clear": {
+    "items": { "base:mat.raw-jade": 2, "base:mat.gold-dust": 2, "base:mat.sky-dew": 2 },
+    "gems": 0
+  }
+}

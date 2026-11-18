@@ -795,3 +795,34 @@ html, body {
 @keyframes hunt-shine{from{background-position:150% 0}to{background-position:-100% 0}}
 @keyframes hunt-shake{0%,100%{transform:rotate(0)}25%{transform:rotate(-3deg) scale(1.04)}75%{transform:rotate(3deg) scale(1.04)}}
 @media (prefers-reduced-motion: reduce){.hunt-slot.jackpot,.hunt-slot.rar-legendary::after{animation:none}}
+
+/* Chỉ thị 10 § 3.7: Biển Mây Bí Ẩn. */
+.sea-layout{display:flex;gap:18px;align-items:flex-start;justify-content:center;flex-wrap:wrap}
+.sea-side{display:flex;flex-direction:column;align-items:center;gap:8px;width:230px;text-align:center}
+.sea-side .note{margin:0}
+.sea-xuxu{filter:drop-shadow(0 6px 8px rgba(0,0,0,.25))}
+.sea-xuxu.pose-wave{animation:sea-bob 1.6s ease-in-out infinite}
+.sea-xuxu.pose-surprised{animation:sea-jump .5s ease-out 2}
+.sea-xuxu.pose-happy{animation:sea-jump .6s ease-out 3}
+.sea-energy{display:flex;align-items:center;gap:8px;font-weight:800}
+.sea-energy-num{font-size:var(--font-size-title,22px)}
+.sea-track{width:200px;display:block}
+.sea-track .luck-fill{background:linear-gradient(90deg,#9fd8ff,#e9f6ff)}
+.sea-stats{display:flex;flex-direction:column;gap:4px;font-weight:700}
+.sea-stats span{display:inline-flex;align-items:center;gap:6px;justify-content:center}
+.sea-board{padding:12px;border-radius:18px;background:linear-gradient(180deg,#8fb6e8 0%,#b9a6e3 60%,#f2c6d6 100%);box-shadow:inset 0 0 24px rgba(255,255,255,.5)}
+.sea-grid{position:relative;display:grid;gap:0}
+.sea-cell{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;border:0;padding:0;background:none}
+.sea-cell.cloud{cursor:pointer;z-index:2;touch-action:manipulation}
+.sea-cell.cloud:active .sea-puff{filter:brightness(1.12)}
+.sea-cell.open{z-index:1}
+.sea-cell.open::before{content:"";position:absolute;inset:6px;border-radius:50%;background:radial-gradient(rgba(255,255,255,.35),transparent 70%)}
+.sea-cell.open .qty-tag{position:absolute;right:2px;bottom:2px}
+.sea-cell.fresh>*{animation:sea-pop .45s cubic-bezier(.3,1.6,.5,1)}
+.sea-puff{position:absolute;left:50%;top:50%;pointer-events:none;background-repeat:no-repeat}
+.sea-chest{position:relative;z-index:0;display:flex;align-items:center;justify-content:center}
+.sea-chest.opened{opacity:.45;filter:grayscale(.4)}
+@keyframes sea-pop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes sea-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes sea-jump{0%,100%{transform:translateY(0)}40%{transform:translateY(-16px)}}
+@media (prefers-reduced-motion: reduce){.sea-xuxu,.sea-cell.fresh>*{animation:none!important}}

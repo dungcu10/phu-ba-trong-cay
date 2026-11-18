@@ -16,6 +16,7 @@ import { SettingsPanel } from '../ui/settings.ts';
 import { FloorPanel, PotShopPanel, type PotShopActions } from '../ui/potPanels.ts';
 import { BirdsPanel, type BirdActions } from '../ui/birdPanels.ts';
 import { WorkshopPanel, type WorkshopActions } from '../ui/workshopPanel.ts';
+import { SeaPanel } from '../ui/seaPanel.ts';
 import { CastingPanel, type CastingActions } from '../ui/castingPanel.ts';
 import { rentEndsSoon } from '../systems/birds.ts';
 import { JournalPanel, LettersPanel, NeighborsPanel, OrdersPanel, StallPanel, type WorldActions } from '../ui/worldPanels.ts';
@@ -69,6 +70,7 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
       openJournal: () => this.open(new JournalPanel(this.session, this)),
       openBirds: () => this.open(new BirdsPanel(this.session, this)),
       openWorkshop: () => this.openWorkshop(),
+      openSea: () => this.openSea(),
       openLetters: () => {
         this.open(new LettersPanel(this.session));
         this.run({ type: 'readNotices' }, true);
@@ -90,6 +92,7 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
       this.hud.update();
       // Countdowns on the order board move every second.
       if (this.panel instanceof OrdersPanel || this.panel instanceof MissionsPanel || this.panel instanceof QuestCenterPanel || this.panel instanceof BirdsPanel || this.panel instanceof WorkshopPanel) this.panel.render();
+      if (this.panel instanceof SeaPanel) this.panel.tick();
       this.warnRent();
       this.visitBar?.update();
       // A feature that just opened is introduced once nothing else is on screen.
@@ -139,6 +142,7 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
       shop: () => this.openShop(),
       birds: () => this.open(new BirdsPanel(this.session, this)),
       workshop: () => this.openWorkshop(),
+      sea: () => this.openSea(),
     };
     setTimeout(() => go[feature]?.(), 250);
   }
@@ -213,6 +217,17 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
 
   castPot(potId: string): void {
     this.run({ type: 'castPot', potId });
+  }
+
+  // --- Biển Mây Bí Ẩn (chỉ thị 10 § 3.7) ------------------------------------------------------
+
+  /** Opens the Biển Mây window (chỉ thị 11: the Cổng Biển Mây in the village calls this same function). */
+  openSea(): void {
+    this.open(new SeaPanel(this.session, this));
+  }
+
+  blowCloud(cell: number): void {
+    this.run({ type: 'blowCloud', cell });
   }
 
   // --- Xưởng Bọ (chỉ thị 10 § 3.5) ------------------------------------------------------------
@@ -551,6 +566,7 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
     this.view.refresh();
     for (const e of events) this.feedback(e);
     this.hud.update();
+    if (this.panel instanceof SeaPanel) this.panel.react(events);
     this.panel?.render();
     if (this.tray.open) this.tray.render();
     this.visitBar?.update();
@@ -595,6 +611,17 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
         this.sfx.play('upgrade');
         const name = content.pots.get(e.potId)?.name.vi ?? 'Chậu';
         this.toasts.show(e.perfect ? `Đúc thành công ${name} Hoàn Mỹ ★! Chậu đã vào kho chậu.` : `Đúc thành công ${name}! Chậu đã vào kho chậu.`, 'level', 3000);
+        break;
+      }
+      case 'cloudBlown': {
+        const names = e.finds.map((f) => `${f.qty} ${content.items.get(f.itemId)?.name.vi ?? ''}`).join(', ');
+        if (e.cleared) {
+          this.sfx.play('upgrade');
+          this.toasts.show(`Dọn sạch Biển Mây! Thưởng: ${names}. Bản đồ mới đã mở.`, 'level', 3200);
+        } else if (e.chest !== undefined) {
+          this.sfx.play('upgrade');
+          this.toasts.show(`Mở rương: ${names}${e.potInstanceId ? ', và một chậu mới!' : ''}`, 'level', 2800);
+        } else this.sfx.play(e.finds.length ? 'coin' : 'tap');
         break;
       }
       case 'bazaarRerolled':
