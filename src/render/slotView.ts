@@ -54,6 +54,10 @@ export class SlotView extends Container {
   private bugFlies = false;
   private bugBase = 0.75;
   private markerKind: 'none' | 'water' | 'ripe' = 'none';
+  /** Ripe now (pets keep from standing in front of it). */
+  get ripe(): boolean {
+    return this.markerKind === 'ripe';
+  }
   private shownBugs = 0;
   private sway = 0;
   private family = '';

@@ -186,6 +186,8 @@ export interface Listing {
   qty: number;
   /** Price per item asked by the player. */
   price: number;
+  /** How many were first laid out (Mèo Tự Bày Hàng lays out the same again). */
+  qty0?: number;
 }
 
 /** Things that happened while the player was away or not looking, shown as letters. */

@@ -436,6 +436,7 @@ export class GameView {
       if (pet) {
         pet.sprite.position.set(-WORLD.potRowSpan / 2 - 60 + ((fi * 263 + k * 340) % 700), 30);
         if (gp.art.startsWith('pet/')) ((pet.baseScale = PET_SCALE), (pet.facesRight = true));
+        pet.species = gp.species;
         pets.push(pet);
       }
     });
@@ -469,7 +470,12 @@ export class GameView {
     }
     const sign = this.buildSign(f);
     container.addChild(sign);
-    for (const p of pets) container.addChild(p.sprite);
+    // Pets keep clear of ripe pots in the front row (same lawn line).
+    const front = slots.filter((_, i) => !place(i).back);
+    for (const p of pets) {
+      p.avoid = () => front.filter((v) => v.ripe).map((v) => v.x);
+      container.addChild(p.sprite);
+    }
     this.floorsLayer.addChild(container);
     return { key: this.floorKey(f), container, slots, ghost, sign, signKey: this.signKey(f), phase: fi * 1.7, animating: false, ringBack, pets };
   }
@@ -761,6 +767,15 @@ export class GameView {
 
   slotView(floor: number, i: number): SlotView {
     return this.floors[floor]!.slots[i]!;
+  }
+
+  /** Chỉ thị 11 § E5: a working pet runs to the pot it works on (beside it, never over a ripe pot). */
+  petGoTo(floor: number, species: string, slot?: number): void {
+    const fv = this.floors[floor];
+    const pet = fv?.pets.find((p) => p.species === species);
+    if (!fv || !pet) return;
+    const v = slot !== undefined ? fv.slots[slot] : undefined;
+    pet.goTo(v ? v.x : pet.sprite.x);
   }
 
   private slotAtGlobal(global: { x: number; y: number }): SlotView | null {

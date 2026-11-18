@@ -10,6 +10,7 @@ import type { GameSession } from '../app/session.ts';
 import type { GameEvent } from '../core/game.ts';
 import { randomFor } from '../core/rng.ts';
 import { energyMax, ensureSeaMap, nextEnergyAt, seaCells, seaRules, settleEnergy } from '../systems/sea.ts';
+import { sniffedChests, speciesDef } from '../systems/pets.ts';
 import cloudData from '../../assets/art/sea_clouds.json';
 import cloudUrl from '../../assets/art/sea_clouds.webp?url';
 import { itemIcon } from './icons.ts';
@@ -136,6 +137,12 @@ export class SeaPanel extends Panel {
       const btn = h('button', { class: 'sea-cell cloud', style, 'aria-label': 'Thổi tan cụm mây', 'data-test': `sea-cell-${i}`, onclick: () => (state.energy.value < 1 && this.energyEmpty() ? shake(btn) : this.actions.blowCloud(i)) }, this.cloud(i, sm));
       grid.append(btn);
     });
+    // Cáo Đánh Hơi (chỉ thị 11 § E1): a paw mark over the chests the fox has sniffed out.
+    const fox = speciesDef(content, 'pet.fire-fox');
+    for (const at of sniffedChests(content, state, cells.filter((c) => c.kind === 'chest').map((c) => c.chest!), now)) {
+      if (sm.chests.includes(at) || !fox) continue;
+      grid.append(h('div', { class: 'sea-sniff', title: 'Cáo đánh hơi: có rương ở đây', style: `grid-column:${(at % r.cols) + 1} / span 2;grid-row:${Math.floor(at / r.cols) + 1} / span 2` }, icon(`${fox.art}/${fox.poses.stand}`, 44)));
+    }
     this.justOpened = -1;
     this.pose = 'wave';
     this.body.append(h('div', { class: 'sea-layout' }, side, h('div', { class: 'sea-board' }, grid)));

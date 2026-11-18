@@ -29,6 +29,20 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Chỉ thị 11 TỔNG N5 (phần 2b) — Kỹ năng 2–3 của thú cưng, bé tránh che chậu chín (tag `m-11-n5c`)
+- Loại: Thêm
+- Mô tả:
+  - **Mèo Tự Bày Hàng** (cấp 10): món trên Sạp bán hết thì Mèo bày lại từ kho, cùng giá, cùng số lượng lúc đầu, tối đa (5 → 15) lần/ngày. **Mèo Khách Quý** (cấp 20): mỗi ngày lần mua đầu tiên ở Sạp trả cao hơn (20% → 40%).
+  - **Cáo Đánh Hơi** (cấp 10): trên Biển Mây đánh dấu sẵn (1 → 2) rương mỗi bản đồ (khung cam nét đứt có hình Cáo). **Cáo Lửa Ấm** (cấp 20): tưới trên tầng của Cáo rút ngắn thêm (20% → 50%).
+  - **Sẻ Gieo Lại Như Cũ** (cấp 10): chậu vừa thu hoạch xong trên tầng của Sẻ tự gieo lại đúng giống (lệnh `plant` chung, trả tiền hạt), tối đa (20 → 60) chậu/ngày, có nút bật/tắt. **Sẻ Thu Hoạch Hộ** (cấp 20): cứ (4 → 2) giờ thu các cây chín trên tầng của Sẻ bằng lệnh `harvest` chung, EXP một nửa, tính bù khi tắt game tối đa 24 giờ, kho đầy thì dừng và báo.
+  - **Rồng Ban Lộc** (cấp 20): mỗi ngày 1 lần, lần thu hoạch tiếp theo trên tầng Rồng trông được nhân đôi.
+  - **Bé chạy tới chỗ làm việc:** Cáo bắt bọ, Sẻ thu hộ/gieo lại thì bé chạy tới gần chậu rồi vui mừng; bé không đứng trước chậu chín ở hàng trước (đang đứng thì tránh sang chỗ khác, chạy ngang qua thì mờ đi).
+  - Nhà Thú Cưng: kỹ năng có giới hạn mỗi ngày ghi "Hôm nay còn N lần".
+- Số liệu: không thêm số mới (dùng `lo`/`hi` có sẵn trong `pets.json`).
+- File/Module: game.ts (harvest có hệ số EXP, Ban Lộc, Lửa Ấm trong `water`, `runHarvestHelp`, `replantAfter`, lệnh `toggleReplant`, sự kiện petHarvested/petReplanted/blessed/replantToggled), neighbors.ts (Tự Bày Hàng, Khách Quý, sự kiện stallRestocked), pets.ts (dailyLeft, replantOn, sniffedChests), state.ts (`Listing.qty0` tùy chọn), seaPanel.ts, petPanel.ts, worldArt.ts (PetActor.avoid/goTo), scene.ts (petGoTo), slotView.ts, controller.ts, styles.css, tests/petSkills11.test.ts (7 test).
+- Ảnh hưởng save: Không đổi đời (bộ đếm mỗi ngày nằm trong `skillAt` có sẵn; `qty0` tùy chọn).
+- Quyết định tự chọn: (1) "Lửa Ấm — cây lâu khát hơn": trong game này cây khát theo từng giai đoạn, nên làm thành "nước giữ lâu hơn" = mỗi lần tưới rút ngắn thêm; phần "ban đêm bắt được bọ hiếm hơn một bậc" chưa làm vì cần thêm số và đụng chỉ số Bọ Rất hiếm — chờ CTO; (2) Đánh Hơi phần "chỉ ra vườn hàng xóm nhiều bọ, +50% thưởng" để sau cùng B5 giúp vườn (chỉ thị 12); (3) Tự Bày Hàng bày lại đúng số lượng lúc đầu (chưa có ô "mức tồn tối thiểu"); (4) Ban Lộc dùng tầng Rồng đang trông (người chơi chọn tầng trông); (5) Vòng Mèo Bày Hàng ↔ Sẻ Gieo Lại ↔ Thu Hoạch Hộ không tạo xu vô hạn: Bày Hàng chỉ bán hàng có sẵn trong kho theo giá người chơi đặt, Gieo Lại trả tiền hạt, Thu Hoạch Hộ chỉ thu cây đã chín, cả ba có giới hạn mỗi ngày hoặc theo thời gian lớn.
+
 ### [2026-11-18] Chỉ thị 11 TỔNG N5 (phần 2a) — Việc vặt thú cưng + mục tiêu cho cấp 19–27 (tag `m-11-n5b`)
 - Loại: Thêm / Thay đổi
 - Mô tả:

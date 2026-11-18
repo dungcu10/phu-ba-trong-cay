@@ -26,7 +26,7 @@ import { castLine, claimFishBook, claimFreeBait, craftBait, exchangeFish, reelFi
 import { buyDecor, placeDecor } from '../systems/decor.ts';
 import { tapXuxu } from '../systems/xuxu.ts';
 import { claimErrand, ensureErrands, rerollErrand, sendErrand, type ErrandReward } from '../systems/pets.ts';
-import { activeSkill, advancePets, feedPet, giftKitten, guardFloor, jadeRainCooldownMs, obtainPet, patPet, starUpPet, walkPet } from '../systems/pets.ts';
+import { activeSkill, advancePets, dailyLeft, feedPet, giftKitten, guardFloor, jadeRainCooldownMs, obtainPet, patPet, petOf, replantOn, starUpPet, walkPet } from '../systems/pets.ts';
 import { awardMedals, claimCheckIn, houseBonus, potBuyPrice, settleBuildings, upgradeHouse } from '../systems/village.ts';
 import { allMissionsClaimed, ensureMissions, localDay, missionDef, recordMissions } from '../systems/missions.ts';
 import { ensureQuestPeriods, questActive, questClaims, questReward, questView, recordQuests } from '../systems/quests.ts';
@@ -105,6 +105,7 @@ export type Command =
   | { type: 'feedPet'; species: string; itemId: string }
   | { type: 'patPet'; species: string }
   | { type: 'walkPet'; species: string; active: boolean }
+  | { type: 'toggleReplant'; on: boolean }
   | { type: 'guardFloor'; species: string; floor: number }
   | { type: 'starUpPet'; species: string }
   | { type: 'jadeRain' }
@@ -131,7 +132,7 @@ export type GameEvent =
   | { type: 'birdObtained'; birdId: string; species: string; rented: boolean }
   | { type: 'birdFed'; birdId: string; food: number }
   | { type: 'newBug'; itemId: string }
-  | { type: 'harvested'; slot: SlotRef; itemId: string; qty: number; xp: number; cleared: boolean; mutation: string | null; doubled?: boolean }
+  | { type: 'harvested'; slot: SlotRef; itemId: string; qty: number; xp: number; cleared: boolean; mutation: string | null; doubled?: boolean; helper?: boolean }
   | { type: 'giftFound'; slot: SlotRef; gift: Gift }
   | { type: 'ordersArrived'; slots: number[] }
   | { type: 'orderDelivered'; slot: number; coins: number; xp: number; gems: number; customer: string; rare: boolean }
@@ -152,6 +153,10 @@ export type GameEvent =
   | { type: 'errandRerolled'; index: number; errand: string }
   | ({ type: 'errandClaimed'; index: number; species: string } & ErrandReward)
   | { type: 'jadeRained'; floor: number; pots: number; savedMs: number }
+  | { type: 'petHarvested'; species: string; floor: number; pots: number; stopped: boolean }
+  | { type: 'petReplanted'; species: string; slot: SlotRef; cropId: string }
+  | { type: 'blessed'; slot: SlotRef; qty: number }
+  | { type: 'replantToggled'; on: boolean }
   | { type: 'seedRefunded'; slot: SlotRef; coins: number }
   | { type: 'houseUpgradeStarted'; house: string; level: number; endsAt: number; coins: number }
   | { type: 'houseUpgraded'; house: string; level: number }
@@ -350,7 +355,60 @@ function runPets(content: ContentPack, state: GameState, now: number): GameEvent
     const caught = r.events.find((e) => e.type === 'bugCaught');
     return { ok: true, itemId: caught?.type === 'bugCaught' ? caught.itemId : undefined };
   });
-  return [...(out as GameEvent[]), ...extra];
+  return [...(out as GameEvent[]), ...extra, ...runHarvestHelp(content, state, now)];
+}
+
+/** Sẻ Thu Hoạch Hộ (§ E1): every (4 → 2) hours the sparrow harvests the ripe pots on its floor with
+ *  the player's own harvest (half XP), in time order up to now (at most a day back). Stops when the
+ *  storage is full. Gieo Lại Như Cũ follows each cleared pot. */
+function runHarvestHelp(content: ContentPack, state: GameState, now: number): GameEvent[] {
+  const p = petOf(state, 'pet.sprout-sparrow');
+  if (!p) return [];
+  const events: GameEvent[] = [];
+  let t = p.skillAt.harvestHelpAt ?? now;
+  if (t < now - 24 * 3_600_000) t = now - 24 * 3_600_000;
+  for (let guard = 0; guard < 64; guard++) {
+    const sk = activeSkill(content, state, 'harvestHelp', t, p.floor);
+    const step = (sk?.value ?? 4) * 3_600_000;
+    if (t + step > now) break;
+    t += step;
+    if (!activeSkill(content, state, 'harvestHelp', t, p.floor)) continue;
+    const floor = state.floors[p.floor];
+    if (!floor) break;
+    let pots = 0;
+    let stopped = false;
+    for (let i = 0; i < floor.slots.length; i++) {
+      const ref = { floor: p.floor, slot: i };
+      const r = harvest(content, state, ref, t, 0.5);
+      if (!r.ok) {
+        if (r.error === 'storage_full') {
+          stopped = true;
+          break;
+        }
+        continue;
+      }
+      pots += 1;
+      events.push(...r.events, ...replantAfter(content, state, ref, r.events, t));
+    }
+    if (pots > 0 || stopped) events.push({ type: 'petHarvested', species: p.species, floor: p.floor, pots, stopped });
+  }
+  p.skillAt.harvestHelpAt = t;
+  return events;
+}
+
+/** Sẻ Gieo Lại Như Cũ: a pot just cleared on the sparrow's floor is planted again with the same crop
+ *  (the player's own plant, paying the seed), at most (20 → 60) a day; has an on/off switch. */
+function replantAfter(content: ContentPack, state: GameState, ref: SlotRef, events: GameEvent[], now: number): GameEvent[] {
+  const h = events.find((e) => e.type === 'harvested');
+  if (!h || h.type !== 'harvested' || !h.cleared) return [];
+  const sk = activeSkill(content, state, 'replant', now, ref.floor);
+  if (!sk || !replantOn(sk.pet)) return [];
+  const crop = content.cropList.find((c) => c.produce.id === (content.items.get(h.itemId)?.baseItem ?? h.itemId));
+  if (!crop || state.player.coins < crop.seedPrice || dailyLeft(content, sk.pet, 'replant', sk.value, now) <= 0) return [];
+  const r = plant(content, state, ref, crop.id, now);
+  if (!r.ok) return [];
+  dailyLeft(content, sk.pet, 'replant', sk.value, now, true);
+  return [...r.events, { type: 'petReplanted', species: sk.pet.species, slot: ref, cropId: crop.id }];
 }
 
 function runBirds(content: ContentPack, state: GameState, now: number): GameEvent[] {
@@ -425,8 +483,17 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
       const r = feedAll(content, state, now);
       return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'birdFed', birdId: '*', food: r.fed }] };
     }
-    case 'harvest':
-      return harvest(content, state, cmd, now);
+    case 'harvest': {
+      const r = harvest(content, state, cmd, now);
+      return r.ok ? { ok: true, events: [...r.events, ...replantAfter(content, state, cmd, r.events, now)] } : r;
+    }
+    case 'toggleReplant': {
+      const p = state.pets.find((x) => x.species === 'pet.sprout-sparrow');
+      if (!p) return fail('no_pet');
+      if (cmd.on) delete p.skillAt.replantOff;
+      else p.skillAt.replantOff = 1;
+      return { ok: true, events: [{ type: 'replantToggled', on: cmd.on }] };
+    }
     case 'sell':
       return sell(content, state, cmd.itemId, cmd.qty, now);
     case 'obtainPet': {
@@ -749,7 +816,9 @@ function water(content: ContentPack, state: GameState, ref: SlotRef, now: number
   if (!status.thirsty) return fail('not_thirsty');
   // Care (POT_SYSTEM 5) makes each watering save more of the remaining time.
   const care = slotBonus(content, state, slot, status.crop, 'care');
-  const savedMs = status.remainingMs * content.config.water.remainingTimeReduction * (1 + care);
+  // Cáo Lửa Ấm (§ E1): on the fox's floor the water lasts longer — each watering saves (20 → 50)% more.
+  const warm = activeSkill(content, state, 'warmFire', now, ref.floor)?.value ?? 0;
+  const savedMs = status.remainingMs * content.config.water.remainingTimeReduction * (1 + care) * (1 + warm);
   slot.planting.bonusMs += savedMs;
   slot.planting.wateredStages.push(status.stage);
   return { ok: true, events: [{ type: 'watered', slot: ref, savedMs }] };
@@ -798,7 +867,7 @@ function catchBug(content: ContentPack, state: GameState, ref: SlotRef, now: num
   return { ok: true, events };
 }
 
-function harvest(content: ContentPack, state: GameState, ref: SlotRef, now: number): Result {
+function harvest(content: ContentPack, state: GameState, ref: SlotRef, now: number, xpScale = 1): Result {
   const slot = slotAt(state, ref);
   if (!slot) return fail('bad_slot');
   const status = cropStatus(content, state, slot, now);
@@ -816,9 +885,13 @@ function harvest(content: ContentPack, state: GameState, ref: SlotRef, now: numb
   const gift = rollGift(content, state, planting, cycleSeconds, luck);
   const baseQty = stochasticRound(crop.yield * (1 + slotBonus(content, state, slot, crop, 'yield')), state.seed, 'yield', planting.id, planting.harvestsDone);
   const doubled = randomFor(state.seed, 'double', planting.id, planting.harvestsDone) < doubleYieldChance(content, potInst);
-  const qty = doubled ? baseQty * 2 : baseQty;
-  const xp = stochasticRound(crop.xp * (1 + slotBonus(content, state, slot, crop, 'xp')), state.seed, 'xp', planting.id, planting.harvestsDone);
+  // Rồng Ban Lộc (§ E1): once a day the next harvest on the dragon's floor is doubled.
+  const bless = activeSkill(content, state, 'blessing', now, ref.floor);
+  const blessed = !!bless && dailyLeft(content, bless.pet, 'blessing', Math.max(1, Math.round(bless.value)), now) > 0;
+  const qty = (doubled ? baseQty * 2 : baseQty) * (blessed ? 2 : 1);
+  const xp = stochasticRound(crop.xp * (1 + slotBonus(content, state, slot, crop, 'xp')) * xpScale, state.seed, 'xp', planting.id, planting.harvestsDone);
   if (storageFree(content, state) < qty) return fail('storage_full');
+  if (blessed) dailyLeft(content, bless.pet, 'blessing', Math.max(1, Math.round(bless.value)), now, true);
 
   addItem(state, itemId, qty);
   state.stats.harvests += 1;
@@ -864,7 +937,8 @@ function harvest(content: ContentPack, state: GameState, ref: SlotRef, now: numb
     planting.wateredStages = [];
     planting.caughtBugs = {};
   }
-  events.push({ type: 'harvested', slot: ref, itemId, qty, xp, cleared, mutation, doubled });
+  events.push({ type: 'harvested', slot: ref, itemId, qty, xp, cleared, mutation, doubled, ...(xpScale < 1 ? { helper: true } : {}) });
+  if (blessed) events.push({ type: 'blessed', slot: ref, qty });
   if (gift) events.push({ type: 'giftFound', slot: ref, gift });
   for (const f of found) events.push({ type: 'materialFound', slot: ref, ...f });
   for (const level of addXp(content, state, xp)) events.push({ type: 'levelUp', level });
@@ -1085,7 +1159,7 @@ function listItem(content: ContentPack, state: GameState, itemId: string, qty: n
   if (state.stall.length >= cfg.stallSlots + houseBonus(content, state, 'market', 'stallSlots')) return fail('stall_full');
   removeItem(state, itemId, qty);
   const listingId = state.nextId++;
-  state.stall.push({ id: listingId, itemId, qty, price });
+  state.stall.push({ id: listingId, itemId, qty, price, qty0: qty });
   return { ok: true, events: [{ type: 'itemListed', listingId, itemId, qty, price }] };
 }
 

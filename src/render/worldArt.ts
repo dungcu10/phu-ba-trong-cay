@@ -123,6 +123,36 @@ export class PetActor {
   baseScale = 1;
   /** The run picture looks right (new pet art) rather than left (Mèo Mây). */
   facesRight = false;
+  /** Chỉ thị 11 § E5: x positions to keep clear (front-row ripe pots), so a pet never hides one. */
+  avoid: () => number[] = () => [];
+  /** Which pet species this is (the player's own pets). */
+  species = '';
+  private static readonly CLEAR = 70;
+
+  private blocked(x: number): boolean {
+    return this.avoid().some((a) => Math.abs(a - x) < PetActor.CLEAR);
+  }
+
+  /** A spot on the lawn away from ripe pots (a few tries, then the edge). */
+  private freeSpot(): number {
+    for (let k = 0; k < 8; k++) {
+      const x = this.minX + this.r() * (this.maxX - this.minX);
+      if (!this.blocked(x)) return x;
+    }
+    return this.minX;
+  }
+
+  /** Runs to a place to work (next to `x`, never in front of a ripe pot) and cheers there. */
+  goTo(x: number): void {
+    if (this.asleep) return;
+    let tx = Math.max(this.minX, Math.min(this.maxX, x + (this.r() < 0.5 ? -1 : 1) * PetActor.CLEAR));
+    if (this.blocked(tx)) tx = this.freeSpot();
+    this.targetX = tx;
+    this.dir = Math.sign(tx - this.sprite.x) || 1;
+    this.working = true;
+    this.set('run');
+  }
+  private working = false;
 
   /** A hungry or resting pet just sleeps where it is (chỉ thị 11 § E5). */
   sleepOnly(): void {
@@ -156,11 +186,22 @@ export class PetActor {
       if (Math.abs(this.targetX - this.sprite.x) <= step) {
         this.sprite.x = this.targetX;
         this.sprite.pivot.y = 0;
-        this.set('idle');
-        this.timer = 3000 + this.r() * 5000;
+        this.set(this.working ? 'happy' : 'idle');
+        this.timer = this.working ? 1800 : 3000 + this.r() * 5000;
+        this.working = false;
       } else this.sprite.x += this.dir * step;
+      // Running past a ripe pot: see-through, so the pot still shows.
+      this.sprite.alpha = this.blocked(this.sprite.x) ? 0.55 : 1;
       return;
     }
+    // Standing in front of a pot that has just become ripe: step aside.
+    if (this.mode !== 'sleep' && this.blocked(this.sprite.x)) {
+      this.targetX = this.freeSpot();
+      this.dir = Math.sign(this.targetX - this.sprite.x) || 1;
+      this.set('run');
+      return;
+    }
+    this.sprite.alpha = 1;
     if (this.mode === 'happy') this.sprite.pivot.y = Math.abs(Math.sin(this.t * 6)) * 8;
     this.timer -= dtMs;
     if (this.timer > 0) return;
@@ -170,7 +211,7 @@ export class PetActor {
       this.set('idle');
       this.timer = 3000 + this.r() * 4000;
     } else if (roll < 0.45) {
-      this.targetX = this.minX + this.r() * (this.maxX - this.minX);
+      this.targetX = this.freeSpot();
       this.dir = Math.sign(this.targetX - this.sprite.x) || 1;
       this.set('run');
     } else if (roll < 0.7) {

@@ -648,6 +648,10 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
     this.run({ type: 'claimErrand', index });
   }
 
+  toggleReplant(on: boolean): void {
+    this.run({ type: 'toggleReplant', on });
+  }
+
   /** A house opens its feature (the toolbar buttons still work too). */
   openHouse(feature: string): void {
     if (feature === 'missions') return this.openQuests(TODAY);
@@ -775,6 +779,22 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
         break;
       case 'petPatted':
         if (e.bond > 0) this.sfx.play('tap');
+        break;
+      case 'petCaught':
+        this.view.petGoTo(e.floor, e.species);
+        break;
+      case 'petReplanted':
+        this.view.petGoTo(e.slot.floor, e.species, e.slot.slot);
+        break;
+      case 'blessed':
+        this.toasts.show(`Rồng Ban Lộc: lần thu hoạch này được nhân đôi (${e.qty})!`, 'level', 2400);
+        break;
+      case 'petHarvested':
+        this.view.petGoTo(e.floor, e.species);
+        if (e.stopped) this.toasts.show('Sẻ Mầm dừng thu hoạch hộ vì kho đầy.', 'info', 2400);
+        break;
+      case 'stallRestocked':
+        this.toasts.show(`Mèo bày lại ${e.qty} ${content.items.get(e.itemId)?.name.vi ?? ''} lên Sạp.`, 'success', 2000);
         break;
       case 'errandSent':
         this.sfx.play('tap');
