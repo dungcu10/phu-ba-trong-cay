@@ -605,6 +605,95 @@
       "minLevel": 2
     },
     {
+      "id": "weekly.birds",
+      "track": "weekly",
+      "name": {
+        "vi": "Cho chim ăn"
+      },
+      "trigger": "feedBird",
+      "target": 10,
+      "reward": {
+        "coinsHours": 2,
+        "items": {
+          "base:mat.cloud-clay": 2
+        }
+      },
+      "minLevel": 3
+    },
+    {
+      "id": "weekly.goods",
+      "track": "weekly",
+      "name": {
+        "vi": "Làm hàng ở Xưởng Bọ"
+      },
+      "trigger": "makeGoods",
+      "target": {
+        "base": 15,
+        "perLevel": 0.5
+      },
+      "reward": {
+        "coinsHours": 2,
+        "gems": 1
+      },
+      "minLevel": 6
+    },
+    {
+      "id": "weekly.sea",
+      "track": "weekly",
+      "name": {
+        "vi": "Thổi mây ở Biển Mây"
+      },
+      "trigger": "blowCloud",
+      "target": 60,
+      "reward": {
+        "coinsHours": 2,
+        "gems": 1
+      },
+      "minLevel": 8
+    },
+    {
+      "id": "weekly.fish",
+      "track": "weekly",
+      "name": {
+        "vi": "Câu cá trên mây"
+      },
+      "trigger": "catchFish",
+      "target": 8,
+      "reward": {
+        "coinsHours": 2,
+        "gems": 1
+      },
+      "minLevel": 14
+    },
+    {
+      "id": "weekly.hunt",
+      "track": "weekly",
+      "name": {
+        "vi": "Săn hàng ở Chợ Mây"
+      },
+      "trigger": "huntBazaar",
+      "target": 5,
+      "reward": {
+        "coinsHours": 2,
+        "gems": 1
+      },
+      "minLevel": 6
+    },
+    {
+      "id": "weekly.cast",
+      "track": "weekly",
+      "name": {
+        "vi": "Đúc chậu ở Lò Gốm"
+      },
+      "trigger": "castPot",
+      "target": 1,
+      "reward": {
+        "coinsHours": 2,
+        "gems": 1
+      },
+      "minLevel": 12
+    },
+    {
       "id": "monthly.harvest",
       "track": "monthly",
       "name": {
@@ -875,6 +964,27 @@
       }
     },
     {
+      "id": "journey.seamaps",
+      "track": "journey",
+      "name": {
+        "vi": "Dọn sạch Biển Mây"
+      },
+      "desc": {
+        "vi": "Dọn hết mây trên một bản đồ Biển Mây."
+      },
+      "trigger": "clearSea",
+      "minLevel": 8,
+      "tiers": {
+        "base": 2,
+        "growth": 2,
+        "rewardGrowth": 1.0
+      },
+      "reward": {
+        "coinsHours": 3,
+        "gems": 2
+      }
+    },
+    {
       "id": "journey.strawberry",
       "track": "journey",
       "name": {
@@ -1023,6 +1133,114 @@
         "vi": "Săn Biến Dị"
       },
       "trigger": "mutation",
+      "tiers": {
+        "base": 1,
+        "growth": 3,
+        "rewardGrowth": 1.05
+      },
+      "reward": {
+        "coinsHours": 1,
+        "gems": 1
+      }
+    },
+    {
+      "id": "achievement.birds",
+      "track": "achievement",
+      "name": {
+        "vi": "Bạn của loài chim"
+      },
+      "trigger": "feedBird",
+      "minLevel": 3,
+      "tiers": {
+        "base": 10,
+        "growth": 3,
+        "rewardGrowth": 1.05
+      },
+      "reward": {
+        "coinsHours": 1,
+        "gems": 1
+      }
+    },
+    {
+      "id": "achievement.goods",
+      "track": "achievement",
+      "name": {
+        "vi": "Thợ cả Xưởng Bọ"
+      },
+      "trigger": "makeGoods",
+      "minLevel": 6,
+      "tiers": {
+        "base": 20,
+        "growth": 3,
+        "rewardGrowth": 1.05
+      },
+      "reward": {
+        "coinsHours": 1,
+        "gems": 1
+      }
+    },
+    {
+      "id": "achievement.sea",
+      "track": "achievement",
+      "name": {
+        "vi": "Gió thổi mây bay"
+      },
+      "trigger": "blowCloud",
+      "minLevel": 8,
+      "tiers": {
+        "base": 50,
+        "growth": 3,
+        "rewardGrowth": 1.05
+      },
+      "reward": {
+        "coinsHours": 1,
+        "gems": 1
+      }
+    },
+    {
+      "id": "achievement.chests",
+      "track": "achievement",
+      "name": {
+        "vi": "Thợ săn rương mây"
+      },
+      "trigger": "openSeaChest",
+      "minLevel": 8,
+      "tiers": {
+        "base": 3,
+        "growth": 3,
+        "rewardGrowth": 1.05
+      },
+      "reward": {
+        "coinsHours": 1,
+        "gems": 1
+      }
+    },
+    {
+      "id": "achievement.fish",
+      "track": "achievement",
+      "name": {
+        "vi": "Ngư phủ trên mây"
+      },
+      "trigger": "catchFish",
+      "minLevel": 14,
+      "tiers": {
+        "base": 5,
+        "growth": 3,
+        "rewardGrowth": 1.05
+      },
+      "reward": {
+        "coinsHours": 1,
+        "gems": 1
+      }
+    },
+    {
+      "id": "achievement.stars",
+      "track": "achievement",
+      "name": {
+        "vi": "Chậu lấp lánh"
+      },
+      "trigger": "starPot",
+      "minLevel": 6,
       "tiers": {
         "base": 1,
         "growth": 3,

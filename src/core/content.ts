@@ -88,8 +88,8 @@ export interface PotSetDef {
   tiers: Array<{ count: number; stats: Partial<Record<PotStatName, number>> }>;
 }
 
-export type MissionKind = 'harvest' | 'plant' | 'water' | 'catchBug' | 'deliverOrder' | 'helpNeighbor' | 'sell';
-export const MISSION_KINDS: MissionKind[] = ['harvest', 'plant', 'water', 'catchBug', 'deliverOrder', 'helpNeighbor', 'sell'];
+export type MissionKind = 'harvest' | 'plant' | 'water' | 'catchBug' | 'deliverOrder' | 'helpNeighbor' | 'sell' | 'feedBird' | 'makeGoods' | 'blowCloud' | 'catchFish';
+export const MISSION_KINDS: MissionKind[] = ['harvest', 'plant', 'water', 'catchBug', 'deliverOrder', 'helpNeighbor', 'sell', 'feedBird', 'makeGoods', 'blowCloud', 'catchFish'];
 
 export interface MissionDef {
   id: string;
@@ -383,6 +383,9 @@ export interface MarketConfig {
   values: Record<string, number>;
   /** Chỉ thị 12 B6.3: BOT traders buy bugs at a low price (a floor for spare bugs). */
   bugTrader?: { factor: number; rarityValue: Partial<Record<BugRarity, number>> };
+  /** Chỉ thị 10 § 3.13: newer wares (goods, Sợi Mây, Giọt Sương, minerals, bait, bugs short of Rất
+   *  hiếm) neighbours may lay out from a level, and their weight in the stall pick (0 = none). */
+  wares?: { weight: number; goodsWeight: number; minLevel: Record<string, number> };
 }
 
 export interface MaterialDef {
@@ -533,6 +536,12 @@ export interface FishingRules {
   biteSeconds: [number, number];
   book: Array<{ points: number; gems?: number; items?: Record<string, number> }>;
 }
+/** Chỉ thị 10 § 3.11: Xu Xu, the mascot. */
+export interface XuxuRules {
+  rewardMinutes: number;
+  reward: { coins?: number; items?: Record<string, number> };
+  lines: string[];
+}
 /** Chỉ thị 10 § 3.10: floor decorations. */
 export interface DecorRules {
   slots: number;
@@ -660,6 +669,7 @@ export interface ContentPack {
   fishing?: FishingRules;
   fish: Map<string, FishDef>;
   decor?: DecorRules;
+  xuxu?: XuxuRules;
   missions: MissionsConfig;
   materials: Map<string, MaterialDef>;
   events: EventDef[];
@@ -698,6 +708,7 @@ export interface RawContent {
   potStars?: unknown;
   fishing?: unknown;
   decor?: unknown;
+  xuxu?: unknown;
 }
 
 export class ContentError extends Error {
@@ -713,7 +724,7 @@ type ReadJson = (relativePath: string) => Promise<unknown>;
 export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> {
   const manifest = (await readJson('manifest.json')) as {
     contentVersion: number;
-    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions' | 'materials' | 'events' | 'quests' | 'features' | 'tutorials', string> & Partial<Record<'birds' | 'workshop' | 'cropExtras' | 'casting' | 'market' | 'sea' | 'potStars' | 'fishing' | 'decor', string>>;
+    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions' | 'materials' | 'events' | 'quests' | 'features' | 'tutorials', string> & Partial<Record<'birds' | 'workshop' | 'cropExtras' | 'casting' | 'market' | 'sea' | 'potStars' | 'fishing' | 'decor' | 'xuxu', string>>;
   };
   const raw: RawContent = {
     contentVersion: manifest.contentVersion,
@@ -741,6 +752,7 @@ export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> 
     potStars: manifest.files.potStars ? await readJson(manifest.files.potStars) : undefined,
     fishing: manifest.files.fishing ? await readJson(manifest.files.fishing) : undefined,
     decor: manifest.files.decor ? await readJson(manifest.files.decor) : undefined,
+    xuxu: manifest.files.xuxu ? await readJson(manifest.files.xuxu) : undefined,
   };
   return buildContentPack(raw);
 }
@@ -1123,6 +1135,13 @@ export function buildContentPack(raw: RawContent): ContentPack {
     }
   }
 
+  let xuxu: XuxuRules | undefined;
+  if (isObj(raw.xuxu)) {
+    xuxu = raw.xuxu as unknown as XuxuRules;
+    if (!(xuxu.rewardMinutes > 0) || !Array.isArray(xuxu.lines) || xuxu.lines.length === 0) problems.push('xuxu: rewardMinutes > 0 và lines');
+    for (const id of Object.keys(xuxu.reward?.items ?? {})) if (!items.has(id)) problems.push(`xuxu.reward: món "${id}" không tồn tại`);
+  }
+
   let market: MarketRules | undefined;
   if (isObj(raw.market)) {
     market = raw.market as unknown as MarketRules;
@@ -1205,6 +1224,7 @@ export function buildContentPack(raw: RawContent): ContentPack {
     fishing,
     fish,
     decor,
+    xuxu,
     potSets,
     missions,
     materials,

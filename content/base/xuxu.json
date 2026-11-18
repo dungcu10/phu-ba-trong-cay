@@ -1,0 +1,14 @@
+{
+  "_note": "Chỉ thị 10 § 3.11 Xu Xu linh vật: góc màn hình, chạm thì phản ứng; mỗi rewardMinutes phút được 1 quà nhỏ (reward). Câu nói ngẫu nhiên lấy từ lines; khi có tính năng sắp mở thì Xu Xu nhắc cấp mở. Ban đêm Xu Xu ngủ. CTO chỉnh số.",
+  "rewardMinutes": 60,
+  "reward": { "items": { "base:mat.cloud-millet": 1 } },
+  "lines": [
+    "Chào chủ vườn! Hôm nay trồng gì nhỉ?",
+    "Cây chín có ngôi sao vàng đó, vuốt tay qua là thu hết.",
+    "Bọ Mây giúp nâng chậu, nhớ bắt nhé!",
+    "Giao đơn khinh khí cầu được nhiều xu hơn bán thường.",
+    "Chim nhà mình bắt sâu cả khi tắt game đấy.",
+    "Chậu cùng bộ đặt chung một tầng thì được thưởng thêm.",
+    "Ghé vườn hàng xóm giúp tưới cây, họ sẽ quý mình lắm."
+  ]
+}

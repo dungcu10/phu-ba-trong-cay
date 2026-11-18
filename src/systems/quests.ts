@@ -253,6 +253,24 @@ function hitsOf(content: ContentPack, state: GameState, e: GameEvent): Hit[] {
       return [{ trigger: 'upgradeStorage', amount: 1 }];
     case 'levelUp':
       return [{ trigger: 'levelUp', amount: 1 }];
+    case 'birdFed':
+      return [{ trigger: 'feedBird', amount: 1 }];
+    case 'goodsMade':
+      return [{ trigger: 'makeGoods', amount: e.qty }];
+    case 'cloudBlown': {
+      const hits: Hit[] = [{ trigger: 'blowCloud', amount: 1 }];
+      if (e.chest !== undefined) hits.push({ trigger: 'openSeaChest', amount: 1 });
+      if (e.cleared) hits.push({ trigger: 'clearSea', amount: 1 });
+      return hits;
+    }
+    case 'fishReeled':
+      return e.landed ? [{ trigger: 'catchFish', amount: 1 }] : [];
+    case 'potCast':
+      return [{ trigger: 'castPot', amount: 1 }];
+    case 'potStarred':
+      return [{ trigger: 'starPot', amount: 1 }];
+    case 'bazaarBought':
+      return [{ trigger: 'huntBazaar', amount: 1 }];
     default:
       return [];
   }

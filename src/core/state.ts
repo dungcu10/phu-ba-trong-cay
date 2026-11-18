@@ -234,6 +234,8 @@ export interface GameState {
   tutorials: string[];
   /** Chợ Mây (save 11): purchases from neighbours on local day `day`. */
   market: { day: number; buys: number };
+  /** Chỉ thị 10 § 3.11: when Xu Xu last gave its small gift. */
+  xuxu?: { giftAt: number; taps: number };
   /** Chỉ thị 12 B2: the Sạp Săn Hàng board (optional; rolled when first opened). */
   bazaar?: BazaarState;
   /** Phú Bà board (save 11): everyone's rank at the start of local day `day`, for the arrows. */

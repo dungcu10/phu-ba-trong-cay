@@ -750,7 +750,22 @@
     "values": {
       "base:bug.ladybird": 30,
       "base:mat.cloud-clay": 90,
-      "base:mat.merit-seal": 420
+      "base:mat.merit-seal": 420,
+      "base:mat.cloud-thread": 120,
+      "base:mat.sky-dew": 200,
+      "base:mat.cloud-stone": 60,
+      "base:mat.copper-bit": 80,
+      "base:mat.silver-bit": 160,
+      "base:mat.gold-dust": 300,
+      "base:mat.raw-jade": 500,
+      "base:mat.bait": 40,
+      "base:mat.sweet-bait": 150,
+      "base:bug.leaf-worm": 30,
+      "base:bug.pink-moth": 80,
+      "base:bug.jade-beetle": 80,
+      "base:bug.dew-hopper": 80,
+      "base:bug.gold-scarab": 250,
+      "base:bug.star-firefly": 250
     },
     "bugTrader": {
       "_note": "Chỉ thị 12 B6.3 (luồng tính năng, trường mới): thương lái BOT mua bọ giá thấp — sàn cho bọ thừa. Giá = market.values (nếu có) hoặc rarityValue × factor. CTO chỉnh số bằng mô phỏng.",
@@ -760,6 +775,28 @@
         "good": 80,
         "rare": 250,
         "epic": 800
+      }
+    },
+    "wares": {
+      "_note": "Chỉ thị 10 § 3.13: món mới Phú Bà có thể bày ở Chợ Mây (từ cấp minLevel), trọng số chọn weight; hàng chế biến theo cấp mở máy, trọng số goodsWeight. 0 = không bày. Bọ dùng đúng giá thương lái (rarityValue). CTO chỉnh.",
+      "weight": 0.3,
+      "goodsWeight": 0.5,
+      "minLevel": {
+        "base:mat.cloud-thread": 5,
+        "base:mat.sky-dew": 5,
+        "base:mat.cloud-stone": 8,
+        "base:mat.copper-bit": 8,
+        "base:mat.silver-bit": 10,
+        "base:mat.gold-dust": 12,
+        "base:mat.raw-jade": 14,
+        "base:mat.bait": 14,
+        "base:mat.sweet-bait": 14,
+        "base:bug.leaf-worm": 2,
+        "base:bug.pink-moth": 3,
+        "base:bug.jade-beetle": 5,
+        "base:bug.dew-hopper": 5,
+        "base:bug.gold-scarab": 9,
+        "base:bug.star-firefly": 12
       }
     }
   }

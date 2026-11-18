@@ -83,6 +83,15 @@ test('mỗi trigger đều được đếm từ đúng sự kiện game', async 
     cloudRain: { type: 'cloudRained', floor: 0, pots: 1, gems: 1 },
     upgradeStorage: { type: 'storageUpgraded', tier: 1, capacity: 80, cost: 1 },
     levelUp: { type: 'levelUp', level: 11 },
+    feedBird: { type: 'birdFed', birdId: 'b1', food: 10 },
+    makeGoods: { type: 'goodsMade', machine: 'm', itemId: 'g', qty: 1 },
+    blowCloud: { type: 'cloudBlown', cell: 0, finds: [] },
+    openSeaChest: { type: 'cloudBlown', cell: 0, finds: [], chest: 0 },
+    clearSea: { type: 'cloudBlown', cell: 0, finds: [], cleared: { gems: 0 } },
+    catchFish: { type: 'fishReeled', fishId: 'base:fish.pink', landed: true, first: true },
+    castPot: { type: 'potCast', potInstanceId: pot, potId: 'x', perfect: false },
+    starPot: { type: 'potStarred', potInstanceId: pot, stars: 1, shards: 10 },
+    huntBazaar: { type: 'bazaarBought', slot: 0, rarity: 'common', kind: 'item', itemId: tomatoItem, qty: 1, currency: 'coins', price: 1 },
   };
   assert.deepEqual(Object.keys(events).sort(), [...QUEST_TRIGGERS].sort(), 'bảng thử phủ đủ mọi trigger');
   for (const t of QUEST_TRIGGERS) {

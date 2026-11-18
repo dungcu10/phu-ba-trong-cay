@@ -55,6 +55,13 @@ wk=[
  ("rain","Gọi Mưa Mây",dict(trigger="cloudRain",target=2),{"coinsHours":2,"gems":1},16),
  ("star","Lên sao một tầng",dict(trigger="starFloor",target=1),{"coinsHours":3,"gems":1},3),
  ("mutation","Thu hoạch quả Biến Dị",dict(trigger="mutation",target=1),{"coinsHours":2,"gems":1},2),
+ # Chỉ thị 10 M8: các hệ mới.
+ ("birds","Cho chim ăn",dict(trigger="feedBird",target=10),{"coinsHours":2,"items":{CLAY:2}},3),
+ ("goods","Làm hàng ở Xưởng Bọ",dict(trigger="makeGoods",target={"base":15,"perLevel":0.5}),{"coinsHours":2,"gems":1},6),
+ ("sea","Thổi mây ở Biển Mây",dict(trigger="blowCloud",target=60),{"coinsHours":2,"gems":1},8),
+ ("fish","Câu cá trên mây",dict(trigger="catchFish",target=8),{"coinsHours":2,"gems":1},14),
+ ("hunt","Săn hàng ở Chợ Mây",dict(trigger="huntBazaar",target=5),{"coinsHours":2,"gems":1},6),
+ ("cast","Đúc chậu ở Lò Gốm",dict(trigger="castPot",target=1),{"coinsHours":2,"gems":1},12),
 ]
 for row in wk:
     id,name,kw,rew=row[:4]; lv=row[4] if len(row)>4 else 1
@@ -84,6 +91,7 @@ jr=[
  ("storage","Rương thêm rộng","Nâng Rương Mây.",dict(measure="storageTier",tiers={"base":1,"step":2,"rewardGrowth":1.0}),{"coinsHours":1,"gems":1}),
  ("upper","Vườn trên cao","Thu hoạch ở tầng thứ 3 trở lên.",dict(trigger="harvest",filter={"floorMin":2},tiers={"base":50,"growth":2.5,"rewardGrowth":1.05}),{"coinsHours":2,"gems":1}),
  ("gerbera","Vườn hoa vàng","Thu hoạch Hoa Đồng Tiền Vàng.",dict(trigger="harvest",filter={"cropId":G},tiers={"base":20,"growth":2.5,"rewardGrowth":1.05}),{"coinsHours":2,"gems":1}),
+ ("seamaps","Dọn sạch Biển Mây","Dọn hết mây trên một bản đồ Biển Mây.",dict(trigger="clearSea",minLevel=8,tiers={"base":2,"growth":2,"rewardGrowth":1.0}),{"coinsHours":3,"gems":2}),
  ("strawberry","Dâu mây ngọt lịm","Thu hoạch Dâu Tây Mây.",dict(trigger="harvest",filter={"cropId":S},tiers={"base":20,"growth":2.5,"rewardGrowth":1.05}),{"coinsHours":2,"gems":1}),
 ]
 for id,name,desc,kw,rew in jr:
@@ -98,8 +106,19 @@ ach=[
  ("stall","Chủ sạp","stallSold",10,{"coinsHours":1,"gems":1}),
  ("mutation","Săn Biến Dị","mutation",1,{"coinsHours":1,"gems":1}),
 ]
+# Chỉ thị 10 M8: thành tựu cho các hệ mới, hiện từ cấp mở hệ đó.
+ach2=[
+ ("birds","Bạn của loài chim","feedBird",10,3),
+ ("goods","Thợ cả Xưởng Bọ","makeGoods",20,6),
+ ("sea","Gió thổi mây bay","blowCloud",50,8),
+ ("chests","Thợ săn rương mây","openSeaChest",3,8),
+ ("fish","Ngư phủ trên mây","catchFish",5,14),
+ ("stars","Chậu lấp lánh","starPot",1,6),
+]
 for id,name,trig,base,rew in ach:
     qs.append(Q(f"achievement.{id}","achievement",name,rew,trigger=trig,tiers={"base":base,"growth":3,"rewardGrowth":1.05}))
+for id,name,trig,base,lv in ach2:
+    qs.append(Q(f"achievement.{id}","achievement",name,{"coinsHours":1,"gems":1},trigger=trig,minLevel=lv,tiers={"base":base,"growth":3,"rewardGrowth":1.05}))
 qs.append(Q("achievement.potlines","achievement","Nhà sưu tầm chậu",{"coinsHours":1,"gems":2},measure="potLines",tiers={"base":3,"step":3,"rewardGrowth":1.03}))
 qs.append(Q("achievement.crops","achievement","Bách khoa cây trồng",{"coinsHours":1,"gems":2},measure="cropKinds",tiers={"targets":[2,4,6,9,12,15,18]}))
 qs.append(Q("achievement.friend","achievement","Tri kỷ",{"coinsHours":1,"gems":2},measure="bestFriendship",tiers={"base":10,"growth":2}))
