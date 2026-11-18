@@ -29,6 +29,19 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Chỉ thị 11 TỔNG N5 (phần 1) — Thú cưng: 4 bé, cho ăn, Thân Thiết, cấp, sao, dắt và trông tầng, 6 kỹ năng đầu (tag `m-11-n5a`)
+- Loại: Thêm
+- Mô tả:
+  - **Nhà Thú Cưng** (nút "Vào" ở làng, hoặc khi mở khóa cấp 4): 4 bé — Mèo Mây Con (**tặng khi mở Chợ**, cấp 4), Cáo Lửa Con (cấp 6, 2.500 xu), Sẻ Mầm (cấp 9, 40 ngọc), Rồng Ngọc Con (cấp 12, 80 ngọc hoặc 10 Mảnh Trứng Rồng). Cửa sổ: hình lớn (chạm để vuốt ve), cấp/EXP, sao, Thân Thiết, độ no, 3 kỹ năng (kỹ năng chưa mở có ổ khóa "Mở ở cấp thú cưng X", có giá trị ở sao kế tiếp), nút cho ăn (món thích đứng đầu, có ♥), dắt/cho về, chọn tầng trông, nâng sao, Mưa Ngọc.
+  - **Dắt và trông tầng:** 1 ô dắt, thêm ô ở Nhà Thú Cưng cấp 3 và 5. Bé được dắt hiện trong vườn trên tầng nó trông (hình mới, ~0,6 lần chậu, lật theo hướng chạy); đói thì ngủ tại chỗ, kỹ năng thụ động nghỉ. **Thân Thiết không bao giờ giảm**, bé không bao giờ bỏ đi.
+  - **Cho ăn / vuốt ve:** món thích Thân Thiết ×3, tối đa 5 lần có điểm mỗi ngày; vuốt ve tối đa 3 lần có điểm mỗi giờ; mốc 25 và 75 tặng Huy Hiệu đúng loài. **Sao 1–5** cần cấp thú cưng (5/12/20/28), Huy Hiệu, bọ (Khá/Khá/Hiếm/Rất hiếm) và xu.
+  - **Kỹ năng đã chạy:** Mèo **Gọi Khách** (hàng xóm ghé mua ở Sạp nhiều hơn 10% → 30%, chạy cả khi tắt game); Cáo **Vồ Bọ** (mỗi 10 → 5 phút bắt 1 con trên tầng trông, **dùng chung `catchBug`**, tính bù tối đa 8 giờ, theo thứ tự thời gian trước mỗi lệnh như chim); Sẻ **Nhặt Hạt** (5% → 15% hoàn tiền hạt khi gieo trên tầng trông); Rồng **Mưa Ngọc** (bấm: tưới cả tầng bằng lệnh tưới chung, rút 5% → 15% thời gian lớn còn lại, hồi 8 → 4 giờ) và **Long Khí** (tỉ lệ Biến Dị trên tầng trông +10% → 30%). Các kỹ năng 2–3 còn lại, việc vặt và kết hợp: phần 2.
+  - Món mới: Mảnh Trứng Rồng, 4 Huy Hiệu (hình có sẵn). Sửa mô tả Pha Lê Mây (+2% sản lượng) và Mồi Thường.
+- Số liệu: `content/base/pets.json` (mới). CTO chỉnh qua mô phỏng.
+- File/Module: src/systems/pets.ts, src/ui/petPanel.ts (mới); game.ts (7 lệnh mới, sự kiện pet*, runPets trong bước trước lệnh, Nhặt Hạt trong `plant`, Long Khí trong `harvest`, lệnh `jadeRain`), neighbors.ts (Gọi Khách), render/garden.ts + scene.ts + worldArt.ts (bé thật của người chơi trên tầng nó trông; vườn hàng xóm vẫn có bé như trước), state.ts (`pets`), migrations.ts (12 → 13 thêm `pets`), reconcile.ts, content.ts, materials.json, tools/make-quests.py (tính năng `pets`, hướng dẫn), controller.ts, styles.css, tests/pets11.test.ts (10 test).
+- Ảnh hưởng save: Không đổi đời (vẫn 13; `pets` thêm vào migration 12 → 13 và reconcile, save 13 đã có thì nhận `[]`).
+- Quyết định tự chọn: (1) kỹ năng tầng chỉ chạy khi bé được dắt, đang ở nhà (không đi việc vặt) và còn no; Gọi Khách của Mèo cũng cần Mèo được dắt; (2) độ no giảm 4 điểm/giờ (no đầy dùng ~25 giờ), mỗi lần ăn +40; (3) bé đi lại phía trước chậu như Mèo trước đây — việc tránh che chậu chín làm cùng hành vi "chạy tới chỗ làm việc" ở phần 2.
+
 ### [2026-11-18] Chỉ thị 11 TỔNG N1 + N4 (phần 1) — Ảnh làng; Làng Phú Bà: 8 nhà, nâng nhà, Cấp Làng, Huy Chương Độ Cao, điểm danh 7 ngày; save 13 (tag `m-11-n4a`)
 - Loại: Thêm
 - Mô tả:

@@ -238,6 +238,8 @@ export interface GameState {
   buildings: Record<string, { level: number; upgradeEndsAt: number | null }>;
   /** Chỉ thị 11 § C3/D3 (save 13): sky zones already greeted, Huy Chương Độ Cao, 7-day check-in. */
   village: { seenZones: number[]; medals: number[]; checkIn: { day: number; count: number } };
+  /** Chỉ thị 11 § E (save 13): the player's pets. */
+  pets: PetState[];
   /** Chỉ thị 10 § 3.11: when Xu Xu last gave its small gift. */
   xuxu?: { giftAt: number; taps: number };
   /** Chỉ thị 12 B2: the Sạp Săn Hàng board (optional; rolled when first opened). */
@@ -268,8 +270,8 @@ export interface GameState {
 }
 
 /** Save 13 defaults for the chỉ thị 11 parts (new games and old saves alike). */
-export function emptyV13Parts(): Pick<GameState, 'buildings' | 'village'> {
-  return { buildings: {}, village: { seenZones: [], medals: [], checkIn: { day: -1, count: 0 } } };
+export function emptyV13Parts(): Pick<GameState, 'buildings' | 'village' | 'pets'> {
+  return { buildings: {}, village: { seenZones: [], medals: [], checkIn: { day: -1, count: 0 } }, pets: [] };
 }
 
 /** Save 12 defaults for the chỉ thị 10 parts (new games and old saves alike). */
@@ -368,4 +370,30 @@ export interface BazaarState {
   rerolls: number;
   /** Vận May counter per pity rarity. */
   luck: Record<string, number>;
+}
+
+/** Chỉ thị 11 § E: one pet. Food runs down from `food` at `fedAt`; bond never goes down. */
+export interface PetState {
+  species: string;
+  level: number;
+  xp: number;
+  stars: number;
+  bond: number;
+  food: number;
+  fedAt: number;
+  /** Walked (dắt) pets work in the garden; the others stay in the village. */
+  active: boolean;
+  /** Floor index the pet looks after (garden skills only work there). */
+  floor: number;
+  /** Away on an errand until this time (passive skills rest). */
+  awayUntil: number | null;
+  /** Garden skills worked out up to this time (offline-exact). */
+  simulatedTo: number;
+  /** Skill clocks: cooldown ends, last daily use (local day). */
+  skillAt: Record<string, number>;
+  /** Bond points today / this hour (caps). */
+  bondDay: { day: number; feeds: number };
+  patHour: { hour: number; n: number };
+  /** Bond milestones already rewarded. */
+  milestones: number[];
 }

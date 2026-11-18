@@ -538,6 +538,42 @@ export interface FishingRules {
   biteSeconds: [number, number];
   book: Array<{ points: number; gems?: number; items?: Record<string, number> }>;
 }
+/** Chỉ thị 11 TỔNG § E: companion pets. */
+export interface PetSkillDef {
+  id: string;
+  name: LocalizedText;
+  desc: LocalizedText;
+  lo: number;
+  hi: number;
+  unit: 'percent' | 'count' | 'minutes' | 'hours';
+  offlineHours?: number;
+  cooldownHours?: [number, number];
+}
+export interface PetSpeciesDef {
+  id: string;
+  name: LocalizedText;
+  title: LocalizedText;
+  art: string;
+  poses: Record<'stand' | 'run' | 'sleep' | 'happy', string>;
+  unlockLevel: number;
+  price: { free?: boolean; coins?: number; gems?: number; shards?: { item: string; qty: number } };
+  badge: string;
+  likes: { kinds: string[]; items: string[] };
+  skills: PetSkillDef[];
+}
+export interface PetRules {
+  unlockLevel: number;
+  maxLevel: number;
+  levelBoost: number;
+  xpPerLevel: [number, number];
+  activeSlots: { base: number; houseLevels: number[] };
+  food: { max: number; perHour: number; perFeed: number; likedTimes: number };
+  bond: { max: number; perFeed: number; feedsPerDay: number; perPat: number; patsPerHour: number; milestones: number[]; badgeAt: number[] };
+  xp: { perFeed: number; perSkill: number; perPat: number };
+  stars: Array<{ minLevel: number; badges: number; bugRarity: string; bugs: number; coins: number }>;
+  species: PetSpeciesDef[];
+}
+
 /** Chỉ thị 11 TỔNG § D: the village — 8 houses, Cấp Làng, Huy Chương Độ Cao, 7-day check-in. */
 export type HouseEffect = 'missionsPerDay' | 'orderSlots' | 'rareShare' | 'potDiscount' | 'perches' | 'rentDiscount' | 'stallSlots' | 'errandsPerDay' | 'workshopQueue' | 'energyMax';
 export interface Reward {
@@ -704,6 +740,7 @@ export interface ContentPack {
   decor?: DecorRules;
   xuxu?: XuxuRules;
   village?: VillageRules;
+  pets?: PetRules;
   missions: MissionsConfig;
   materials: Map<string, MaterialDef>;
   events: EventDef[];
@@ -744,6 +781,7 @@ export interface RawContent {
   decor?: unknown;
   xuxu?: unknown;
   village?: unknown;
+  pets?: unknown;
 }
 
 export class ContentError extends Error {
@@ -759,7 +797,7 @@ type ReadJson = (relativePath: string) => Promise<unknown>;
 export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> {
   const manifest = (await readJson('manifest.json')) as {
     contentVersion: number;
-    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions' | 'materials' | 'events' | 'quests' | 'features' | 'tutorials', string> & Partial<Record<'birds' | 'workshop' | 'cropExtras' | 'casting' | 'market' | 'sea' | 'potStars' | 'fishing' | 'decor' | 'xuxu' | 'village', string>>;
+    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions' | 'materials' | 'events' | 'quests' | 'features' | 'tutorials', string> & Partial<Record<'birds' | 'workshop' | 'cropExtras' | 'casting' | 'market' | 'sea' | 'potStars' | 'fishing' | 'decor' | 'xuxu' | 'village' | 'pets', string>>;
   };
   const raw: RawContent = {
     contentVersion: manifest.contentVersion,
@@ -789,6 +827,7 @@ export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> 
     decor: manifest.files.decor ? await readJson(manifest.files.decor) : undefined,
     xuxu: manifest.files.xuxu ? await readJson(manifest.files.xuxu) : undefined,
     village: manifest.files.village ? await readJson(manifest.files.village) : undefined,
+    pets: manifest.files.pets ? await readJson(manifest.files.pets) : undefined,
   };
   return buildContentPack(raw);
 }
@@ -1195,6 +1234,19 @@ export function buildContentPack(raw: RawContent): ContentPack {
     if ((v.checkIn ?? []).length !== 7) problems.push('village.checkIn: cần 7 ngày');
   }
 
+  let pets: PetRules | undefined;
+  if (isObj(raw.pets)) {
+    pets = raw.pets as unknown as PetRules;
+    if (!Array.isArray(pets.species) || pets.species.length === 0) problems.push('pets.species: cần danh sách');
+    if (!Array.isArray(pets.stars) || pets.stars.length !== 4) problems.push('pets.stars: cần 4 mốc (sao 2–5)');
+    for (const sp of pets.species ?? []) {
+      if (!items.has(sp.badge)) problems.push(`pets.${sp.id}: huy hiệu "${sp.badge}" không tồn tại`);
+      if (!Array.isArray(sp.skills) || sp.skills.length !== 3) problems.push(`pets.${sp.id}: cần 3 kỹ năng`);
+      for (const id of sp.likes?.items ?? []) if (!items.has(id)) problems.push(`pets.${sp.id}: món thích "${id}" không tồn tại`);
+      if (sp.price.shards && !items.has(sp.price.shards.item)) problems.push(`pets.${sp.id}: mảnh "${sp.price.shards.item}" không tồn tại`);
+    }
+  }
+
   let market: MarketRules | undefined;
   if (isObj(raw.market)) {
     market = raw.market as unknown as MarketRules;
@@ -1279,6 +1331,7 @@ export function buildContentPack(raw: RawContent): ContentPack {
     decor,
     xuxu,
     village,
+    pets,
     potSets,
     missions,
     materials,

@@ -143,6 +143,7 @@ features=[
  # Chỉ thị 10 § 3.3 + chỉ thị 11 đính chính D2: chim mở ở cấp 3 (Sẻ Mây).
  {"id":"birds","name":{"vi":"Chim Bắt Sâu"},"level":3,"tutorial":"tut.birds"},
  # Chỉ thị 10 § 3.5 + chỉ thị 11 G: Xưởng Bọ mở ở cấp 6 (Máy Sấy Hoa).
+ {"id":"pets","name":{"vi":"Nhà Thú Cưng"},"level":4,"tutorial":"tut.pets"},
  {"id":"workshop","name":{"vi":"Xưởng Bọ"},"level":6,"tutorial":"tut.workshop"},
  {"id":"sea","name":{"vi":"Biển Mây Bí Ẩn"},"level":8,"tutorial":"tut.sea"},
  {"id":"decor","name":{"vi":"Trang trí tầng"},"level":9,"tutorial":"tut.decor"},
@@ -158,6 +159,7 @@ tut=[
  {"id":"tut.birds","title":{"vi":"Mở khóa: Chim Bắt Sâu"},"text":{"vi":"Thuê Sẻ Mây đậu ở mép tầng: chim tự bắt bọ trên cây Hoa, cả khi bạn tắt game. Nhớ cho chim ăn Hạt Kê Mây, chim đói thì ngủ."},"target":"open-birds"},
  {"id":"tut.workshop","title":{"vi":"Mở khóa: Xưởng Bọ"},"text":{"vi":"Bọ thợ chế biến nông sản thành hàng giá cao: 3 hoa thành Hoa Sấy, quả thành Hũ Mứt. Máy chạy cả khi bạn tắt game."},"target":"open-workshop"},
  {"id":"tut.sea","title":{"vi":"Mở khóa: Biển Mây Bí Ẩn"},"text":{"vi":"Xu Xu thổi tan từng cụm mây để tìm khoáng, Sợi Mây, Giọt Sương, bọ hiếm và rương. Mỗi lần thổi tốn 1 Năng Lượng Gió; gió tự hồi cả khi bạn tắt game."},"target":"open-sea"},
+ {"id":"tut.pets","title":{"vi":"Mở khóa: Nhà Thú Cưng"},"text":{"vi":"Mèo Mây Con về ở với bạn. Dắt bé đi rồi chọn tầng cho bé trông. Cho bé ăn món thích để thêm Thân Thiết. Bé đói thì chỉ ngủ, không bao giờ bỏ đi."},"target":"open-village"},
  {"id":"tut.decor","title":{"vi":"Mở khóa: Trang trí tầng"},"text":{"vi":"Chạm bảng gỗ của một tầng để treo Đèn Lồng (+2% kinh nghiệm) hoặc Pha Lê (+2% sản lượng) vào 2 khe trang trí. Mua ngay trong bảng tầng."}},
  {"id":"tut.fishing","title":{"vi":"Mở khóa: Câu cá trên mây"},"text":{"vi":"Mở Biển Mây, chọn tab Câu cá. Mỗi ngày có 1 mồi miễn phí; chờ phao rung thì chạm ngay, rồi giữ để căng dây trong vùng xanh. Cá đổi được xu, Giọt Sương, bọ Hiếm và điểm Sổ Cá."},"target":"open-sea"},
  {"id":"tut.stall","title":{"vi":"Mở khóa: Sạp Phú Bà"},"text":{"vi":"Bày nông sản lên sạp với giá bạn chọn. Hàng xóm ghé mua theo sở thích — giá càng hời bán càng nhanh."},"target":"open-stall"},

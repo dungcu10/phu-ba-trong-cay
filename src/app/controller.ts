@@ -18,6 +18,7 @@ import { BirdsPanel, type BirdActions } from '../ui/birdPanels.ts';
 import { WorkshopPanel, type WorkshopActions } from '../ui/workshopPanel.ts';
 import { SeaPanel } from '../ui/seaPanel.ts';
 import { VillagePanel } from '../ui/villagePanel.ts';
+import { PetPanel } from '../ui/petPanel.ts';
 import { CastingPanel, type CastingActions } from '../ui/castingPanel.ts';
 import { rentEndsSoon } from '../systems/birds.ts';
 import { JournalPanel, LettersPanel, NeighborsPanel, OrdersPanel, StallPanel, type WorldActions } from '../ui/worldPanels.ts';
@@ -147,6 +148,7 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
       workshop: () => this.openWorkshop(),
       sea: () => this.openSea(),
       fishing: () => this.openFishing(),
+      pets: () => this.openPets(),
       decor: () => this.openFloorInfo(0),
     };
     setTimeout(() => go[feature]?.(), 250);
@@ -600,10 +602,43 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
     this.run({ type: 'claimCheckIn' });
   }
 
+  // --- Thú cưng (chỉ thị 11 § E) -------------------------------------------------------------------
+
+  openPets(): void {
+    this.open(new PetPanel(this.session, this));
+  }
+
+  obtainPet(species: string, pay: 'coins' | 'gems' | 'shards'): void {
+    this.run({ type: 'obtainPet', species, pay });
+  }
+
+  feedPet(species: string, itemId: string): void {
+    this.run({ type: 'feedPet', species, itemId });
+  }
+
+  patPet(species: string): void {
+    this.run({ type: 'patPet', species });
+  }
+
+  walkPet(species: string, active: boolean): void {
+    this.run({ type: 'walkPet', species, active });
+  }
+
+  guardFloor(species: string, floor: number): void {
+    this.run({ type: 'guardFloor', species, floor });
+  }
+
+  starUpPet(species: string): void {
+    this.run({ type: 'starUpPet', species });
+  }
+
+  jadeRain(): void {
+    this.run({ type: 'jadeRain' });
+  }
+
   /** A house opens its feature (the toolbar buttons still work too). */
   openHouse(feature: string): void {
     if (feature === 'missions') return this.openQuests(TODAY);
-    if (feature === 'pets') return void this.toasts.show('Nhà Thú Cưng sắp mở cửa: thú cưng đang trên đường về làng!', 'success', 2400);
     this.openFeature(feature);
   }
 
@@ -715,6 +750,30 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
       case 'decorBought':
         this.sfx.play('coin');
         this.toasts.show(`Đã mua ${content.items.get(e.itemId)?.name.vi ?? ''}. Đặt vào khe trang trí của tầng.`, 'success', 2200);
+        break;
+      case 'petObtained': {
+        const sp = content.pets?.species.find((x) => x.id === e.species);
+        this.sfx.play('upgrade');
+        this.toasts.show(e.gift ? `Quà mở Chợ: ${sp?.name.vi ?? 'thú cưng'} về ở với bạn! Ghé Nhà Thú Cưng nhé.` : `${sp?.name.vi ?? 'Thú cưng'} đã về nhà!`, 'level', 3000);
+        break;
+      }
+      case 'petFed':
+        this.sfx.play(e.liked ? 'upgrade' : 'tap');
+        this.toasts.show(e.liked ? 'Món bé thích! Thân Thiết tăng nhiều ♥' : 'Bé ăn ngon lành.', 'success', 1600);
+        break;
+      case 'petPatted':
+        if (e.bond > 0) this.sfx.play('tap');
+        break;
+      case 'petStarred':
+        this.sfx.play('upgrade');
+        this.toasts.show(`Thú cưng lên ${e.stars}★! Kỹ năng mạnh hơn.`, 'level', 2400);
+        break;
+      case 'jadeRained':
+        this.sfx.play('upgrade');
+        this.toasts.show(`Mưa Ngọc! Tưới ${e.pots} chậu, rút ngắn ${Math.round(e.savedMs / 60000)} phút lớn.`, 'level', 2400);
+        break;
+      case 'seedRefunded':
+        this.toasts.show('Sẻ Mầm nhặt lại được tiền hạt!', 'success', 1600);
         break;
       case 'houseUpgradeStarted':
         this.sfx.play('tap');

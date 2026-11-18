@@ -56,6 +56,14 @@
     "tutorial": "tut.birds"
   },
   {
+    "id": "pets",
+    "name": {
+      "vi": "Nhà Thú Cưng"
+    },
+    "level": 4,
+    "tutorial": "tut.pets"
+  },
+  {
     "id": "workshop",
     "name": {
       "vi": "Xưởng Bọ"

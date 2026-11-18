@@ -12,6 +12,7 @@ import type { BotListing, BotState, GameState } from '../core/state.ts';
 import { randomFor } from '../core/rng.ts';
 import { xpToNextLevel } from './economy.ts';
 import { advanceBotBirds, botCatchBugs, botKeepBirds } from './botBirds.ts';
+import { activeSkill } from './pets.ts';
 
 export type NeighborEvent =
   | { type: 'stallSold'; botId: string; itemId: string; qty: number; coins: number }
@@ -79,7 +80,8 @@ function session(content: ContentPack, state: GameState, bot: BotDef, s: BotStat
     const b = best as { i: number; deal: number; qty: number };
     options.push({
       kind: 'shop',
-      score: t.trader * (0.8 + b.deal * 2) + r('shop') * 0.3,
+      // Chỉ thị 11 § E1: Mèo Gọi Khách makes neighbours stop at the player's stall more often.
+      score: t.trader * (0.8 + b.deal * 2) * (1 + (activeSkill(content, state, 'callCustomers', at)?.value ?? 0)) + r('shop') * 0.3,
       run: () => {
         const l = state.stall[b.i]!;
         const coins = b.qty * l.price;
