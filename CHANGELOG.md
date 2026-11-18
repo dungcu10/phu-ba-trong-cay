@@ -29,6 +29,13 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] CTO — N5 phần 2b: số giữ được khi người chơi BẬT Sẻ Gieo Lại
+- Luồng thực thi để Gieo Lại Như Cũ mặc định tắt cho cổng xanh. Giữ mặc định tắt (người chơi tự chọn), nhưng bot mô phỏng giờ bật nó khi có Sẻ: số liệu phải đúng cho người bật.
+- Khi bật: chậu chữ ký 16, Bọ Rất hiếm 0,20. Bù: đúc Huyền Thoại 60 bụi vàng + 12 ngọc thô + 15 ngọc mài (trước 45 / 10 / 12); Ve Ngọc ×1,15. Kết quả: chậu chữ ký 15, Bọ Rất hiếm 0,24.
+- Trả lời câu chờ CTO: phần "Lửa Ấm — ban đêm bọ hiếm hơn một bậc" KHÔNG làm (đụng thẳng chỉ số Bọ Rất hiếm, Cáo đã có Vồ Bọ).
+- Cổng XANH, typecheck sạch, 257/257 test.
+- Trạng thái nghiệm thu: Chờ
+
 ### [2026-11-18] Chỉ thị 11 TỔNG N5 (phần 2b) — Kỹ năng 2–3 của thú cưng, bé tránh che chậu chín (tag `m-11-n5c`)
 - Loại: Thêm
 - Mô tả:

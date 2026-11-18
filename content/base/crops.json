@@ -257,7 +257,7 @@
       },
       {
         "id": "base:bug.jade-cicada",
-        "weight": 0.38
+        "weight": 0.44
       }
     ]
   },
@@ -429,7 +429,7 @@
       },
       {
         "id": "base:bug.jade-cicada",
-        "weight": 0.09
+        "weight": 0.1
       }
     ]
   },
@@ -474,7 +474,7 @@
       },
       {
         "id": "base:bug.jade-cicada",
-        "weight": 0.38
+        "weight": 0.44
       }
     ]
   },
@@ -523,7 +523,7 @@
       },
       {
         "id": "base:bug.jade-cicada",
-        "weight": 0.09
+        "weight": 0.1
       }
     ]
   },
@@ -568,7 +568,7 @@
       },
       {
         "id": "base:bug.jade-cicada",
-        "weight": 0.38
+        "weight": 0.44
       }
     ]
   },
@@ -617,7 +617,7 @@
       },
       {
         "id": "base:bug.jade-cicada",
-        "weight": 0.12
+        "weight": 0.14
       }
     ]
   }
