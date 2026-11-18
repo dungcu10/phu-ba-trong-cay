@@ -29,6 +29,12 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] CTO — A1 / B1.3: quà bất ngờ 10–15 lần mỗi ngày
+- `surprises.json`: giftChancePer10Min 0,04 → 0,015, giftChanceMax 0,25 → 0,08; trọng số quà xu 5 → 1, bọ 3 → 4, vật phẩm 3 → 4 (bớt gói xu lặt vặt). Quà/ngày: trước 2–84, nay TB 12,7 (ngày 7–30). Thêm chỉ số chặn "Quà bất ngờ mỗi ngày" 10–15. Ngày 1–6 còn ít quà (0–6) vì cây ngắn.
+- Chậu chữ ký Hiếm đổi 26 Đất Sét + 1 Ấn (trước 22): chậu ngày 30 về 14.
+- File của luồng thực thi (chỉ chỉnh số, báo lại): `birds.json › bots.growingShare` 0,45 → 0,28, vì bọ của người chơi giảm (trước ~25% bọ đến từ quà) nên BOT phải hạ theo để giữ ±20%. `tests/world.test.ts`: test quà đọc số từ surprises.json thay vì số 0,25 viết cứng.
+- Cổng XANH, typecheck sạch, 204/204 test.
+- Trạng thái nghiệm thu: Chờ
 ### [2026-11-18] Chỉ thị 10 M7 phần 2 — Biển Mây Bí Ẩn (tag `m-10-m7b`)
 - Loại: Thêm
 - Mô tả: mở ở cấp 8, nút "Biển Mây" ở thanh bên trái (có hướng dẫn lần đầu). Lưới 6×8 cụm mây; chạm một cụm thì Xu Xu thổi tan, tốn 1 Năng Lượng Gió (tối đa 30, hồi 1 điểm / 6 phút kể cả khi tắt game, mỗi ngày tặng thêm 10 tới 40). Dưới mây: trống, khoáng (Đá Mây, Mảnh Đồng, Mảnh Bạc, Vàng Vụn, Ngọc Thô), Sợi Mây, Giọt Sương, bọ Hiếm (ghi vào Sổ Sâu Bọ), 2–3 rương 2×2 (thổi tan đủ 4 ô mới mở; 2 lượt thưởng + 3% ra chậu đúc). Dọn hết bản đồ: thưởng lớn và mở bản đồ mới. Xu Xu vẫy tay khi thổi, ngạc nhiên khi mở rương, vui khi dọn xong, ngủ khi hết gió. Bản đồ tất định từ seed + ngày lập + số thứ tự.

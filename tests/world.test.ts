@@ -106,8 +106,10 @@ test('quà bất ngờ tính theo thời gian sinh trưởng: cây ngắn ít qu
     if (rollGift(content, s, p, 7200, 0)) long++;
   }
   assert.ok(short < 60, `cúc 1 phút: ${short}/5000`);
-  // Capped at giftChanceMax (0.25 since nâng cấp v3 đợt 1, so gems do not flood big gardens).
-  assert.ok(long > 1000 && long < 1500, `hoa 2 giờ: ${long}/5000`);
+  // Capped at giftChanceMax (12 TỔNG B1.3: about 10–15 gifts a day), numbers read from surprises.json.
+  const cfg = content.surprises;
+  const want = 5000 * Math.min(cfg.giftChanceMax, (cfg.giftChancePer10Min * 7200) / 600);
+  assert.ok(long > want * 0.8 && long < want * 1.2 && long > short * 3, `hoa 2 giờ: ${long}/5000, mong ${want}`);
 });
 
 test('thu hoạch ghi Sổ Tay; mốc đầu tiên nhận Ngọc Mây, nhận hai lần bị từ chối', () => {

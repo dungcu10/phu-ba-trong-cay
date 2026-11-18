@@ -51,6 +51,8 @@ export interface DayReport {
   commonBugsPerPot: number;
   /** Coins earned this day (every gain, before spending): the "one day of income" of 12 TỔNG A3. */
   income: number;
+  /** Quà bất ngờ found this day (12 TỔNG B1.3: 10–15). */
+  gifts: number;
 }
 
 const T0 = Date.parse('2026-11-17T08:00:00+07:00');
@@ -94,6 +96,8 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
   /** Coins in (+) and out (−) by command over the whole run (A3: where the coins come from and go). */
   const coinFlow: Record<string, number> = {};
   let dayIncome = 0;
+  let giftsFound = 0;
+  const giftKinds: Record<string, number> = {};
   const run = (cmd: Command, t: number) => {
     const gems = s.player.gems;
     const coinsBefore = s.player.coins;
@@ -107,6 +111,7 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
       }
       for (const e of r.events) {
         if (e.type === 'birdCaught') birdCaught += 1;
+        if (e.type === 'giftFound') { giftsFound += 1; giftKinds[e.gift.kind] = (giftKinds[e.gift.kind] ?? 0) + 1; }
         if (e.type === 'floorUnlocked' || e.type === 'floorExpanded' || e.type === 'floorStarred') milestones++;
         if (e.type === 'potBought' || (e.type === 'potUpgraded' && e.milestone) || e.type === 'storageUpgraded') milestones++;
         // Also progress a player sees: a level (often a new crop), a crafted pot, a machine star, a Sổ Tay reward.
@@ -301,8 +306,10 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
       bugStock: Object.entries(s.inventory).reduce((a, [id, q]) => a + (content.bugs.has(id) ? q : 0), 0),
       commonBugsPerPot: (bugsByRarity.common ?? 0) / Math.max(1, s.floors.reduce((a, f) => a + f.slots.filter((x) => x.potInstanceId).length, 0)),
       income: dayIncome,
+      gifts: giftsFound,
     });
     dayIncome = 0;
+    giftsFound = 0;
     milestones = 0;
     gemsEarned = 0;
     questsClaimed = 0;
