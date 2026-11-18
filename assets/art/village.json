@@ -1,0 +1,48 @@
+{
+ "sky": {
+  "overlap": 0.12,
+  "pictures": [
+   {
+    "image": "village_sky0.webp",
+    "w": 1600,
+    "h": 2400
+   },
+   {
+    "image": "village_sky1.webp",
+    "w": 1600,
+    "h": 2400
+   },
+   {
+    "image": "village_sky2.webp",
+    "w": 1600,
+    "h": 2400
+   },
+   {
+    "image": "village_sky3.webp",
+    "w": 1600,
+    "h": 2385
+   },
+   {
+    "image": "village_sky4.webp",
+    "w": 1600,
+    "h": 2385
+   }
+  ],
+  "scale": 1
+ },
+ "houses": [
+  "balloon",
+  "birds",
+  "gate",
+  "hall",
+  "kiln",
+  "market",
+  "pets",
+  "workshop"
+ ],
+ "pets": [
+  "fire-fox",
+  "jade-dragon",
+  "sprout-sparrow"
+ ]
+}
