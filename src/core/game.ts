@@ -8,6 +8,7 @@ import { adjustedOffset, gameTime } from './clock.ts';
 import { stochasticRound } from './rng.ts';
 import { cropStatus, cycleDurationMs } from '../systems/growth.ts';
 import { townDaily } from '../systems/town.ts';
+import { claimLuck } from '../systems/sessionLuck.ts';
 import { settleLeague } from '../systems/league.ts';
 import { friendGifts, helpsLeftToday, isEnemy, steal, stealWhileAway, useHelp, visitBug } from '../systems/social.ts';
 import { addItem, addXp, removeItem, sellPrice, storageCapacity, storageFree, storageUpgradeCost } from '../systems/economy.ts';
@@ -72,6 +73,7 @@ export type Command =
   /** Helps one pot while visiting a neighbour's garden. */
   | { type: 'helpNeighbor'; botId: string; floor: number; slot: number; kind: HelpKind }
   | { type: 'stealCrop'; botId: string; floor: number; slot: number }
+  | { type: 'claimSessionLuck' }
   /** Gets a non-shop pot by exchanging items (mission seals). */
   | { type: 'obtainPot'; potId: string }
   | { type: 'claimEventMilestone'; eventId: string }
@@ -204,6 +206,7 @@ export type GameEvent =
   | { type: 'takenWhileAway'; list: Array<{ botId: string; itemId: string; qty: number; at: number }> }
   | { type: 'friendGift'; botId: string; at: number; coins: number; items: Record<string, number> }
   | { type: 'townChanged'; left: string[]; came: string[] }
+  | { type: 'luckClaimed'; index: number; coins: number; gems: number; bazaarReroll: number; stealTurn: number }
   | { type: 'leagueSettled'; week: number; points: number; tier: number; rank: number; newTier: number; coins: number; gems: number; items: Record<string, number>; pot: string | null }
   | { type: 'materialFound'; slot: SlotRef; itemId: string; qty: number }
   | { type: 'potObtained'; potInstanceId: string; potId: string; source: 'exchange' | 'event' }
@@ -673,6 +676,11 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
       return claimMissionBonus(content, state);
     case 'helpNeighbor':
       return helpNeighbor(content, state, cmd, now);
+    case 'claimSessionLuck': {
+      const r = claimLuck(content, state, now);
+      if (typeof r === 'string') return fail(r === 'locked' ? 'not_available' : 'nothing_to_claim');
+      return { ok: true, events: [{ type: 'luckClaimed', ...r }] };
+    }
     case 'stealCrop': {
       const r = steal(content, state, cmd.botId, cmd.floor, cmd.slot, now);
       if (typeof r === 'string') return fail(r as ErrorCode);

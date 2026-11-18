@@ -1,6 +1,7 @@
 // REDESIGN_V2 windows and bars: floor sign (stars, expansion, pot sets), daily missions,
 // the seed tray at the bottom (drag a seed onto pots), and the bar shown while visiting.
 
+import { clockAt } from './timersPanel.ts';
 import { catchChance, gardenBugs, helpsLeftToday, isEnemy, nextStealTurnAt, stealTurns } from '../systems/social.ts';
 import { itemIcon } from './icons.ts';
 import type { GameSession } from '../app/session.ts';
@@ -258,7 +259,7 @@ export class SeedTray {
   render(): void {
     const { content, state } = this.session;
     const hot = hotCrop(content, state, state.player.level, this.session.now());
-    const key = `${state.player.level}|${state.player.coins >= 0 ? content.cropList.map((c) => c.seedPrice <= state.player.coins).join() : ''}|${this.selected}|${hot?.id ?? ''}|${JSON.stringify(state.social.trialSeeds)}`;
+    const key = `${state.player.level}|${state.player.coins >= 0 ? content.cropList.map((c) => c.seedPrice <= state.player.coins).join() : ''}|${this.selected}|${hot?.id ?? ''}|${JSON.stringify(state.social.trialSeeds)}|${Math.floor(this.session.now() / 60_000)}`;
     if (key === this.lastKey) return;
     this.lastKey = key;
     clear(this.row);
@@ -272,8 +273,9 @@ export class SeedTray {
         { class: `seed-chip${locked ? ' locked' : ''}${poor && !locked ? ' poor' : ''}${this.selected === crop.id ? ' on' : ''}`, 'data-test': `tray-${crop.id}`, 'aria-label': crop.name.vi },
         icon(`${crop.sprite}/${crop.stages - 1}`, 54),
         h('span', { class: 'chip-price' }, locked ? `Cấp ${crop.unlockLevel}` : trial > 0 ? `Hạt thử ×${trial}` : crop.seedPrice === 0 ? 'Miễn phí' : formatNumber(crop.seedPrice)),
-        // Bổ sung A6.5: today's hot crop sells and delivers for more.
-        !locked && hot?.id === crop.id && h('span', { class: 'hot-tag' }, 'Hot hôm nay'),
+        // Chỉ thị 12 B1.2: when it would be ripe if planted now (base growing time).
+        !locked && h('span', { class: `chip-ready${hot?.id === crop.id ? ' hot' : ''}` }, `${hot?.id === crop.id ? 'Hot · ' : 'Chín '}${clockAt(this.session, this.session.now() + crop.growSeconds * 1000)}`),
+        // Bổ sung A6.5: today's hot crop sells and delivers for more (shown in the ready-time tag).
       );
       if (!locked) chip.addEventListener('pointerdown', (e) => this.startDrag(e, crop.id, crop.sprite, crop.stages));
       this.row.append(chip);

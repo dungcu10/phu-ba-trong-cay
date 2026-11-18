@@ -171,12 +171,15 @@ export function rerollBazaar(content: ContentPack, state: GameState, now: number
   ensureBazaar(content, state, now);
   const b = bazaarRules(content)!;
   const z = state.bazaar!;
-  const cost = rerollCost(content, state, now);
+  // Chỉ thị 12 B1.1: a free reroll from Lộc Phiên is used first (it does not raise the day's price).
+  const free = (z.free ?? 0) > 0;
+  const cost = free ? 0 : rerollCost(content, state, now);
   if (state.player.coins < cost) return 'not_enough_coins';
   state.player.coins -= cost;
   const day = localDay(content, now);
   if (z.day !== day) ((z.day = day), (z.rerolls = 0));
-  z.rerolls += 1;
+  if (free) z.free = (z.free ?? 0) - 1;
+  else z.rerolls += 1;
   // The highest pity mark reached decides what is sure to show.
   const due = b.pity.filter((p) => (z.luck[p.rarity] ?? 0) >= p.at).sort((x, y) => rank(y.rarity) - rank(x.rarity))[0];
   const sure = due?.rarity ?? null;
