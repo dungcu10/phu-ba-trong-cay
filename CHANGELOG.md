@@ -29,6 +29,16 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Chỉ thị 12 TỔNG phần C — Gợi ý "Gần mốc", hoạt cảnh bị bắt, rung khi vuốt (tag `m-12-c`)
+- Loại: Thêm
+- Mô tả:
+  - **B7.3 Gần mốc:** chậu còn 1–2 cấp nữa tới dáng mới (và cấp đó đã mở) có vòng vàng nhấp nháy dưới chân chậu; bảng Chậu có dòng "Còn N cấp nữa chậu sẽ đổi dáng: <tên dáng>" kèm hình dáng mới, chạm để phóng to.
+  - **B8.8 hoạt cảnh bị bắt:** khi trộm bị bắt, thú canh vườn chạy tới chậu (dấu "!"), màn hình rung, bụi chân chạy đi.
+  - **G2:** vuốt nhiều chậu đã có; thêm rung nhẹ mỗi chậu có việc (máy hỗ trợ rung).
+- Số liệu: không đổi.
+- File/Module: systems/pots.ts (`nearMilestone`), render/garden.ts, render/slotView.ts, render/scene.ts (`chase`), ui/potSystemPanels.ts, app/controller.ts, styles.css; tests/potNear12.test.ts.
+- Ảnh hưởng save: Không.
+
 ### [2026-11-18] CTO — 12 TỔNG: bật trộm của BOT, đơn khách quen; bot ghé vườn hàng xóm
 - `neighbors.json › botSteal.chancePerHour` 0 → 0,12 (theo chỉ thị). `orders.json`: recentWeight 2, daisyFadeFrom 10, regularChance 0,25, regularBonus 0,2 (số đề xuất); rareChance 0,05 → 0,04 (mô phỏng 90 ngày chơi 15 phút/lần: ngọc 12,03/ngày, trần 12 → nay 11,5).
 - Bot mô phỏng: mỗi ngày vào lần ghé giữa trưa sang 2 hàng xóm gần cấp nhất, giúp mọi chậu cần (tưới / bắt bọ), trộm chậu chín theo lượt. Giúp vườn ~29 nghìn xu / 30 ngày; 14 lần trộm / tuần.

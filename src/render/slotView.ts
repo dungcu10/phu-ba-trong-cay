@@ -34,6 +34,8 @@ export class SlotView extends Container {
   private readonly aura: Sprite;
   private readonly shadow: Sprite;
   private readonly studs = new Graphics();
+  /** Chỉ thị 12 B7.3 "Gần mốc": gold ring at the pot's foot, blinking. */
+  private readonly nearRing = new Graphics().ellipse(0, -4, 62, 16).stroke({ width: 5, color: 0xf2c14e, alpha: 1 }).ellipse(0, -4, 68, 19).stroke({ width: 2, color: 0xfff1b8, alpha: 0.8 });
   private potGrow = 1;
   private dropY = 0;
   /** Pot layer, added by the scene to the floor's pot layer under all slots. */
@@ -121,7 +123,8 @@ export class SlotView extends Container {
     // marker, so a wide pot (wings, halo) can spill into the next slot without covering its plant
     // (directive 03 step 4). Taps still use this slot's own hit box.
     this.back.sortableChildren = true;
-    this.back.addChild(this.shadow, this.aura, this.pot, this.studs);
+    this.nearRing.visible = false;
+    this.back.addChild(this.shadow, this.aura, this.pot, this.studs, this.nearRing);
     this.addChild(this.plant, ...this.sparkles, this.bloomRing, this.bug, this.bugCount, this.marker, this.bar, this.timer);
 
     const g = SLOT_GEOM.hit;
@@ -163,6 +166,10 @@ export class SlotView extends Container {
       g.circle(x, y, 4).fill(hex(C.brand.gold));
       g.circle(x - 1.2, y - 1.4, 1.4).fill({ color: 0xffffff, alpha: 0.85 });
     }
+  }
+
+  setNear(on: boolean): void {
+    this.nearRing.visible = on;
   }
 
   /** Appearance tier of the pot (0 Mộc, 1 Tinh, 2 Thần). */
@@ -326,6 +333,10 @@ export class SlotView extends Container {
     const lift = this.soilY * this.potGrow - SLOT_GEOM.soilY;
     this.plant.y = SLOT_GEOM.soilY + lift + this.dropY + this.plantSink;
     this.studs.scale.set(this.potPop);
+    if (this.nearRing.visible) {
+      this.nearRing.y = this.dropY;
+      this.nearRing.alpha = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * 4.2 + this.phase));
+    }
     if (this.tier > 0) {
       const pulse = 0.5 + 0.5 * Math.sin(t * 2.2 + this.phase);
       // Glow texture is 128 pt wide: about 1.9× / 1.5× the pot.

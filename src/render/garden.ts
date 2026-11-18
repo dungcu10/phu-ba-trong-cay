@@ -7,7 +7,7 @@ import type { GameState } from '../core/state.ts';
 import { nextFloor } from '../core/game.ts';
 import { cropStatus, type CropStatus } from '../systems/growth.ts';
 import { expandCost, floorSets, potTier } from '../systems/floors.ts';
-import { potLook } from '../systems/pots.ts';
+import { nearMilestone, potLook } from '../systems/pots.ts';
 
 /** Effect tier and small-step count of a pot at a level: from its line's looks when it has them. */
 export function potFx(pot: PotDef, level: number, stars = 0): { tier: 0 | 1 | 2; step: number } {
@@ -27,6 +27,8 @@ export interface GardenPot {
   /** Small evolution steps since the current look started (POT_SYSTEM 2). */
   step: number;
   status: CropStatus | null;
+  /** Chỉ thị 12 B7.3: 1–2 levels from a new look (own garden only): a blinking gold ring. */
+  near?: boolean;
 }
 
 export interface GardenFloor {
@@ -77,7 +79,7 @@ export function homeGarden(content: ContentPack, state: GameState, now: number):
       pots: floor.slots.map((slot) => {
         const inst = state.pots[slot.potInstanceId]!;
         const pot = content.pots.get(inst.potId)!;
-        return { pot, level: inst.level, ...potFx(pot, inst.level, inst.stars ?? 0), status: cropStatus(content, state, slot, now) };
+        return { pot, level: inst.level, ...potFx(pot, inst.level, inst.stars ?? 0), status: cropStatus(content, state, slot, now), near: nearMilestone(pot, inst.level) !== null };
       }),
     };
   });
