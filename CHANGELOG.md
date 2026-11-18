@@ -29,6 +29,14 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] CTO — B2 + A3: bật Sạp Săn Hàng và giá theo cấp, cân qua mô phỏng
+- `market.json › levelPricing` bật theo số đề xuất: mở tầng 0,5U, mở rộng tầng 0,1U, sao máy 0,3U, ô máy 0,2U, đúc chậu 0,3/0,8/2U.
+- Chậu chữ ký trên Sạp (ô Sử Thi) 40 → 80 ngọc: 40 ngọc làm chậu chữ ký ngày 30 lên 18 (trần 15).
+- Bot mô phỏng: mỗi lần ghé mua mọi ô Hiếm trở lên và món đơn đang cần, mua chậu bằng ngọc khi còn 20 ngọc, đặt lại tối đa 2 lần khi giá ≤ 5% xu đang có. Mở tầng / mở rộng / sao máy dùng giá theo cấp.
+- Kết quả: xu tiêu vào nâng kho 59% → 22%; Sạp 36% (đặt lại 6,5%, mua 29%); xu giữ 0,05–1,14 ngày thu nhập. Thêm cảnh báo "Phần xu tiêu ở Sạp" 20–35%.
+- Test của luồng thực thi giả định hệ số 0 trong nội dung gốc; đã sửa cho đọc giá theo cấp: `tests/bazaar12.test.ts`, `tests/floors-pots.test.ts`, `tests/redesign.test.ts`.
+- Cổng XANH, typecheck sạch, 204/204 test.
+- Trạng thái nghiệm thu: Chờ
 ### [2026-11-18] Sửa: bản thử không lên vì test hiệu năng trên máy CI
 - Loại: Sửa
 - Mô tả: từ 17/11 22:00 bản thử không cập nhật (dừng ở 30c66dc), vì 2 test hiệu năng trượt trên máy GitHub (2 nhân, chạy mọi file test cùng lúc, chậm 2–4×): 241 ms > 150 và 619 ms > 400. Trên máy dev vẫn 110–170 ms. Nay hai test lấy lần nhanh nhất trong 3 sau 1 lần chạy nóng, và trên CI ngưỡng ×3 (`PERF_SLACK` trong tests/helpers.ts). Mục tiêu iPad giữ nguyên trong tên test.

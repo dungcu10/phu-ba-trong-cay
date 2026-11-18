@@ -38,7 +38,7 @@
         { "pick": "item", "id": "base:mat.cut-gem", "weight": 1, "qty": [1, 1] }
       ],
       "epic": [
-        { "pick": "pot", "signature": true, "rarities": ["rare", "epic"], "weight": 3, "currency": "gems", "gems": 40 },
+        { "pick": "pot", "signature": true, "rarities": ["rare", "epic"], "weight": 3, "currency": "gems", "gems": 80 },
         { "pick": "item", "id": "base:mat.gold-dust", "weight": 1, "qty": [2, 4] },
         { "pick": "item", "id": "base:mat.raw-jade", "weight": 1, "qty": [1, 2] }
       ],
@@ -51,11 +51,11 @@
   },
   "levelPricing": {
     "_note": "Xu cộng thêm = hệ số × U(cấp người chơi lúc mua). Nhà và Cấp Làng thêm khi làm chỉ thị 11.",
-    "floorUnlockU": 0,
-    "floorExpandU": 0,
-    "machineStarU": 0,
-    "machineSlotU": 0,
-    "castingU": { "rare": 0, "epic": 0, "legendary": 0 },
+    "floorUnlockU": 0.5,
+    "floorExpandU": 0.1,
+    "machineStarU": 0.3,
+    "machineSlotU": 0.2,
+    "castingU": { "rare": 0.3, "epic": 0.8, "legendary": 2 },
     "_proposed": { "floorUnlockU": 0.5, "floorExpandU": 0.1, "machineStarU": 0.3, "machineSlotU": 0.2, "castingU": { "rare": 0.3, "epic": 0.8, "legendary": 2 } }
   }
 }

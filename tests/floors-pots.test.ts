@@ -9,6 +9,7 @@ import { bugsInCycle, cropStatus } from '../src/systems/growth.ts';
 import { slotBonus } from '../src/systems/modifiers.ts';
 import { migrate } from '../src/persistence/migrations.ts';
 import { reconcile } from '../src/persistence/reconcile.ts';
+import { floorUnlockCost } from '../src/systems/coinSinks.ts';
 import { DAISY, giveFloorItems, loadBase, MIN, MINT, newGame, T0, TOMATO } from './helpers.ts';
 
 const content = await loadBase();
@@ -23,9 +24,10 @@ test('mở tầng: đúng thứ tự, cần đủ cấp và xu, tạo 6 vị tr�
   assert.deepEqual(dispatch(content, s, { type: 'unlockFloor', floorId: GOLDEN }, T0), { ok: false, error: 'not_next_floor' });
   assert.deepEqual(dispatch(content, s, { type: 'unlockFloor', floorId: TEA }, T0), { ok: false, error: 'locked' });
   s.player.level = 5;
-  s.player.coins = 1999;
+  const price = floorUnlockCost(content, content.floors.get(TEA)!, 5); // 2000 + the A3 level part
+  s.player.coins = price - 1;
   assert.deepEqual(dispatch(content, s, { type: 'unlockFloor', floorId: TEA }, T0), { ok: false, error: 'not_enough_coins' });
-  s.player.coins = 2000;
+  s.player.coins = price;
   // Chỉ thị 10 § 3.1: 3 Sợi Mây Kết + 2 Giọt Sương Trời on top of the coins.
   assert.deepEqual(dispatch(content, s, { type: 'unlockFloor', floorId: TEA }, T0), { ok: false, error: 'not_enough_items' });
   giveFloorItems(content, s, TEA);

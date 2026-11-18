@@ -7,7 +7,7 @@ import { dispatch } from '../src/core/game.ts';
 import { SAVE_VERSION } from '../src/core/state.ts';
 import { cropStatus } from '../src/systems/growth.ts';
 import { slotBonus } from '../src/systems/modifiers.ts';
-import { floorSets, potTier } from '../src/systems/floors.ts';
+import { expandCost, floorSets, potTier } from '../src/systems/floors.ts';
 import { localDay, missionDef } from '../src/systems/missions.ts';
 import { botGarden, helpsLeft } from '../src/systems/visit.ts';
 import { migrate } from '../src/persistence/migrations.ts';
@@ -24,9 +24,10 @@ test('mở rộng tầng: từng ô theo giá, chậu mới gieo được, dừn
   assert.equal(s.floors[0]!.slots.length, 6);
   let paid = 0;
   for (let i = 0; i < def.expandCosts.length; i++) {
+    const price = expandCost(def, s.floors[0]!, content, s.player.level)!; // expandCosts[i] + the A3 level part
     const r = dispatch(content, s, { type: 'expandFloor', floor: 0 }, T0);
     assert.ok(r.ok && r.events[0]!.type === 'floorExpanded');
-    paid += def.expandCosts[i]!;
+    paid += price;
   }
   assert.equal(s.floors[0]!.slots.length, 10);
   assert.equal(s.player.coins, 100_000 - paid);
