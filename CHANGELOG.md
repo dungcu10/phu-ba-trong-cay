@@ -29,6 +29,15 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] CTO — 12 TỔNG: bật trộm của BOT, đơn khách quen; bot ghé vườn hàng xóm
+- `neighbors.json › botSteal.chancePerHour` 0 → 0,12 (theo chỉ thị). `orders.json`: recentWeight 2, daisyFadeFrom 10, regularChance 0,25, regularBonus 0,2 (số đề xuất); rareChance 0,05 → 0,04 (mô phỏng 90 ngày chơi 15 phút/lần: ngọc 12,03/ngày, trần 12 → nay 11,5).
+- Bot mô phỏng: mỗi ngày vào lần ghé giữa trưa sang 2 hàng xóm gần cấp nhất, giúp mọi chậu cần (tưới / bắt bọ), trộm chậu chín theo lượt. Giúp vườn ~29 nghìn xu / 30 ngày; 14 lần trộm / tuần.
+- Bù: xpExponent 2,88 → 2,94 (đơn ưu tiên cây mới làm cấp ngày 7 lên 16); Ve Ngọc ×0,85 (bắt bọ khi giúp vườn).
+- Chỉ số Bọ Rất hiếm và Chậu chữ ký: TB **8** seed (4 seed vẫn nhảy 0,27 ↔ 0,35 với thay đổi không liên quan). Cổng chạy ~24 giây.
+- `tests/partA12.test.ts`: phần "núm trung tính" đặt về 0 trước khi đo (nội dung gốc nay mang số CTO).
+- Cổng XANH (cấp 5 / 15 / 25 — ngày 7 và ngày 30 nằm sát mép), typecheck sạch, 288/288 test.
+- Trạng thái nghiệm thu: Chờ
+
 ### [2026-11-18] Chỉ thị 12 TỔNG phần A (code) — Thanh bên gọn, nút "Có X chậu chín", đơn khách quen, lịch sự kiện xoay vòng (tag `m-12-a`)
 - Loại: Thêm / Thay đổi
 - Mô tả:

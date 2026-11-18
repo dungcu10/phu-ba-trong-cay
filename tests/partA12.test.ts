@@ -42,6 +42,7 @@ test('đơn: núm trung tính giữ nguyên đơn cũ; bật lên thì cây mớ
   };
   const daisy = content.cropList[0]!.produce.id;
   const count = (list: ReturnType<typeof orders>) => list.filter((o) => o.items[daisy]).length;
+  Object.assign(cfg, { recentWeight: 0, daisyFadeFrom: undefined, regularChance: 0, regularBonus: 0 }); // neutral (base carries the CTO's numbers)
   const base = orders(7);
   assert.equal(base.filter((o) => o.regular).length, 0);
   Object.assign(cfg, { recentWeight: 3, daisyFadeFrom: 10, regularChance: 0.5, regularFriendship: 3, regularBonus: 0.2 });

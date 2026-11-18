@@ -9,7 +9,7 @@
     1.7
   ],
   "xpPerCoin": 0.35,
-  "rareChance": 0.05,
+  "rareChance": 0.04,
   "rareMultiplier": 2.0,
   "rareGems": 1,
   "_m6": "Chỉ thị 10 § 3.6 (M6, luồng tính năng): chỉ thêm trường mới; code và test đã đủ (test dùng số riêng). Khinh khí cầu bay đi trong refillSeconds; XP cộng khi gửi, xu/ngọc/vật phẩm về cùng khinh khí cầu. Bốn núm kinh tế để trung tính, CTO bật khi chỉnh số: goodsShare (đề xuất 0.4 — cần bot mô phỏng biết dùng Xưởng), rareHours (đề xuất 24 — làm đổi chuỗi đơn, chỉ số Bọ Rất hiếm rất nhạy), extraSlots (đề xuất 7/8/9 ô ở cấp 10/15/20), rareItems (đề xuất Sợi Mây Kết, Giọt Sương Trời).",
@@ -21,8 +21,9 @@
   "helpChance": 0.5,
   "helpFriendshipBonus": 0.02,
   "_a4": "Chỉ thị 12 A4 (luồng tính năng, chỉ thêm trường): recentWeight (đề xuất 2: cây mở gần đây nặng hơn), daisyFadeFrom (đề xuất 10: Cúc Bông Gòn giảm dần từ cấp 10), regularFriendship / regularChance / regularBonus (đề xuất 3 / 0.25 / 0.2: Phú Bà thân thiết đặt đơn khách quen, có câu thoại, thưởng thêm 20%). Để trung tính (tắt), CTO bật qua mô phỏng.",
-  "recentWeight": 0,
-  "regularChance": 0,
+  "recentWeight": 2,
+  "daisyFadeFrom": 10,
+  "regularChance": 0.25,
   "regularFriendship": 3,
-  "regularBonus": 0
+  "regularBonus": 0.2
 }

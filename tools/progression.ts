@@ -20,6 +20,7 @@ import { randomFor } from '../src/core/rng.ts';
 import { seaOpen } from '../src/systems/sea.ts';
 import { fishingOpen } from '../src/systems/fishing.ts';
 import { decorPrice } from '../src/systems/decor.ts';
+import { botGarden } from '../src/systems/visit.ts';
 import { nextHouseCost, villageLevel } from '../src/systems/village.ts';
 import { foodAt, foodKind, petOf, walkSlots } from '../src/systems/pets.ts';
 import { bazaarOpen, rerollCost, wantedItems } from '../src/systems/bazaar.ts';
@@ -73,6 +74,7 @@ const RESERVE = 300;
 const BUG_RESERVE = 40;
 const BAZAAR_REROLLS = 2;
 const FISH_PER_DAY = 10;
+const VISITS_PER_DAY_HALF = 360;
 
 /** The crop whose produce is this item, if any. */
 function cropOf(content: ContentPack, itemId: string): CropDef | undefined {
@@ -290,6 +292,17 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
           }
         }
         while (run({ type: 'claimFishBook' }, t).ok);
+      }
+      // Ghé vườn (12 TỔNG B4/B5): at midday visit two neighbours of about the player's level, help
+      // every pot that asks, and take the ripe ones the steal turns allow.
+      if (m === VISITS_PER_DAY_HALF && content.neighbors.steal) {
+        const ids = [...content.bots.keys()].filter((id) => s.neighbors[id]).sort((a, b) => Math.abs((s.neighbors[a]!.level ?? 0) - s.player.level) - Math.abs((s.neighbors[b]!.level ?? 0) - s.player.level)).slice(0, 2);
+        for (const id of ids) {
+          botGarden(content, s, id, t).forEach((f, fi) => f.pots.forEach((p, si) => {
+            if (p.need) run({ type: 'helpNeighbor', botId: id, floor: fi, slot: si, kind: p.need }, t);
+            else if (p.ripe) run({ type: 'stealCrop', botId: id, floor: fi, slot: si }, t);
+          }));
+        }
       }
       // Biển Mây (M7): spend the Năng Lượng Gió on the next hidden clouds, row by row.
       if (seaOpen(content, s)) {

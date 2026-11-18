@@ -41,9 +41,9 @@ const { days, coinFlow } = simulateProgression(content, metrics.visitMinutes, me
 console.log(`✓ mô phỏng ${metrics.days} ngày, ${metrics.visitMinutes} phút/lần (${Math.round((Date.now() - t) / 1000)} s)\n`);
 
 const at = (n: number) => days[Math.min(n, days.length) - 1]!;
-// Rare outcomes (a Rất hiếm bug, a signature pot) are a handful per run: average 4 seeds (CTO 18/11).
+// Rare outcomes (a Rất hiếm bug, a signature pot) are a handful per run: average 8 seeds (CTO 18/11).
 let seedCache: (typeof days)[] | null = null;
-const seedRuns = () => (seedCache ??= [42, 7, 99, 1234].map((seed) => (seed === 42 ? days : simulateProgression(content, metrics.visitMinutes, 30, seed).days)));
+const seedRuns = () => (seedCache ??= [42, 7, 99, 1234, 5, 77, 314, 2026].map((seed) => (seed === 42 ? days : simulateProgression(content, metrics.visitMinutes, 30, seed).days)));
 const span = (from: number, to: number) => days.slice(from - 1, to);
 const avg = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / Math.max(1, xs.length);
 const value: Record<string, () => number[]> = {
@@ -65,7 +65,7 @@ const value: Record<string, () => number[]> = {
   commonBugsPerDay: () => span(7, 30).map((d) => d.bugsByRarity.common ?? 0),
   commonBugsPerPot: () => [avg(span(7, 30).map((d) => d.commonBugsPerPot))],
   bugStockDays: () => [at(30).bugStock / Math.max(1, avg(span(24, 30).map((d) => Object.values(d.bugsByRarity).reduce((a, q) => a + q, 0))))],
-  // A Rất hiếm bug is ~1 per 4 days, so one run sees only a handful: average 4 seeds (CTO 18/11).
+  // A Rất hiếm bug is ~1 per 4 days, so one run sees only a handful: average 8 seeds (CTO 18/11).
   epicBugsPerDay: () => [avg(seedRuns().map((run) => avg(run.slice(6, 30).map((d) => d.bugsByRarity.epic ?? 0))))],
   signaturePots30: () => [avg(seedRuns().map((run) => run[29]!.signaturePots))],
   storageFullShare: () => [avg(days.map((d) => d.storageFullShare))],
