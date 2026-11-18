@@ -1147,6 +1147,75 @@
       }
     },
     {
+      "id": "journey.zone-gold",
+      "track": "journey",
+      "name": {
+        "vi": "Trời Vàng Kim"
+      },
+      "desc": {
+        "vi": "Thu hoạch ở tầng thứ 6 trở lên (Trời Vàng Kim)."
+      },
+      "trigger": "harvest",
+      "filter": {
+        "floorMin": 5
+      },
+      "minLevel": 22,
+      "tiers": {
+        "base": 40,
+        "growth": 2.5,
+        "rewardGrowth": 1.0
+      },
+      "reward": {
+        "coinsHours": 2
+      }
+    },
+    {
+      "id": "journey.zone-dusk",
+      "track": "journey",
+      "name": {
+        "vi": "Hoàng Hôn Tím"
+      },
+      "desc": {
+        "vi": "Thu hoạch ở tầng thứ 11 trở lên (Hoàng Hôn Tím)."
+      },
+      "trigger": "harvest",
+      "filter": {
+        "floorMin": 10
+      },
+      "minLevel": 37,
+      "tiers": {
+        "base": 40,
+        "growth": 2.5,
+        "rewardGrowth": 1.0
+      },
+      "reward": {
+        "coinsHours": 3
+      }
+    },
+    {
+      "id": "journey.zone-night",
+      "track": "journey",
+      "name": {
+        "vi": "Thiên Giới Đêm"
+      },
+      "desc": {
+        "vi": "Thu hoạch ở tầng thứ 16 trở lên (Thiên Giới Đêm)."
+      },
+      "trigger": "harvest",
+      "filter": {
+        "floorMin": 15
+      },
+      "minLevel": 52,
+      "tiers": {
+        "base": 40,
+        "growth": 2.5,
+        "rewardGrowth": 1.0
+      },
+      "reward": {
+        "coinsHours": 4
+      }
+    },
+    {
       "id": "journey.strawberry",
       "track": "journey",
       "name": {
