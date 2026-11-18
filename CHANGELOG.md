@@ -29,6 +29,15 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Sửa — "Thu hoạch xong cây tự trồng lại" (tag `m-12-sua-thu-lai`)
+- Loại: Sửa
+- Mô tả: kiểm tra trên trình duyệt (chạm chuột, chạm cảm ứng, vuốt): thu hoạch chạy đúng. Cây "tự mọc lại" là **cây thu nhiều lần** (Cà Chua Bi, Bạc Hà Mây, Dâu Mây, Đồng Tiền Vàng, Hồng Mây, Táo Trời, Hoa Trăng Khuyết, Đào Tiên: 2–3 lần thu): sau lần thu đầu cây ở lại chậu và ra quả lại. Trước đây không có dấu hiệu gì nên trông như game tự gieo lại.
+  - Thêm chữ nổi sau mỗi lần thu chưa hết: **"Ra quả lại · còn N lần thu"**.
+  - Kỹ năng Sẻ Mầm "Gieo Lại Như Cũ" (mặc định tắt, bật trong bảng thú cưng) giờ có chữ nổi **"Sẻ Mầm gieo lại <cây>"**, để biết là do Sẻ Mầm.
+- Quyết định tự chọn: không đổi luật thu nhiều lần (số của CTO), chỉ thêm thông báo.
+- File/Module: app/controller.ts.
+- Ảnh hưởng save: Không.
+
 ### [2026-11-18] Chỉ thị 12 TỔNG phần C — Gợi ý "Gần mốc", hoạt cảnh bị bắt, rung khi vuốt (tag `m-12-c`)
 - Loại: Thêm
 - Mô tả:
