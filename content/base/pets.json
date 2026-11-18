@@ -72,6 +72,21 @@
       "coins": 40000
     }
   ],
+  "combos": {
+    "_note": "§ E4 Kết hợp: mở ở cấp người chơi unlockLevel. Có tác dụng khi cả hai bé đều đang được dắt và làm việc (no, không đi việc vặt). vipBonus: Khách Quý trả thêm; growth: tầng có cả hai bé trông, mỗi lần gieo/bắt đầu vụ mới được rút sẵn phần này thời gian lớn; jadeCooldown: Mưa Ngọc hồi nhanh hơn; giftBags: số túi quà mỗi ngày của Sẻ. Số khởi điểm theo chỉ thị, CTO chỉnh qua mô phỏng.",
+    "unlockLevel": 14,
+    "list": [
+      { "id": "caravan", "name": { "vi": "Thương Đoàn" }, "pets": ["pet.cloud-kitten", "pet.fire-fox"], "effect": "vipBonus", "value": 0.1, "desc": { "vi": "Khách Quý trả thêm 10%." } },
+      { "id": "harvest-season", "name": { "vi": "Mùa Màng" }, "pets": ["pet.sprout-sparrow", "pet.jade-dragon"], "effect": "growth", "value": 0.08, "sameFloor": true, "desc": { "vi": "Tầng có cả hai bé trông lớn nhanh thêm 8%." } },
+      { "id": "fire-water", "name": { "vi": "Lửa và Nước" }, "pets": ["pet.fire-fox", "pet.jade-dragon"], "effect": "jadeCooldown", "value": 0.2, "desc": { "vi": "Mưa Ngọc hồi lại nhanh hơn 20%." } },
+      { "id": "home-garden", "name": { "vi": "Vườn Nhà" }, "pets": ["pet.cloud-kitten", "pet.sprout-sparrow"], "effect": "giftBags", "value": 2, "desc": { "vi": "Quà mỗi ngày của Sẻ thành 2 túi." } }
+    ]
+  },
+  "sparrowGift": {
+    "_note": "§ E1 Sẻ Nhặt Hạt: mỗi ngày Sẻ (được dắt, làm việc) mang về 1 túi quà nhỏ, tự vào túi khi Sẻ làm việc lần đầu trong ngày. coinsU = xu × U(cấp người chơi). Để trung tính, CTO chỉnh.",
+    "coinsU": 0.5,
+    "items": {}
+  },
   "errands": {
     "_note": "§ E3 Việc vặt: perDay việc mỗi ngày (làm mới 0 giờ, + Nhà Thú Cưng), đổi miễn phí freeRerolls việc mỗi ngày. Thú cưng hợp nghề (fit) được thưởng ×fitBonus. Mọi việc cho EXP thú cưng và có badgeChance rơi Huy Hiệu đúng loài. Thú cưng đi việc vặt thì kỹ năng thụ động nghỉ. coinsU = xu × U(cấp người chơi).",
     "perDay": 4,

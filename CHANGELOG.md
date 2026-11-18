@@ -29,6 +29,16 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Chỉ thị 11 TỔNG N6 — Kết hợp thú cưng, túi quà mỗi ngày của Sẻ (tag `m-11-n6`)
+- Loại: Thêm
+- Mô tả:
+  - **Kết hợp thú cưng** (mở ở cấp 14, có tác dụng khi cả hai bé được dắt, còn no, ở nhà): **Thương Đoàn** Mèo + Cáo — Khách Quý trả thêm 10%; **Mùa Màng** Sẻ + Rồng cùng trông một tầng — cây trên tầng đó lớn nhanh thêm 8%; **Lửa và Nước** Cáo + Rồng — Mưa Ngọc hồi nhanh hơn 20%; **Vườn Nhà** Mèo + Sẻ — quà mỗi ngày của Sẻ thành 2 túi.
+  - **Túi quà mỗi ngày của Sẻ** (§ E1 Nhặt Hạt): Sẻ được dắt và làm việc thì mỗi ngày mang về 1 túi (xu theo cấp), tự vào túi, có thông báo.
+  - Nhà Thú Cưng: mục "Kết hợp thú cưng" (hình hai bé, mô tả, trạng thái "Đang có tác dụng / Chưa dắt đủ / Chưa có đủ bé", khóa trước cấp 14).
+- Số liệu: khối `combos` và `sparrowGift` (coinsU 0,5) trong `content/base/pets.json`. CTO chỉnh qua mô phỏng.
+- File/Module: pets.ts (activeCombos, comboValue, sparrowDailyGift, jadeRainCooldownMs có kết hợp), game.ts (seasonHead khi gieo và khi bắt đầu vụ mới, sự kiện sparrowGift), neighbors.ts (Thương Đoàn), content.ts (kiểu + kiểm tra), petPanel.ts, controller.ts, styles.css, tests/petCombos11.test.ts (5 test).
+- Ảnh hưởng save: Không đổi đời.
+- Quyết định tự chọn: (1) Mùa Màng tính lúc gieo/bắt đầu vụ (rút sẵn 8% thời gian lớn, lưu trong chậu) chứ không đổi tốc độ liên tục — để thời gian lớn không đổi ngược khi bé đói hay đi việc vặt; (2) Lửa và Nước tính lúc dùng Mưa Ngọc; (3) túi quà của Sẻ cần Sẻ được dắt (giống kỹ năng Nhặt Hạt).
 ### [2026-11-18] CTO — N5 phần 2b: số giữ được khi người chơi BẬT Sẻ Gieo Lại
 - Luồng thực thi để Gieo Lại Như Cũ mặc định tắt cho cổng xanh. Giữ mặc định tắt (người chơi tự chọn), nhưng bot mô phỏng giờ bật nó khi có Sẻ: số liệu phải đúng cho người bật.
 - Khi bật: chậu chữ ký 16, Bọ Rất hiếm 0,20. Bù: đúc Huyền Thoại 60 bụi vàng + 12 ngọc thô + 15 ngọc mài (trước 45 / 10 / 12); Ve Ngọc ×1,15. Kết quả: chậu chữ ký 15, Bọ Rất hiếm 0,24.
