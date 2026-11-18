@@ -39,6 +39,11 @@ Phân loại:
 - File/Module: src/systems/pets.ts (ensureErrands/sendErrand/rerollErrand/claimErrand), game.ts (3 lệnh, 3 sự kiện), state.ts (`errands`), migrations.ts (12 → 13 thêm `errands`), reconcile.ts, content.ts, questdefs.ts + quests.ts (trigger petErrand/feedPet, 5 measure mới), tools/make-quests.py, petPanel.ts (mục "Việc vặt hôm nay" có đồng hồ đếm ngược), controller.ts, styles.css, text.ts, tests/errands11.test.ts (5 test).
 - Ảnh hưởng save: Không đổi đời (vẫn 13; save 13 đã có nhận `errands` rỗng qua reconcile).
 - Quyết định tự chọn: (1) mỗi bé chỉ làm một việc một lúc; (2) thân thiết từ việc Đưa thư cộng cho một hàng xóm chọn theo seed; (3) bot mô phỏng chưa làm việc vặt nên chỉ số "mốc tiến bộ ngày 10–30" vẫn còn ngày 0 (cảnh báo, không chặn) — để CTO quyết có thêm việc vặt vào bot hay không.
+### [2026-11-18] CTO — 11 TỔNG N5 phần 1: bot nuôi thú cưng, kiểm số
+- Bot mô phỏng: nhận thú cưng khi có gấp 3 giá xu / còn 20 ngọc / đủ mảnh; mỗi lần ghé cho ăn khi no < 60 (món thích trước), vuốt 1 lần, dắt theo số khe, trông tầng cao nhất; lên sao mỗi ngày. Mốc tiến bộ đếm thêm nhận thú cưng và thú cưng lên cấp.
+- Kết quả ngày 30: cả 4 bé (Mèo, Cáo, Sẻ cấp 10, Rồng cấp 6), 2 sao, Thân Thiết 100. Ngọc giữ 29–82, không phình. Kinh tế không lệch: cổng XANH, không phải đổi số trong `pets.json`.
+- Typecheck sạch, 245/245 test.
+- Trạng thái nghiệm thu: Chờ
 
 ### [2026-11-18] Chỉ thị 11 TỔNG N5 (phần 1) — Thú cưng: 4 bé, cho ăn, Thân Thiết, cấp, sao, dắt và trông tầng, 6 kỹ năng đầu (tag `m-11-n5a`)
 - Loại: Thêm
