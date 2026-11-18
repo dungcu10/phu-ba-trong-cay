@@ -113,9 +113,9 @@ export function dailyLeft(content: ContentPack, p: PetState, key: string, max: n
   return left;
 }
 
-/** Sẻ Gieo Lại Như Cũ has an on/off switch (on by default). */
+/** Sẻ Gieo Lại Như Cũ has an on/off switch (off until the player turns it on, so it never picks a crop for them unasked). */
 export function replantOn(p: PetState): boolean {
-  return p.skillAt.replantOff !== 1;
+  return p.skillAt.replantOn === 1;
 }
 
 /** Cáo Đánh Hơi on Biển Mây: the first (1 → 2) chests of the map are marked (top-left cells). */

@@ -31,6 +31,7 @@ function plantAll(s: GameState, cropId: string, at: number): void {
 test('Sẻ Gieo Lại Như Cũ: chậu vừa thu hoạch xong tự gieo lại đúng giống; có công tắc; chưa mở ở cấp < 10', () => {
   const s = withPet(SPARROW, 10);
   plantAll(s, DAISY, T0);
+  assert.ok(dispatch(content, s, { type: 'toggleReplant', on: true }, T0 + MIN).ok);
   const r = dispatch(content, s, { type: 'harvest', floor: 0, slot: 0 }, T0 + 2 * MIN);
   assert.ok(r.ok && r.events.some((e) => e.type === 'petReplanted'));
   assert.equal(s.floors[0]!.slots[0]!.planting?.cropId, DAISY);
@@ -39,6 +40,7 @@ test('Sẻ Gieo Lại Như Cũ: chậu vừa thu hoạch xong tự gieo lại đ
   assert.equal(s.floors[0]!.slots[1]!.planting, null);
   const low = withPet(SPARROW, 9);
   plantAll(low, DAISY, T0);
+  dispatch(content, low, { type: 'toggleReplant', on: true }, T0 + MIN);
   dispatch(content, low, { type: 'harvest', floor: 0, slot: 0 }, T0 + 2 * MIN);
   assert.equal(low.floors[0]!.slots[0]!.planting, null);
 });

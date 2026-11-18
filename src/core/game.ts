@@ -490,8 +490,8 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
     case 'toggleReplant': {
       const p = state.pets.find((x) => x.species === 'pet.sprout-sparrow');
       if (!p) return fail('no_pet');
-      if (cmd.on) delete p.skillAt.replantOff;
-      else p.skillAt.replantOff = 1;
+      if (cmd.on) p.skillAt.replantOn = 1;
+      else delete p.skillAt.replantOn;
       return { ok: true, events: [{ type: 'replantToggled', on: cmd.on }] };
     }
     case 'sell':
