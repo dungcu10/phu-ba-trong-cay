@@ -183,10 +183,15 @@ test('ô Khá ưu tiên đồ đang thiếu cho lần nâng chậu kế tiếp',
 
 test('A3: giá mở tầng, đúc chậu, nâng sao máy tăng theo cấp; hệ số 0 thì giữ giá cũ', async () => {
   const s = player(15);
-  const floor = nextFloor(content, s)!;
-  assert.equal(floorUnlockCost(content, floor, 15), floor.unlockCost);
-  const pot = content.potList.find((p) => p.group === 'crafted' && p.rarity === 'rare')!;
-  assert.equal(castRecipe(content, pot, 30)!.coins, castRecipe(content, pot)!.coins);
+  // Coefficients at 0 keep the old prices (base content now carries the CTO's numbers).
+  const flat = await withMarket((m) => {
+    m.levelPricing.floorUnlockU = 0;
+    m.levelPricing.castingU.rare = 0;
+  });
+  const floor = nextFloor(flat, s)!;
+  assert.equal(floorUnlockCost(flat, floor, 15), floor.unlockCost);
+  const pot = flat.potList.find((p) => p.group === 'crafted' && p.rarity === 'rare')!;
+  assert.equal(castRecipe(flat, pot, 30)!.coins, castRecipe(flat, pot)!.coins);
   const scaled = await withMarket((m) => {
     m.levelPricing.floorUnlockU = 0.5;
     m.levelPricing.castingU.rare = 1;

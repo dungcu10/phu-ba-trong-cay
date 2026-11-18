@@ -7,6 +7,7 @@
     { "id": "level30", "label": "Cấp ngày 30", "min": 25, "max": 28, "block": true },
     { "id": "milestonesPerDay", "label": "Mốc tiến bộ mỗi ngày (ngày 10–30)", "min": 2, "max": 1000, "block": false },
     { "id": "coinsDaysIncome", "label": "Xu đang giữ / thu nhập 1 ngày (ngày 3–30)", "min": 0, "max": 5, "block": true },
+    { "id": "bazaarSpendShare", "label": "Phần xu tiêu ở Sạp Săn Hàng (đặt lại + mua)", "min": 0.2, "max": 0.35, "block": false },
     { "id": "storageSpendShare", "label": "Phần xu tiêu vào nâng kho (cần chỗ tiêu vui hơn)", "min": 0, "max": 0.4, "block": false },
     { "id": "commonBugsPerPot", "label": "Bọ Thường mỗi chậu mỗi ngày (TB ngày 7–30)", "min": 1, "max": 2, "block": true },
     { "id": "bugStockDays", "label": "Bọ tồn trong túi ngày 30 (số ngày bắt)", "min": 0, "max": 5, "block": true },

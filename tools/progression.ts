@@ -14,6 +14,8 @@ import { questActive, questView } from '../src/systems/quests.ts';
 import { createNewGame, type GameState } from '../src/core/state.ts';
 import { canDeliver } from '../src/systems/orders.ts';
 import { expandCost } from '../src/systems/floors.ts';
+import { floorUnlockCost } from '../src/systems/coinSinks.ts';
+import { bazaarOpen, rerollCost, wantedItems } from '../src/systems/bazaar.ts';
 import { canAfford, nextUpgradeCost } from '../src/systems/pots.ts';
 import { claimableMilestones, visibleEvents } from '../src/systems/events.ts';
 
@@ -54,6 +56,7 @@ export interface DayReport {
 const T0 = Date.parse('2026-11-17T08:00:00+07:00');
 const RESERVE = 300;
 const BUG_RESERVE = 40;
+const BAZAAR_REROLLS = 2;
 
 /** The crop whose produce is this item, if any. */
 function cropOf(content: ContentPack, itemId: string): CropDef | undefined {
@@ -238,12 +241,30 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
         if (blocked) run({ type: 'skipOrder', slot: i }, t);
       });
       const nf = nextFloor(content, s);
-      if (nf && s.player.level >= nf.unlockLevel && s.player.coins - RESERVE >= nf.unlockCost) run({ type: 'unlockFloor', floorId: nf.id }, t);
+      if (nf && s.player.level >= nf.unlockLevel && s.player.coins - RESERVE >= floorUnlockCost(content, nf, s.player.level)) run({ type: 'unlockFloor', floorId: nf.id }, t);
       s.floors.forEach((f, floor) => {
-        const c = expandCost(content.floors.get(f.floorId)!, f);
+        const c = expandCost(content.floors.get(f.floorId)!, f, content, s.player.level);
         if (c !== null && s.player.coins - RESERVE >= c) run({ type: 'expandFloor', floor }, t);
         run({ type: 'upgradeFloorStar', floor }, t);
       });
+      // Sạp Săn Hàng (12 TỔNG B2): take every Hiếm-or-better slot and anything an order wants; pots for
+      // gems when 20 gems stay. Then a hunter's few paid rerolls while one costs ≤ 5% of the coins.
+      if (bazaarOpen(content, s)) {
+        const shop = () => {
+          const wanted = wantedItems(content, s);
+          (s.bazaar?.slots ?? []).forEach((sl, i) => {
+            if (sl.sold) return;
+            const good = sl.rarity === 'rare' || sl.rarity === 'epic' || sl.rarity === 'legendary' || wanted.has(sl.id);
+            if (sl.currency === 'gems' ? s.player.gems - sl.price >= 20 : good && s.player.coins - sl.price >= RESERVE) run({ type: 'buyBazaar', slot: i }, t);
+          });
+        };
+        run({ type: 'tick' }, t);
+        shop();
+        for (let k = 0; k < BAZAAR_REROLLS && rerollCost(content, s, t) <= 0.05 * s.player.coins; k++) {
+          if (!run({ type: 'rerollBazaar' }, t).ok) break;
+          shop();
+        }
+      }
       if (s.player.coins - RESERVE > 2 * storageUpgradeCost(content, s)) run({ type: 'upgradeStorage' }, t);
       // Mưa Mây on the first visit of the day when it costs at most half the gems held.
       if (m === 0) {
@@ -253,7 +274,7 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
       }
       // Xưởng Bọ: raise a machine's star whenever the coins allow (it costs the machine's worker bug).
       for (const mc of content.recipes ? new Set([...content.recipes.values()].map((r) => r.machine)) : []) {
-        const c = nextStarCost(content, mc, machineState(content, s, mc.id));
+        const c = nextStarCost(content, mc, machineState(content, s, mc.id), s.player.level);
         if (c && s.player.level >= mc.unlockLevel && s.player.coins - c.coins >= RESERVE * 3) run({ type: 'upgradeMachine', machineId: mc.id }, t);
       }
       for (let k = 0; k < 20; k++) {

@@ -53,6 +53,10 @@ const value: Record<string, () => number[]> = {
     const spent = Object.values(coinFlow).filter((v) => v < 0).reduce((a, v) => a - v, 0);
     return [spent > 0 ? -(coinFlow.upgradeStorage ?? 0) / spent : 0];
   },
+  bazaarSpendShare: () => {
+    const spent = Object.values(coinFlow).filter((v) => v < 0).reduce((a, v) => a - v, 0);
+    return [spent > 0 ? -((coinFlow.rerollBazaar ?? 0) + (coinFlow.buyBazaar ?? 0)) / spent : 0];
+  },
   coinsDaysIncome: () => span(3, 30).map((d) => d.coins / Math.max(1, d.income)),
   commonBugsPerDay: () => span(7, 30).map((d) => d.bugsByRarity.common ?? 0),
   commonBugsPerPot: () => [avg(span(7, 30).map((d) => d.commonBugsPerPot))],
