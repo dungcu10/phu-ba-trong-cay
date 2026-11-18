@@ -168,6 +168,8 @@ export function itemIcon(content: ContentPack, itemId: string, size: number): El
   const good = content.goods?.get(itemId);
   if (good?.icon.startsWith('art:')) return icon(good.icon.slice(4), size);
   if (mat?.icon.startsWith('tmp:')) return tempIcon(mat.icon, size);
+  const fish = content.fish.get(itemId);
+  if (fish?.icon.startsWith('art:')) return icon(fish.icon.slice(4), size);
   // Chỉ thị 12 B7: a pot shard is its pot's picture broken along a jagged line (CSS clip, no new art).
   const shardOf = content.items.get(itemId)?.potId;
   const pot = shardOf ? content.pots.get(shardOf) : undefined;

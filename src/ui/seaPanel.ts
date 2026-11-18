@@ -17,8 +17,9 @@ import { clear, h, icon } from './dom.ts';
 import { Panel } from './panel.ts';
 import { shake } from './potPanels.ts';
 import { formatClock } from './text.ts';
+import { FishingView, type FishingActions } from './fishingView.ts';
 
-export interface SeaActions {
+export interface SeaActions extends FishingActions {
   blowCloud(cell: number): void;
 }
 
@@ -34,17 +35,28 @@ export class SeaPanel extends Panel {
   private readonly energyNext = h('span', { class: 'note' });
   private readonly energyFill = h('span', { class: 'luck-fill' });
 
+  private readonly fishing: FishingView;
+
   constructor(
     private readonly session: GameSession,
     private readonly actions: SeaActions,
+    private tab: 'dig' | 'fish' = 'dig',
   ) {
-    super('Biển Mây Bí Ẩn', 'sea-panel', 'win-wide');
+    super('Biển Mây', 'sea-panel', 'win-wide');
+    this.fishing = new FishingView(session, actions);
     this.render();
+  }
+
+  override close(): void {
+    this.fishing.stop();
+    super.close();
   }
 
   /** Called by the controller with each command's events. */
   react(events: GameEvent[]): void {
     for (const e of events) {
+      if (e.type === 'lineCast') this.fishing.react('lineCast');
+      if (e.type === 'fishReeled') this.fishing.react('fishReeled', e.fishId, e.landed);
       if (e.type !== 'cloudBlown') continue;
       this.justOpened = e.cell;
       this.pose = e.cleared ? 'happy' : e.chest !== undefined ? 'surprised' : 'wave';
@@ -71,6 +83,12 @@ export class SeaPanel extends Panel {
     const { content, state } = this.session;
     const r = seaRules(content);
     if (!r) return;
+    const tabs = h('div', { class: 'tabs', role: 'tablist' });
+    for (const [id, name] of [['dig', 'Thổi mây tìm đồ'], ['fish', 'Câu cá']] as const) {
+      tabs.append(h('button', { class: `tab${this.tab === id ? ' on' : ''}`, role: 'tab', 'aria-selected': this.tab === id ? 'true' : 'false', 'data-test': `sea-tab-${id}`, onclick: () => ((this.tab = id), this.render()) }, name));
+    }
+    this.body.append(h('div', { class: 'filters' }, tabs));
+    if (this.tab === 'fish') return void this.body.append(this.fishing.render());
     const now = this.session.now();
     if (state.player.level < r.unlockLevel) {
       this.body.append(h('p', { class: 'note' }, `Biển Mây mở ở cấp ${r.unlockLevel}.`));

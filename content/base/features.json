@@ -70,5 +70,21 @@
     },
     "level": 8,
     "tutorial": "tut.sea"
+  },
+  {
+    "id": "decor",
+    "name": {
+      "vi": "Trang trí tầng"
+    },
+    "level": 9,
+    "tutorial": "tut.decor"
+  },
+  {
+    "id": "fishing",
+    "name": {
+      "vi": "Câu cá trên mây"
+    },
+    "level": 14,
+    "tutorial": "tut.fishing"
   }
 ]

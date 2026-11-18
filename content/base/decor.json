@@ -1,0 +1,19 @@
+{
+  "_note": "Chỉ thị 10 § 3.10 Trang trí có hiệu ứng: mỗi tầng có `slots` khe; đặt đèn lồng hoặc pha lê vào khe để cộng chỉ số khi thu hoạch trên tầng đó (đèn lồng: EXP; pha lê: sản lượng — thu hoạch không trả xu trực tiếp, nên +sản lượng là cách cho thêm xu). Cộng trên một tầng không quá floorCap. Mua ở Lò Gốm bằng xu (price), mở từ unlockLevel. CTO chỉnh số.",
+  "slots": 2,
+  "floorCap": 0.06,
+  "items": {
+    "base:decor.lantern": {
+      "stat": "xp",
+      "bonus": 0.02,
+      "price": 2500,
+      "unlockLevel": 9
+    },
+    "base:decor.crystal": {
+      "stat": "yield",
+      "bonus": 0.02,
+      "price": 2500,
+      "unlockLevel": 9
+    }
+  }
+}

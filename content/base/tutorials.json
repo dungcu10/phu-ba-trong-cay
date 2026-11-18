@@ -80,6 +80,25 @@
     "target": "open-sea"
   },
   {
+    "id": "tut.decor",
+    "title": {
+      "vi": "Mở khóa: Trang trí tầng"
+    },
+    "text": {
+      "vi": "Chạm bảng gỗ của một tầng để treo Đèn Lồng (+2% kinh nghiệm) hoặc Pha Lê (+2% sản lượng) vào 2 khe trang trí. Mua ngay trong bảng tầng."
+    }
+  },
+  {
+    "id": "tut.fishing",
+    "title": {
+      "vi": "Mở khóa: Câu cá trên mây"
+    },
+    "text": {
+      "vi": "Mở Biển Mây, chọn tab Câu cá. Mỗi ngày có 1 mồi miễn phí; chờ phao rung thì chạm ngay, rồi giữ để căng dây trong vùng xanh. Cá đổi được xu, Giọt Sương, bọ Hiếm và điểm Sổ Cá."
+    },
+    "target": "open-sea"
+  },
+  {
     "id": "tut.stall",
     "title": {
       "vi": "Mở khóa: Sạp Phú Bà"

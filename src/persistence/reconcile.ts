@@ -357,6 +357,9 @@ function reconcileV12(state: GameState, content: ContentPack, c: Checker): void 
   state.energy.at = c.num('mốc Năng Lượng Gió', state.energy.at, { min: 0, fallback: state.maxSeenAt });
   state.energy.dailyDay = c.num('ngày năng lượng', state.energy.dailyDay, { min: -1, int: true, fallback: -1 });
   if (!obj(state.fishing) || typeof state.fishing.freeBaitDay !== 'number') state.fishing = d.fishing;
+  if (state.fishing.casts !== undefined) state.fishing.casts = c.num('lần thả câu', state.fishing.casts, { min: 0, int: true, fallback: 0 });
+  const hk = state.fishing.hooked;
+  if (hk !== undefined && hk !== null && !(obj(hk) && typeof hk.fishId === 'string' && content.fish.has(hk.fishId) && typeof hk.bait === 'string')) delete state.fishing.hooked;
   if (!obj(state.collections)) state.collections = d.collections;
   const col = state.collections;
   for (const k of ['bugs', 'fish'] as const) {

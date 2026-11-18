@@ -247,7 +247,13 @@ export interface GameState {
   /** Chỉ thị 10 (save 12): Năng Lượng Gió (value at `at`), and the day the free daily 10 were given. */
   energy: { value: number; at: number; dailyDay: number };
   /** Chỉ thị 10 (save 12): fishing — the day the free bait was taken. */
-  fishing: { freeBaitDay: number };
+  fishing: {
+    freeBaitDay: number;
+    /** Lines cast so far (the random key for what bites). */
+    casts?: number;
+    /** A fish on the line, waiting for the reel mini-game. */
+    hooked?: { fishId: string; bait: string } | null;
+  };
   /** Chỉ thị 10 (save 12): Sổ Sâu Bọ / Sổ Cá — first catch time and count per id, rewards claimed. */
   collections: { bugs: Record<string, { firstAt: number; count: number }>; fish: Record<string, { firstAt: number; count: number }>; claimed: string[] };
 }

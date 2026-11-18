@@ -29,6 +29,17 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Chỉ thị 10 M7 phần 3 — Câu cá, Trang trí tầng (tag `m-10-m7c`)
+- Loại: Thêm
+- Mô tả:
+  - **Câu cá** (mở cấp 14): tab "Câu cá" trong cửa sổ Biển Mây (`openFishing()`, để Bến Câu Cá của làng ở chỉ thị 11 gọi lại). Mỗi ngày 1 Mồi Thường miễn phí; chế Mồi Thường từ 2 Lá Bạc Hà Mây, Mồi Thơm từ 1 Hũ Mứt (Mồi Thơm dễ gặp cá hiếm). Thả câu → phao nhấp nhô 2–6 giây → phao rung, chạm trong 2,5 giây → giữ để căng dây, giữ vạch trong vùng xanh 3–6 giây (vùng hẹp dần và cá giật mạnh hơn theo độ hiếm) cho đầy thanh. 5 loài cá theo 5 độ hiếm (Cá Mây Hồng, Cá Bông Mây, Cá Trăng Bạc, Cá Kim Vân, Cá Long Vân; hình có sẵn). Cá vào Túi Nguyên Liệu, đổi được xu, vật phẩm (Giọt Sương, Ngọc Thô…) hoặc bọ Hiếm/Rất hiếm. **Sổ Cá**: mỗi con câu được cộng điểm, 5 mốc thưởng (ngọc, Mồi Thơm, Ngọc Thô). Cá nào cắn câu được định sẵn theo seed + số lần thả; kết quả trò chơi gửi bằng lệnh `reelFish`. Đóng cửa sổ giữa chừng thì lần mở sau vào thẳng phần kéo dây.
+  - **Trang trí tầng** (mở cấp 9): bảng gỗ của mỗi tầng có thẻ "Trang trí tầng" với 2 khe; mua Đèn Lồng Mây (+2% kinh nghiệm) hoặc Pha Lê Mây (+2% sản lượng) 2.500 xu, đặt vào khe, gỡ xuống thì trả về túi. Mỗi tầng cộng tối đa 6% mỗi loại, vẫn dưới trần tổng `bonusCaps`.
+  - Test mới `tests/itemArt.test.ts`: mọi món phải có hình trong atlas — bắt lỗi "Không mở được game" (thiếu hình) ngay ở `npm run check` thay vì trên iPad.
+- Số liệu: `content/base/fishing.json`, `content/base/decor.json` (mới). Xu đổi cá là nguồn xu mới, số khởi điểm thấp; CTO chỉnh.
+- File/Module: src/systems/fishing.ts, src/systems/decor.ts, src/ui/fishingView.ts (mới); seaPanel.ts (2 tab), gardenPanels.ts (thẻ trang trí), modifiers.ts (decorBonus), game.ts (8 lệnh mới), content.ts (món cá kind `fish`), state.ts (`fishing.casts?`, `fishing.hooked?`), reconcile.ts, assets.ts + icons.ts (hình cá), controller.ts, styles.css, tools/make-quests.py (tính năng `decor`, `fishing` + hướng dẫn), tests/fishing10.test.ts (5 test).
+- Ảnh hưởng save: Không (trường mới tuỳ chọn; save cũ mở bình thường).
+- Quyết định tự chọn: (1) Pha Lê cộng **sản lượng** thay vì "+2% xu khi thu hoạch" vì thu hoạch không trả xu trực tiếp — thêm nông sản là thêm xu; (2) "Rau Thảo" chưa có trong game, dùng Lá Bạc Hà Mây (cây thảo mộc cấp 3); (3) câu cá là tab trong Biển Mây thay vì nút riêng, vì thanh bên đã đủ 8 nút và chỉ thị 11 chuyển câu cá vào làng; (4) trò kéo dây làm dễ cho trẻ: vạch bắt đầu trong vùng xanh, ra ngoài vùng thì thanh tụt chậm bằng nửa tốc độ đầy.
+
 ### [2026-11-18] CTO — M7 + B7: cân Biển Mây, Đúc Chậu, mảnh/sao chậu qua mô phỏng
 - Bot mô phỏng: mỗi lần ghé tiêu hết Năng Lượng Gió ở Biển Mây; mỗi ngày đúc 1 chậu rẻ nhất chưa có khi đủ khoáng, ghép mảnh thành chậu, dùng mảnh lên sao.
 - `sea.json`: Năng Lượng Gió hồi 1 điểm / 60 phút (trước 6 phút: bot dọn ~5 bản đồ/ngày, ngày 30 thừa 600 đồng, 500 bụi vàng). Bụi vàng ở ô mây 3 → 1,5.
