@@ -10,12 +10,13 @@
 import type { BotDef, ContentPack } from '../core/content.ts';
 import type { BotListing, BotState, GameState } from '../core/state.ts';
 import { randomFor } from '../core/rng.ts';
-import { xpToNextLevel } from './economy.ts';
+import { removeItem, xpToNextLevel } from './economy.ts';
 import { advanceBotBirds, botCatchBugs, botKeepBirds } from './botBirds.ts';
-import { activeSkill } from './pets.ts';
+import { activeSkill, dailyLeft } from './pets.ts';
 
 export type NeighborEvent =
-  | { type: 'stallSold'; botId: string; itemId: string; qty: number; coins: number }
+  | { type: 'stallSold'; botId: string; itemId: string; qty: number; coins: number; vip?: boolean }
+  | { type: 'stallRestocked'; itemId: string; qty: number }
   | { type: 'neighborGift'; botId: string; kind: 'coins' | 'bug'; amount: number };
 
 const MAX_NOTICES = 30;
@@ -84,15 +85,27 @@ function session(content: ContentPack, state: GameState, bot: BotDef, s: BotStat
       score: t.trader * (0.8 + b.deal * 2) * (1 + (activeSkill(content, state, 'callCustomers', at)?.value ?? 0)) + r('shop') * 0.3,
       run: () => {
         const l = state.stall[b.i]!;
-        const coins = b.qty * l.price;
+        // Chỉ thị 11 § E1: Mèo Khách Quý — once a day one neighbour pays (20 → 40)% more.
+        const vip = activeSkill(content, state, 'vipCustomer', at);
+        const isVip = !!vip && dailyLeft(content, vip.pet, 'vip', 1, at, true) > 0;
+        const coins = Math.round(b.qty * l.price * (isVip ? 1 + vip!.value : 1));
         s.coins -= coins;
         s.gardenValue += Math.round(coins * 0.5);
         state.player.coins += coins;
         state.stats.coinsEarned += coins;
         l.qty -= b.qty;
-        if (l.qty === 0) state.stall.splice(b.i, 1);
         const name = content.items.get(l.itemId)?.name.vi ?? l.itemId;
-        events.push({ type: 'stallSold', botId: bot.id, itemId: l.itemId, qty: b.qty, coins });
+        events.push({ type: 'stallSold', botId: bot.id, itemId: l.itemId, qty: b.qty, coins, ...(isVip ? { vip: true } : {}) });
+        if (l.qty === 0) {
+          // Mèo Tự Bày Hàng: a sold-out listing is laid out again from storage, same price, (5 → 15) a day.
+          const re = activeSkill(content, state, 'restock', at);
+          const again = Math.min(state.inventory[l.itemId] ?? 0, l.qty0 ?? b.qty);
+          if (re && again > 0 && dailyLeft(content, re.pet, 'restock', re.value, at, true) > 0) {
+            removeItem(state, l.itemId, again);
+            l.qty = again;
+            events.push({ type: 'stallRestocked', itemId: l.itemId, qty: again });
+          } else state.stall.splice(b.i, 1);
+        }
         addNotice(state, at, `${bot.name.vi} mua ${b.qty} ${name} ở Sạp của bạn: +${coins} xu`);
         return `Mua ${b.qty} ${name} giá ${l.price} xu vì rẻ hơn mức sẵn lòng trả ${Math.round(valuation(content, bot, l.itemId))} xu`;
       },

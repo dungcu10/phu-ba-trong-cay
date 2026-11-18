@@ -947,3 +947,5 @@ html, body {
 .errand-fit{display:inline-flex;align-items:center;gap:4px;font-size:13px}
 .errand-act{display:flex;gap:6px;align-items:center}
 @media (max-width:1000px){.errand{grid-template-columns:1fr 1fr}}
+.sea-sniff{position:relative;z-index:3;pointer-events:none;display:flex;align-items:flex-end;justify-content:flex-end;border:3px dashed rgba(255,190,90,.9);border-radius:14px;box-shadow:0 0 14px rgba(255,170,60,.6) inset}
+.sea-sniff img,.sea-sniff .icon{filter:drop-shadow(0 2px 3px rgba(0,0,0,.4))}

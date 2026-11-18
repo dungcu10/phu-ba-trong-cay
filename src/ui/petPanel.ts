@@ -6,7 +6,7 @@
 import type { GameSession } from '../app/session.ts';
 import type { PetSkillDef, PetSpeciesDef } from '../core/content.ts';
 import type { PetState } from '../core/state.ts';
-import { foodAt, foodKind, nextPetStar, petOf, petWorking, skillOpen, skillValue, walkSlots, xpToNext } from '../systems/pets.ts';
+import { dailyLeft, foodAt, foodKind, nextPetStar, petOf, petWorking, replantOn, skillOpen, skillValue, walkSlots, xpToNext } from '../systems/pets.ts';
 import { itemIcon } from './icons.ts';
 import { clear, h, icon } from './dom.ts';
 import { Panel } from './panel.ts';
@@ -25,6 +25,7 @@ export interface PetActions {
   sendErrand(index: number, species: string): void;
   rerollErrand(index: number): void;
   claimErrand(index: number): void;
+  toggleReplant(on: boolean): void;
 }
 
 const pose = (sp: PetSpeciesDef, p: 'stand' | 'run' | 'sleep' | 'happy') => `${sp.art}/${sp.poses[p]}`;
@@ -161,7 +162,10 @@ export class PetPanel extends Panel {
       const open = skillOpen(p, i);
       const v = skillValue(content, p, sk);
       const nextStar = p.stars < 5 ? skillValue(content, { ...p, stars: p.stars + 1 }, sk) : null;
-      info.append(h('div', { class: `pet-skill${open ? '' : ' locked'}` }, h('strong', {}, `${['①', '②', '③'][i]} ${sk.name.vi}`), h('span', { class: 'note' }, open ? fmtSkill(sk, v) : `🔒 Mở ở cấp thú cưng ${[1, 10, 20][i]}`), open && nextStar !== null ? h('span', { class: 'note next' }, `Sao ${p.stars + 1}: ${fmtSkill(sk, nextStar)}`) : null));
+      // Daily allowances left today (a copy, so the panel does not change the save).
+      const daily = open && (sk.id === 'restock' || sk.id === 'replant') ? h('span', { class: 'note' }, `Hôm nay còn ${dailyLeft(content, { ...p, skillAt: { ...p.skillAt } }, sk.id, v, now)} lần`) : null;
+      const sw = open && sk.id === 'replant' ? h('button', { class: `candy small ${replantOn(p) ? 'primary' : 'plain'}`, 'data-test': 'toggle-replant', onclick: () => this.actions.toggleReplant(!replantOn(p)) }, replantOn(p) ? 'Đang bật' : 'Đang tắt') : null;
+      info.append(h('div', { class: `pet-skill${open ? '' : ' locked'}` }, h('strong', {}, `${['①', '②', '③'][i]} ${sk.name.vi}`), h('span', { class: 'note' }, open ? fmtSkill(sk, v) : `🔒 Mở ở cấp thú cưng ${[1, 10, 20][i]}`), open && nextStar !== null ? h('span', { class: 'note next' }, `Sao ${p.stars + 1}: ${fmtSkill(sk, nextStar)}`) : null, daily, sw));
     });
     // Actions.
     const act = h('div', { class: 'candy-wrap pet-actions' });

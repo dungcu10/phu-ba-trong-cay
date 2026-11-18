@@ -101,6 +101,30 @@ export function activeSkill(content: ContentPack, state: GameState, skillId: str
   return null;
 }
 
+/** A daily skill allowance kept in `skillAt` (`<key>Day`, `<key>N`). Uses one when `use`. */
+export function dailyLeft(content: ContentPack, p: PetState, key: string, max: number, at: number, use = false): number {
+  const day = localDay(content, at);
+  if (p.skillAt[`${key}Day`] !== day) {
+    p.skillAt[`${key}Day`] = day;
+    p.skillAt[`${key}N`] = 0;
+  }
+  const left = Math.max(0, max - (p.skillAt[`${key}N`] ?? 0));
+  if (use && left > 0) p.skillAt[`${key}N`] = (p.skillAt[`${key}N`] ?? 0) + 1;
+  return left;
+}
+
+/** Sẻ Gieo Lại Như Cũ has an on/off switch (off until the player turns it on, so it never picks a crop for them unasked). */
+export function replantOn(p: PetState): boolean {
+  return p.skillAt.replantOn === 1;
+}
+
+/** Cáo Đánh Hơi on Biển Mây: the first (1 → 2) chests of the map are marked (top-left cells). */
+export function sniffedChests(content: ContentPack, state: GameState, chests: number[], at: number): number[] {
+  const sk = activeSkill(content, state, 'sniff', at);
+  if (!sk) return [];
+  return [...new Set(chests)].sort((a, b) => a - b).slice(0, Math.max(0, Math.round(sk.value)));
+}
+
 // --- getting, feeding, patting, walking ----------------------------------------------------------
 
 /** The kitten is a gift when the market opens (chỉ thị 11 § E1). */
