@@ -55,6 +55,9 @@ export const ERROR_TEXT: Record<ErrorCode, string> = {
   bird_busy: 'Chú chim này đang bay theo một khinh khí cầu khác.',
   not_castable: 'Chậu này không đúc được.',
   already_bought: 'Ô này đã có người mua rồi.',
+  bad_cell: 'Ô này không có trên bản đồ.',
+  already_open: 'Mây ở đây đã tan rồi.',
+  no_energy: 'Hết Năng Lượng Gió rồi, chờ gió hồi nhé.',
 };
 
 const numberFormat = new Intl.NumberFormat('vi-VN');

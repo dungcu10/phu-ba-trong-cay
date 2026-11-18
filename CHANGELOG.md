@@ -29,6 +29,14 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Chỉ thị 10 M7 phần 2 — Biển Mây Bí Ẩn (tag `m-10-m7b`)
+- Loại: Thêm
+- Mô tả: mở ở cấp 8, nút "Biển Mây" ở thanh bên trái (có hướng dẫn lần đầu). Lưới 6×8 cụm mây; chạm một cụm thì Xu Xu thổi tan, tốn 1 Năng Lượng Gió (tối đa 30, hồi 1 điểm / 6 phút kể cả khi tắt game, mỗi ngày tặng thêm 10 tới 40). Dưới mây: trống, khoáng (Đá Mây, Mảnh Đồng, Mảnh Bạc, Vàng Vụn, Ngọc Thô), Sợi Mây, Giọt Sương, bọ Hiếm (ghi vào Sổ Sâu Bọ), 2–3 rương 2×2 (thổi tan đủ 4 ô mới mở; 2 lượt thưởng + 3% ra chậu đúc). Dọn hết bản đồ: thưởng lớn và mở bản đồ mới. Xu Xu vẫy tay khi thổi, ngạc nhiên khi mở rương, vui khi dọn xong, ngủ khi hết gió. Bản đồ tất định từ seed + ngày lập + số thứ tự.
+- Hình: cụm mây cắt từ vòng mây và mặt dưới tầng 1, 2, 4 đã duyệt (`tools/art/make-sea-clouds.py` → `assets/art/sea_clouds.webp`, 29 cụm, viền mềm bằng code), xoay, lật, co giãn ngẫu nhiên theo ô. Không vẽ mới.
+- File/Module: content/base/sea.json (mới, manifest), src/systems/sea.ts, src/ui/seaPanel.ts, game.ts (lệnh blowCloud, sự kiện cloudBlown; updateWorld tính gió), content.ts, hud.ts, controller.ts, styles.css, theme-fantasy.css (nút thanh bên thấp hơn 8px cho vừa 8 nút), tools/make-quests.py (tính năng `sea` + `tut.sea`), tests/sea10.test.ts (6 test).
+- Ảnh hưởng save: Không (dùng `seaMap`, `energy` đã có từ save 12).
+- Quyết định tự chọn: (1) bản đồ chưa dọn xong được giữ qua ngày, không xoá khi sang ngày mới (không phạt khi vắng mặt, L5); bản đồ mới lấy seed theo ngày nó được lập; (2) chạm được mọi cụm mây, không bắt đào theo đường; (3) rương là khối 2×2 ô; (4) nút vào đặt ở thanh bên thay vì gốc cây leo, vì chỉ thị 11 chuyển lối vào sang Cổng Biển Mây trong làng, cửa sổ mở bằng `openSea()` để làng gọi lại; (5) thưởng ô, rương, dọn bản đồ chỉ là vật liệu và bọ, không có xu (để không thêm nguồn xu khi Xu/U đang cao), số khởi điểm để CTO chỉnh. Nhiệm vụ cho Biển Mây và BOT dùng Biển Mây làm ở M8.
+
 ### [2026-11-18] Sửa: bản thử không lên vì test hiệu năng trên máy CI
 - Loại: Sửa
 - Mô tả: từ 17/11 22:00 bản thử không cập nhật (dừng ở 30c66dc), vì 2 test hiệu năng trượt trên máy GitHub (2 nhân, chạy mọi file test cùng lúc, chậm 2–4×): 241 ms > 150 và 619 ms > 400. Trên máy dev vẫn 110–170 ms. Nay hai test lấy lần nhanh nhất trong 3 sau 1 lần chạy nóng, và trên CI ngưỡng ×3 (`PERF_SLACK` trong tests/helpers.ts). Mục tiêu iPad giữ nguyên trong tên test.

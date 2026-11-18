@@ -21,6 +21,7 @@
     "workshop": "workshop.json",
     "cropExtras": "crop-extras.json",
     "casting": "casting.json",
-    "market": "market.json"
+    "market": "market.json",
+    "sea": "sea.json"
   }
 }

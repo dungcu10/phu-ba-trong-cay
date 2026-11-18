@@ -26,6 +26,7 @@ export interface HudActions {
   openJournal(): void;
   openBirds(): void;
   openWorkshop(): void;
+  openSea(): void;
   openLetters(): void;
   openMissions(): void;
   openEvent(): void;
@@ -115,6 +116,7 @@ export class Hud {
       side('Sổ Tay', 'open-journal', lineIcon('journal', 26), this.journalBadge, () => actions.openJournal(), 'journal'),
       side('Chim', 'open-birds', icon('bird/sky-sparrow/perch', 30), null, () => actions.openBirds(), 'birds'),
       side('Xưởng', 'open-workshop', icon('bug/ladybird', 30), null, () => actions.openWorkshop(), 'workshop'),
+      side('Biển Mây', 'open-sea', icon('icon/wind-energy', 30), null, () => actions.openSea(), 'sea'),
     );
     this.gated.push({ feature: 'shop', el: shop });
     // Quest tracker (đợt 2): the quest to do next, its progress, and a claim button when ready.

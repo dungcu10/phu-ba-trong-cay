@@ -105,9 +105,9 @@ body, button, input { font-family: 'Be Vietnam Pro', system-ui, sans-serif; }
 .hud-side::before { top: -5px; }
 .hud-side::after { bottom: -5px; }
 .side-btn {
-  position: relative; width: 76px; height: 66px; border: 0; border-radius: 16px; background: transparent; box-shadow: none;
+  position: relative; width: 76px; height: 58px; border: 0; border-radius: 16px; background: transparent; box-shadow: none;
   -webkit-backdrop-filter: none; backdrop-filter: none;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; color: var(--fx-ivory);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--fx-ivory);
 }
 .side-btn + .side-btn::after {
   content: ""; position: absolute; top: -2px; left: 18px; right: 18px; height: 1px;
@@ -145,7 +145,7 @@ body, button, input { font-family: 'Be Vietnam Pro', system-ui, sans-serif; }
 .round-big {
   position: relative; width: 84px; height: 64px; margin: 0; border: 0; border-radius: 16px; background: transparent; box-shadow: none;
   -webkit-backdrop-filter: none; backdrop-filter: none;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; color: var(--fx-ivory);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--fx-ivory);
 }
 .round-big.seeds {
   width: auto; height: 56px; margin: 0 8px; padding: 0 22px 0 7px; flex-direction: row; gap: 12px; border-radius: 28px;
