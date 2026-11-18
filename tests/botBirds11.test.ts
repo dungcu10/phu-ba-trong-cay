@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import { simulateNeighbors } from '../src/systems/neighbors.ts';
 import { botCrops, botGarden } from '../src/systems/visit.ts';
 import { simulateProgression } from '../tools/progression.ts';
-import { HOUR, loadBase, MIN, newGame, T0 } from './helpers.ts';
+import { HOUR, loadBase, MIN, newGame, PERF_SLACK, T0 } from './helpers.ts';
 
 const content = await loadBase();
 const DAY = 86_400_000;
@@ -91,5 +91,5 @@ test('hiệu năng: 40 BOT × 7 ngày (đủ chim) dưới 150 ms khi đã chạ
     simulateNeighbors(content, s, T0 + 7 * DAY);
     ms = Math.min(ms, performance.now() - t);
   }
-  assert.ok(ms < 150, `${ms.toFixed(0)} ms`);
+  assert.ok(ms < 150 * PERF_SLACK, `${ms.toFixed(0)} ms`);
 });

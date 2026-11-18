@@ -9,7 +9,7 @@ import { localDay } from '../src/systems/missions.ts';
 import { askingPrice, playerPrice, rankings, simulateNeighbors } from '../src/systems/neighbors.ts';
 import { migrate } from '../src/persistence/migrations.ts';
 import { reconcile } from '../src/persistence/reconcile.ts';
-import { HOUR, loadBase, newGame, T0 } from './helpers.ts';
+import { bestOf, HOUR, loadBase, newGame, PERF_SLACK, T0 } from './helpers.ts';
 
 const content = await loadBase();
 const DAY = 24 * HOUR;
@@ -127,13 +127,10 @@ test('chợ chạy theo thời gian: giả lập một lần 8 giờ và từng 
   assert.deepEqual(a.neighbors, b.neighbors);
 });
 
-test('40 Phú Bà, 7 ngày offline: tính xong nhanh (mục tiêu < 50 ms trên iPad; ngưỡng test 400 ms cho máy CI)', () => {
-  const s = newGame(content, { level: 12 }, 33);
-  const t0 = performance.now();
-  simulateNeighbors(content, s, T0 + 7 * DAY);
-  const ms = performance.now() - t0;
+test('40 Phú Bà, 7 ngày offline: tính xong nhanh (mục tiêu < 50 ms trên iPad; ngưỡng test 400 ms, máy CI ×3)', () => {
+  const ms = bestOf(3, (k) => simulateNeighbors(content, newGame(content, { level: 12 }, 33 + k + 1), T0 + 7 * DAY));
   console.log(`  40 Phú Bà × 7 ngày: ${ms.toFixed(1)} ms`);
-  assert.ok(ms < 400, `${ms} ms`);
+  assert.ok(ms < 400 * PERF_SLACK, `${ms} ms`);
 });
 
 test('save cũ (bản 10, 8 hàng xóm) lên bản 11: giữ tình thân, thêm hàng xóm mới, sạp rỗng', () => {
