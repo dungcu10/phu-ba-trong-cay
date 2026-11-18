@@ -43,6 +43,13 @@ Phân loại:
 - File/Module: src/systems/social.ts (mới), game.ts (lệnh `stealCrop`, `helpNeighbor` đổi luật, trộm khi vắng ở bước đầu `dispatch`, quà thân thiết, hạt thử trong `plant`, phần bị trộm trong `harvest`), state.ts (`social`, `Planting.stolen`, `BotState.friendGifts`), migrations.ts (13 → 14), reconcile.ts, content.ts (kiểu + kiểm tra), visit/garden (bọ theo cây, dấu chân), slotView.ts (dấu chân), gardenPanels.ts (thanh ghé vườn, khay hạt), panels.ts, worldPanels.ts (nút Trả đũa), controller.ts, scene.ts (`shake`), text.ts, styles.css, tests/steal12.test.ts (11 test); sửa test cũ theo luật mới (redesign: lượt giúp chung; market: cộng quà thân thiết).
 - Ảnh hưởng save: **Có — SAVE_VERSION 13 → 14** (migration thêm `social`; lượt trộm đầy; giữ nguyên chậu, bọ, xu).
 - Quyết định tự chọn: (1) **BOT trộm khi tắt game để tắt** (chancePerHour 0): bật 0,12 thì mô phỏng 30 ngày lệch chỉ số chặn (chậu chữ ký 16–18, Bọ Rất hiếm 0,38) — CTO bật và chỉnh; luật và test đã đủ. (2) Quà thân thiết chỉ xu nhỏ (0,25 / 0,5 / 1 U): quà Sợi Mây/Giọt Sương làm lệch nhịp cấp và chậu. (3) Trộm không chạy khi vuốt (luôn là một lần chạm). (4) Kẻ thù không cần bắt sâu giúp: báo trước thay vì tốn lượt.
+### [2026-11-18] CTO — 11 TỔNG § H: nhịp Làng và tầng 5; đo chậu chữ ký trên 4 seed
+- `village.json`: thời gian nâng nhà 1 giờ / 6 giờ / 16 giờ / 36 giờ (trước 5 / 30 / 90 / 240 phút); giá 2.000+2U / 8.000+4U / 35.000+10U / 120.000+24U (trước 300+1U … 12.000+8U); nâng nhà từ cấp 10 (trước 5).
+- `config.json › floorGen.firstLevel` 19 → 23: tầng 5 mở ở cấp 23 (≈ ngày 21, mục tiêu 20–25); tầng 20 ở cấp 68 (trước 64). `tests/floors20.test.ts` theo số mới.
+- Kết quả (`docs/reviews/economy-11.md` chạy lại): 4 thú cưng ngày 15, Cấp Làng 25 ngày 26, tầng 5 ngày 21 — đạt. **Cấp Làng 10 ngày 4 vẫn sớm hơn mục tiêu ngày 7** và sẽ không đạt được: mỗi nhà mở ra đã là cấp 1, đủ 8 nhà ở cấp 8 là Cấp Làng 8; muốn 10 ở ngày 7 thì cả tuần đầu chỉ được nâng 2 lần. CTO giữ ngày 4–5.
+- Chỉ số "Chậu chữ ký ngày 30" lấy TB 4 seed như Bọ Rất hiếm (1 seed nhảy 15 ↔ 16 với thay đổi rất nhỏ). Bù: chậu Hiếm đổi 40 Đất Sét + 1 Ấn; Ve Ngọc ×1,15. Đo: chậu 13,75; Bọ Rất hiếm 0,31.
+- Cổng XANH, typecheck sạch, 266/266 test.
+- Trạng thái nghiệm thu: Chờ
 
 ### [2026-11-18] Chỉ thị 11 TỔNG N8 — Kiểm tổng, tài liệu, báo cáo (tag `m-11-n8`)
 - Loại: Thêm
