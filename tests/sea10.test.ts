@@ -55,16 +55,18 @@ test('mỗi lần thổi tốn 1 Năng Lượng Gió; ô có món thì vào túi
   assert.deepEqual(dispatch(content, low, { type: 'blowCloud', cell: 0 }, T0), { ok: false, error: 'locked' });
 });
 
-test('Năng Lượng Gió hồi 1 điểm / 6 phút khi tắt game, tính từng bước hay một lần đều như nhau; quà ngày +10 tới 40', () => {
+test('Năng Lượng Gió hồi 1 điểm / regenMinutes khi tắt game, tính từng bước hay một lần đều như nhau; quà ngày +10 tới 40', () => {
   const a = player(5);
   a.energy = { value: 5, at: T0, dailyDay: localDay(content, T0) };
   const b = structuredClone(a);
-  settleEnergy(content, a, T0 + 61 * MIN);
-  for (let t = 1; t <= 61; t++) settleEnergy(content, b, T0 + t * MIN);
+  const step = r.energy.regenMinutes; // sea.json (CTO tunes it)
+  settleEnergy(content, a, T0 + (10 * step + 1) * MIN);
+  for (let t = 1; t <= 10 * step + 1; t++) settleEnergy(content, b, T0 + t * MIN);
   assert.equal(a.energy.value, 5 + 10);
   assert.deepEqual(a.energy, b.energy);
-  settleEnergy(content, a, T0 + 10 * 60 * MIN);
-  assert.equal(a.energy.value, r.energy.max);
+  settleEnergy(content, a, T0 + 100 * step * MIN);
+  // Regen stops at the max; a new day's gift may sit on top of it up to the cap.
+  assert.ok(a.energy.value >= r.energy.max && a.energy.value <= r.energy.cap, `${a.energy.value}`);
   // A new local day adds the gift, above the max up to the cap.
   const c = player(6);
   updateWorld(content, c, T0);

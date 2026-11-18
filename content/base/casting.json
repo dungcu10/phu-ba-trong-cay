@@ -5,9 +5,9 @@
   "perfectStars": 1,
   "starStatBonus": 0.04,
   "tiers": [
-    { "rarity": "rare", "coins": 3000, "items": { "base:mat.copper-bit": 4, "base:mat.cloud-stone": 2, "base:mat.cut-gem": 1 } },
-    { "rarity": "epic", "coins": 9000, "items": { "base:mat.silver-bit": 4, "base:mat.copper-bit": 2, "base:mat.cut-gem": 2 } },
-    { "rarity": "legendary", "coins": 25000, "items": { "base:mat.gold-dust": 4, "base:mat.raw-jade": 2, "base:mat.cut-gem": 3 } }
+    { "rarity": "rare", "coins": 3000, "items": { "base:mat.copper-bit": 12, "base:mat.cloud-stone": 6, "base:mat.cut-gem": 2 } },
+    { "rarity": "epic", "coins": 9000, "items": { "base:mat.silver-bit": 26, "base:mat.copper-bit": 8, "base:mat.cut-gem": 8 } },
+    { "rarity": "legendary", "coins": 25000, "items": { "base:mat.gold-dust": 30, "base:mat.raw-jade": 8, "base:mat.cut-gem": 10 } }
   ],
   "sources": {
     "base:mat.cloud-stone": "Đào ở Biển Mây",

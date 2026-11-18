@@ -15,6 +15,8 @@ import { createNewGame, type GameState } from '../src/core/state.ts';
 import { canDeliver } from '../src/systems/orders.ts';
 import { expandCost } from '../src/systems/floors.ts';
 import { floorUnlockCost } from '../src/systems/coinSinks.ts';
+import { castablePots, castRecipe } from '../src/systems/casting.ts';
+import { seaOpen } from '../src/systems/sea.ts';
 import { bazaarOpen, rerollCost, wantedItems } from '../src/systems/bazaar.ts';
 import { canAfford, nextUpgradeCost } from '../src/systems/pots.ts';
 import { claimableMilestones, visibleEvents } from '../src/systems/events.ts';
@@ -209,6 +211,23 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
           .filter((d) => d.group === 'crafted' && d.exchange && !owned.has(d.id) && d.unlockLevel <= s.player.level && canAfford(s, { coins: 0, items: d.exchange.items }))
           .sort((a, b) => (rank[a.rarity] ?? 3) - (rank[b.rarity] ?? 3))[0];
         if (pick) run({ type: 'obtainPot', potId: pick.id }, t);
+        // Lò Gốm (M7): cast the cheapest castable pot not owned yet when the minerals are in the bag;
+        // B7: put shards together into a pot, then spend the rest on stars.
+        const cast = castablePots(content, s.player.level)
+          .filter((d) => !owned.has(d.id) && d.id !== pick?.id)
+          .sort((a, b) => (rank[a.rarity] ?? 3) - (rank[b.rarity] ?? 3))
+          .find((d) => { const r = castRecipe(content, d, s.player.level); return r && canAfford(s, { coins: r.coins + RESERVE, items: r.items }); });
+        if (cast) run({ type: 'castPot', potId: cast.id }, t);
+        for (const d of content.potList) if (d.group === 'crafted' && !owned.has(d.id)) run({ type: 'combineShards', potId: d.id }, t);
+        for (const id of Object.keys(s.pots)) while (run({ type: 'starUpPot', potInstanceId: id }, t).ok);
+      }
+      // Biển Mây (M7): spend the Năng Lượng Gió on the next hidden clouds, row by row.
+      if (seaOpen(content, s)) {
+        run({ type: 'tick' }, t);
+        for (let k = 0; k < 60; k++) {
+          const cell = Array.from({ length: s.seaMap.open.length + 1 }, (_, i) => i).find((i) => !s.seaMap.open.includes(i)) ?? -1;
+          if (cell < 0 || !run({ type: 'blowCloud', cell }, t).ok) break;
+        }
       }
       s.floors.forEach((f, floor) =>
         f.slots.forEach((sl, slot) => {
