@@ -29,6 +29,16 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] CTO — M7 + B7: cân Biển Mây, Đúc Chậu, mảnh/sao chậu qua mô phỏng
+- Bot mô phỏng: mỗi lần ghé tiêu hết Năng Lượng Gió ở Biển Mây; mỗi ngày đúc 1 chậu rẻ nhất chưa có khi đủ khoáng, ghép mảnh thành chậu, dùng mảnh lên sao.
+- `sea.json`: Năng Lượng Gió hồi 1 điểm / 60 phút (trước 6 phút: bot dọn ~5 bản đồ/ngày, ngày 30 thừa 600 đồng, 500 bụi vàng). Bụi vàng ở ô mây 3 → 1,5.
+- `casting.json` vật liệu: Hiếm 12 đồng + 6 đá + 2 ngọc mài; Sử Thi 26 bạc + 8 đồng + 8 ngọc mài; Huyền Thoại 30 bụi vàng + 8 ngọc thô + 10 ngọc mài. Ngày 30: 13 chậu Hiếm, 7 Sử Thi, 1 Huyền Thoại (trước: 16 Sử Thi đúc).
+- `surprises.json`: giftChanceMax 0,08 → 0,075; giftChanceMin giữ 0 (bật 0,015 làm cây ngắn có bọ/giờ lệch quá 3 lần so với cây dài, test balance (c) đỏ). Quà TB 14,2/ngày.
+- `birds.json › bots.growingShare` trả lại 0,45: chậu đúc có chỉ số bọ nên người chơi lại được ~43 bọ/ngày.
+- `tests/sea10.test.ts`: đọc regenMinutes từ sea.json thay vì 6 phút viết cứng.
+- Cổng XANH, typecheck sạch, 217/217 test.
+- Trạng thái nghiệm thu: Chờ
+
 ### [2026-11-18] Chỉ thị 12 TỔNG B7 phần code — Mảnh chậu, ghép chậu, sao chậu (tag `m-12-b7-code`)
 - Loại: Thêm
 - Mô tả:
