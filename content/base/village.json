@@ -6,66 +6,66 @@
   "houses": [
     { "id": "hall", "name": { "vi": "Đình Lễ Hội" }, "art": "house/hall", "plot": 1, "unlockLevel": 1, "feature": "missions",
       "costs": [
-        { "coins": 300, "coinsU": 0, "items": { "base:mat.merit-seal": 2 } },
-        { "coins": 1200, "coinsU": 0, "items": { "base:mat.merit-seal": 4 } },
-        { "coins": 4000, "coinsU": 0, "items": { "base:mat.merit-seal": 6 } },
-        { "coins": 12000, "coinsU": 0, "items": { "base:mat.merit-seal": 10 } }
+        { "coins": 300, "coinsU": 1, "items": { "base:mat.merit-seal": 2 } },
+        { "coins": 1200, "coinsU": 2, "items": { "base:mat.merit-seal": 4 } },
+        { "coins": 4000, "coinsU": 4, "items": { "base:mat.merit-seal": 6 } },
+        { "coins": 12000, "coinsU": 8, "items": { "base:mat.merit-seal": 10 } }
       ],
       "effects": { "missionsPerDay": 1 } },
     { "id": "balloon", "name": { "vi": "Trạm Khinh Khí Cầu" }, "art": "house/balloon", "plot": 2, "unlockLevel": 2, "feature": "orders",
       "costs": [
-        { "coins": 300, "coinsU": 0, "items": { "base:mat.cloud-thread": 2 } },
-        { "coins": 1200, "coinsU": 0, "items": { "base:mat.cloud-thread": 3, "base:good.dried-flowers.cloud-rose": 2 } },
-        { "coins": 4000, "coinsU": 0, "items": { "base:mat.cloud-thread": 5, "base:good.jam.cloud-strawberry": 3 } },
-        { "coins": 12000, "coinsU": 0, "items": { "base:mat.cloud-thread": 8, "base:good.juice.cloud-bokchoy": 3 } }
+        { "coins": 300, "coinsU": 1, "items": { "base:mat.cloud-thread": 2 } },
+        { "coins": 1200, "coinsU": 2, "items": { "base:mat.cloud-thread": 3, "base:good.dried-flowers.cloud-rose": 2 } },
+        { "coins": 4000, "coinsU": 4, "items": { "base:mat.cloud-thread": 5, "base:good.jam.cloud-strawberry": 3 } },
+        { "coins": 12000, "coinsU": 8, "items": { "base:mat.cloud-thread": 8, "base:good.juice.cloud-bokchoy": 3 } }
       ],
       "effects": { "orderSlots": 1, "rareShare": 0.05 } },
     { "id": "kiln", "name": { "vi": "Lò Gốm" }, "art": "house/kiln", "plot": 3, "unlockLevel": 3, "feature": "shop",
       "costs": [
-        { "coins": 300, "coinsU": 0, "items": { "base:mat.cloud-stone": 3 } },
-        { "coins": 1200, "coinsU": 0, "items": { "base:mat.copper-bit": 4 } },
-        { "coins": 4000, "coinsU": 0, "items": { "base:mat.silver-bit": 4 } },
-        { "coins": 12000, "coinsU": 0, "items": { "base:mat.gold-dust": 4 } }
+        { "coins": 300, "coinsU": 1, "items": { "base:mat.cloud-stone": 3 } },
+        { "coins": 1200, "coinsU": 2, "items": { "base:mat.copper-bit": 4 } },
+        { "coins": 4000, "coinsU": 4, "items": { "base:mat.silver-bit": 4 } },
+        { "coins": 12000, "coinsU": 8, "items": { "base:mat.gold-dust": 4 } }
       ],
       "effects": { "potDiscount": 0.05 } },
     { "id": "birds", "name": { "vi": "Tháp Chim" }, "art": "house/birds", "plot": 4, "unlockLevel": 3, "feature": "birds",
       "costs": [
-        { "coins": 300, "coinsU": 0, "items": { "base:bug.ladybird": 5 } },
-        { "coins": 1200, "coinsU": 0, "items": { "base:bug.leaf-worm": 6 } },
-        { "coins": 4000, "coinsU": 0, "items": { "base:bug.pink-moth": 6 } },
-        { "coins": 12000, "coinsU": 0, "items": { "base:bug.jade-beetle": 8 } }
+        { "coins": 300, "coinsU": 1, "items": { "base:bug.ladybird": 5 } },
+        { "coins": 1200, "coinsU": 2, "items": { "base:bug.leaf-worm": 6 } },
+        { "coins": 4000, "coinsU": 4, "items": { "base:bug.pink-moth": 6 } },
+        { "coins": 12000, "coinsU": 8, "items": { "base:bug.jade-beetle": 8 } }
       ],
       "effects": { "perches": 1, "rentDiscount": 0.1 } },
     { "id": "market", "name": { "vi": "Chợ Mây" }, "art": "house/market", "plot": 5, "unlockLevel": 4, "feature": "stall",
       "costs": [
-        { "coins": 300, "coinsU": 0, "items": { "base:mat.cloud-millet": 4 } },
-        { "coins": 1200, "coinsU": 0, "items": { "base:good.dried-flowers.cloud-rose": 3 } },
-        { "coins": 4000, "coinsU": 0, "items": { "base:good.jam.cloud-strawberry": 4 } },
-        { "coins": 12000, "coinsU": 0, "items": { "base:good.juice.cloud-bokchoy": 4 } }
+        { "coins": 300, "coinsU": 1, "items": { "base:mat.cloud-millet": 4 } },
+        { "coins": 1200, "coinsU": 2, "items": { "base:good.dried-flowers.cloud-rose": 3 } },
+        { "coins": 4000, "coinsU": 4, "items": { "base:good.jam.cloud-strawberry": 4 } },
+        { "coins": 12000, "coinsU": 8, "items": { "base:good.juice.cloud-bokchoy": 4 } }
       ],
       "effects": { "stallSlots": 1 } },
     { "id": "pets", "name": { "vi": "Nhà Thú Cưng" }, "art": "house/pets", "plot": 6, "unlockLevel": 4, "feature": "pets",
       "costs": [
-        { "coins": 300, "coinsU": 0, "items": { "base:mat.cloud-millet": 4 } },
-        { "coins": 1200, "coinsU": 0, "items": { "base:mat.cloud-clay": 4 } },
-        { "coins": 4000, "coinsU": 0, "items": { "base:mat.cloud-thread": 6 } },
-        { "coins": 12000, "coinsU": 0, "items": { "base:mat.sky-dew": 6 } }
+        { "coins": 300, "coinsU": 1, "items": { "base:mat.cloud-millet": 4 } },
+        { "coins": 1200, "coinsU": 2, "items": { "base:mat.cloud-clay": 4 } },
+        { "coins": 4000, "coinsU": 4, "items": { "base:mat.cloud-thread": 6 } },
+        { "coins": 12000, "coinsU": 8, "items": { "base:mat.sky-dew": 6 } }
       ],
       "effects": { "errandsPerDay": 1 } },
     { "id": "workshop", "name": { "vi": "Xưởng Bọ" }, "art": "house/workshop", "plot": 7, "unlockLevel": 6, "feature": "workshop",
       "costs": [
-        { "coins": 300, "coinsU": 0, "items": { "base:bug.ladybird": 6 } },
-        { "coins": 1200, "coinsU": 0, "items": { "base:bug.leaf-worm": 8 } },
-        { "coins": 4000, "coinsU": 0, "items": { "base:bug.dew-hopper": 6 } },
-        { "coins": 12000, "coinsU": 0, "items": { "base:bug.gold-scarab": 4 } }
+        { "coins": 300, "coinsU": 1, "items": { "base:bug.ladybird": 6 } },
+        { "coins": 1200, "coinsU": 2, "items": { "base:bug.leaf-worm": 8 } },
+        { "coins": 4000, "coinsU": 4, "items": { "base:bug.dew-hopper": 6 } },
+        { "coins": 12000, "coinsU": 8, "items": { "base:bug.gold-scarab": 4 } }
       ],
       "effects": { "workshopQueue": 1 } },
     { "id": "gate", "name": { "vi": "Cổng Biển Mây" }, "art": "house/gate", "plot": 8, "unlockLevel": 8, "feature": "sea",
       "costs": [
-        { "coins": 300, "coinsU": 0, "items": { "base:mat.sky-dew": 2 } },
-        { "coins": 1200, "coinsU": 0, "items": { "base:mat.sky-dew": 3, "base:fish.pink": 2 } },
-        { "coins": 4000, "coinsU": 0, "items": { "base:mat.sky-dew": 5, "base:fish.cloud": 2 } },
-        { "coins": 12000, "coinsU": 0, "items": { "base:mat.sky-dew": 8, "base:fish.moon": 2 } }
+        { "coins": 300, "coinsU": 1, "items": { "base:mat.sky-dew": 2 } },
+        { "coins": 1200, "coinsU": 2, "items": { "base:mat.sky-dew": 3, "base:fish.pink": 2 } },
+        { "coins": 4000, "coinsU": 4, "items": { "base:mat.sky-dew": 5, "base:fish.cloud": 2 } },
+        { "coins": 12000, "coinsU": 8, "items": { "base:mat.sky-dew": 8, "base:fish.moon": 2 } }
       ],
       "effects": { "energyMax": 5 } }
   ],
@@ -77,10 +77,10 @@
     { "level": 40, "title": { "vi": "Làng Phú Quý" } }
   ],
   "medals": [
-    { "floor": 5, "zone": "low-sky", "name": { "vi": "Huy Chương Trời Thấp" }, "icon": "art:icon/medal-low-sky", "gems": 5, "items": { "base:mat.cloud-thread": 5, "base:mat.sky-dew": 3 }, "_proposedPotRarity": "rare" },
-    { "floor": 10, "zone": "golden-sky", "name": { "vi": "Huy Chương Trời Vàng" }, "icon": "art:icon/medal-golden-sky", "gems": 10, "items": { "base:mat.cloud-thread": 8, "base:mat.sky-dew": 5 }, "_proposedPotRarity": "epic" },
-    { "floor": 15, "zone": "sunset", "name": { "vi": "Huy Chương Hoàng Hôn" }, "icon": "art:icon/medal-sunset", "gems": 15, "items": { "base:mat.cloud-thread": 12, "base:mat.sky-dew": 8 }, "_proposedPotRarity": "epic" },
-    { "floor": 20, "zone": "night", "name": { "vi": "Huy Chương Thiên Giới" }, "icon": "art:icon/medal-night", "gems": 25, "items": { "base:mat.cloud-thread": 16, "base:mat.sky-dew": 12 }, "_proposedPotRarity": "legendary" }
+    { "floor": 5, "zone": "low-sky", "name": { "vi": "Huy Chương Trời Thấp" }, "icon": "art:icon/medal-low-sky", "gems": 5, "items": { "base:mat.cloud-thread": 5, "base:mat.sky-dew": 3 }, "potRarity": "rare" },
+    { "floor": 10, "zone": "golden-sky", "name": { "vi": "Huy Chương Trời Vàng" }, "icon": "art:icon/medal-golden-sky", "gems": 10, "items": { "base:mat.cloud-thread": 8, "base:mat.sky-dew": 5 }, "potRarity": "epic" },
+    { "floor": 15, "zone": "sunset", "name": { "vi": "Huy Chương Hoàng Hôn" }, "icon": "art:icon/medal-sunset", "gems": 15, "items": { "base:mat.cloud-thread": 12, "base:mat.sky-dew": 8 }, "potRarity": "epic" },
+    { "floor": 20, "zone": "night", "name": { "vi": "Huy Chương Thiên Giới" }, "icon": "art:icon/medal-night", "gems": 25, "items": { "base:mat.cloud-thread": 16, "base:mat.sky-dew": 12 }, "potRarity": "legendary" }
   ],
   "checkIn": [
     { "coins": 100 },

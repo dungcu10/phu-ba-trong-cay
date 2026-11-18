@@ -20,6 +20,7 @@ import { randomFor } from '../src/core/rng.ts';
 import { seaOpen } from '../src/systems/sea.ts';
 import { fishingOpen } from '../src/systems/fishing.ts';
 import { decorPrice } from '../src/systems/decor.ts';
+import { nextHouseCost } from '../src/systems/village.ts';
 import { bazaarOpen, rerollCost, wantedItems } from '../src/systems/bazaar.ts';
 import { canAfford, nextUpgradeCost } from '../src/systems/pots.ts';
 import { claimableMilestones, visibleEvents } from '../src/systems/events.ts';
@@ -121,7 +122,7 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
         if (e.type === 'floorUnlocked' || e.type === 'floorExpanded' || e.type === 'floorStarred') milestones++;
         if (e.type === 'potBought' || (e.type === 'potUpgraded' && e.milestone) || e.type === 'storageUpgraded') milestones++;
         // Also progress a player sees: a level (often a new crop), a crafted pot, a machine star, a Sổ Tay reward.
-        if (e.type === 'levelUp' || e.type === 'potObtained' || e.type === 'machineStar' || e.type === 'journalClaimed') milestones++;
+        if (e.type === 'levelUp' || e.type === 'potObtained' || e.type === 'machineStar' || e.type === 'journalClaimed' || e.type === 'houseUpgraded' || e.type === 'medalAwarded') milestones++;
         if (e.type === 'questClaimed') {
           questsClaimed++;
           gemSources[`quest:${e.questId}`] = (gemSources[`quest:${e.questId}`] ?? 0) + e.gems;
@@ -318,6 +319,15 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
         const price = decorPrice(content, s, id);
         if (price !== null && s.player.coins - RESERVE > 3 * price && run({ type: 'buyDecor', itemId: id }, t).ok) run({ type: 'placeDecor', floor: fi, slot: si, itemId: id }, t);
       }));
+      // Làng Phú Bà (11 TỔNG N4): start the cheapest house upgrade whose items are in the bag when 2× its coins are.
+      if (content.village) {
+        const next = content.village.houses
+          .map((h) => ({ h, c: nextHouseCost(content, s, h.id) }))
+          .filter((x) => x.c && canAfford(s, { coins: 2 * x.c.coins + RESERVE, items: x.c.items }))
+          .sort((a, b) => a.c!.coins - b.c!.coins)[0];
+        if (next) run({ type: 'upgradeHouse', house: next.h.id }, t);
+        run({ type: 'claimCheckIn' }, t);
+      }
       if (s.player.coins - RESERVE > 2 * storageUpgradeCost(content, s)) run({ type: 'upgradeStorage' }, t);
       // Mưa Mây on the first visit of the day when it costs at most half the gems held.
       if (m === 0) {

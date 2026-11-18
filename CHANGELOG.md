@@ -42,6 +42,15 @@ Phân loại:
 - Ảnh hưởng save: Không đổi đời (vẫn 13; `pets` thêm vào migration 12 → 13 và reconcile, save 13 đã có thì nhận `[]`).
 - Quyết định tự chọn: (1) kỹ năng tầng chỉ chạy khi bé được dắt, đang ở nhà (không đi việc vặt) và còn no; Gọi Khách của Mèo cũng cần Mèo được dắt; (2) độ no giảm 4 điểm/giờ (no đầy dùng ~25 giờ), mỗi lần ăn +40; (3) bé đi lại phía trước chậu như Mèo trước đây — việc tránh che chậu chín làm cùng hành vi "chạy tới chỗ làm việc" ở phần 2.
 
+### [2026-11-18] CTO — 11 TỔNG N4 phần 1: giá Làng, Huy Chương ra chậu, bot xây làng
+- `village.json`: xu nâng nhà = coins + coinsU × U, coinsU theo cấp nhà 1 / 2 / 4 / 8 (cả 8 nhà). Huy Chương Độ Cao bật `potRarity` (Hiếm / Sử Thi / Sử Thi / Huyền Thoại).
+- Bù số chậu chữ ký (16 → 15): chậu Hiếm đổi 30 Đất Sét + 1 Ấn; đúc Sử Thi 30 bạc + 10 đồng + 8 ngọc mài; Huyền Thoại 45 bụi vàng + 10 ngọc thô + 12 ngọc mài.
+- Bot mô phỏng: mỗi ngày nâng nhà rẻ nhất có đủ vật liệu và gấp 2 xu, nhận điểm danh. Mốc tiến bộ đếm thêm nhà lên cấp và Huy Chương.
+- `birds.json › bots.growingShare` 0,45 → 0,38 (người chơi dùng bọ xây nhà, BOT 36,7 so với 30,5).
+- Kết quả: nhà tiêu ~344 nghìn xu / 30 ngày; Sạp 32%, kho 19%. Cổng XANH, typecheck sạch, 235/235 test (test 150 ms của BOT thỉnh thoảng 158 ms trên máy CTO).
+- Còn cảnh báo: ngày 27, 29 có 0 mốc tiến bộ.
+- Trạng thái nghiệm thu: Chờ
+
 ### [2026-11-18] Chỉ thị 11 TỔNG N1 + N4 (phần 1) — Ảnh làng; Làng Phú Bà: 8 nhà, nâng nhà, Cấp Làng, Huy Chương Độ Cao, điểm danh 7 ngày; save 13 (tag `m-11-n4a`)
 - Loại: Thêm
 - Mô tả:
