@@ -41,6 +41,12 @@ Phân loại:
 - File/Module: src/render/sky.ts, src/render/zones.ts, src/ui/altitude.ts (mới); scene.ts (trời, màu phủ, lật hình, bệ theo vùng, dừng ở tầng, `onCamera`), world10.ts (bệ theo vùng), controller.ts, styles.css, content/base/config.json (`floorGen.names`), tests/floors20.test.ts.
 - Ảnh hưởng save: Không. Vùng trời đã xem lưu ở localStorage của máy (chỉ để không hiện lại tên vùng).
 - Quyết định tự chọn: (1) cảnh làng dưới tầng 1 (nen0), cây leo mọc dài có hoạt ảnh, mây trôi/đàn chim/tia nắng/sao/cực quang theo vùng: phần 2; (2) nút nhà trên thước mở bảng Làng như nút nhà ở HUD, tới khi có cảnh làng.
+### [2026-11-18] CTO — N6: kiểm kết hợp thú cưng, túi quà của Sẻ
+- `pets.json › sparrowGift`: 0,3U + 2 Hạt Kê Mây + 1 Sợi Mây mỗi túi (trước 0,5U, không có vật phẩm: túi quà chỉ có xu thì nhạt).
+- Kết hợp thú cưng giữ số đề xuất. Mô phỏng: ngày 15 dắt 2 bé (Thương Đoàn chạy), ngày 30 dắt 3 bé (Vườn Nhà chạy). Cổng không lệch.
+- `tests/petCombos11.test.ts`: 2 túi = 2 × 1 túi cho lệch 1 xu do làm tròn coinsU × U.
+- Cổng XANH, typecheck sạch, 262/262 test.
+- Trạng thái nghiệm thu: Chờ
 
 ### [2026-11-18] Chỉ thị 11 TỔNG N6 — Kết hợp thú cưng, túi quà mỗi ngày của Sẻ (tag `m-11-n6`)
 - Loại: Thêm

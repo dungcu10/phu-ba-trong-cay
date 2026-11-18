@@ -65,7 +65,7 @@ test('Sẻ mang về 1 túi quà mỗi ngày; Vườn Nhà thành 2 túi', () =>
   const two = game(20, [SPARROW, KITTEN]);
   const g2 = sparrowDailyGift(content, two, T0)!;
   assert.equal(g2.bags, 2);
-  assert.equal(g2.coins, g1.coins * 2);
+  assert.ok(Math.abs(g2.coins - g1.coins * 2) <= 1, `${g2.coins} vs 2 × ${g1.coins}`); // rounding of coinsU × U
 });
 
 test('Thương Đoàn cộng vào Khách Quý', () => {

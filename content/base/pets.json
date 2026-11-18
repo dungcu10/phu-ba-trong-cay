@@ -84,8 +84,8 @@
   },
   "sparrowGift": {
     "_note": "§ E1 Sẻ Nhặt Hạt: mỗi ngày Sẻ (được dắt, làm việc) mang về 1 túi quà nhỏ, tự vào túi khi Sẻ làm việc lần đầu trong ngày. coinsU = xu × U(cấp người chơi). Để trung tính, CTO chỉnh.",
-    "coinsU": 0.5,
-    "items": {}
+    "coinsU": 0.3,
+    "items": { "base:mat.cloud-millet": 2, "base:mat.cloud-thread": 1 }
   },
   "errands": {
     "_note": "§ E3 Việc vặt: perDay việc mỗi ngày (làm mới 0 giờ, + Nhà Thú Cưng), đổi miễn phí freeRerolls việc mỗi ngày. Thú cưng hợp nghề (fit) được thưởng ×fitBonus. Mọi việc cho EXP thú cưng và có badgeChance rơi Huy Hiệu đúng loài. Thú cưng đi việc vặt thì kỹ năng thụ động nghỉ. coinsU = xu × U(cấp người chơi).",
