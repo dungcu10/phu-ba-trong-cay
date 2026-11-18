@@ -825,9 +825,12 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
       case 'petCaught':
         this.view.petGoTo(e.floor, e.species);
         break;
-      case 'petReplanted':
+      case 'petReplanted': {
         this.view.petGoTo(e.slot.floor, e.species, e.slot.slot);
+        const p = at(e.slot);
+        fx.floatText(`Sẻ Mầm gieo lại ${content.crops.get(e.cropId)?.name.vi ?? ''}`, p.x, p.y + 64, hex(TOKENS.color.brand.cream));
         break;
+      }
       case 'sparrowGift':
         this.toasts.show(`Sẻ Mầm mang về ${e.bags > 1 ? `${e.bags} túi quà` : 'túi quà'}: ${formatNumber(e.coins)} xu`, 'success', 2400);
         break;
@@ -970,6 +973,12 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
         }
         fx.floatText(`+${e.qty} ${content.items.get(e.itemId)?.name.vi ?? ''}`, p.x, p.y - 10, e.mutation ? hex(TOKENS.color.brand.gold) : undefined);
         fx.floatText(`+${e.xp} XP`, p.x, p.y + 30, hex(TOKENS.color.brand.sky));
+        // A crop picked several times stays in the pot and fruits again: say so, or it looks like a replant.
+        if (!e.cleared) {
+          const pl = this.session.state.floors[e.slot.floor]?.slots[e.slot.slot]?.planting;
+          const crop = pl ? content.crops.get(pl.cropId) : undefined;
+          if (pl && crop) fx.floatText(`Ra quả lại · còn ${crop.harvests - pl.harvestsDone} lần thu`, p.x, p.y + 64, hex(TOKENS.color.brand.cream));
+        }
         if (e.mutation) {
           this.sfx.play('levelUp');
           fx.burst(this.view.dot, p.x, p.y, 16, { scale: 0.55, speed: 380, tint: hex(e.mutation === 'jade' ? TOKENS.color.brand.jade : TOKENS.color.brand.gold) });
