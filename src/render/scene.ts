@@ -863,6 +863,7 @@ export class GameView {
         if (!view) return;
         view.setPot(`${p.pot.id}/${p.level}`, this.art.pot(p.pot, p.level, rarityColors[p.pot.rarity] ?? C.rarity.common), p.step);
         view.setTier(p.tier);
+        view.setNear(p.near === true);
         view.setStatus(p.status);
       });
     });
@@ -886,6 +887,17 @@ export class GameView {
     if (!fv || !pet) return;
     const v = slot !== undefined ? fv.slots[slot] : undefined;
     pet.goTo(v ? v.x : pet.sprite.x);
+  }
+
+  /** Chỉ thị 12 B8.8 "bị bắt": the garden's pet (if awake) dashes at the pot; where it starts, in world points. */
+  chase(floor: number, slot: number): { x: number; y: number } | null {
+    const fv = this.floors[floor];
+    const pet = fv?.pets[0];
+    const v = fv?.slots[slot];
+    if (!fv || !pet || !v) return null;
+    const from = this.world.toLocal(pet.sprite.getGlobalPosition());
+    pet.goTo(v.x);
+    return { x: from.x, y: from.y - 70 };
   }
 
   private slotAtGlobal(global: { x: number; y: number }): SlotView | null {

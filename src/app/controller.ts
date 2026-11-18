@@ -516,13 +516,16 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
     if (this.view.mode === 'visit') return this.help(ref, 'bug', true);
     const { status } = this.status(ref);
     if (!status) {
-      if (this.lastCrop) this.run({ type: 'plant', cropId: this.lastCrop, ...ref });
+      if (this.lastCrop && this.run({ type: 'plant', cropId: this.lastCrop, ...ref }).ok) navigator.vibrate?.(8);
       return;
     }
     // Catch any Bọ Mây first so a sweep never lets them fly away, then harvest or water.
-    while (this.run({ type: 'catchBug', ...ref }, true).ok);
-    if (status.ripe) this.run({ type: 'harvest', ...ref });
-    else if (status.thirsty) this.run({ type: 'water', ...ref }, true);
+    let did = false;
+    while (this.run({ type: 'catchBug', ...ref }, true).ok) did = true;
+    if (status.ripe) did = this.run({ type: 'harvest', ...ref }).ok || did;
+    else if (status.thirsty) did = this.run({ type: 'water', ...ref }, true).ok || did;
+    // Chỉ thị 12 G2: a light tick per pot where the device can vibrate (the floating numbers come from the events).
+    if (did) navigator.vibrate?.(8);
   }
 
   plant(slot: SlotRef | null, cropId: string): number {
@@ -1160,6 +1163,10 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
         const p = at({ floor: e.floor, slot: e.slot });
         fx.floatText('Bị bắt quả tang!', p.x, p.y - 20, hex(TOKENS.color.brand.peach));
         this.view.shake(320);
+        // B8.8 hoạt cảnh: the pet on guard dashes at the pot, the thief's dust trail runs off.
+        const guard = this.view.chase(e.floor, e.slot);
+        if (guard) fx.floatText('!', guard.x, guard.y, hex(TOKENS.color.brand.gold));
+        for (let i = 1; i <= 5; i++) setTimeout(() => fx.burst(this.view.dot, p.x + i * 46, p.y + 40 - (i % 2) * 8, 6, { scale: 0.4, speed: 90, tint: 0xd9c7a6 }), i * 90);
         this.toasts.show(`Thú cưng nhà ${content.bots.get(e.botId)?.name.vi ?? 'hàng xóm'} đuổi chạy mất dép! Mất lượt, không mất đồ.`, 'error', 2600);
         this.visitBar?.update();
         break;

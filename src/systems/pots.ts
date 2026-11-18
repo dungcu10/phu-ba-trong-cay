@@ -59,6 +59,14 @@ export function isMilestone(def: PotDef, level: number): boolean {
   return def.looks.some((l) => l.from === level && level > 1);
 }
 
+/** Chỉ thị 12 B7.3 "Gần mốc": the next look when it is 1–2 levels away and those levels are open. */
+export function nearMilestone(def: PotDef, level: number): { look: PotLook; left: number } | null {
+  const look = def.looks.find((l) => l.from > level);
+  if (!look || look.from > def.openTo) return null;
+  const left = look.from - level;
+  return left >= 1 && left <= 2 ? { look, left } : null;
+}
+
 /** Stage name (POT_SYSTEM 2): ten stages of five levels. */
 export const STAGE_NAMES = ['Khởi Nguyên', 'Nảy Mầm', 'Tinh Xảo', 'Ma Thuật', 'Hiếm', 'Cao Quý', 'Sử Thi', 'Huyền Thoại', 'Thần Thoại', 'Tối Thượng'];
 export const stageOf = (level: number) => Math.min(STAGE_NAMES.length - 1, Math.floor((level - 1) / 5));

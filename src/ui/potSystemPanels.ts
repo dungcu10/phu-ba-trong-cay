@@ -9,7 +9,7 @@ import { shardId, type PotDef, type PotGroup, type PotStatName } from '../core/c
 import type { PotInstance } from '../core/state.ts';
 import { nextStarShards } from '../systems/potStars.ts';
 import { cropStatus } from '../systems/growth.ts';
-import { canAfford, isMilestone, nextUpgradeCost, potLook, potStat, STAGE_NAMES, stageOf, upgradeBlock } from '../systems/pots.ts';
+import { canAfford, isMilestone, nearMilestone, nextUpgradeCost, potLook, potStat, STAGE_NAMES, stageOf, upgradeBlock } from '../systems/pots.ts';
 import { claimableMilestones, visibleEvents } from '../systems/events.ts';
 import { clear, h } from './dom.ts';
 import { itemIcon, svgIcon } from './icons.ts';
@@ -44,6 +44,19 @@ function levelTrack(def: PotDef, level: number): HTMLElement {
   const track = h('div', { class: 'lv-track', 'aria-label': `Cấp ${level}/${max}` }, h('i', { class: 'lv-fill', style: `width:${(level / max) * 100}%` }), h('i', { class: 'lv-open', style: `left:${(def.openTo / max) * 100}%` }));
   for (const l of def.looks) if (l.from > 1) track.append(h('b', { class: `lv-mark${level >= l.from ? ' on' : ''}`, style: `left:${((l.from - 0.5) / max) * 100}%`, title: `Cấp ${l.from}: ${l.name.vi}` }));
   return track;
+}
+
+/** Chỉ thị 12 B7.3 "Gần mốc": how many levels to the next look, with the new look shown (tap to enlarge). */
+function nearLine(def: PotDef, level: number): HTMLElement | null {
+  const near = nearMilestone(def, level);
+  if (!near) return null;
+  const pic = h('span', { class: 'near-pic' }, potIcon(def, near.look.from, 56));
+  return h(
+    'button',
+    { class: 'near-line', 'data-test': 'near-milestone', onclick: () => pic.classList.toggle('big') },
+    h('span', {}, `Còn ${near.left} cấp nữa chậu sẽ đổi dáng: `, h('strong', {}, near.look.name.vi)),
+    pic,
+  );
 }
 
 /** The pot window for one slot. */
@@ -83,6 +96,7 @@ export class PotPanel extends Panel {
       h('p', { class: 'pot-desc' }, def.description?.vi ?? ''),
       h('div', { class: 'lv-line' }, h('strong', { 'data-test': 'pot-level' }, `Cấp ${pot.level}`), h('span', {}, `/${max}`), look && h('em', {}, ` · ${look.name.vi}`)),
       levelTrack(def, pot.level),
+      nearLine(def, pot.level),
       status && h('p', { class: 'note left' }, status.ripe ? `${status.crop.name.vi} đã chín — chạm chậu để thu.` : `${status.crop.name.vi} chín sau ${formatDuration(status.remainingMs)}`),
     );
     this.body.append(h('div', { class: 'pot-head' }, pic, id));
