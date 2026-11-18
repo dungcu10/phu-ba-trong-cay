@@ -15,6 +15,7 @@ import { randomFor } from '../core/rng.ts';
 import { cropStatus, isNight } from './growth.ts';
 import { addItem, removeItem } from './economy.ts';
 import { localDay } from './missions.ts';
+import { houseBonus } from './village.ts';
 
 const HOUR = 3_600_000;
 const MIN = 60_000;
@@ -233,7 +234,7 @@ export function runBirds(content: ContentPack, owner: BirdOwner, now: number): B
 
 /** Free perch (floor, branch) for a new bird, or null. */
 export function freePerch(content: ContentPack, state: GameState): { floor: number; branch: number } | null {
-  const per = perchesPerFloor(content, state.player.level);
+  const per = perchesPerFloor(content, state.player.level) + houseBonus(content, state, 'birds', 'perches');
   for (let f = 0; f < state.floors.length; f++) {
     for (let br = 0; br < per; br++) if (!state.birds.some((b) => b.floor === f && b.branch === br)) return { floor: f, branch: br };
   }
@@ -251,8 +252,9 @@ export function obtainBird(content: ContentPack, state: GameState, species: stri
   const perch = freePerch(content, state);
   if (!perch) return 'no_perch';
   if (how === 'rent') {
-    if (state.player.coins < def.rent!.coins) return 'not_enough_coins';
-    state.player.coins -= def.rent!.coins;
+    const rent = rentPrice(content, state, def.rent!.coins);
+    if (state.player.coins < rent) return 'not_enough_coins';
+    state.player.coins -= rent;
   } else {
     if (state.player.gems < def.gems) return 'not_enough_gems';
     state.player.gems -= def.gems;
@@ -314,7 +316,7 @@ export function feedBird(content: ContentPack, state: GameState, birdId: string,
 export function placeBird(content: ContentPack, state: GameState, birdId: string, floor: number, branch: number): BirdError | null {
   const b = state.birds.find((x) => x.id === birdId);
   if (!b) return 'no_bird';
-  if (floor < 0 || floor >= state.floors.length || branch < 0 || branch >= perchesPerFloor(content, state.player.level)) return 'bad_perch';
+  if (floor < 0 || floor >= state.floors.length || branch < 0 || branch >= perchesPerFloor(content, state.player.level) + houseBonus(content, state, 'birds', 'perches')) return 'bad_perch';
   const other = state.birds.find((x) => x !== b && x.floor === floor && x.branch === branch);
   if (other) {
     other.floor = b.floor;
@@ -353,4 +355,9 @@ export function feedAll(content: ContentPack, state: GameState, now: number): Bi
   }
   if (fed === 0) return state.birds.every((b) => foodAt(content, b, now) >= r.foodMax - 0.5) ? 'already_full' : 'not_enough_items';
   return { fed };
+}
+
+/** Rent after the Tháp Chim discount (chỉ thị 11 § D2). */
+export function rentPrice(content: ContentPack, state: GameState, coins: number): number {
+  return Math.round(coins * (1 - houseBonus(content, state, 'birds', 'rentDiscount')));
 }

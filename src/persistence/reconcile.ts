@@ -11,7 +11,7 @@ import { adoptQuestsForOldSave, emptyQuestState } from '../systems/quests.ts';
 import type { ContentPack } from '../core/content.ts';
 import { genFloorNumber } from '../core/floorgen.ts';
 import { orderSlotsFor } from '../systems/orders.ts';
-import { emptyV12Parts, newNeighbors, type GameState, type Planting, type SlotState } from '../core/state.ts';
+import { emptyV12Parts, emptyV13Parts, newNeighbors, type GameState, type Planting, type SlotState } from '../core/state.ts';
 import { SaveFormatError } from './serializer.ts';
 
 export type ReconcileMode = 'import' | 'local';
@@ -80,6 +80,7 @@ export function reconcile(input: GameState, content: ContentPack, mode: Reconcil
   reconcileStock(state);
   reconcileWorld(state, content, c);
   reconcileV12(state, content, c);
+  reconcileV13(state, content);
 
   // nextId must stay above every planting id so new plantings never reuse random keys.
   for (const f of state.floors) for (const s of f.slots) if (s.planting) state.nextId = Math.max(state.nextId, s.planting.id + 1);
@@ -166,7 +167,8 @@ function reconcileWorld(state: GameState, content: ContentPack, c: Checker): voi
   state.orders.counter = c.num('bộ đếm đơn hàng', state.orders.counter, { min: 0, int: true, fallback: 0 });
   // Chỉ thị 10 § 3.6: up to the player's slot count (6, more by level), and a balloon on its way keeps
   // what it will pay (it is the player's: never dropped).
-  const maxSlots = orderSlotsFor(content, state.player?.level ?? 1);
+  // + 4: the Trạm Khinh Khí Cầu (chỉ thị 11) adds up to 4 slots; refillOrders never fills beyond the real number.
+  const maxSlots = orderSlotsFor(content, state.player?.level ?? 1) + 4;
   state.orders.slots = state.orders.slots.slice(0, maxSlots).map((sl) => {
     const order = sl?.order && Object.keys(sl.order.items ?? {}).every((id) => content.items.has(id)) ? sl.order : null;
     const f = sl?.flight;
@@ -318,6 +320,25 @@ function cleanBirds(content: ContentPack, input: unknown, floors: number, at: nu
     if (b.escort !== null && !(obj(b.escort) && typeof b.escort.slot === 'number' && typeof b.escort.until === 'number')) b.escort = null;
   }
   return list;
+}
+
+/** Save 13 (chỉ thị 11): houses of the content only, levels 1–5, sane timers; village lists of numbers. */
+function reconcileV13(state: GameState, content: ContentPack): void {
+  const d = emptyV13Parts();
+  const known = new Set((content.village?.houses ?? []).map((h) => h.id));
+  const b = obj(state.buildings) ? state.buildings : d.buildings;
+  const out: GameState['buildings'] = {};
+  for (const [id, v] of Object.entries(b)) {
+    if (!known.has(id) || !obj(v)) continue;
+    const level = Number.isInteger(v.level) ? Math.min(5, Math.max(1, v.level)) : 1;
+    const ends = typeof v.upgradeEndsAt === 'number' && Number.isFinite(v.upgradeEndsAt) && level < 5 ? v.upgradeEndsAt : null;
+    out[id] = { level, upgradeEndsAt: ends };
+  }
+  state.buildings = out;
+  const v = obj(state.village) ? state.village : d.village;
+  const nums = (x: unknown) => (Array.isArray(x) ? [...new Set(x.filter((n) => Number.isInteger(n) && n >= 0))] : []);
+  const ci = obj(v.checkIn) && Number.isInteger(v.checkIn.day) && Number.isInteger(v.checkIn.count) && v.checkIn.count >= 0 ? v.checkIn : d.village.checkIn;
+  state.village = { seenZones: nums(v.seenZones), medals: nums(v.medals), checkIn: { day: ci.day, count: ci.count } };
 }
 
 /**

@@ -275,12 +275,22 @@ def build_rings(meta):
     write_atlas("rings", entries)
 
 
-def build_sheet(path, names, size_pt, anchor, extra=None, fixer=None, by="max", rows=None):
-    img = cut_white(Image.open(path))
+def build_sheet(path, names, size_pt, anchor, extra=None, fixer=None, by="max", rows=None, cut_kw=None, grid=None):
+    img = cut_white(Image.open(path), **(cut_kw or {}))
     if fixer:
         img = fixer(img)
     boxes = components(img, min_area=1500, pad=4)
-    if rows:
+    if grid:
+        # (cols, rows): name order is by grid cell of each piece's centre (pieces of one cell merge)
+        gc, gr = grid
+        cells = {}
+        for b in boxes:
+            cx, cy = (b[0] + b[2]) / 2, (b[1] + b[3]) / 2
+            key = (int(cy / img.height * gr), int(cx / img.width * gc))
+            o = cells.get(key)
+            cells[key] = b if o is None else (min(o[0], b[0]), min(o[1], b[1]), max(o[2], b[2]), max(o[3], b[3]), o[4] + b[4])
+        boxes = [cells[k] for k in sorted(cells)]
+    elif rows:
         # sort into rows by y, then x
         boxes.sort(key=lambda b: b[1])
         out = []

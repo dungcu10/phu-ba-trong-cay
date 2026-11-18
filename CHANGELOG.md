@@ -29,6 +29,19 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Chỉ thị 11 TỔNG N1 + N4 (phần 1) — Ảnh làng; Làng Phú Bà: 8 nhà, nâng nhà, Cấp Làng, Huy Chương Độ Cao, điểm danh 7 ngày; save 13 (tag `m-11-n4a`)
+- Loại: Thêm
+- Mô tả:
+  - **N1 ảnh** (`tools/art/build_village.py`, chạy lại được; chỉ tách nền, cắt, phóng to): 5 tấm trời 1600 px (Lanczos; nen3, nen4 làm mờ 0,8 px; mép dưới các tấm trời trộn smoothstep 12%), 8 nhà (Real-ESRGAN, lỗ giấy trắng giữa giàn giáo/lồng chim được tách), Cáo/Rồng/Sẻ Mầm × đứng, chạy, ngủ, vui, biển gỗ, giàn giáo, cần câu, Xu Xu thợ xây và câu cá. Mèo Mây Con dùng lại bản đã cắt (`world/pet/cloud-cat`).
+  - **Làng** (nút nhà ở thanh trên, có dấu "!" khi nhà nào có việc): cửa sổ Làng Phú Bà với 8 nhà theo ô đất, bong bóng báo trên mái (điểm danh/nhiệm vụ xong, đơn đủ hàng, đủ đồ nâng chậu, chim đói/sắp hết thuê, Sạp còn chỗ, máy nghỉ, gió đầy, mồi câu miễn phí), nút "Vào" mở đúng chức năng, Bến Câu Cá, biển gỗ "Dinh Phú Bà — sắp xây". Nhà chưa mở hiện mờ kèm "Mở ở cấp X".
+  - **Nâng nhà** (từ cấp 5): 5 phút → 4 giờ, chạy khi tắt game, nhà vẫn dùng được (giàn giáo + Xu Xu cầm búa), 1 ô nâng cấp (Cấp Làng 15 thêm ô thứ 2). Nguyên liệu lấy từ hệ khác (§ D2): Ấn Công Trạng (Đình), Sợi Mây + hàng chế biến (Trạm), khoáng (Lò), sâu bọ (Tháp Chim, Xưởng), hàng chế biến (Chợ), Giọt Sương + cá (Cổng). Hiệu ứng mỗi cấp: +1 nhiệm vụ ngày, +1 ô đơn và +5% đơn hiếm, −5% giá chậu, +1 cành đậu và −10% giá thuê chim, +1 ô Sạp, +1 khe hàng chờ Xưởng, +5 Năng Lượng Gió tối đa. Cấp 3 có vầng sáng, cấp 5 có hào quang (vẽ bằng CSS).
+  - **Cấp Làng** = tổng cấp 8 nhà: mốc 10 (−10% thời gian nâng), 15 (ô nâng thứ 2), 20, 30, 40 (dữ liệu sẵn; +1 lượt nhờ góp và +5% EXP đơn sẽ nối khi làm phần đơn hàng).
+  - **Huy Chương Độ Cao** lần đầu mở tầng 5/10/15/20: ngọc + Sợi Mây + Giọt Sương. **Điểm danh 7 ngày**: nghỉ một ngày không mất chuỗi.
+- Số liệu: `content/base/village.json` (mới). Xu nâng nhà có trường `coinsU` (đang 0). Chậu chữ ký của Huy Chương để ở `_proposedPotRarity` (bật thì chỉ số "Chậu chữ ký ngày 30" lên 16 > 15).
+- File/Module: src/systems/village.ts, src/systems/villageAlerts.ts, src/ui/villagePanel.ts (mới); state.ts (`buildings`, `village`; **SAVE_VERSION 13**), migrations.ts (12 → 13), reconcile.ts, game.ts (upgradeHouse, claimCheckIn; sự kiện houseUpgradeStarted/houseUpgraded/medalAwarded/checkedIn), missions.ts, orders.ts, workshop.ts, sea.ts, birds.ts (hiệu ứng nhà), hud.ts, lineIcons.ts, controller.ts, world10.ts (nạp atlas houses/pets/village), styles.css, tools/art/build.py (`build_sheet` thêm `cut_kw`, `grid`), tests/village11.test.ts (7 test, có migration 12 → 13).
+- Ảnh hưởng save: **Có — lên đời 13**, migration 12 → 13 thêm `buildings` và `village` trống; save cũ mở bình thường; Huy Chương cho tầng đã mở được trao (kèm thưởng) ở lần tick đầu.
+- Quyết định tự chọn: (1) làng tạm là một cửa sổ (nút nhà ở thanh trên) trong khi làm cảnh làng dưới tầng 1 (N2–N3); (2) Đình nâng bằng Ấn Công Trạng (game chưa có món "Điểm sự kiện"); Nhà Thú Cưng tạm dùng Hạt Kê/Đất Mây cho tới khi có Huy Hiệu; (3) bong bóng Chợ báo "Sạp còn chỗ bày hàng" (hàng bán xong được trả xu ngay, không có trạng thái "đã bán"); bong bóng Xưởng báo "máy đang nghỉ" (hàng xong tự vào kho).
+
 ### [2026-11-18] CTO — M8: bật giới hạn câu cá và giá trang trí theo cấp
 - `fishing.json › castsPerDay` 0 → 15. `market.json › levelPricing.decorU` 0 → 0,5 (trang trí là cộng thưởng vĩnh viễn nên đắt hơn đề xuất 0,2).
 - Bot mô phỏng mua và đặt Đèn Lồng / Pha Lê vào khe trống khi có gấp 3 giá.

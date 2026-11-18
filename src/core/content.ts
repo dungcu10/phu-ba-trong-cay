@@ -538,6 +538,35 @@ export interface FishingRules {
   biteSeconds: [number, number];
   book: Array<{ points: number; gems?: number; items?: Record<string, number> }>;
 }
+/** Chỉ thị 11 TỔNG § D: the village — 8 houses, Cấp Làng, Huy Chương Độ Cao, 7-day check-in. */
+export type HouseEffect = 'missionsPerDay' | 'orderSlots' | 'rareShare' | 'potDiscount' | 'perches' | 'rentDiscount' | 'stallSlots' | 'errandsPerDay' | 'workshopQueue' | 'energyMax';
+export interface Reward {
+  coins?: number;
+  gems?: number;
+  items?: Record<string, number>;
+}
+export interface HouseDef {
+  id: string;
+  name: LocalizedText;
+  art: string;
+  plot: number;
+  unlockLevel: number;
+  feature: string;
+  /** costs[k] takes the house from level k+1 to k+2. */
+  costs: Array<{ coins: number; coinsU: number; items: Record<string, number> }>;
+  /** Added per level above 1. */
+  effects: Partial<Record<HouseEffect, number>>;
+}
+export interface VillageRules {
+  upgradeFromLevel: number;
+  minutes: number[];
+  buildSlots: number;
+  houses: HouseDef[];
+  villageLevels: Array<{ level: number; upgradeTime?: number; buildSlots?: number; helpPerDay?: number; orderXp?: number; title?: LocalizedText }>;
+  medals: Array<{ floor: number; zone: string; name: LocalizedText; icon: string; potRarity?: string } & Reward>;
+  checkIn: Reward[];
+}
+
 /** Chỉ thị 10 § 3.11: Xu Xu, the mascot. */
 export interface XuxuRules {
   rewardMinutes: number;
@@ -674,6 +703,7 @@ export interface ContentPack {
   fish: Map<string, FishDef>;
   decor?: DecorRules;
   xuxu?: XuxuRules;
+  village?: VillageRules;
   missions: MissionsConfig;
   materials: Map<string, MaterialDef>;
   events: EventDef[];
@@ -713,6 +743,7 @@ export interface RawContent {
   fishing?: unknown;
   decor?: unknown;
   xuxu?: unknown;
+  village?: unknown;
 }
 
 export class ContentError extends Error {
@@ -728,7 +759,7 @@ type ReadJson = (relativePath: string) => Promise<unknown>;
 export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> {
   const manifest = (await readJson('manifest.json')) as {
     contentVersion: number;
-    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions' | 'materials' | 'events' | 'quests' | 'features' | 'tutorials', string> & Partial<Record<'birds' | 'workshop' | 'cropExtras' | 'casting' | 'market' | 'sea' | 'potStars' | 'fishing' | 'decor' | 'xuxu', string>>;
+    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions' | 'materials' | 'events' | 'quests' | 'features' | 'tutorials', string> & Partial<Record<'birds' | 'workshop' | 'cropExtras' | 'casting' | 'market' | 'sea' | 'potStars' | 'fishing' | 'decor' | 'xuxu' | 'village', string>>;
   };
   const raw: RawContent = {
     contentVersion: manifest.contentVersion,
@@ -757,6 +788,7 @@ export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> 
     fishing: manifest.files.fishing ? await readJson(manifest.files.fishing) : undefined,
     decor: manifest.files.decor ? await readJson(manifest.files.decor) : undefined,
     xuxu: manifest.files.xuxu ? await readJson(manifest.files.xuxu) : undefined,
+    village: manifest.files.village ? await readJson(manifest.files.village) : undefined,
   };
   return buildContentPack(raw);
 }
@@ -1146,6 +1178,23 @@ export function buildContentPack(raw: RawContent): ContentPack {
     for (const id of Object.keys(xuxu.reward?.items ?? {})) if (!items.has(id)) problems.push(`xuxu.reward: món "${id}" không tồn tại`);
   }
 
+  let village: VillageRules | undefined;
+  if (isObj(raw.village)) {
+    village = raw.village as unknown as VillageRules;
+    const v = village;
+    if (!Array.isArray(v.minutes) || v.minutes.length !== 4 || !(v.buildSlots >= 1)) problems.push('village: minutes cần 4 mốc (cấp 2–5), buildSlots ≥ 1');
+    const ids = new Set<string>();
+    for (const hd of v.houses ?? []) {
+      if (ids.has(hd.id)) problems.push(`village: nhà "${hd.id}" trùng`);
+      ids.add(hd.id);
+      if (!Array.isArray(hd.costs) || hd.costs.length !== 4) problems.push(`village.${hd.id}: costs cần 4 mốc`);
+      for (const c of hd.costs ?? []) for (const id of Object.keys(c.items ?? {})) if (!items.has(id)) problems.push(`village.${hd.id}: món "${id}" không tồn tại`);
+    }
+    for (const m of v.medals ?? []) for (const id of Object.keys(m.items ?? {})) if (!items.has(id)) problems.push(`village.medals: món "${id}" không tồn tại`);
+    for (const r of v.checkIn ?? []) for (const id of Object.keys(r.items ?? {})) if (!items.has(id)) problems.push(`village.checkIn: món "${id}" không tồn tại`);
+    if ((v.checkIn ?? []).length !== 7) problems.push('village.checkIn: cần 7 ngày');
+  }
+
   let market: MarketRules | undefined;
   if (isObj(raw.market)) {
     market = raw.market as unknown as MarketRules;
@@ -1229,6 +1278,7 @@ export function buildContentPack(raw: RawContent): ContentPack {
     fish,
     decor,
     xuxu,
+    village,
     potSets,
     missions,
     materials,

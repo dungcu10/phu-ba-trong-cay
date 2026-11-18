@@ -25,6 +25,7 @@ import { combineShards, obtainPot as obtainPotFrom, starUpPot } from '../systems
 import { castLine, claimFishBook, claimFreeBait, craftBait, exchangeFish, reelFish } from '../systems/fishing.ts';
 import { buyDecor, placeDecor } from '../systems/decor.ts';
 import { tapXuxu } from '../systems/xuxu.ts';
+import { awardMedals, claimCheckIn, houseBonus, potBuyPrice, settleBuildings, upgradeHouse } from '../systems/village.ts';
 import { allMissionsClaimed, ensureMissions, localDay, missionDef, recordMissions } from '../systems/missions.ts';
 import { ensureQuestPeriods, questActive, questClaims, questReward, questView, recordQuests } from '../systems/quests.ts';
 import { botGarden, helpReward, helpsLeft, helpToday, type HelpKind } from '../systems/visit.ts';
@@ -96,6 +97,8 @@ export type Command =
   | { type: 'blowCloud'; cell: number }
   | { type: 'quickSell' }
   | { type: 'tapXuxu' }
+  | { type: 'upgradeHouse'; house: string }
+  | { type: 'claimCheckIn' }
   | { type: 'starUpPot'; potInstanceId: string }
   | { type: 'combineShards'; potId: string }
   | { type: 'claimFreeBait' }
@@ -126,6 +129,10 @@ export type GameEvent =
   | { type: 'potCast'; potInstanceId: string; potId: string; perfect: boolean }
   | { type: 'bazaarRerolled'; coins: number; best: BazaarSlot['rarity']; sure: BazaarSlot['rarity'] | null }
   | { type: 'bazaarRefreshed' }
+  | { type: 'houseUpgradeStarted'; house: string; level: number; endsAt: number; coins: number }
+  | { type: 'houseUpgraded'; house: string; level: number }
+  | { type: 'medalAwarded'; floor: number; potInstanceId?: string }
+  | { type: 'checkedIn'; day: number; coins: number; gems: number; items: Record<string, number> }
   | { type: 'xuxuTapped'; line: string; gift: { coins: number; items: Record<string, number> } | null }
   | { type: 'baitGot'; itemId: string; qty: number; free: boolean }
   | { type: 'lineCast'; fishId: string; bait: string }
@@ -215,6 +222,10 @@ export type ErrorCode =
   | 'pot_max_stars'
   | 'no_bait'
   | 'casts_used'
+  | 'unknown_house'
+  | 'house_max_level'
+  | 'busy'
+  | 'no_build_slot'
   | 'line_busy'
   | 'nothing_hooked'
   | 'bad_option'
@@ -257,6 +268,8 @@ export function updateWorld(content: ContentPack, state: GameState, now: number)
   snapshotRanks(content, state, localDay(content, now));
   if (ensureBazaar(content, state, now)) events.push({ type: 'bazaarRefreshed' });
   settleEnergy(content, state, now);
+  for (const d of settleBuildings(content, state, now)) events.push({ type: 'houseUpgraded', ...d });
+  for (const m of awardMedals(content, state, now)) events.push({ type: 'medalAwarded', ...m });
   events.push(...simulateNeighbors(content, state, now));
   return events;
 }
@@ -361,6 +374,14 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
       return harvest(content, state, cmd, now);
     case 'sell':
       return sell(content, state, cmd.itemId, cmd.qty, now);
+    case 'upgradeHouse': {
+      const r = upgradeHouse(content, state, cmd.house, now);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'houseUpgradeStarted', house: cmd.house, ...r }] };
+    }
+    case 'claimCheckIn': {
+      const r = claimCheckIn(content, state, now);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'checkedIn', day: r.day, coins: r.reward.coins ?? 0, gems: r.reward.gems ?? 0, items: r.reward.items ?? {} }] };
+    }
     case 'tapXuxu': {
       const r = tapXuxu(content, state, now);
       return { ok: true, events: [{ type: 'xuxuTapped', ...r }] };
@@ -836,10 +857,11 @@ function buyPot(content: ContentPack, state: GameState, potId: string): Result {
   if (!def) return fail('unknown_pot');
   if (!isSoldInShop(def)) return fail('not_for_sale');
   if (def.unlockLevel > state.player.level) return fail('locked');
-  if (state.player.coins < def.price) return fail('not_enough_coins');
-  state.player.coins -= def.price;
+  const price = potBuyPrice(content, state, def.price);
+  if (state.player.coins < price) return fail('not_enough_coins');
+  state.player.coins -= price;
   const potInstanceId = grantPot(state, potId, 'shop', state.maxSeenAt);
-  return { ok: true, events: [{ type: 'potBought', potInstanceId, potId, cost: def.price }] };
+  return { ok: true, events: [{ type: 'potBought', potInstanceId, potId, cost: price }] };
 }
 
 /** Puts a pot from stock on a slot; the pot that was there goes back to stock. */
@@ -934,7 +956,7 @@ function listItem(content: ContentPack, state: GameState, itemId: string, qty: n
   if (!Number.isInteger(qty) || qty <= 0 || qty > cfg.maxListingQty) return fail('bad_quantity');
   if (!Number.isInteger(price) || price < Math.max(1, Math.floor(item.sellPrice * cfg.priceRange[0])) || price > Math.ceil(item.sellPrice * cfg.priceRange[1])) return fail('bad_price');
   if ((state.inventory[itemId] ?? 0) < qty) return fail('not_enough_items');
-  if (state.stall.length >= cfg.stallSlots) return fail('stall_full');
+  if (state.stall.length >= cfg.stallSlots + houseBonus(content, state, 'market', 'stallSlots')) return fail('stall_full');
   removeItem(state, itemId, qty);
   const listingId = state.nextId++;
   state.stall.push({ id: listingId, itemId, qty, price });

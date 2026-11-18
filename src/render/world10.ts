@@ -54,7 +54,7 @@ export function hasWorld10(art: Art): boolean {
 
 /** Loads the always-needed world atlases (vine, rings, pedestals, characters). */
 export async function loadWorld10(art: Art): Promise<boolean> {
-  const names = ['vine', 'vine_ends', 'rings', 'pedestals', 'chars', 'icons'];
+  const names = ['vine', 'vine_ends', 'rings', 'pedestals', 'chars', 'icons', 'houses', 'pets', 'village'];
   const list = names.map(atlas);
   if (list.some((a) => !a)) return false;
   await Promise.all(list.map((a) => art.addAtlas(a!.url, a!.data)));

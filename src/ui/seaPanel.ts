@@ -9,7 +9,7 @@
 import type { GameSession } from '../app/session.ts';
 import type { GameEvent } from '../core/game.ts';
 import { randomFor } from '../core/rng.ts';
-import { ensureSeaMap, nextEnergyAt, seaCells, seaRules, settleEnergy } from '../systems/sea.ts';
+import { energyMax, ensureSeaMap, nextEnergyAt, seaCells, seaRules, settleEnergy } from '../systems/sea.ts';
 import cloudData from '../../assets/art/sea_clouds.json';
 import cloudUrl from '../../assets/art/sea_clouds.webp?url';
 import { itemIcon } from './icons.ts';
@@ -72,8 +72,9 @@ export class SeaPanel extends Panel {
     const view = { ...state, energy: { ...state.energy } };
     settleEnergy(content, view, this.session.now());
     const e = view.energy;
-    this.energyText.textContent = `${e.value}/${r.energy.max}`;
-    this.energyFill.style.width = `${Math.min(100, (100 * e.value) / r.energy.max)}%`;
+    const max = energyMax(content, state);
+    this.energyText.textContent = `${e.value}/${max}`;
+    this.energyFill.style.width = `${Math.min(100, (100 * e.value) / max)}%`;
     const next = nextEnergyAt(content, view);
     this.energyNext.textContent = next === null ? 'Gió đầy' : `+1 sau ${formatClock(next - this.session.now())}`;
   }

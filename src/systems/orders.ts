@@ -15,6 +15,7 @@ import { addItem, addXp } from './economy.ts';
 import { machineOrderBonus } from './workshop.ts';
 import { localDay } from './missions.ts';
 import { hotCrop } from './cropExtras.ts';
+import { houseBonus } from './village.ts';
 
 const HOUR = 3_600_000;
 
@@ -63,7 +64,7 @@ export function generateOrder(content: ContentPack, state: GameState): Order {
     items[crop.produce.id] = qty;
     value += qty * crop.sellPrice;
   }
-  const rare = level >= 3 && r('rare') < cfg.rareChance;
+  const rare = level >= 3 && r('rare') < cfg.rareChance + houseBonus(content, state, 'balloon', 'rareShare');
   const [lo, hi] = cfg.rewardMultiplier;
   const mult = (lo + (hi - lo) * r('mult')) * (rare ? cfg.rareMultiplier : 1);
   const bots = [...content.bots.keys()];
@@ -97,7 +98,7 @@ export type OrderWorldEvent =
  * carry (then bring a new order), rare orders past their time leave. Returns the slots that got an order.
  */
 export function refillOrders(content: ContentPack, state: GameState, now: number, events: OrderWorldEvent[] = []): number[] {
-  const want = orderSlotsFor(content, state.player.level);
+  const want = orderSlotsFor(content, state.player.level) + houseBonus(content, state, 'balloon', 'orderSlots');
   while (state.orders.slots.length < want) state.orders.slots.push({ order: null, readyAt: now });
   const filled: number[] = [];
   state.orders.slots.forEach((slot, i) => {

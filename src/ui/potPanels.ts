@@ -9,6 +9,7 @@ import { atlasData, potFrame } from '../render/assets.ts';
 import { clear, h, icon } from './dom.ts';
 import { Panel } from './panel.ts';
 import { FAMILY_TEXT, formatNumber, formatPercent, RARITY_MARKS, RARITY_TEXT, STAT_TEXT } from './text.ts';
+import { potBuyPrice } from '../systems/village.ts';
 
 export interface PotShopActions {
   buyPot(potId: string): void;
@@ -79,7 +80,8 @@ export class PotShopPanel extends Panel {
     for (const def of sold) {
       if ((def.theme ?? BASIC_THEME) !== this.theme) continue;
       const locked = def.unlockLevel > state.player.level;
-      const poor = def.price > state.player.coins;
+      const price = potBuyPrice(content, state, def.price);
+      const poor = price > state.player.coins;
       shelf.append(
         h(
           'button',
@@ -96,7 +98,7 @@ export class PotShopPanel extends Panel {
           rarityChip(def.rarity),
           statLines(def.levels[0]!),
           h('span', { class: 'pack-info' }, `${def.openTo < def.levels.length ? `Mở tới cấp ${def.openTo}/${def.levels.length}` : `Tối đa cấp ${def.levels.length}`} · đang có ${owned(def.id)}`),
-          h('span', { class: 'tag' }, coin(), formatNumber(def.price)),
+          h('span', { class: 'tag' }, coin(), formatNumber(price)),
           locked && h('span', { class: 'cloth' }, `Mở ở cấp ${def.unlockLevel}`),
         ),
       );

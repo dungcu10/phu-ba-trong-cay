@@ -2,7 +2,7 @@
 // plus the bird shop (rent with coins, buy with in-game gems). Reads state, sends commands only.
 
 import type { GameSession } from '../app/session.ts';
-import { foodAt, perchesPerFloor, rentEndsSoon } from '../systems/birds.ts';
+import { foodAt, perchesPerFloor, rentEndsSoon, rentPrice } from '../systems/birds.ts';
 import { isNight } from '../systems/growth.ts';
 import { localDay } from '../systems/missions.ts';
 import { itemIcon } from './icons.ts';
@@ -11,6 +11,7 @@ import { Panel } from './panel.ts';
 import { shake } from './potPanels.ts';
 import { FAMILY_TEXT, formatDuration, formatNumber } from './text.ts';
 import { coin, gem } from './worldPanels.ts';
+import { houseBonus } from '../systems/village.ts';
 
 export interface BirdActions {
   obtainBird(species: string, how: 'rent' | 'buy'): void;
@@ -52,7 +53,7 @@ export class BirdsPanel extends Panel {
 
     const mine = h('div', { class: 'bird-list' });
     const day = localDay(content, now);
-    const perches = perchesPerFloor(content, state.player.level);
+    const perches = perchesPerFloor(content, state.player.level) + houseBonus(content, state, 'birds', 'perches');
     for (const b of state.birds) {
       const def = content.birds.get(b.species);
       if (!def) continue;
@@ -113,9 +114,9 @@ export class BirdsPanel extends Panel {
         def.rent &&
         h(
           'button',
-          { class: `candy ${open && state.player.coins >= def.rent.coins ? 'primary' : 'blocked'} small`, 'data-test': `rent-${slug(def.id)}`, onclick: (e: Event) => (open ? this.actions.obtainBird(def.id, 'rent') : shake(e.currentTarget as HTMLElement)) },
+          { class: `candy ${open && state.player.coins >= rentPrice(content, state, def.rent.coins) ? 'primary' : 'blocked'} small`, 'data-test': `rent-${slug(def.id)}`, onclick: (e: Event) => (open ? this.actions.obtainBird(def.id, 'rent') : shake(e.currentTarget as HTMLElement)) },
           coin(16),
-          `${formatNumber(def.rent.coins)} · Thuê ${def.rent.days} ngày`,
+          `${formatNumber(rentPrice(content, state, def.rent.coins))} · Thuê ${def.rent.days} ngày`,
         );
       const buyBtn = h(
         'button',

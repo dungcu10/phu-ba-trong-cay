@@ -15,6 +15,7 @@ import { h, icon } from './dom.ts';
 import { nextHint } from './hint.ts';
 import { formatNumber, formatTimeLeft } from './text.ts';
 import { xuxuGiftReady } from '../systems/xuxu.ts';
+import { houseAlerts } from '../systems/villageAlerts.ts';
 import { isNight } from '../systems/growth.ts';
 
 export interface HudActions {
@@ -30,6 +31,7 @@ export interface HudActions {
   openWorkshop(): void;
   openSea(): void;
   tapXuxu(): void;
+  openVillage(): void;
   openLetters(): void;
   openMissions(): void;
   openEvent(): void;
@@ -90,6 +92,9 @@ export class Hud {
     );
     const letters = h('button', { class: 'knob icon-knob', 'aria-label': 'Thư Mây', 'data-test': 'open-letters', onclick: () => actions.openLetters() }, lineIcon('letter', 22), this.letterBadge);
     const gear = h('button', { class: 'knob icon-knob', 'aria-label': 'Cài đặt', onclick: () => actions.openSettings() }, lineIcon('gear', 22));
+    // Chỉ thị 11: the village (houses, Cấp Làng, check-in); a mark when a house has something waiting.
+    this.villageBadge = h('span', { class: 'badge hidden' }, '!');
+    const village = h('button', { class: 'knob icon-knob', 'aria-label': 'Làng Phú Bà', 'data-test': 'open-village', onclick: () => actions.openVillage() }, lineIcon('house', 22), this.villageBadge);
     const seeds = (this.seeds = h(
       'button',
       { class: 'round-big seeds', 'aria-label': 'Hạt giống', 'data-test': 'open-seeds', onclick: () => actions.toggleTray() },
@@ -141,7 +146,7 @@ export class Hud {
       { class: 'hud' },
       h('div', { class: 'hud-right' }, this.eventBtn),
       h('div', { class: 'xuxu-wrap' }, this.xuxuBubble, this.xuxuBtn),
-      h('div', { class: 'hud-top' }, levelBox, h('div', { class: 'pouches' }, this.pouch, this.gemPouch), letters, gear),
+      h('div', { class: 'hud-top' }, levelBox, h('div', { class: 'pouches' }, this.pouch, this.gemPouch), village, letters, gear),
       this.hint,
       services,
       h('div', { class: 'hud-arc' }, this.storageButton, seeds, shop),
@@ -152,6 +157,7 @@ export class Hud {
 
   private trackedTrack: string | undefined;
   private readonly xuxuPic: HTMLElement;
+  private readonly villageBadge: HTMLElement;
   private readonly xuxuBubble: HTMLElement;
   private readonly xuxuGift: HTMLElement;
   private readonly xuxuBtn: HTMLElement;
@@ -199,6 +205,7 @@ export class Hud {
     // Xu Xu sleeps at night, waves by day; a gift mark when the hourly gift is ready.
     if (Date.now() > this.poseUntil) this.setXuxuPose(isNight(content, this.session.now()) ? 'sleep' : 'wave');
     this.xuxuGift.classList.toggle('hidden', !xuxuGiftReady(content, state, this.session.now()));
+    this.villageBadge.classList.toggle('hidden', houseAlerts(content, state, this.session.now()).length === 0);
     const need = xpToNextLevel(content, p.level);
     this.level.textContent = String(p.level);
     this.vineFill.style.width = `${Math.min(100, (p.xp / need) * 100)}%`;

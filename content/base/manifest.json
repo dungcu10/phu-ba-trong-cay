@@ -26,6 +26,7 @@
     "potStars": "pot-stars.json",
     "fishing": "fishing.json",
     "decor": "decor.json",
-    "xuxu": "xuxu.json"
+    "xuxu": "xuxu.json",
+    "village": "village.json"
   }
 }
