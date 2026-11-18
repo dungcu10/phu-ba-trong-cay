@@ -786,6 +786,9 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
       case 'petReplanted':
         this.view.petGoTo(e.slot.floor, e.species, e.slot.slot);
         break;
+      case 'sparrowGift':
+        this.toasts.show(`Sẻ Mầm mang về ${e.bags > 1 ? `${e.bags} túi quà` : 'túi quà'}: ${formatNumber(e.coins)} xu`, 'success', 2400);
+        break;
       case 'blessed':
         this.toasts.show(`Rồng Ban Lộc: lần thu hoạch này được nhân đôi (${e.qty})!`, 'level', 2400);
         break;

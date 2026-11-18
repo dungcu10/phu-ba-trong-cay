@@ -5,7 +5,7 @@
 // never goes down, pets never leave or die. Garden work uses the player's own commands (catchBug,
 // harvest, plant) through callbacks, worked out in time order up to now so it is exact offline.
 
-import type { ContentPack, PetSkillDef, PetSpeciesDef } from '../core/content.ts';
+import type { ContentPack, PetComboDef, PetComboEffect, PetSkillDef, PetSpeciesDef } from '../core/content.ts';
 import type { GameState, PetState } from '../core/state.ts';
 import { addItem, removeItem } from './economy.ts';
 import { localDay } from './missions.ts';
@@ -326,11 +326,53 @@ export function advancePets(content: ContentPack, state: GameState, now: number,
   return events;
 }
 
-/** Rồng Mưa Ngọc: cooldown in hours at the dragon's stars (8 → 4). */
-export function jadeRainCooldownMs(content: ContentPack, p: PetState): number {
+/** Rồng Mưa Ngọc: cooldown in hours at the dragon's stars (8 → 4), shorter with Lửa và Nước. */
+export function jadeRainCooldownMs(content: ContentPack, p: PetState, state?: GameState, at?: number): number {
   const sk = speciesDef(content, p.species)?.skills.find((s) => s.id === 'jadeRain');
   const [lo, hi] = sk?.cooldownHours ?? [8, 4];
-  return (lo + ((hi - lo) * (p.stars - 1)) / 4) * HOUR;
+  const combo = state && at !== undefined ? comboValue(content, state, 'jadeCooldown', at) : 0;
+  return (lo + ((hi - lo) * (p.stars - 1)) / 4) * HOUR * (1 - combo);
+}
+
+// --- combos (§ E4) -------------------------------------------------------------------------------
+
+/** Combos working now: both pets walked and working (and on one floor when `sameFloor`), from player level 14. */
+export function activeCombos(content: ContentPack, state: GameState, at: number): Array<{ def: PetComboDef; floor: number | null }> {
+  const c = content.pets?.combos;
+  if (!c || state.player.level < c.unlockLevel) return [];
+  const out: Array<{ def: PetComboDef; floor: number | null }> = [];
+  for (const def of c.list) {
+    const [a, b] = def.pets.map((id) => petOf(state, id));
+    if (!a || !b || !petWorking(content, a, at) || !petWorking(content, b, at)) continue;
+    if (def.sameFloor && a.floor !== b.floor) continue;
+    out.push({ def, floor: def.sameFloor ? a.floor : null });
+  }
+  return out;
+}
+
+/** Sum of a combo effect now (for floor effects, give the floor). */
+export function comboValue(content: ContentPack, state: GameState, effect: PetComboEffect, at: number, floor?: number): number {
+  return activeCombos(content, state, at)
+    .filter((c) => c.def.effect === effect && (c.floor === null || floor === undefined || c.floor === floor))
+    .reduce((a, c) => a + c.def.value, 0);
+}
+
+/** Sẻ's daily bag (§ E1 Nhặt Hạt): once a day while the sparrow works; Vườn Nhà makes it 2 bags. */
+export function sparrowDailyGift(content: ContentPack, state: GameState, at: number): { bags: number; coins: number; items: Record<string, number> } | null {
+  const g = content.pets?.sparrowGift;
+  const sk = activeSkill(content, state, 'pickSeeds', at);
+  if (!g || !sk) return null;
+  const day = localDay(content, at);
+  if (sk.pet.skillAt.giftDay === day) return null;
+  sk.pet.skillAt.giftDay = day;
+  const bags = Math.max(1, comboValue(content, state, 'giftBags', at) || 1);
+  const coins = Math.round(g.coinsU * content.income.unit(state.player.level) * bags);
+  const items: Record<string, number> = {};
+  for (const [id, q] of Object.entries(g.items)) items[id] = q * bags;
+  state.player.coins += coins;
+  state.stats.coinsEarned += coins;
+  for (const [id, q] of Object.entries(items)) addItem(state, id, q);
+  return { bags, coins, items };
 }
 
 export function jadeRainReadyAt(content: ContentPack, state: GameState): number | null {

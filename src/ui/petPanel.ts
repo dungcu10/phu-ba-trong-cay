@@ -6,7 +6,7 @@
 import type { GameSession } from '../app/session.ts';
 import type { PetSkillDef, PetSpeciesDef } from '../core/content.ts';
 import type { PetState } from '../core/state.ts';
-import { dailyLeft, foodAt, foodKind, nextPetStar, petOf, petWorking, replantOn, skillOpen, skillValue, walkSlots, xpToNext } from '../systems/pets.ts';
+import { activeCombos, dailyLeft, foodAt, foodKind, nextPetStar, petOf, petWorking, replantOn, skillOpen, skillValue, walkSlots, xpToNext } from '../systems/pets.ts';
 import { itemIcon } from './icons.ts';
 import { clear, h, icon } from './dom.ts';
 import { Panel } from './panel.ts';
@@ -79,6 +79,28 @@ export class PetPanel extends Panel {
     const p = petOf(state, sp.id);
     this.body.append(p ? this.owned(sp, p, now) : this.shop(sp));
     if (state.pets.length > 0) this.body.append(this.errands(now));
+    if (content.pets?.combos && state.pets.length > 1) this.body.append(this.combos(now));
+  }
+
+  /** § E4: pairs that help each other when both are walked (from player level 14). */
+  private combos(now: number): HTMLElement {
+    const { content, state } = this.session;
+    const c = content.pets!.combos!;
+    const on = new Set(activeCombos(content, state, now).map((x) => x.def.id));
+    const box = h('section', { class: 'card combo-card' }, h('h3', {}, 'Kết hợp thú cưng'));
+    if (state.player.level < c.unlockLevel) {
+      box.append(h('p', { class: 'note' }, `🔒 Mở ở cấp ${c.unlockLevel}. Dắt cùng lúc hai bé hợp nhau để có thêm thưởng.`));
+      return box;
+    }
+    box.append(h('p', { class: 'note' }, 'Dắt cùng lúc hai bé (cả hai còn no, đang ở nhà) để có thêm thưởng.'));
+    const list = h('div', { class: 'combo-list' });
+    for (const def of c.list) {
+      const pics = def.pets.map((id) => content.pets!.species.find((s) => s.id === id)).filter((x): x is NonNullable<typeof x> => !!x).map((sp) => icon(`${sp.art}/${sp.poses[on.has(def.id) ? 'happy' : 'stand']}`, 40));
+      const have = def.pets.every((id) => petOf(state, id));
+      list.append(h('div', { class: `combo${on.has(def.id) ? ' on' : ''}`, 'data-test': `combo-${def.id}` }, h('span', { class: 'combo-pics' }, ...pics), h('strong', {}, def.name.vi), h('span', { class: 'note' }, def.desc.vi + (def.sameFloor ? ' (cùng trông một tầng)' : '')), h('span', { class: 'tag' }, on.has(def.id) ? 'Đang có tác dụng' : have ? 'Chưa dắt đủ' : 'Chưa có đủ bé')));
+    }
+    box.append(list);
+    return box;
   }
 
   /** § E3: today's errands. The chosen pet is the one sent. */

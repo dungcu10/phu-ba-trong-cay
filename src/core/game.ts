@@ -6,7 +6,7 @@ import { floorAtIndex } from './floorgen.ts';
 import type { BazaarSlot, GameState, SlotState } from './state.ts';
 import { adjustedOffset, gameTime } from './clock.ts';
 import { stochasticRound } from './rng.ts';
-import { cropStatus } from '../systems/growth.ts';
+import { cropStatus, cycleDurationMs } from '../systems/growth.ts';
 import { addItem, addXp, removeItem, sellPrice, storageCapacity, storageFree, storageUpgradeCost } from '../systems/economy.ts';
 import { canAfford, doubleYieldChance, grantPot, isMilestone, mutationMultiplier, nextUpgradeCost, noteInBook, upgradeBlock } from '../systems/pots.ts';
 import { randomFor } from './rng.ts';
@@ -26,7 +26,7 @@ import { castLine, claimFishBook, claimFreeBait, craftBait, exchangeFish, reelFi
 import { buyDecor, placeDecor } from '../systems/decor.ts';
 import { tapXuxu } from '../systems/xuxu.ts';
 import { claimErrand, ensureErrands, rerollErrand, sendErrand, type ErrandReward } from '../systems/pets.ts';
-import { activeSkill, advancePets, dailyLeft, feedPet, giftKitten, guardFloor, jadeRainCooldownMs, obtainPet, patPet, petOf, replantOn, starUpPet, walkPet } from '../systems/pets.ts';
+import { activeSkill, advancePets, comboValue, dailyLeft, sparrowDailyGift, feedPet, giftKitten, guardFloor, jadeRainCooldownMs, obtainPet, patPet, petOf, replantOn, starUpPet, walkPet } from '../systems/pets.ts';
 import { awardMedals, claimCheckIn, houseBonus, potBuyPrice, settleBuildings, upgradeHouse } from '../systems/village.ts';
 import { allMissionsClaimed, ensureMissions, localDay, missionDef, recordMissions } from '../systems/missions.ts';
 import { ensureQuestPeriods, questActive, questClaims, questReward, questView, recordQuests } from '../systems/quests.ts';
@@ -157,6 +157,7 @@ export type GameEvent =
   | { type: 'petReplanted'; species: string; slot: SlotRef; cropId: string }
   | { type: 'blessed'; slot: SlotRef; qty: number }
   | { type: 'replantToggled'; on: boolean }
+  | { type: 'sparrowGift'; bags: number; coins: number; items: Record<string, number> }
   | { type: 'seedRefunded'; slot: SlotRef; coins: number }
   | { type: 'houseUpgradeStarted'; house: string; level: number; endsAt: number; coins: number }
   | { type: 'houseUpgraded'; house: string; level: number }
@@ -355,6 +356,8 @@ function runPets(content: ContentPack, state: GameState, now: number): GameEvent
     const caught = r.events.find((e) => e.type === 'bugCaught');
     return { ok: true, itemId: caught?.type === 'bugCaught' ? caught.itemId : undefined };
   });
+  const gift = sparrowDailyGift(content, state, now);
+  if (gift) extra.push({ type: 'sparrowGift', ...gift });
   return [...(out as GameEvent[]), ...extra, ...runHarvestHelp(content, state, now)];
 }
 
@@ -803,9 +806,18 @@ function plant(content: ContentPack, state: GameState, ref: SlotRef, cropId: str
     caughtBugs: {},
     bugLevel: state.player.level,
   };
+  seasonHead(content, state, slot, ref.floor, now);
   const events: GameEvent[] = [{ type: 'planted', slot: ref, cropId, cost: crop.seedPrice }];
   if (refunded) events.push({ type: 'seedRefunded', slot: ref, coins: crop.seedPrice });
   return { ok: true, events };
+}
+
+/** Mùa Màng (§ E4): on a floor that Sẻ and Rồng look after together, a new cycle starts with 8% of its
+ *  growing time already done (kept in the planting, so it never changes afterwards). */
+function seasonHead(content: ContentPack, state: GameState, slot: SlotState, floor: number, now: number): void {
+  const g = comboValue(content, state, 'growth', now, floor);
+  if (g <= 0 || !slot.planting) return;
+  slot.planting.bonusMs += cycleDurationMs(content, state, slot, slot.planting) * g;
 }
 
 function water(content: ContentPack, state: GameState, ref: SlotRef, now: number): Result {
@@ -844,7 +856,7 @@ function jadeRain(content: ContentPack, state: GameState, now: number): Result {
     savedMs += cut;
     pots += 1;
   });
-  sk.pet.skillAt.jadeRain = now + jadeRainCooldownMs(content, sk.pet);
+  sk.pet.skillAt.jadeRain = now + jadeRainCooldownMs(content, sk.pet, state, now);
   return { ok: true, events: [{ type: 'jadeRained', floor: sk.pet.floor, pots, savedMs }] };
 }
 
@@ -936,6 +948,7 @@ function harvest(content: ContentPack, state: GameState, ref: SlotRef, now: numb
     planting.bonusMs = 0;
     planting.wateredStages = [];
     planting.caughtBugs = {};
+    seasonHead(content, state, slot, ref.floor, now);
   }
   events.push({ type: 'harvested', slot: ref, itemId, qty, xp, cleared, mutation, doubled, ...(xpScale < 1 ? { helper: true } : {}) });
   if (blessed) events.push({ type: 'blessed', slot: ref, qty });

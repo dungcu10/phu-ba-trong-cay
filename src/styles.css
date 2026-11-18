@@ -949,3 +949,9 @@ html, body {
 @media (max-width:1000px){.errand{grid-template-columns:1fr 1fr}}
 .sea-sniff{position:relative;z-index:3;pointer-events:none;display:flex;align-items:flex-end;justify-content:flex-end;border:3px dashed rgba(255,190,90,.9);border-radius:14px;box-shadow:0 0 14px rgba(255,170,60,.6) inset}
 .sea-sniff img,.sea-sniff .icon{filter:drop-shadow(0 2px 3px rgba(0,0,0,.4))}
+.combo-card{margin-top:12px}
+.combo-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.combo{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto auto;column-gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:rgba(255,255,255,.05);opacity:.75}
+.combo.on{opacity:1;box-shadow:0 0 0 2px rgba(255,210,110,.7) inset}
+.combo-pics{grid-row:1 / span 3;display:flex}
+.combo .tag{justify-self:start}

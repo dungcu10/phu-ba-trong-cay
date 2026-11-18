@@ -12,7 +12,7 @@ import type { BotListing, BotState, GameState } from '../core/state.ts';
 import { randomFor } from '../core/rng.ts';
 import { removeItem, xpToNextLevel } from './economy.ts';
 import { advanceBotBirds, botCatchBugs, botKeepBirds } from './botBirds.ts';
-import { activeSkill, dailyLeft } from './pets.ts';
+import { activeSkill, comboValue, dailyLeft } from './pets.ts';
 
 export type NeighborEvent =
   | { type: 'stallSold'; botId: string; itemId: string; qty: number; coins: number; vip?: boolean }
@@ -88,7 +88,7 @@ function session(content: ContentPack, state: GameState, bot: BotDef, s: BotStat
         // Chỉ thị 11 § E1: Mèo Khách Quý — once a day one neighbour pays (20 → 40)% more.
         const vip = activeSkill(content, state, 'vipCustomer', at);
         const isVip = !!vip && dailyLeft(content, vip.pet, 'vip', 1, at, true) > 0;
-        const coins = Math.round(b.qty * l.price * (isVip ? 1 + vip!.value : 1));
+        const coins = Math.round(b.qty * l.price * (isVip ? 1 + vip!.value + comboValue(content, state, 'vipBonus', at) : 1));
         s.coins -= coins;
         s.gardenValue += Math.round(coins * 0.5);
         state.player.coins += coins;

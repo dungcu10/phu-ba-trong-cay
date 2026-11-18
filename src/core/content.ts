@@ -572,7 +572,20 @@ export interface PetRules {
   xp: { perFeed: number; perSkill: number; perPat: number };
   stars: Array<{ minLevel: number; badges: number; bugRarity: string; bugs: number; coins: number }>;
   errands?: ErrandRules;
+  combos?: { unlockLevel: number; list: PetComboDef[] };
+  sparrowGift?: { coinsU: number; items: Record<string, number> };
   species: PetSpeciesDef[];
+}
+export type PetComboEffect = 'vipBonus' | 'growth' | 'jadeCooldown' | 'giftBags';
+export interface PetComboDef {
+  id: string;
+  name: LocalizedText;
+  pets: [string, string];
+  effect: PetComboEffect;
+  value: number;
+  /** Both pets must look after the same floor (the effect is on that floor). */
+  sameFloor?: boolean;
+  desc: LocalizedText;
 }
 export interface ErrandDef {
   id: string;
@@ -1267,6 +1280,11 @@ export function buildContentPack(raw: RawContent): ContentPack {
       for (const id of sp.likes?.items ?? []) if (!items.has(id)) problems.push(`pets.${sp.id}: món thích "${id}" không tồn tại`);
       if (sp.price.shards && !items.has(sp.price.shards.item)) problems.push(`pets.${sp.id}: mảnh "${sp.price.shards.item}" không tồn tại`);
     }
+    for (const c of pets.combos?.list ?? []) {
+      if (!['vipBonus', 'growth', 'jadeCooldown', 'giftBags'].includes(c.effect) || !isNum(c.value)) problems.push(`pets.combos.${c.id}: effect/value không hợp lệ`);
+      for (const sp of c.pets ?? []) if (!pets.species?.some((x) => x.id === sp)) problems.push(`pets.combos.${c.id}: thú cưng "${sp}" không tồn tại`);
+    }
+    for (const id of Object.keys(pets.sparrowGift?.items ?? {})) if (!items.has(id)) problems.push(`pets.sparrowGift: món "${id}" không tồn tại`);
     for (const e of pets.errands?.list ?? []) {
       if (!(e.hours > 0)) problems.push(`pets.errands.${e.id}: hours > 0`);
       for (const id of [...Object.keys(e.items ?? {}), ...(e.pick ?? []).flatMap((x) => Object.keys(x.items))]) if (!items.has(id)) problems.push(`pets.errands.${e.id}: món "${id}" không tồn tại`);
