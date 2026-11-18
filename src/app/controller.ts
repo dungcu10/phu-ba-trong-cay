@@ -79,6 +79,10 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
       tapXuxu: () => this.tapXuxu(),
       openVillage: () => this.openVillage(),
       openTimers: () => this.open(new TimersPanel(this.session)),
+      goVillage: () => {
+        this.panel?.close();
+        this.view.focusVillage();
+      },
       claimLuck: () => this.run({ type: 'claimSessionLuck' }),
       openLetters: () => {
         this.open(new LettersPanel(this.session));
@@ -88,7 +92,7 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
     this.tray = new SeedTray(session, this, () => this.toggleTray(false));
     // Chỉ thị 11 § C3: altitude gauge and the zone banner.
     this.altitude = new AltitudeGauge(session, { goFloor: (i) => this.view.focusFloor(i, 600), openVillage: () => this.view.focusVillage() });
-    overlay.append(this.hud.el, this.altitude.el, this.altitude.bannerEl, this.tray.el, this.toasts.el);
+    overlay.append(this.hud.el, this.altitude.el, this.altitude.bannerEl, this.altitude.ripeEl, this.tray.el, this.toasts.el);
     view.onCamera = (f) => (this.view.mode === 'home' ? this.altitude.setCamera(f) : undefined);
     view.handlers = {
       onTap: (s, t) => this.tap(s, t),
@@ -110,6 +114,8 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
       this.visitBar?.update();
       // A feature that just opened is introduced once nothing else is on screen.
       if (++this.idleTicks % 3 === 0) this.maybeTutorial();
+      // Ripe pots appear over time (no event): refresh the gauge and the "Có X chậu chín" button.
+      if (this.idleTicks % 3 === 1) this.altitude.update();
     }, 1000);
     setInterval(() => this.session.run({ type: 'tick' }), TICK_MS);
     this.hud.update();
@@ -462,6 +468,7 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
     this.sfx.play('levelUp');
     this.view.setSource(() => visitGarden(this.session.content, this.session.state, botId, this.session.now()));
     this.altitude.el.hidden = true;
+    this.altitude.update();
   }
 
   goHome(): void {
@@ -471,6 +478,7 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
     this.sfx.play('tap');
     this.view.setSource(null);
     this.altitude.el.hidden = false;
+    this.altitude.update();
   }
 
   private help(ref: SlotRef, target: 'pot' | 'bug', fromSwipe: boolean): void {
@@ -669,7 +677,8 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
   private tapHouse(id: string): void {
     const { content, state } = this.session;
     this.sfx.play('tap');
-    if (id === 'sign') return void this.toasts.show('Dinh Phú Bà sẽ được xây ở đợt sau.', 'info', 2000);
+    // Chỉ thị 12 A7 G1: the Dinh Phú Bà sign carries the Phú Bà board (league, enemies, visits).
+    if (id === 'sign') return void this.open(new NeighborsPanel(this.session, (botId) => this.visit(botId), (botId) => this.open(new StallPanel(this.session, this, 'market', botId))));
     if (id === 'river') {
       const lv = content.fishing?.unlockLevel ?? Infinity;
       if (state.player.level < lv) return void this.toasts.show(`Bến Câu Cá mở ở cấp ${lv}.`, 'info', 2000);

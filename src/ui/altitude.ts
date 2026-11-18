@@ -44,6 +44,16 @@ export class AltitudeGauge {
     this.label = h('div', { class: 'alt-label' });
     this.el = h('div', { class: 'alt-gauge', 'data-test': 'altitude' }, this.label, h('div', { class: 'alt-rail' }), this.dots);
     this.banner = h('div', { class: 'zone-banner', 'aria-live': 'polite' });
+    // Chỉ thị 12 A7 G3: "Có X chậu chín" flies straight to the floor with the most ripe pots.
+    this.ripe = h('button', { class: 'ripe-pill hidden', 'data-test': 'ripe-pill', onclick: () => this.ripeFloor !== null && this.actions.goFloor(this.ripeFloor) });
+  }
+
+  private readonly ripe: HTMLElement;
+  private ripeFloor: number | null = null;
+
+  /** The floating "Có X chậu chín" button (placed by the controller). */
+  get ripeEl(): HTMLElement {
+    return this.ripe;
   }
 
   /** The zone banner lives in the overlay, not inside the gauge. */
@@ -79,9 +89,22 @@ export class AltitudeGauge {
     const { content, state } = this.session;
     const now = this.session.now();
     const busy = new Set<number>();
+    const ripeCount: number[] = [];
     state.floors.forEach((f, i) => {
-      if (f.slots.some((s) => s.planting && cropStatus(content, state, s, now)?.ripe)) busy.add(i);
+      ripeCount[i] = f.slots.filter((s) => s.planting && cropStatus(content, state, s, now)?.ripe).length;
+      if (ripeCount[i]! > 0) busy.add(i);
     });
+    // Ripe pots on floors other than the one in view.
+    let best = -1;
+    let total = 0;
+    ripeCount.forEach((n, i) => {
+      if (i === this.current || n === 0) return;
+      total += n;
+      if (best < 0 || n > ripeCount[best]!) best = i;
+    });
+    this.ripeFloor = best >= 0 ? best : null;
+    this.ripe.classList.toggle('hidden', total === 0 || this.el.hidden === true);
+    if (total > 0) this.ripe.textContent = `Có ${total} chậu chín · Tầng ${best + 1} ${best > this.current ? '↑' : '↓'}`;
     for (const b of state.birds) if (b.floor !== null && birdFood(content, b, now) <= 0) busy.add(b.floor);
     const n = state.floors.length;
     const list: HTMLElement[] = [];

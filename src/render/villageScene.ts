@@ -150,7 +150,7 @@ export class VillageView {
     this.ground = g;
     for (const h of content.village.houses) this.addHouse(h.id, h.art, PLOTS[h.plot] ?? [0.5, 0.6], h.unlockLevel);
     // Plot 9: the sign for the Dinh Phú Bà (later).
-    const sign = new Text({ text: 'Dinh Phú Bà\nsắp xây', style: { fontFamily: 'system-ui, sans-serif', fontSize: 22, fontWeight: '700', fill: 0x5b3a1e, align: 'center' } });
+    const sign = new Text({ text: 'Bảng Phú Bà\n(Dinh sắp xây)', style: { fontFamily: 'system-ui, sans-serif', fontSize: 22, fontWeight: '700', fill: 0x5b3a1e, align: 'center' } });
     sign.anchor.set(0.5);
     const board = new Graphics().roundRect(-80, -34, 160, 68, 12).fill(0xe8c891).stroke({ color: 0x8a5a2b, width: 4 });
     const [sx, sy] = PLOTS[9]!;

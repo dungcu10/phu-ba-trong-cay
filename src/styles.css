@@ -995,3 +995,8 @@ html, body {
 .timer-at{font-size:18px;color:#f3cf6a}
 .seed-chip .chip-ready{position:absolute;top:4px;right:4px;padding:0 5px;border-radius:8px;background:rgba(20,30,50,.72);color:#fff;font-size:10px;font-weight:700;white-space:nowrap}
 .seed-chip .chip-ready.hot{background:#E5527A}
+.side-btn.moved{display:none}
+.village-links{display:flex;gap:8px;margin:6px 0}
+/* Chỉ thị 12 A7 G3 */
+.ripe-pill{position:absolute;right:60px;bottom:215px;z-index:5;padding:8px 14px;border-radius:999px;border:2px solid #f3cf6a;background:rgba(40,30,20,.82);color:#ffe9a8;font-weight:800;pointer-events:auto;box-shadow:0 2px 10px rgba(0,0,0,.35)}
+.ripe-pill.hidden{display:none}

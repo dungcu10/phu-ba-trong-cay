@@ -29,6 +29,18 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Chỉ thị 12 TỔNG phần A (code) — Thanh bên gọn, nút "Có X chậu chín", đơn khách quen, lịch sự kiện xoay vòng (tag `m-12-a`)
+- Loại: Thêm / Thay đổi
+- Mô tả:
+  - **G1 thanh bên gọn:** từ cấp 10 (`village.toolbarFromLevel`), thanh trái chỉ còn **Nhiệm vụ** và **Về Làng**; Đơn hàng, Sạp, Chim, Xưởng, Biển Mây vào bằng nhà trong làng (khi nhà đã mở; nhà chưa mở thì nút vẫn ở thanh bên), **Bảng Phú Bà** ở biển "Bảng Phú Bà" trong làng, Sổ Tay ở bảng Làng (nút nhanh "Bảng Phú Bà", "Sổ Tay Thực Vật").
+  - **G3:** nút nổi "Có X chậu chín · Tầng N ↑/↓" khi tầng khác tầng đang xem có cây chín; chạm là bay thẳng tới tầng nhiều chậu chín nhất (cập nhật mỗi 3 giây và theo sự kiện).
+  - **A4 đơn hàng** (núm mới, để trung tính): `recentWeight` (cây mở gần đây nặng hơn), `daisyFadeFrom` (Cúc Bông Gòn giảm dần), `regularFriendship` / `regularChance` / `regularBonus` (Phú Bà thân thiết đặt **đơn khách quen**, có câu thoại trong bảng đơn, thưởng thêm). Mặc định tắt: đơn sinh ra y như cũ.
+  - **A5 lịch sự kiện xoay vòng:** sau Lễ Hội Trăng Mây, 104 sự kiện nối liền (khoảng 2 năm), mỗi cái 7–10 ngày, xáo thứ tự mỗi vòng, không lặp liền: **Mùa Săn Bọ** (bắt bọ bằng tay, chim, Cáo), **Hội Câu Cá**, **Chợ Phiên Mây** (bán Sạp, Sạp Săn Hàng, Xưởng), **Lễ Hội Trăng**, **Tết Phú Bà** (Lộc Phiên, ghé vườn, quà thân thiết). Sinh từ seed cố định theo ngày thật (mọi người chơi cùng lịch, chạy khi offline). Dùng bảng sự kiện và mốc thưởng sẵn có.
+- Số liệu: `orders.json` thêm `recentWeight` 0, `regularChance` 0, `regularFriendship` 3, `regularBonus` 0 (đề xuất trong `_a4`); `event-rotation.json` (mới, mốc thưởng nhỏ); `village.json › toolbarFromLevel` 10. CTO chỉnh qua mô phỏng.
+- File/Module: hud.ts, altitude.ts, controller.ts (Về Làng, biển Bảng Phú Bà), villagePanel.ts, villageScene.ts, orders.ts (`pickCrop`, khách quen), worldPanels.ts, events.ts (nguồn điểm mới), content.ts (lịch xoay vòng, kiểu), manifest.json, styles.css; tests/partA12.test.ts (3 test).
+- Ảnh hưởng save: Không.
+- Chưa làm: "đơn đặc sản tầng" (cần ghi nông sản trồng ở tầng nào — đổi kho, để sau); chậu sự kiện riêng cho lịch xoay vòng (cần hình).
+
 ### [2026-11-18] Chỉ thị 12 TỔNG B1 — Lộc Phiên, Hẹn giờ (tag `m-12-b1`)
 - Loại: Thêm
 - Mô tả:

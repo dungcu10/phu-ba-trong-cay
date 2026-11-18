@@ -8,7 +8,7 @@
 // A rare order (gold border) pays double and an extra Sợi Mây Kết / Giọt Sương Trời, and leaves after
 // rareHours. Once a day the player can ask the neighbours to chip in for an order.
 
-import type { ContentPack, GoodDef } from '../core/content.ts';
+import type { ContentPack, CropDef, GoodDef } from '../core/content.ts';
 import type { GameState, Order, OrderFlight } from '../core/state.ts';
 import { randomFor } from '../core/rng.ts';
 import { addItem, addXp } from './economy.ts';
@@ -38,6 +38,27 @@ function makeableGoods(content: ContentPack, level: number): GoodDef[] {
   return out;
 }
 
+const REGULAR_LINES = ['Như mọi khi nhé cưng!', 'Hàng nhà bạn là nhất!', 'Để dành cho chị mấy món này nha.', 'Mai có khách, nhờ bạn nhé!', 'Lần trước ngon quá, cho thêm nữa!'];
+
+/**
+ * Chỉ thị 12 A4: index of the crop for an order line. With recentWeight 0 every crop is alike (as
+ * before); otherwise newer crops weigh more, and Cúc Bông Gòn (the first crop) fades from daisyFadeFrom.
+ */
+function pickCrop(content: ContentPack, pool: CropDef[], level: number, roll: number): number {
+  const cfg = content.orders;
+  const k = cfg.recentWeight ?? 0;
+  const first = content.cropList[0]?.id;
+  const weights = pool.map((c) => {
+    let w = 1 + k * Math.max(0, c.unlockLevel) / Math.max(1, level);
+    if (c.id === first && cfg.daisyFadeFrom !== undefined && level >= cfg.daisyFadeFrom) w *= Math.max(0.1, 1 - (level - cfg.daisyFadeFrom + 1) * 0.15);
+    return w;
+  });
+  const total = weights.reduce((a, w) => a + w, 0);
+  let x = roll * total;
+  for (let i = 0; i < weights.length; i++) if ((x -= weights[i]!) < 0) return i;
+  return weights.length - 1;
+}
+
 export function generateOrder(content: ContentPack, state: GameState): Order {
   const cfg = content.orders;
   const id = ++state.orders.counter;
@@ -59,7 +80,7 @@ export function generateOrder(content: ContentPack, state: GameState): Order {
       value += qty * g.sellPrice;
       continue;
     }
-    const crop = pool.splice(Math.floor(r('crop', i) * pool.length), 1)[0]!;
+    const crop = pool.splice(pickCrop(content, pool, level, r('crop', i)), 1)[0]!;
     const qty = Math.max(1, Math.round(crop.yield * (1 + r('qty', i) * 2) * (1 + level * 0.05)));
     items[crop.produce.id] = qty;
     value += qty * crop.sellPrice;
@@ -70,11 +91,18 @@ export function generateOrder(content: ContentPack, state: GameState): Order {
   // Named neighbours only (generated ones belong to one save; chỉ thị 12 B3).
   const bots = [...content.bots.keys()].filter((id) => !id.startsWith('gen:'));
   const extras = cfg.rareItems ?? [];
+  // Chỉ thị 12 A4: a friendly neighbour (khách quen) sometimes places the order, with a line and a bonus.
+  const friends = Object.keys(state.neighbors)
+    .filter((b) => (state.neighbors[b]!.friendship ?? 0) >= (cfg.regularFriendship ?? Infinity))
+    .sort();
+  const regular = friends.length > 0 && r('regular') < (cfg.regularChance ?? 0) ? friends[Math.floor(r('regularWho') * friends.length)]! : null;
+  const bonus = regular ? 1 + (cfg.regularBonus ?? 0) : 1;
   return {
     id,
-    customer: bots[Math.floor(r('customer') * bots.length)] ?? '',
+    customer: regular ?? bots[Math.floor(r('customer') * bots.length)] ?? '',
+    ...(regular ? { regular: REGULAR_LINES[Math.floor(r('regularLine') * REGULAR_LINES.length)]! } : {}),
     items,
-    coins: Math.max(1, Math.round(value * mult)),
+    coins: Math.max(1, Math.round(value * mult * bonus)),
     xp: Math.max(1, Math.round(value * cfg.xpPerCoin * (rare ? 1.5 : 1))),
     gems: rare ? cfg.rareGems : 0,
     rare,

@@ -128,6 +128,8 @@ export interface Order {
   bonusItem?: string;
   /** Items neighbours chipped in (they count toward the order). */
   given?: Record<string, number>;
+  /** Chỉ thị 12 A4: placed by a friendly neighbour (khách quen), with a short line. */
+  regular?: string;
 }
 
 /** A balloon on its way with a sent order: it pays when it comes back (chỉ thị 10 § 3.6). */

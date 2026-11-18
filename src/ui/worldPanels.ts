@@ -111,7 +111,7 @@ export class OrdersPanel extends Panel {
           { class: `note-card${o.rare ? ' rare' : ''}`, 'data-test': `order-${i}` },
           h('span', { class: 'pin' }),
           o.rare && h('span', { class: 'rare-tag' }, left !== null ? `Đơn quý · còn ${formatDuration(left)}` : 'Đơn quý'),
-          h('span', { class: 'customer' }, botName(this.session, o.customer)),
+          h('span', { class: 'customer' }, botName(this.session, o.customer), o.regular ? h('em', { class: 'regular-line' }, ` · Khách quen: “${o.regular}”`) : null),
           lines,
           h('span', { class: 'rewards' }, h('span', {}, coin(18), formatNumber(o.coins)), h('span', {}, star(18), formatNumber(o.xp)), o.gems > 0 && h('span', {}, gem(18), String(o.gems)), o.bonusItem && h('span', {}, itemIcon(content, o.bonusItem, 18), '1')),
           h(

@@ -28,6 +28,7 @@
     "decor": "decor.json",
     "xuxu": "xuxu.json",
     "village": "village.json",
-    "pets": "pets.json"
+    "pets": "pets.json",
+    "eventRotation": "event-rotation.json"
   }
 }

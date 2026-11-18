@@ -6,6 +6,7 @@ export type PotStatName = 'speed' | 'yield' | 'xp' | 'attract' | 'luck' | 'care'
 export const POT_STATS: PotStatName[] = ['speed', 'yield', 'xp', 'attract', 'luck', 'care'];
 
 import { FloorMap, type FloorGenConfig } from './floorgen.ts';
+import { randomFor } from './rng.ts';
 import { IncomeModel, type IncomeConfig } from './income.ts';
 import { validateQuests, type FeatureDef, type QuestDef, type QuestPack, type TrackDef, type TutorialDef } from './questdefs.ts';
 
@@ -316,6 +317,13 @@ export interface OrdersConfig {
   helpLevel?: number;
   helpChance?: number;
   helpFriendshipBonus?: number;
+  /** Chỉ thị 12 A4: newer crops weigh more in order lines (0 = all alike), Cúc Bông Gòn fades from
+   *  this level (never = always), friendly neighbours place "khách quen" orders (friendship mark, chance, bonus). */
+  recentWeight?: number;
+  daisyFadeFrom?: number;
+  regularFriendship?: number;
+  regularChance?: number;
+  regularBonus?: number;
 }
 
 export interface MutationDef {
@@ -466,7 +474,7 @@ export interface MaterialDef {
   icon: string;
 }
 
-export type EventPointSource = 'harvest' | 'deliverOrder' | 'missionClaimed' | 'neighborHelped';
+export type EventPointSource = 'harvest' | 'deliverOrder' | 'missionClaimed' | 'neighborHelped' | 'catchBug' | 'catchFish' | 'stallSold' | 'bazaarBuy' | 'makeGoods' | 'steal' | 'luck' | 'friend';
 
 export interface EventReward {
   coins?: number;
@@ -700,6 +708,8 @@ export interface HouseDef {
 }
 export interface VillageRules {
   /** Chỉ thị 12 B1.1: Lộc Phiên at the Đình. */
+  /** Chỉ thị 12 A7 G1: from this level the side bar keeps only Nhiệm vụ and Về Làng. */
+  toolbarFromLevel?: number;
   sessionLuck?: { perDay: number; gapHours: number; rewards: Array<{ coinsU?: number; bazaarReroll?: number; stealTurn?: number; gemsIfFull?: number; gems?: number }> };
   upgradeFromLevel: number;
   minutes: number[];
@@ -889,6 +899,7 @@ export interface RawContent {
   xuxu?: unknown;
   village?: unknown;
   pets?: unknown;
+  eventRotation?: unknown;
 }
 
 export class ContentError extends Error {
@@ -904,7 +915,7 @@ type ReadJson = (relativePath: string) => Promise<unknown>;
 export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> {
   const manifest = (await readJson('manifest.json')) as {
     contentVersion: number;
-    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions' | 'materials' | 'events' | 'quests' | 'features' | 'tutorials', string> & Partial<Record<'birds' | 'workshop' | 'cropExtras' | 'casting' | 'market' | 'sea' | 'potStars' | 'fishing' | 'decor' | 'xuxu' | 'village' | 'pets', string>>;
+    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions' | 'materials' | 'events' | 'quests' | 'features' | 'tutorials', string> & Partial<Record<'birds' | 'workshop' | 'cropExtras' | 'casting' | 'market' | 'sea' | 'potStars' | 'fishing' | 'decor' | 'xuxu' | 'village' | 'pets' | 'eventRotation', string>>;
   };
   const raw: RawContent = {
     contentVersion: manifest.contentVersion,
@@ -935,6 +946,7 @@ export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> 
     xuxu: manifest.files.xuxu ? await readJson(manifest.files.xuxu) : undefined,
     village: manifest.files.village ? await readJson(manifest.files.village) : undefined,
     pets: manifest.files.pets ? await readJson(manifest.files.pets) : undefined,
+    eventRotation: manifest.files.eventRotation ? await readJson(manifest.files.eventRotation) : undefined,
   };
   return buildContentPack(raw);
 }
@@ -1083,6 +1095,7 @@ export function buildContentPack(raw: RawContent): ContentPack {
     addUnique(items, { id: mat.id, name: mat.name, kind: 'material', sellPrice: null, countsTowardStorage: false }, `materials[${i}]`, problems);
   });
   const events: EventDef[] = [];
+  let lastTemplate = -1;
   asArray('events', raw.events, problems).forEach((e, i) => {
     if (!checkFields(`events[${i}]`, e, [], ['id', 'startsAt', 'endsAt'], problems)) return;
     const ev = e as unknown as EventDef;
@@ -1094,6 +1107,29 @@ export function buildContentPack(raw: RawContent): ContentPack {
     });
     events.push(ev);
   });
+  // Chỉ thị 12 A5: the rotating calendar after the fixed events (one event at a time, 7–10 days each).
+  const rot = raw.eventRotation as { from: string; count: number; days: [number, number]; seed: number; templates: Array<Omit<EventDef, 'startsAt' | 'endsAt' | 'start' | 'end'>> } | undefined;
+  if (rot) {
+    const lastFixed = Math.max(0, ...events.map((e) => e.end));
+    let t = Math.max(Date.parse(rot.from), lastFixed);
+    const order: number[] = [];
+    for (let n = 0; n < rot.count; n++) {
+      // A fresh shuffle of the templates every round, no template twice in a row.
+      if (order.length === 0) {
+        const round = rot.templates.map((_, i) => i).sort((a, b) => randomFor(rot.seed, 'rotOrder', n, a) - randomFor(rot.seed, 'rotOrder', n, b));
+        if (n > 0 && round[0] === lastTemplate) round.push(round.shift()!);
+        order.push(...round);
+      }
+      const ti = order.shift()!;
+      lastTemplate = ti;
+      const tpl = rot.templates[ti]!;
+      const days = rot.days[0] + Math.floor(randomFor(rot.seed, 'rotDays', n) * (rot.days[1] - rot.days[0] + 1));
+      const start = t;
+      const end = t + days * 86_400_000;
+      t = end;
+      events.push({ ...structuredClone(tpl), id: `base:event.rot-${n}-${tpl.id}`, startsAt: new Date(start).toISOString(), endsAt: new Date(end).toISOString(), start, end });
+    }
+  }
 
   const orders = raw.orders as OrdersConfig;
   checkFields('orders', orders, ['slots', 'refillSeconds', 'skipSeconds', 'skipNowGems', 'maxLines', 'xpPerCoin', 'rareChance', 'rareMultiplier', 'rareGems'], [], problems);
