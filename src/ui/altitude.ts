@@ -52,8 +52,9 @@ export class AltitudeGauge {
   }
 
   setCamera(floor: number): void {
-    this.current = Math.max(0, floor);
+    this.current = floor;
     this.update();
+    if (floor < 0) return;
     const z = zoneOf(this.current);
     if (!this.seen.has(z)) {
       this.seen.add(z);
@@ -88,8 +89,8 @@ export class AltitudeGauge {
       const cls = `alt-dot z${zoneOf(i)}${i === this.current ? ' on' : ''}${busy.has(i) ? ' busy' : ''}`;
       list.push(h('button', { class: cls, 'aria-label': `Tầng ${i + 1}`, title: `Tầng ${i + 1}`, 'data-test': `alt-${i}`, onclick: () => this.actions.goFloor(i) }));
     }
-    list.push(h('button', { class: 'alt-home', 'aria-label': 'Về làng', title: 'Làng Phú Bà', onclick: () => this.actions.openVillage() }, lineIcon('house', 16)));
+    list.push(h('button', { class: `alt-home${this.current < 0 ? ' on' : ''}`, 'data-test': 'alt-home', 'aria-label': 'Về làng', title: 'Làng Phú Bà', onclick: () => this.actions.openVillage() }, lineIcon('house', 16)));
     this.dots.replaceChildren(...list);
-    this.label.textContent = `Độ cao: ${formatNumber((this.current + 1) * METERS_PER_FLOOR)} m`;
+    this.label.textContent = this.current < 0 ? 'Làng Phú Bà · 0 m' : `Độ cao: ${formatNumber((this.current + 1) * METERS_PER_FLOOR)} m`;
   }
 }

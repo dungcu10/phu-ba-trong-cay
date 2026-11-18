@@ -972,3 +972,4 @@ html, body {
 .zone-banner strong{display:block;font-family:var(--font-display,serif);font-size:56px;line-height:1.1}
 .zone-banner.show{animation:zoneShow 2s ease-out forwards}
 @keyframes zoneShow{0%{opacity:0;transform:translate(-50%,-40%)}15%{opacity:1;transform:translate(-50%,-50%)}70%{opacity:1}100%{opacity:0;transform:translate(-50%,-55%)}}
+.alt-home.on{background:#5fb36f;box-shadow:0 0 10px rgba(255,255,255,.9)}

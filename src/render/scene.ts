@@ -21,6 +21,13 @@ import { SLOT_GEOM, SlotView } from './slotView.ts';
 import { ease, Tweens } from './tween.ts';
 import { PetActor } from './worldArt.ts';
 import { SkyStrip, ZONES, zoneOf } from './sky.ts';
+import { VillageView } from './villageScene.ts';
+
+/** Chỉ thị 11 § C2: the village picture's top (world y) and how far below floor 1 the camera may go. */
+const VILLAGE_TOP = -560;
+const VILLAGE_SCROLL = -900;
+/** Where "go to the village" puts the camera (the middle of the plots). */
+const VILLAGE_VIEW = -690;
 
 /** New pet pictures are 150 pt wide; drawn at about 0.6 × a pot (§ E5). */
 const PET_SCALE = 0.62;
@@ -94,6 +101,8 @@ export interface ViewHandlers {
   onLockedFloor(floor: FloorDef): void;
   onExpand(floor: number): void;
   onFloorSign(floor: number): void;
+  /** A house in the village (or "river", "sign"). */
+  onHouse?(house: string): void;
 }
 
 interface FloorView {
@@ -148,6 +157,8 @@ export class GameView {
   private coasting = false;
   /** Called when the camera floor changes (altitude gauge, zone banner). */
   onCamera: ((floor: number) => void) | null = null;
+  /** Chỉ thị 11 § D1: Làng Phú Bà on the ground under floor 1. */
+  private readonly village: VillageView;
   private lastCameraFloor = -1;
   private readonly ambience: Ambience;
   private floors: FloorView[] = [];
@@ -189,7 +200,14 @@ export class GameView {
       this.applyScroll();
     });
     // Chỉ thị 10 § 2.3 layer order: ring backs, vine, floors (ring fronts, pedestals, pots inside), effects.
-    this.world.addChild(this.ringBackLayer, this.trunkLayer, this.floorsLayer, this.birdLayer, this.effects);
+    this.village = new VillageView(art, VILLAGE_TOP);
+    // Shifted right so the houses on the left plots stand clear of the vine root.
+    this.village.root.x = (WORLD.view.left + WORLD.view.right) / 2 + 110;
+    this.world.addChild(this.village.root, this.ringBackLayer, this.trunkLayer, this.floorsLayer, this.birdLayer, this.effects);
+    void this.village.load(session.content).then(() => {
+      this.village.update(session.content, session.state, session.now());
+      this.village.root.visible = this.village.ready && this.model.mode === 'home';
+    });
     app.stage.addChild(this.world, this.ambience.front);
     this.source = () => homeGarden(session.content, session.state, session.now());
     this.model = this.source();
@@ -628,8 +646,25 @@ export class GameView {
     return Math.max(0, top - (this.floorsInView - 1) * WORLD.floorGap);
   }
 
+  /** Lowest camera height: the village under floor 1 (home garden only). */
+  private minScroll(): number {
+    return this.village.ready && this.model.mode === 'home' ? VILLAGE_SCROLL : 0;
+  }
+
+  /** Camera down to the village. */
+  focusVillage(durationMs = 600): void {
+    const from = this.scroll;
+    const to = Math.max(this.minScroll(), VILLAGE_VIEW);
+    this.scrollVelocity = 0;
+    this.tweens.add(durationMs, ease.inOutSine, (t) => this.setScroll(from + (to - from) * t));
+  }
+
+  get inVillage(): boolean {
+    return this.scroll < -WORLD.floorGap * 0.6;
+  }
+
   private setScroll(value: number): void {
-    this.scroll = Math.max(0, Math.min(this.maxScroll(), value));
+    this.scroll = Math.max(this.minScroll(), Math.min(this.maxScroll(), value));
     this.applyScroll();
   }
 
@@ -645,7 +680,7 @@ export class GameView {
   private applyScroll(): void {
     this.world.y = this.baseY + this.scroll * this.scale;
     this.skyStrip.update(this.cameraFloor);
-    const cf = Math.round(this.scroll / WORLD.floorGap);
+    const cf = this.inVillage ? -1 : Math.max(0, Math.round(this.scroll / WORLD.floorGap));
     if (cf !== this.lastCameraFloor) {
       this.lastCameraFloor = cf;
       this.onCamera?.(cf);
@@ -766,6 +801,8 @@ export class GameView {
 
   refresh(): void {
     this.model = this.source();
+    this.village.root.visible = this.village.ready && this.model.mode === 'home';
+    if (this.village.root.visible) this.village.update(this.session.content, this.session.state, this.session.now());
     this.syncBirds();
     if (this.model.floors.length !== this.floors.length || this.model.floors.some((f, i) => this.floors[i]?.key !== this.floorKey(f))) {
       this.syncFloors();
@@ -907,6 +944,11 @@ export class GameView {
     if (d?.mode === 'climb') this.coasting = true;
     if (!d || d.mode !== 'undecided') return;
     if (d.start >= 0) return this.handlers?.onTap({ floor: d.floor, slot: d.start }, d.target);
+    if (this.village.root.visible) {
+      const p = this.village.root.toLocal({ x: d.x0, y: d.y0 });
+      const house = this.village.hitAt(p.x, p.y);
+      if (house) return this.handlers?.onHouse?.(house);
+    }
     const hit = (c: Container | null) => c !== null && c.getBounds().containsPoint(d.x0, d.y0);
     const fi = this.floors.findIndex((fv) => hit(fv.ghost));
     if (fi >= 0) return this.handlers?.onExpand(fi);
@@ -958,8 +1000,9 @@ export class GameView {
       // § C3: a fling coasts, then settles on a floor.
       this.coasting = false;
       this.scrollVelocity = 0;
-      if (this.floorsInView < 1.5) this.focusFloor(Math.round(this.scroll / WORLD.floorGap), 260);
+      if (this.floorsInView < 1.5 && this.scroll > -WORLD.floorGap * 0.5) this.focusFloor(Math.round(this.scroll / WORLD.floorGap), 260);
     }
+    this.village.animate(dt, this.scroll < WORLD.floorGap * 0.3);
     this.effects.update(dt);
     this.ambience.update(dt, this.scroll);
     this.sinceRefresh += dt;

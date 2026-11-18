@@ -84,7 +84,7 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
     });
     this.tray = new SeedTray(session, this, () => this.toggleTray(false));
     // Chỉ thị 11 § C3: altitude gauge and the zone banner.
-    this.altitude = new AltitudeGauge(session, { goFloor: (i) => this.view.focusFloor(i, 600), openVillage: () => this.openVillage() });
+    this.altitude = new AltitudeGauge(session, { goFloor: (i) => this.view.focusFloor(i, 600), openVillage: () => this.view.focusVillage() });
     overlay.append(this.hud.el, this.altitude.el, this.altitude.bannerEl, this.tray.el, this.toasts.el);
     view.onCamera = (f) => (this.view.mode === 'home' ? this.altitude.setCamera(f) : undefined);
     view.handlers = {
@@ -93,6 +93,7 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
       onLockedFloor: (f) => this.openFloor(f),
       onExpand: (floor) => this.openFloorInfo(floor),
       onFloorSign: (floor) => this.openFloorInfo(floor),
+      onHouse: (id) => this.tapHouse(id),
     };
     session.onChange((events) => this.onEvents(events));
     this.welcomeBack();
@@ -657,6 +658,22 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
 
   toggleReplant(on: boolean): void {
     this.run({ type: 'toggleReplant', on });
+  }
+
+  /** A house tapped in the village scene (§ D1): open its feature, or say when it opens. */
+  private tapHouse(id: string): void {
+    const { content, state } = this.session;
+    this.sfx.play('tap');
+    if (id === 'sign') return void this.toasts.show('Dinh Phú Bà sẽ được xây ở đợt sau.', 'info', 2000);
+    if (id === 'river') {
+      const lv = content.fishing?.unlockLevel ?? Infinity;
+      if (state.player.level < lv) return void this.toasts.show(`Bến Câu Cá mở ở cấp ${lv}.`, 'info', 2000);
+      return this.openHouse('fishing');
+    }
+    const h = content.village?.houses.find((x) => x.id === id);
+    if (!h) return;
+    if (state.player.level < h.unlockLevel) return void this.toasts.show(`${h.name.vi} mở ở cấp ${h.unlockLevel}.`, 'info', 2000);
+    this.openHouse(h.feature);
   }
 
   /** A house opens its feature (the toolbar buttons still work too). */
