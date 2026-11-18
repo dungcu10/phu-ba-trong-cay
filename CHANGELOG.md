@@ -29,6 +29,12 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Chỉ thị 11 TỔNG N8 — Kiểm tổng, tài liệu, báo cáo (tag `m-11-n8`)
+- Loại: Thêm
+- Mô tả: `docs/FEATURE_WEB.md` (bảng mạng liên kết + sơ đồ + vòng xu, có chỗ trong mã); `tools/economy-11.ts` → `docs/reviews/economy-11.md` (30 ngày, 3 kiểu người chơi, 5 ràng buộc phần H, biểu đồ xu / cấp / Cấp Làng); báo cáo `docs/reports/2026-11-18-chi-thi-11/` với 6 ảnh 2388×1668. `tools/progression.ts` chỉ thêm trường báo cáo (villageLevel, pets, petBugs, errands), không đổi hành vi bot. Test hiệu năng 40 BOT × 7 ngày đổi ngưỡng 250 ms theo chỉ thị 11 § I (đủ mọi hệ).
+- Ảnh hưởng save: Không.
+- Cho CTO: Cấp Làng 10 ở ngày 3 và 25 ở ngày 16, tầng 5 ở ngày 13 — sớm hơn mục tiêu phần H (7 / 30 / 20–25).
+
 ### [2026-11-18] Chỉ thị 11 TỔNG N7 (BOT) — Hàng xóm có làng và thú cưng, dùng chung luật (tag `m-11-n7`)
 - Loại: Thêm
 - Mô tả:
