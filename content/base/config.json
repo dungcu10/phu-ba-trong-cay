@@ -4,7 +4,7 @@
   "storageCapacity": 60,
   "levels": {
     "xpBase": 3,
-    "xpExponent": 2.9,
+    "xpExponent": 2.88,
     "xpGrowth": 1.06,
     "xpGrowthUntil": 25,
     "xpLinearAfter": 0.02,
@@ -136,7 +136,7 @@
       "perFloor": 0.01,
       "max": 0.3
     },
-    "firstLevel": 19,
+    "firstLevel": 23,
     "levelStep": 3,
     "levelStepGrowth": 0,
     "slotCount": 6,

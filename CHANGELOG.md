@@ -29,6 +29,14 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] CTO — 11 TỔNG § H: nhịp Làng và tầng 5; đo chậu chữ ký trên 4 seed
+- `village.json`: thời gian nâng nhà 1 giờ / 6 giờ / 16 giờ / 36 giờ (trước 5 / 30 / 90 / 240 phút); giá 2.000+2U / 8.000+4U / 35.000+10U / 120.000+24U (trước 300+1U … 12.000+8U); nâng nhà từ cấp 10 (trước 5).
+- `config.json › floorGen.firstLevel` 19 → 23: tầng 5 mở ở cấp 23 (≈ ngày 21, mục tiêu 20–25); tầng 20 ở cấp 68 (trước 64). `tests/floors20.test.ts` theo số mới.
+- Kết quả (`docs/reviews/economy-11.md` chạy lại): 4 thú cưng ngày 15, Cấp Làng 25 ngày 26, tầng 5 ngày 21 — đạt. **Cấp Làng 10 ngày 4 vẫn sớm hơn mục tiêu ngày 7** và sẽ không đạt được: mỗi nhà mở ra đã là cấp 1, đủ 8 nhà ở cấp 8 là Cấp Làng 8; muốn 10 ở ngày 7 thì cả tuần đầu chỉ được nâng 2 lần. CTO giữ ngày 4–5.
+- Chỉ số "Chậu chữ ký ngày 30" lấy TB 4 seed như Bọ Rất hiếm (1 seed nhảy 15 ↔ 16 với thay đổi rất nhỏ). Bù: chậu Hiếm đổi 40 Đất Sét + 1 Ấn; Ve Ngọc ×1,15. Đo: chậu 13,75; Bọ Rất hiếm 0,31.
+- Cổng XANH, typecheck sạch, 266/266 test.
+- Trạng thái nghiệm thu: Chờ
+
 ### [2026-11-18] Chỉ thị 11 TỔNG N8 — Kiểm tổng, tài liệu, báo cáo (tag `m-11-n8`)
 - Loại: Thêm
 - Mô tả: `docs/FEATURE_WEB.md` (bảng mạng liên kết + sơ đồ + vòng xu, có chỗ trong mã); `tools/economy-11.ts` → `docs/reviews/economy-11.md` (30 ngày, 3 kiểu người chơi, 5 ràng buộc phần H, biểu đồ xu / cấp / Cấp Làng); báo cáo `docs/reports/2026-11-18-chi-thi-11/` với 6 ảnh 2388×1668. `tools/progression.ts` chỉ thêm trường báo cáo (villageLevel, pets, petBugs, errands), không đổi hành vi bot. Test hiệu năng 40 BOT × 7 ngày đổi ngưỡng 250 ms theo chỉ thị 11 § I (đủ mọi hệ).

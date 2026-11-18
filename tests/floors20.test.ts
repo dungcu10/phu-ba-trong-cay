@@ -9,13 +9,13 @@ import { loadBase } from './helpers.ts';
 
 const content = await loadBase();
 
-test('20 tầng: tên tầng 5–20 khác nhau, không trùng tầng 1–4; cấp mở theo bước 3 tới tầng 20 ở cấp 64', () => {
+test('20 tầng: tên tầng 5–20 khác nhau, không trùng tầng 1–4; cấp mở theo bước 3 từ firstLevel (CTO: tầng 5 ở cấp 23 ≈ ngày 21, tầng 20 ở cấp 68)', () => {
   const list = Array.from({ length: 20 }, (_, i) => floorAtIndex(content.floors, content.floorList, i));
   const names = list.map((f) => f.name.vi);
   assert.equal(new Set(names).size, 20);
   assert.equal(list[3]!.unlockLevel, 16);
-  for (let i = 4; i < 20; i++) assert.equal(list[i]!.unlockLevel, 19 + 3 * (i - 4));
-  assert.equal(list[19]!.unlockLevel, 64);
+  for (let i = 4; i < 20; i++) assert.equal(list[i]!.unlockLevel, 23 + 3 * (i - 4));
+  assert.equal(list[19]!.unlockLevel, 68);
 });
 
 test('vùng trời: tầng 1–5 trời thấp, 6–10 vàng, 11–15 hoàng hôn, 16 trở lên đêm', () => {
