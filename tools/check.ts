@@ -62,7 +62,11 @@ const value: Record<string, () => number[]> = {
   commonBugsPerDay: () => span(7, 30).map((d) => d.bugsByRarity.common ?? 0),
   commonBugsPerPot: () => [avg(span(7, 30).map((d) => d.commonBugsPerPot))],
   bugStockDays: () => [at(30).bugStock / Math.max(1, avg(span(24, 30).map((d) => Object.values(d.bugsByRarity).reduce((a, q) => a + q, 0))))],
-  epicBugsPerDay: () => [avg(span(7, 30).map((d) => d.bugsByRarity.epic ?? 0))],
+  // A Rất hiếm bug is ~1 per 4 days, so one run sees only a handful: average 4 seeds (CTO 18/11).
+  epicBugsPerDay: () => [avg([42, 7, 99, 1234].map((seed) => {
+    const run = seed === 42 ? days : simulateProgression(content, metrics.visitMinutes, 30, seed).days;
+    return avg(run.slice(6, 30).map((d) => d.bugsByRarity.epic ?? 0));
+  }))],
   signaturePots30: () => [at(30).signaturePots],
   storageFullShare: () => [avg(days.map((d) => d.storageFullShare))],
   ordersPerDay: () => [avg(span(3, 30).map((d) => d.ordersDelivered))],
