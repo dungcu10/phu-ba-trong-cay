@@ -103,8 +103,9 @@ export function slotXs(id: FloorArtId, n: number): number[] {
 }
 
 /** Pedestal for slot i of a floor: style by floor, the two variants alternating. */
-export function pedestalSprite(art: Art, id: FloorArtId, i: number): Sprite {
-  const style = WORLD10.floors[id]!.pedestal;
+export function pedestalSprite(art: Art, id: FloorArtId, i: number, zoneStyle?: FloorArtMeta['pedestal']): Sprite {
+  // Chỉ thị 11 § C2: the style follows the sky zone (grey low, sandstone gold, moonstone dusk/night).
+  const style = zoneStyle ?? WORLD10.floors[id]!.pedestal;
   return sprite(art, `pedestal/${style}/${i % 2}`);
 }
 

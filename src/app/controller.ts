@@ -1,5 +1,6 @@
 // Connects player input to game commands, and game events to feedback (effects, sound, HUD).
 
+import { AltitudeGauge } from '../ui/altitude.ts';
 import type { Command, GameEvent, Result, SlotRef } from '../core/game.ts';
 import { nextFloor } from '../core/game.ts';
 import { cropStatus } from '../systems/growth.ts';
@@ -48,6 +49,7 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
   /** Pot where the dragged seed last failed, so one failure shows one message. */
   private lastDropFail = '';
 
+  private readonly altitude: AltitudeGauge;
   constructor(
     private readonly session: GameSession,
     private readonly view: GameView,
@@ -81,7 +83,10 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
       },
     });
     this.tray = new SeedTray(session, this, () => this.toggleTray(false));
-    overlay.append(this.hud.el, this.tray.el, this.toasts.el);
+    // Chỉ thị 11 § C3: altitude gauge and the zone banner.
+    this.altitude = new AltitudeGauge(session, { goFloor: (i) => this.view.focusFloor(i, 600), openVillage: () => this.openVillage() });
+    overlay.append(this.hud.el, this.altitude.el, this.altitude.bannerEl, this.tray.el, this.toasts.el);
+    view.onCamera = (f) => (this.view.mode === 'home' ? this.altitude.setCamera(f) : undefined);
     view.handlers = {
       onTap: (s, t) => this.tap(s, t),
       onSwipe: (s) => this.swipe(s),
@@ -452,6 +457,7 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
     this.overlay.append(this.visitBar.el);
     this.sfx.play('levelUp');
     this.view.setSource(() => visitGarden(this.session.content, this.session.state, botId, this.session.now()));
+    this.altitude.el.hidden = true;
   }
 
   goHome(): void {
@@ -460,6 +466,7 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
     this.hud.el.classList.remove('hidden');
     this.sfx.play('tap');
     this.view.setSource(null);
+    this.altitude.el.hidden = false;
   }
 
   private help(ref: SlotRef, target: 'pot' | 'bug', fromSwipe: boolean): void {
@@ -696,6 +703,7 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
     this.view.refresh();
     for (const e of events) this.feedback(e);
     this.hud.update();
+    this.altitude.update();
     if (this.panel instanceof SeaPanel) this.panel.react(events);
     this.panel?.render();
     if (this.tray.open) this.tray.render();
