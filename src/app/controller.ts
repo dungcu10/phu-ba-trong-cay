@@ -536,6 +536,14 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
     this.run({ type: 'upgradePot', potInstanceId });
   }
 
+  starUpPot(potInstanceId: string): void {
+    this.run({ type: 'starUpPot', potInstanceId });
+  }
+
+  combineShards(potId: string): void {
+    this.run({ type: 'combineShards', potId });
+  }
+
   quickSell(): void {
     this.run({ type: 'quickSell' });
   }
@@ -617,6 +625,17 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
         this.toasts.show(e.perfect ? `Đúc thành công ${name} Hoàn Mỹ ★! Chậu đã vào kho chậu.` : `Đúc thành công ${name}! Chậu đã vào kho chậu.`, 'level', 3000);
         break;
       }
+      case 'potStarred':
+        this.sfx.play('upgrade');
+        this.toasts.show(`Chậu lên ★${e.stars}! Chỉ số chính tăng thêm.`, 'level', 2400);
+        break;
+      case 'potCombined':
+        this.sfx.play('upgrade');
+        this.toasts.show(`Ghép xong ${content.pots.get(e.potId)?.name.vi ?? 'chậu'}! Chậu đã vào kho chậu.`, 'level', 2600);
+        break;
+      case 'potToShards':
+        this.toasts.show(`Đã có ${content.pots.get(e.potId)?.name.vi ?? 'chậu này'} — đổi thành ${e.qty} mảnh để nâng sao.`, 'success', 2800);
+        break;
       case 'quickSold':
         this.sfx.play('coin');
         this.toasts.show(`Bán nhanh ${formatNumber(e.items.reduce((a, x) => a + x.qty, 0))} món: +${formatNumber(e.coins)} xu`, 'success', 2200);

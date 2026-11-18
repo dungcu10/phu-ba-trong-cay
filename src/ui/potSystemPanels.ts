@@ -5,7 +5,9 @@
 
 import type { GameSession } from '../app/session.ts';
 import type { SlotRef } from '../core/game.ts';
-import type { PotDef, PotGroup, PotStatName } from '../core/content.ts';
+import { shardId, type PotDef, type PotGroup, type PotStatName } from '../core/content.ts';
+import type { PotInstance } from '../core/state.ts';
+import { nextStarShards } from '../systems/potStars.ts';
 import { cropStatus } from '../systems/growth.ts';
 import { canAfford, isMilestone, nextUpgradeCost, potLook, potStat, STAGE_NAMES, stageOf, upgradeBlock } from '../systems/pots.ts';
 import { claimableMilestones, visibleEvents } from '../systems/events.ts';
@@ -23,9 +25,10 @@ export interface PotSystemActions {
   claimEventMilestone(eventId: string): void;
   claimBookReward(): void;
   openCollection(): void;
+  starUpPot(potInstanceId: string): void;
 }
 
-const SOURCE_TEXT: Record<string, string> = { start: 'Có sẵn từ đầu', shop: 'Mua ở Lò Gốm', floor: 'Có sẵn khi mở tầng', exchange: 'Đổi bằng Ấn Công Trạng', event: 'Phần thưởng sự kiện', 'old-save': 'Từ bản lưu cũ' };
+const SOURCE_TEXT: Record<string, string> = { start: 'Có sẵn từ đầu', shop: 'Mua ở Lò Gốm', floor: 'Có sẵn khi mở tầng', exchange: 'Đổi bằng Ấn Công Trạng', event: 'Phần thưởng sự kiện', 'old-save': 'Từ bản lưu cũ', quest: 'Thưởng nhiệm vụ', cast: 'Đúc ở Lò Gốm', bazaar: 'Săn ở Chợ Mây', sea: 'Rương Biển Mây', combine: 'Ghép từ mảnh chậu' };
 
 /** All stats a pot line ever has, in a stable order. */
 function lineStats(def: PotDef): PotStatName[] {
@@ -97,8 +100,10 @@ export class PotPanel extends Panel {
     );
     this.body.append(h('div', { class: 'cards' }, h('section', { class: 'card' }, h('h3', {}, 'Chỉ số'), ...rows), h('section', { class: 'card' }, h('h3', {}, 'Kỹ năng'), ...skills)));
 
-    // Upgrade.
+    // Upgrade, then stars from shards (chỉ thị 12 B7).
     this.body.append(this.upgradeCard(def, pot, slotState.potInstanceId));
+    const starCard = this.starCard(pot, slotState.potInstanceId);
+    if (starCard) this.body.append(starCard);
 
     // History and owner record.
     const hist = (pot.history ?? []).slice(-3).reverse().map((e) => h('span', {}, `Cấp ${e.level} · ${formatDate(e.at)}`));
@@ -109,6 +114,33 @@ export class PotPanel extends Panel {
 
     if (this.lastLevel >= 0 && pot.level > this.lastLevel) this.playUpgrade(def, pot.level);
     this.lastLevel = pot.level;
+  }
+
+  /** Pot stars ★0–★5 raised with this kind's shards; each star adds to the main stats. */
+  private starCard(pot: PotInstance, instanceId: string): HTMLElement | null {
+    const { content, state } = this.session;
+    const ps = content.potStars;
+    if (!ps) return null;
+    const stars = pot.stars ?? 0;
+    const need = nextStarShards(content, pot);
+    const have = state.inventory[shardId(pot.potId)] ?? 0;
+    const per = Math.round((content.casting?.starStatBonus ?? 0) * 100);
+    const row = h('span', { class: 'pot-stars', 'data-test': 'pot-stars' }, ...Array.from({ length: ps.maxStars }, (_, i) => h('i', { class: i < stars ? 'on' : '' }, '★')));
+    const card = h('section', { class: 'card pot-star-card' }, h('h3', {}, 'Sao chậu ', row));
+    card.append(h('p', { class: 'note left' }, `Mỗi sao: chỉ số chính +${per}% và chậu sáng hơn. Mảnh chậu có từ chậu trùng loại (tự đổi thành ${ps.duplicateShards} mảnh), Chợ Mây và Biển Mây.`));
+    if (need === null) {
+      card.append(h('p', { class: 'note' }, 'Chậu đã đủ sao.'));
+      return card;
+    }
+    const ok = have >= need;
+    const btn = h(
+      'button',
+      { class: `candy ${ok ? 'gold' : 'blocked'}`, 'data-test': 'star-up-pot', onclick: () => (ok ? this.actions.starUpPot(instanceId) : shake(btn)) },
+      itemIcon(content, shardId(pot.potId), 26),
+      ` ${Math.min(have, need)}/${need} mảnh · Lên ★${stars + 1}`,
+    );
+    card.append(h('div', { class: 'candy-wrap' }, btn));
+    return card;
   }
 
   private upgradeCard(def: PotDef, pot: { potId: string; level: number }, instanceId: string): HTMLElement {

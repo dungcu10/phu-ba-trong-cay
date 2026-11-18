@@ -10,7 +10,7 @@ import type { GameState } from '../core/state.ts';
 import { randomFor } from '../core/rng.ts';
 import { localDay } from './missions.ts';
 import { addItem } from './economy.ts';
-import { grantPot } from './pots.ts';
+import { obtainPot } from './potStars.ts';
 
 export type SeaError = 'locked' | 'bad_cell' | 'already_open' | 'no_energy';
 
@@ -172,7 +172,11 @@ export function blowCloud(content: ContentPack, state: GameState, cell: number, 
     }
     if (roll('pot') < r.chest.potChance) {
       const pots = content.potList.filter((p) => p.group === 'crafted' && r.chest.potRarities.includes(p.rarity) && p.unlockLevel <= state.player.level);
-      if (pots.length) out.potInstanceId = grantPot(state, pots[Math.floor(roll('potId') * pots.length)]!.id, 'sea', now);
+      if (pots.length) {
+        const got = obtainPot(content, state, pots[Math.floor(roll('potId') * pots.length)]!.id, 'sea', now);
+        if ('potInstanceId' in got) out.potInstanceId = got.potInstanceId;
+        else out.finds.push(got.shards);
+      }
     }
   }
   if (sm.open.length >= n) {

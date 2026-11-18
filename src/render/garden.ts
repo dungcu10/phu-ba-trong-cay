@@ -9,9 +9,12 @@ import { expandCost, floorSets, potTier } from '../systems/floors.ts';
 import { potLook } from '../systems/pots.ts';
 
 /** Effect tier and small-step count of a pot at a level: from its line's looks when it has them. */
-export function potFx(pot: PotDef, level: number): { tier: 0 | 1 | 2; step: number } {
+export function potFx(pot: PotDef, level: number, stars = 0): { tier: 0 | 1 | 2; step: number } {
   const { look, step } = potLook(pot, level);
-  return look ? { tier: look.aura, step } : { tier: potTier(level, pot.levels.length), step: 0 };
+  const fx = look ? { tier: look.aura, step } : { tier: potTier(level, pot.levels.length), step: 0 };
+  // Chỉ thị 12 B7: pot stars light the pot too — a glow from ★1, the orbiting sparkles from ★3.
+  const starTier = stars >= 3 ? 2 : stars >= 1 ? 1 : 0;
+  return { tier: Math.max(fx.tier, starTier) as 0 | 1 | 2, step: fx.step };
 }
 import { botGarden } from '../systems/visit.ts';
 
@@ -53,7 +56,7 @@ export function homeGarden(content: ContentPack, state: GameState, now: number):
       pots: floor.slots.map((slot) => {
         const inst = state.pots[slot.potInstanceId]!;
         const pot = content.pots.get(inst.potId)!;
-        return { pot, level: inst.level, ...potFx(pot, inst.level), status: cropStatus(content, state, slot, now) };
+        return { pot, level: inst.level, ...potFx(pot, inst.level, inst.stars ?? 0), status: cropStatus(content, state, slot, now) };
       }),
     };
   });

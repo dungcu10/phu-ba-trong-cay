@@ -419,9 +419,11 @@ export interface EventDef {
 export interface ItemDef {
   id: string;
   name: LocalizedText;
-  kind: 'produce' | 'bug' | 'material' | 'good';
+  kind: 'produce' | 'bug' | 'material' | 'good' | 'shard';
   sellPrice: number | null;
   countsTowardStorage: boolean;
+  /** For a pot shard (chỉ thị 12 B7): the pot it belongs to. */
+  potId?: string;
   /** For mutated produce: the mutation and the normal item it is a variant of. */
   mutation?: string;
   baseItem?: string;
@@ -502,6 +504,18 @@ export interface CastingRules {
   tiers: Array<{ rarity: string; coins: number; items: Record<string, number> }>;
   sources: Record<string, string>;
 }
+
+/** Chỉ thị 12 TỔNG B7.2: pot shards, combining, pot stars. */
+export interface PotStarRules {
+  maxStars: number;
+  duplicateShards: number;
+  combineShards: number;
+  starShards: number[];
+  convertSources: string[];
+}
+
+/** Item id of a pot's shard. */
+export const shardId = (potId: string): string => `${potId}#shard`;
 
 /** Chỉ thị 10 § 3.7: Biển Mây Bí Ẩn. */
 export interface SeaDrop {
@@ -607,6 +621,7 @@ export interface ContentPack {
   casting?: CastingRules;
   market?: MarketRules;
   sea?: SeaRules;
+  potStars?: PotStarRules;
   missions: MissionsConfig;
   materials: Map<string, MaterialDef>;
   events: EventDef[];
@@ -642,6 +657,7 @@ export interface RawContent {
   casting?: unknown;
   market?: unknown;
   sea?: unknown;
+  potStars?: unknown;
 }
 
 export class ContentError extends Error {
@@ -657,7 +673,7 @@ type ReadJson = (relativePath: string) => Promise<unknown>;
 export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> {
   const manifest = (await readJson('manifest.json')) as {
     contentVersion: number;
-    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions' | 'materials' | 'events' | 'quests' | 'features' | 'tutorials', string> & Partial<Record<'birds' | 'workshop' | 'cropExtras' | 'casting' | 'market' | 'sea', string>>;
+    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions' | 'materials' | 'events' | 'quests' | 'features' | 'tutorials', string> & Partial<Record<'birds' | 'workshop' | 'cropExtras' | 'casting' | 'market' | 'sea' | 'potStars', string>>;
   };
   const raw: RawContent = {
     contentVersion: manifest.contentVersion,
@@ -682,6 +698,7 @@ export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> 
     casting: manifest.files.casting ? await readJson(manifest.files.casting) : undefined,
     market: manifest.files.market ? await readJson(manifest.files.market) : undefined,
     sea: manifest.files.sea ? await readJson(manifest.files.sea) : undefined,
+    potStars: manifest.files.potStars ? await readJson(manifest.files.potStars) : undefined,
   };
   return buildContentPack(raw);
 }
@@ -1024,6 +1041,17 @@ export function buildContentPack(raw: RawContent): ContentPack {
     if (!isNum(casting.perfectChance) || casting.perfectChance < 0 || casting.perfectChance > 1) problems.push('casting.perfectChance: 0–1');
   }
 
+  let potStars: PotStarRules | undefined;
+  if (isObj(raw.potStars)) {
+    potStars = raw.potStars as unknown as PotStarRules;
+    const ps = potStars;
+    if (!(ps.maxStars >= 1) || !(ps.duplicateShards >= 1) || !(ps.combineShards >= 1)) problems.push('potStars: maxStars, duplicateShards, combineShards ≥ 1');
+    if (!Array.isArray(ps.starShards) || ps.starShards.length < ps.maxStars || ps.starShards.some((n) => !(n >= 1))) problems.push('potStars.starShards: đủ maxStars số ≥ 1');
+    if (!Array.isArray(ps.convertSources)) problems.push('potStars.convertSources: cần danh sách');
+    // One shard item per pot, kept in the Túi Nguyên Liệu.
+    for (const p of pots.values()) addUnique(items, { id: shardId(p.id), name: { vi: `Mảnh ${p.name.vi}` }, kind: 'shard', sellPrice: null, countsTowardStorage: false, potId: p.id }, `potStars.${p.id}`, problems);
+  }
+
   let market: MarketRules | undefined;
   if (isObj(raw.market)) {
     market = raw.market as unknown as MarketRules;
@@ -1102,6 +1130,7 @@ export function buildContentPack(raw: RawContent): ContentPack {
     casting,
     market,
     sea,
+    potStars,
     potSets,
     missions,
     materials,

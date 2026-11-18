@@ -832,3 +832,11 @@ html, body {
 .quick-sell{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0 10px;padding:8px 12px;border-radius:12px;background:rgba(255,255,255,.06)}
 .quick-sell.full{background:rgba(214,120,90,.18);outline:2px solid rgba(214,120,90,.5)}
 .quick-sell .candy{white-space:nowrap;flex:none}
+
+/* Chỉ thị 12 B7: pot shards and stars. */
+.shard-icon{position:relative;display:inline-flex;align-items:center;justify-content:center}
+.shard-icon .shard-pic{clip-path:polygon(0 0,62% 0,48% 30%,70% 52%,44% 74%,58% 100%,0 100%);filter:saturate(.9)}
+.shard-icon::after{content:"";position:absolute;right:8%;top:12%;width:26%;height:26%;border-radius:50%;background:radial-gradient(#fff8d8,rgba(255,240,180,0) 70%)}
+.pot-stars{display:inline-flex;gap:2px;margin-left:6px}
+.pot-stars i{font-style:normal;color:rgba(255,255,255,.25);font-size:20px}
+.pot-stars i.on{color:var(--color-brand-gold,#F3D27E);text-shadow:0 0 6px rgba(243,210,126,.8)}

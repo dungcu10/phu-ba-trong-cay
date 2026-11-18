@@ -1,0 +1,8 @@
+{
+  "_note": "Chỉ thị 12 TỔNG B7.2 (phần code). Mỗi loại chậu có Mảnh riêng (món trong Túi Nguyên Liệu). Có chậu trùng loại từ các nguồn trong convertSources thì tự đổi thành duplicateShards mảnh. Gom combineShards mảnh cùng loại thì ghép được 1 chậu. Mảnh nâng sao chậu ★0 → ★maxStars; starShards[k] là số mảnh để lên từ ★k lên ★k+1; mỗi sao cộng casting.starStatBonus chỉ số chính. Mua ở Lò Gốm, đúc chậu, đổi chậu luôn ra chậu (người chơi tự chọn). CTO chỉnh số.",
+  "maxStars": 5,
+  "duplicateShards": 10,
+  "combineShards": 10,
+  "starShards": [10, 20, 30, 40, 50],
+  "convertSources": ["bazaar", "sea", "event", "quest"]
+}

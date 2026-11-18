@@ -22,6 +22,7 @@
     "cropExtras": "crop-extras.json",
     "casting": "casting.json",
     "market": "market.json",
-    "sea": "sea.json"
+    "sea": "sea.json",
+    "potStars": "pot-stars.json"
   }
 }
