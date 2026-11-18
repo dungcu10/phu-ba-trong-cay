@@ -200,7 +200,7 @@ export class GameView {
       this.applyScroll();
     });
     // Chỉ thị 10 § 2.3 layer order: ring backs, vine, floors (ring fronts, pedestals, pots inside), effects.
-    this.village = new VillageView(art, VILLAGE_TOP);
+    this.village = new VillageView(art, VILLAGE_TOP, this.glow);
     // Shifted right so the houses on the left plots stand clear of the vine root.
     this.village.root.x = (WORLD.view.left + WORLD.view.right) / 2 + 110;
     this.world.addChild(this.village.root, this.ringBackLayer, this.trunkLayer, this.floorsLayer, this.birdLayer, this.effects);
