@@ -253,6 +253,9 @@ export interface GameState {
     freeBaitDay: number;
     /** Lines cast so far (the random key for what bites). */
     casts?: number;
+    /** Casts on local day `castDay` (for fishing.castsPerDay). */
+    castDay?: number;
+    castsToday?: number;
     /** A fish on the line, waiting for the reel mini-game. */
     hooked?: { fishId: string; bait: string } | null;
   };

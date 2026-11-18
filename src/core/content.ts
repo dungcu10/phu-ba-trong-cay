@@ -531,6 +531,8 @@ export interface FishDef {
 export interface FishingRules {
   unlockLevel: number;
   freeBaitPerDay: number;
+  /** Casts allowed per local day (0 or missing = no limit). */
+  castsPerDay?: number;
   baits: Array<{ item: string; recipes: Array<Record<string, number>>; weights: number[] }>;
   fish: FishDef[];
   biteSeconds: [number, number];
@@ -617,6 +619,8 @@ export interface LevelPricing {
   machineStarU: number;
   machineSlotU: number;
   castingU: Record<string, number>;
+  /** Floor decorations (lantern, crystal). */
+  decorU?: number;
 }
 export interface MarketRules {
   bazaar?: BazaarRules;

@@ -14,6 +14,8 @@ import { claimableMilestones, visibleEvents } from '../systems/events.ts';
 import { h, icon } from './dom.ts';
 import { nextHint } from './hint.ts';
 import { formatNumber, formatTimeLeft } from './text.ts';
+import { xuxuGiftReady } from '../systems/xuxu.ts';
+import { isNight } from '../systems/growth.ts';
 
 export interface HudActions {
   openSeeds(): void;
@@ -27,6 +29,7 @@ export interface HudActions {
   openBirds(): void;
   openWorkshop(): void;
   openSea(): void;
+  tapXuxu(): void;
   openLetters(): void;
   openMissions(): void;
   openEvent(): void;
@@ -128,10 +131,16 @@ export class Hud {
       this.trackerClaim,
     );
     this.eventBtn = h('button', { class: 'side-btn event-btn', 'aria-label': 'Lễ Hội', 'data-test': 'open-event', onclick: () => actions.openEvent() }, lineIcon('moon', 26), h('span', { class: 'side-label' }, 'Lễ Hội'), this.eventTime, this.eventBadge);
+    // Chỉ thị 10 § 3.11: Xu Xu in the corner — tap for a line, and a small gift once an hour.
+    this.xuxuPic = h('span', { class: 'xuxu-pic' });
+    this.xuxuBubble = h('span', { class: 'xuxu-bubble hidden', 'aria-live': 'polite' });
+    this.xuxuGift = h('span', { class: 'badge xuxu-gift hidden' }, '!');
+    this.xuxuBtn = h('button', { class: 'xuxu-corner', 'aria-label': 'Xu Xu', 'data-test': 'xuxu', onclick: () => actions.tapXuxu() }, this.xuxuPic, this.xuxuGift);
     this.el = h(
       'div',
       { class: 'hud' },
       h('div', { class: 'hud-right' }, this.eventBtn),
+      h('div', { class: 'xuxu-wrap' }, this.xuxuBubble, this.xuxuBtn),
       h('div', { class: 'hud-top' }, levelBox, h('div', { class: 'pouches' }, this.pouch, this.gemPouch), letters, gear),
       this.hint,
       services,
@@ -142,6 +151,32 @@ export class Hud {
   }
 
   private trackedTrack: string | undefined;
+  private readonly xuxuPic: HTMLElement;
+  private readonly xuxuBubble: HTMLElement;
+  private readonly xuxuGift: HTMLElement;
+  private readonly xuxuBtn: HTMLElement;
+  private xuxuPose = '';
+  private bubbleTimer = 0;
+  private poseUntil = 0;
+
+  /** Xu Xu says a line (and strikes a pose for a moment). */
+  say(line: string, pose: 'happy' | 'wave' | 'surprised' = 'happy'): void {
+    this.xuxuBubble.textContent = line;
+    this.xuxuBubble.classList.remove('hidden');
+    clearTimeout(this.bubbleTimer);
+    this.bubbleTimer = window.setTimeout(() => this.xuxuBubble.classList.add('hidden'), 4200);
+    this.poseUntil = Date.now() + 2500;
+    this.setXuxuPose(pose);
+  }
+
+  private setXuxuPose(pose: string): void {
+    if (pose === this.xuxuPose) return;
+    this.xuxuPose = pose;
+    this.xuxuPic.replaceChildren(icon(`xuxu/${pose}`, 64));
+    this.xuxuBtn.classList.remove('bounce');
+    void this.xuxuBtn.offsetWidth;
+    this.xuxuBtn.classList.add('bounce');
+  }
 
   setTrayOpen(on: boolean): void {
     this.seeds.classList.toggle('on', on);
@@ -161,6 +196,9 @@ export class Hud {
   update(): void {
     const { content, state } = this.session;
     const p = state.player;
+    // Xu Xu sleeps at night, waves by day; a gift mark when the hourly gift is ready.
+    if (Date.now() > this.poseUntil) this.setXuxuPose(isNight(content, this.session.now()) ? 'sleep' : 'wave');
+    this.xuxuGift.classList.toggle('hidden', !xuxuGiftReady(content, state, this.session.now()));
     const need = xpToNextLevel(content, p.level);
     this.level.textContent = String(p.level);
     this.vineFill.style.width = `${Math.min(100, (p.xp / need) * 100)}%`;

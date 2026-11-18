@@ -6,6 +6,13 @@
 import type { ContentPack, PotStatName } from '../core/content.ts';
 import type { FloorState, GameState } from '../core/state.ts';
 import { addItem, removeItem } from './economy.ts';
+import { levelCoins } from './coinSinks.ts';
+
+/** Coins for one decoration at the player's level (chỉ thị 12 A3: market.json levelPricing.decorU). */
+export function decorPrice(content: ContentPack, state: GameState, itemId: string): number | null {
+  const it = content.decor?.items[itemId];
+  return it ? it.price + levelCoins(content, 'decorU', state.player.level) : null;
+}
 
 export type DecorError = 'locked' | 'unknown_item' | 'not_enough_coins' | 'not_enough_items' | 'bad_slot' | 'unknown_floor';
 
@@ -24,10 +31,11 @@ export function buyDecor(content: ContentPack, state: GameState, itemId: string)
   const it = content.decor?.items[itemId];
   if (!it) return 'unknown_item';
   if (state.player.level < it.unlockLevel) return 'locked';
-  if (state.player.coins < it.price) return 'not_enough_coins';
-  state.player.coins -= it.price;
+  const price = decorPrice(content, state, itemId)!;
+  if (state.player.coins < price) return 'not_enough_coins';
+  state.player.coins -= price;
   addItem(state, itemId, 1);
-  return { coins: it.price };
+  return { coins: price };
 }
 
 /** Sets a decoration from the bag into a floor's slot (null takes it down); the old one goes back. */

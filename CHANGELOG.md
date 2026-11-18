@@ -29,6 +29,18 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Chỉ thị 10 M8 — Xu Xu, nhiệm vụ cho hệ mới, hàng mới ở Chợ Mây; castsPerDay, decorU (tag `m-10-m8`)
+- Loại: Thêm
+- Mô tả:
+  - **Xu Xu ở góc màn hình** (§ 3.11): ban ngày vẫy tay, ban đêm ngủ; chạm thì nói một câu (cứ 3 lần thì nhắc tính năng sắp mở ở cấp nào); mỗi 60 phút chạm được 1 quà nhỏ (1 Hạt Kê Mây), có dấu "!" khi quà sẵn. Cửa sổ "Mở khóa: …" có Xu Xu ngạc nhiên và chia lời hướng dẫn thành 2–3 bước. Số liệu `content/base/xuxu.json`.
+  - **Nhiệm vụ** (§ 3.13): 4 nhiệm vụ ngày mới (cho chim ăn, làm hàng ở Xưởng, thổi mây, câu cá — mỗi cái mở theo cấp của hệ đó), 6 nhiệm vụ tuần, 6 thành tựu, 1 hành trình "Dọn sạch Biển Mây". 9 trigger mới: feedBird, makeGoods, blowCloud, openSeaChest, clearSea, catchFish, castPot, starPot, huntBazaar.
+  - **Chợ Mây** (§ 3.13): Phú Bà bày thêm hàng chế biến (khi cấp mở máy), Sợi Mây, Giọt Sương, khoáng, mồi câu, bọ Thường đến Hiếm — không bao giờ bọ Rất hiếm, không chim. Giá tham chiếu bọ bằng đúng giá thương lái. Núm `neighbors.json › market.wares` (weight 0,3, goodsWeight 0,5, minLevel từng món).
+  - **CTO yêu cầu:** `fishing.json › castsPerDay` (0 = không giới hạn; lỗi `casts_used`) và `market.json › levelPricing.decorU` (0; đề xuất 0,2) — giá trang trí = giá gốc + decorU × U(cấp).
+- Sửa trong lúc làm: hành trình "Dọn sạch Biển Mây" lúc đầu có mốc cách đều + thưởng tăng 5%/mốc nên bot mô phỏng 365 ngày ôm ~300 ngọc/ngày (test của CTO bắt được); đã đổi sang mốc nhân đôi, thưởng không tăng.
+- File/Module: src/systems/xuxu.ts (mới), hud.ts, questPanels.ts, controller.ts, styles.css, missions.ts, quests.ts, questdefs.ts, neighbors.ts, fishing.ts, decor.ts, coinSinks.ts, gardenPanels.ts, content.ts, state.ts (`xuxu?`, `fishing.castDay?/castsToday?`), reconcile.ts, tools/make-quests.py, content/base/{missions,neighbors,fishing,market,xuxu,quests}.json, tests/m8.test.ts (5 test), tests/quests.test.ts.
+- Ảnh hưởng save: Không (trường mới tuỳ chọn).
+- Quyết định tự chọn: (1) nhịp mở khóa giữ theo `features.json` hiện có (một số cấp lệch bảng § 5, ví dụ Xưởng cấp 6) vì CTO đã cân theo mô phỏng; nút tính năng chưa mở vẫn ẩn, Xu Xu nhắc "Lên cấp X là mở Y"; (2) BOT dùng Biển Mây/câu cá/đúc chậu: chưa làm, để vào chỉ thị 11 khi làm lại BOT.
+
 ### [2026-11-18] CTO — M7 câu cá: chặn lỗ in tiền, bot đi câu, đo Bọ Rất hiếm trên 4 seed
 - Lỗ: 1 Mồi Thường = 2 Bạc Hà Mây (~14 xu) mà 1 lần câu trả TB ~197 xu (gấp 14 lần), kèm bọ Hiếm/Rất hiếm không giới hạn. `fishing.json`: Mồi Thường 6 Bạc Hà Mây; xu đổi cá 20 / 50 / 130 / 400 / 1.300 (trước 60 / 150 / 400 / 1.200 / 4.000). TB ~65 xu cho mồi ~42 xu.
 - Bot mô phỏng câu tối đa 10 mồi/ngày (mồi miễn phí + chế), 70% kéo được; cá Thường đổi xu, cá hiếm hơn lấy lựa chọn cuối; nhận quà Sổ Cá.

@@ -5,7 +5,7 @@ import type { GameSession } from '../app/session.ts';
 import type { QuestView } from '../systems/quests.ts';
 import { periodEndsAt, questReward, questsReady, trackQuests } from '../systems/quests.ts';
 import { missionsReady } from '../systems/missions.ts';
-import { clear, h } from './dom.ts';
+import { clear, h, icon } from './dom.ts';
 import { dailyMissionsView, type GardenActions } from './gardenPanels.ts';
 import { itemIcon } from './icons.ts';
 import { Panel } from './panel.ts';
@@ -135,6 +135,11 @@ export class FeatureTutorialPanel extends Panel {
     const t = this.session.content.tutorials.get(this.tutorialId);
     const go = h('button', { class: 'candy primary', 'data-test': 'tutorial-go', onclick: () => (this.close(), this.onGo(this.featureId)) }, 'Xem ngay');
     const later = h('button', { class: 'candy', 'data-test': 'tutorial-later', onclick: () => this.close() }, 'Để sau');
-    this.body.append(h('p', { class: 'lead tutorial-text' }, t?.text.vi ?? ''), h('div', { class: 'candy-wrap' }, later, go));
+    // Chỉ thị 10 § 3.11: Xu Xu (surprised) presents the new feature; the text reads as 2–3 short steps.
+    const steps = (t?.text.vi ?? '').split(/(?<=[.!?])\s+/).filter(Boolean);
+    const body = steps.length >= 2 ? h('ol', { class: 'tutorial-steps' }, ...steps.slice(0, 4).map((x) => h('li', {}, x))) : h('p', { class: 'lead tutorial-text' }, t?.text.vi ?? '');
+    const xuxu = icon('xuxu/surprised', 96);
+    xuxu.classList.add('tutorial-xuxu');
+    this.body.append(h('div', { class: 'tutorial-head' }, xuxu, h('div', { class: 'xuxu-say' }, body)), h('div', { class: 'candy-wrap' }, later, go));
   }
 }

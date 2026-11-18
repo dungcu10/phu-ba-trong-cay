@@ -214,6 +214,7 @@ export type ErrorCode =
   | 'nothing_to_sell'
   | 'pot_max_stars'
   | 'no_bait'
+  | 'casts_used'
   | 'line_busy'
   | 'nothing_hooked'
   | 'bad_option'
@@ -373,7 +374,7 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
       return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'baitGot', itemId: r.itemId, qty: 1, free: false }] };
     }
     case 'castLine': {
-      const r = castLine(content, state, cmd.bait);
+      const r = castLine(content, state, cmd.bait, now);
       return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'lineCast', fishId: r.fish.id, bait: cmd.bait }] };
     }
     case 'reelFish': {
