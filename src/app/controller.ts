@@ -96,7 +96,7 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
       this.hud.update();
       // Countdowns on the order board move every second.
       if (this.panel instanceof OrdersPanel || this.panel instanceof MissionsPanel || this.panel instanceof QuestCenterPanel || this.panel instanceof BirdsPanel || this.panel instanceof WorkshopPanel) this.panel.render();
-      if (this.panel instanceof SeaPanel || this.panel instanceof VillagePanel) this.panel.tick();
+      if (this.panel instanceof SeaPanel || this.panel instanceof VillagePanel || this.panel instanceof PetPanel) this.panel.tick();
       this.warnRent();
       this.visitBar?.update();
       // A feature that just opened is introduced once nothing else is on screen.
@@ -636,6 +636,18 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
     this.run({ type: 'jadeRain' });
   }
 
+  sendErrand(index: number, species: string): void {
+    this.run({ type: 'sendErrand', index, species });
+  }
+
+  rerollErrand(index: number): void {
+    this.run({ type: 'rerollErrand', index });
+  }
+
+  claimErrand(index: number): void {
+    this.run({ type: 'claimErrand', index });
+  }
+
   /** A house opens its feature (the toolbar buttons still work too). */
   openHouse(feature: string): void {
     if (feature === 'missions') return this.openQuests(TODAY);
@@ -764,6 +776,16 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
       case 'petPatted':
         if (e.bond > 0) this.sfx.play('tap');
         break;
+      case 'errandSent':
+        this.sfx.play('tap');
+        this.toasts.show('Bé lon ton đi làm việc vặt. Về rồi nhớ nhận túi quà nhé!', 'success', 2000);
+        break;
+      case 'errandClaimed': {
+        this.sfx.play('upgrade');
+        const got = [e.coins ? `${formatNumber(e.coins)} xu` : '', ...Object.entries(e.items).map(([id, q]) => `${q} ${content.items.get(id)?.name.vi ?? ''}`), e.energy ? `${e.energy} gió` : ''].filter(Boolean).join(', ');
+        this.toasts.show(`Túi quà việc vặt${e.fit ? ' (hợp nghề!)' : ''}: ${got || 'thân thiết hàng xóm'}`, 'level', 2800);
+        break;
+      }
       case 'petStarred':
         this.sfx.play('upgrade');
         this.toasts.show(`Thú cưng lên ${e.stars}★! Kỹ năng mạnh hơn.`, 'level', 2400);
