@@ -15,12 +15,14 @@ import { formatDuration, formatNumber, formatPercent } from './text.ts';
 import { Panel } from './panel.ts';
 import { potIcon, favText, statLines, rarityChip, shake } from './potPanels.ts';
 import { bugTraderPrice } from '../systems/neighbors.ts';
+import { quickSellPlan, storeEntries, type Store } from '../systems/storage.ts';
 
 export interface PanelActions {
   /** Plants one pot, or every empty pot when slot is null. Returns how many were planted. */
   plant(slot: SlotRef | null, cropId: string): number;
   sell(itemId: string, qty: number): void;
   sellBugs(itemId: string, qty: number): void;
+  quickSell(): void;
   upgradePot(potInstanceId: string): void;
   placePot(slot: SlotRef, potInstanceId: string): void;
   openBench(slot: SlotRef): void;
@@ -78,7 +80,8 @@ export class SeedPanel extends Panel {
   }
 }
 
-/** "Rương Mây": velvet compartments, capacity as a row of baskets, a scale to sell. */
+/** "Rương Mây" (chỉ thị 12 A2): two tabs — Kho Nông Sản (produce and goods, capacity as a row of
+ *  baskets, Bán nhanh) and Túi Nguyên Liệu (bugs, minerals, materials; no limit); a scale to sell. */
 export class StoragePanel extends Panel {
   private selected: string | null = null;
   private qty = 0;
@@ -86,6 +89,7 @@ export class StoragePanel extends Panel {
   constructor(
     private readonly session: GameSession,
     private readonly actions: PanelActions,
+    private tab: Store = 'farm',
   ) {
     super('Rương Mây', 'storage-panel');
     this.render();
@@ -94,6 +98,15 @@ export class StoragePanel extends Panel {
   render(): void {
     clear(this.body);
     const { content, state } = this.session;
+    const tabs = h('div', { class: 'tabs', role: 'tablist' });
+    for (const [id, name] of [['farm', 'Kho Nông Sản'], ['bag', 'Túi Nguyên Liệu']] as const) {
+      const n = storeEntries(content, state, id).reduce((a, [, q]) => a + q, 0);
+      tabs.append(
+        h('button', { class: `tab${this.tab === id ? ' on' : ''}`, role: 'tab', 'aria-selected': this.tab === id ? 'true' : 'false', 'data-test': `storage-tab-${id}`, onclick: () => ((this.tab = id), (this.selected = null), this.render()) }, name, h('span', { class: 'tab-count' }, formatNumber(n))),
+      );
+    }
+    this.body.append(h('div', { class: 'filters' }, tabs));
+    if (this.tab === 'bag') return this.renderStore('bag');
     const cap = storageCapacity(content, state);
     const used = storageUsed(content, state);
     const baskets = h('span', { class: 'baskets' });
@@ -113,10 +126,30 @@ export class StoragePanel extends Panel {
       formatNumber(upCost),
     );
     this.body.append(h('div', { class: 'cap-row' }, baskets, h('span', { class: 'cap-text' }, `${used}/${cap}`), upBtn));
+    // Bán nhanh: everything beyond what the open orders still need.
+    const plan = quickSellPlan(content, state, this.session.now());
+    const gain = plan.reduce((a, p) => a + p.coins, 0);
+    const n = plan.reduce((a, p) => a + p.qty, 0);
+    this.body.append(
+      h(
+        'div',
+        { class: `quick-sell${used >= cap ? ' full' : ''}` },
+        h('span', { class: 'note' }, used >= cap ? 'Kho Nông Sản đầy! ' : '', n > 0 ? `Bán nhanh ${formatNumber(n)} món thừa (giữ lại đủ cho đơn hàng đang mở).` : 'Không có món thừa: kho đang giữ đúng phần cho đơn hàng.'),
+        h('button', { class: `candy small ${n > 0 ? 'gold' : 'blocked'}`, 'data-test': 'quick-sell', disabled: n > 0 ? undefined : true, onclick: () => this.actions.quickSell() }, 'Bán nhanh · ', coin(16), formatNumber(gain)),
+      ),
+    );
+    this.renderStore('farm');
+  }
 
-    const entries = Object.entries(state.inventory).filter(([, q]) => q > 0);
+  private renderStore(store: Store): void {
+    const { content, state } = this.session;
+    const entries = storeEntries(content, state, store);
+    if (store === 'bag') {
+      const total = entries.reduce((a, [, q]) => a + q, 0);
+      this.body.append(h('div', { class: 'cap-row' }, h('span', { class: 'cap-text' }, `${formatNumber(total)} món · không giới hạn`), h('span', { class: 'note' }, 'Sâu bọ, khoáng, Sợi Mây, Giọt Sương, mồi câu và vật liệu chậu nằm ở đây, không chiếm chỗ Kho Nông Sản.')));
+    }
     if (entries.length === 0) {
-      this.body.append(h('p', { class: 'note' }, 'Rương đang trống. Thu hoạch cây chín để có nông sản.'));
+      this.body.append(h('p', { class: 'note' }, store === 'farm' ? 'Kho đang trống. Thu hoạch cây chín để có nông sản.' : 'Túi đang trống. Bắt sâu bọ, đào Biển Mây để có nguyên liệu.'));
       return;
     }
     const sellable = entries.filter(([id]) => content.items.get(id)?.sellPrice != null);

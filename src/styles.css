@@ -826,3 +826,9 @@ html, body {
 @keyframes sea-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 @keyframes sea-jump{0%,100%{transform:translateY(0)}40%{transform:translateY(-16px)}}
 @media (prefers-reduced-motion: reduce){.sea-xuxu,.sea-cell.fresh>*{animation:none!important}}
+
+/* Chỉ thị 12 A2: Rương Mây — Kho Nông Sản / Túi Nguyên Liệu. */
+.tab .tab-count{margin-left:6px;padding:0 7px;border-radius:9px;background:rgba(0,0,0,.18);font-size:var(--font-size-caption)}
+.quick-sell{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0 10px;padding:8px 12px;border-radius:12px;background:rgba(255,255,255,.06)}
+.quick-sell.full{background:rgba(214,120,90,.18);outline:2px solid rgba(214,120,90,.5)}
+.quick-sell .candy{white-space:nowrap;flex:none}

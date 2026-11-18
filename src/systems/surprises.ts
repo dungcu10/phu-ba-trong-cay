@@ -22,7 +22,8 @@ export function rollMutation(content: ContentPack, state: GameState, planting: P
 export function rollGift(content: ContentPack, state: GameState, planting: Planting, cycleSeconds: number, luck: number): Gift | null {
   const cfg = content.surprises;
   const r = (k: string) => randomFor(state.seed, 'gift', k, planting.id, planting.harvestsDone);
-  const chance = Math.min(cfg.giftChanceMax, (cfg.giftChancePer10Min * cycleSeconds) / 600) * (1 + luck);
+  const base = Math.min(cfg.giftChanceMax, (cfg.giftChancePer10Min * cycleSeconds) / 600);
+  const chance = Math.max(cfg.giftChanceMin ?? 0, base) * (1 + luck);
   if (r('chance') >= chance) return null;
   const total = cfg.gifts.reduce((a, g) => a + g.weight, 0);
   let pick = r('kind') * total;

@@ -536,6 +536,10 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
     this.run({ type: 'upgradePot', potInstanceId });
   }
 
+  quickSell(): void {
+    this.run({ type: 'quickSell' });
+  }
+
   openStorage(): void {
     this.sfx.play('tap');
     this.openPanel(new StoragePanel(this.session, this));
@@ -613,6 +617,10 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
         this.toasts.show(e.perfect ? `Đúc thành công ${name} Hoàn Mỹ ★! Chậu đã vào kho chậu.` : `Đúc thành công ${name}! Chậu đã vào kho chậu.`, 'level', 3000);
         break;
       }
+      case 'quickSold':
+        this.sfx.play('coin');
+        this.toasts.show(`Bán nhanh ${formatNumber(e.items.reduce((a, x) => a + x.qty, 0))} món: +${formatNumber(e.coins)} xu`, 'success', 2200);
+        break;
       case 'cloudBlown': {
         const names = e.finds.map((f) => `${f.qty} ${content.items.get(f.itemId)?.name.vi ?? ''}`).join(', ');
         if (e.cleared) {

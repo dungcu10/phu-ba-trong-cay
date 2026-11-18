@@ -41,7 +41,7 @@ export function nextHint(content: ContentPack, state: GameState, now: number): H
 
   const hasSellable = Object.entries(state.inventory).some(([id, qty]) => qty > 0 && content.items.get(id)?.sellPrice != null);
   if (ripe > 0 && storageFree(content, state) <= 0) {
-    return { kind: 'storageFull', text: 'Kho đầy rồi — mở Kho để bán bớt nông sản.' };
+    return { kind: 'storageFull', text: 'Kho Nông Sản đầy rồi — mở Rương Mây, bấm Bán nhanh.' };
   }
   if (ripe > 0) return { kind: 'harvest', text: 'Cây đã chín! Chạm hoặc kéo tay qua các chậu để thu hoạch.' };
   if (bug) return { kind: 'bug', text: 'Có Bọ Mây đậu trên cây — chạm để bắt, dùng để nâng cấp chậu.' };
