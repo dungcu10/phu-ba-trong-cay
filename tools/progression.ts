@@ -20,7 +20,7 @@ import { randomFor } from '../src/core/rng.ts';
 import { seaOpen } from '../src/systems/sea.ts';
 import { fishingOpen } from '../src/systems/fishing.ts';
 import { decorPrice } from '../src/systems/decor.ts';
-import { nextHouseCost } from '../src/systems/village.ts';
+import { nextHouseCost, villageLevel } from '../src/systems/village.ts';
 import { foodAt, foodKind, petOf, walkSlots } from '../src/systems/pets.ts';
 import { bazaarOpen, rerollCost, wantedItems } from '../src/systems/bazaar.ts';
 import { canAfford, nextUpgradeCost } from '../src/systems/pots.ts';
@@ -60,6 +60,12 @@ export interface DayReport {
   income: number;
   /** Quà bất ngờ found this day (12 TỔNG B1.3: 10–15). */
   gifts: number;
+  /** Chỉ thị 11 § H (added by the developer for economy-11.md): Cấp Làng, pets owned, bugs the
+   *  pets caught this day, errand bags claimed this day. */
+  villageLevel: number;
+  pets: number;
+  petBugs: number;
+  errands: number;
 }
 
 const T0 = Date.parse('2026-11-17T08:00:00+07:00');
@@ -99,6 +105,8 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
   let milestones = 0;
   let gemsEarned = 0;
   let birdCaught = 0;
+  let petCaught = 0;
+  let errandsClaimed = 0;
   let questsClaimed = 0;
   const gemSources: Record<string, number> = {};
   /** Coins in (+) and out (−) by command over the whole run (A3: where the coins come from and go). */
@@ -119,6 +127,8 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
       }
       for (const e of r.events) {
         if (e.type === 'birdCaught') birdCaught += 1;
+        if (e.type === 'petCaught') petCaught += 1;
+        if (e.type === 'errandClaimed') errandsClaimed += 1;
         if (e.type === 'giftFound') { giftsFound += 1; giftKinds[e.gift.kind] = (giftKinds[e.gift.kind] ?? 0) + 1; }
         if (e.type === 'floorUnlocked' || e.type === 'floorExpanded' || e.type === 'floorStarred') milestones++;
         if (e.type === 'potBought' || (e.type === 'potUpgraded' && e.milestone) || e.type === 'storageUpgraded') milestones++;
@@ -152,6 +162,8 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
     const bugsBefore = bookCount();
     const ordersBefore = s.stats.ordersDone;
     const birdBefore = birdCaught;
+    const petBefore = petCaught;
+    const errandsBefore = errandsClaimed;
     let visits = 0;
     let fullVisits = 0;
     for (let m = 0; m <= 14 * 60; m += visitMinutes) {
@@ -400,6 +412,10 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
       commonBugsPerPot: (bugsByRarity.common ?? 0) / Math.max(1, s.floors.reduce((a, f) => a + f.slots.filter((x) => x.potInstanceId).length, 0)),
       income: dayIncome,
       gifts: giftsFound,
+      villageLevel: villageLevel(content, s),
+      pets: s.pets.length,
+      petBugs: petCaught - petBefore,
+      errands: errandsClaimed - errandsBefore,
     });
     dayIncome = 0;
     giftsFound = 0;

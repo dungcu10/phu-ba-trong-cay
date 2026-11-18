@@ -81,7 +81,7 @@ test('tất định: mô phỏng liên tục hay mở lại sau 7 ngày cho cùn
   assert.deepEqual(view(steps), view(once));
 });
 
-test('hiệu năng: 40 BOT × 7 ngày (đủ chim) dưới 150 ms khi đã chạy nóng', () => {
+test('hiệu năng: 40 BOT × 7 ngày (đủ mọi hệ: chim, làng, thú cưng) dưới 250 ms khi đã chạy nóng (chỉ thị 11 § I)', () => {
   simulateNeighbors(content, newGame(content, { level: 20 }, 3), T0 + 7 * DAY);
   // Best of 3 runs: the test runner works on other test files at the same time.
   let ms = Infinity;
@@ -91,5 +91,5 @@ test('hiệu năng: 40 BOT × 7 ngày (đủ chim) dưới 150 ms khi đã chạ
     simulateNeighbors(content, s, T0 + 7 * DAY);
     ms = Math.min(ms, performance.now() - t);
   }
-  assert.ok(ms < 200 * PERF_SLACK, `${ms.toFixed(0)} ms`);
+  assert.ok(ms < 250 * PERF_SLACK, `${ms.toFixed(0)} ms`);
 });
