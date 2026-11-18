@@ -29,6 +29,12 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] CTO — 11 TỔNG N5 phần 2a: bot làm việc vặt thú cưng; bật chặn mốc tiến bộ
+- Bot mô phỏng: mỗi lần ghé nhận việc vặt đã xong, gửi thú cưng không đi dắt vào việc hợp nghề trước. Việc vặt trả ~44 nghìn xu / 30 ngày.
+- Mốc tiến bộ đếm thêm việc vặt hoàn thành. Ngày 10–30: 2–15 mốc/ngày (trước có ngày 0). Bật chặn chỉ số này (tối thiểu 2).
+- Số trong `pets.json` giữ nguyên. Cổng XANH, typecheck sạch, 250/250 test.
+- Trạng thái nghiệm thu: Chờ
+
 ### [2026-11-18] Chỉ thị 11 TỔNG N5 (phần 2a) — Việc vặt thú cưng + mục tiêu cho cấp 19–27 (tag `m-11-n5b`)
 - Loại: Thêm / Thay đổi
 - Mô tả:
