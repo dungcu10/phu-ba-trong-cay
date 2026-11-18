@@ -528,7 +528,11 @@ export class GameView {
 
   /** The vine: its base under the first floor, middle sections repeated up to the top floor. */
   private buildTrunk(): void {
+    // A growing-vine mask in progress keeps working: it is taken out, then put back on the new trunk.
+    const mask = this.trunkLayer.mask instanceof Graphics ? this.trunkLayer.mask : null;
+    if (mask) this.trunkLayer.removeChild(mask);
     this.trunkLayer.removeChildren().forEach((c) => c.destroy({ children: true }));
+    if (mask) this.trunkLayer.addChild(mask);
     if (hasWorld10(this.art)) {
       // Chỉ thị 10: root under the lowest floor, the seamless segment up past the highest floor shown
       // (the locked one included), the top above it; decoration seeded per floor.
@@ -746,6 +750,35 @@ export class GameView {
     for (let k = 0; k < 4; k++) {
       setTimeout(() => this.effects.burst(this.dot, WORLD.floorCenterX - 400 + k * 260, y - 120, 10, { scale: 0.6, speed: 420, tint: hex(C.brand.gold) }), open.cameraMs + k * 160);
     }
+    this.growVine(index);
+  }
+
+  /** § C2: when a floor opens, the vine grows up one floor (a mask over the trunk rises), leaves sparkle. */
+  private growVine(index: number): void {
+    if (!hasWorld10(this.art)) return;
+    const n = this.floors.length + (this.model.locked ? 1 : 0);
+    const to = this.floorY(n - 1) - TOP_ABOVE - 40;
+    const from = Math.min(this.floorY(index) + 60, this.floorY(Math.max(0, n - 2)) - TOP_ABOVE);
+    const mask = new Graphics();
+    this.trunkLayer.addChild(mask);
+    this.trunkLayer.mask = mask;
+    const x = WORLD.trunk.x;
+    const draw = (top: number) => mask.clear().rect(x - 500, top, 1000, this.floorY(0) + ROOT_BELOW + 400 - top).fill(0xffffff);
+    draw(from);
+    const ms = TOKENS.world.floorOpen.cameraMs + 900;
+    this.tweens.add(
+      ms,
+      ease.outCubic,
+      (t) => {
+        const top = from + (to - from) * t;
+        draw(top);
+        if (Math.random() < 0.25) this.effects.burst(this.dot, x + (Math.random() - 0.5) * 120, top + 40, 2, { scale: 0.4, speed: 160, tint: hex(C.brand.jade) });
+      },
+      () => {
+        if (this.trunkLayer.mask === mask) this.trunkLayer.mask = null;
+        mask.destroy();
+      },
+    );
   }
 
   /** A new star on a floor sign: the sign hops and sparkles. */
@@ -1004,7 +1037,7 @@ export class GameView {
     }
     this.village.animate(dt, this.scroll < WORLD.floorGap * 0.3);
     this.effects.update(dt);
-    this.ambience.update(dt, this.scroll);
+    this.ambience.update(dt, this.scroll, this.scroll / WORLD.floorGap);
     this.sinceRefresh += dt;
     if (this.sinceRefresh >= STATUS_REFRESH_MS) {
       this.sinceRefresh = 0;

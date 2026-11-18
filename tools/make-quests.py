@@ -101,6 +101,10 @@ jr=[
  ("petstars","Thú cưng lấp lánh","Tổng số sao của các thú cưng.",dict(measure="petStars",minLevel=6,tiers={"targets":[3,5,7,9,12,15,18,20]}),{"coinsHours":3}),
  ("medals","Huy Chương Độ Cao","Số Huy Chương Độ Cao (mở tầng 5, 10, 15, 20).",dict(measure="medals",minLevel=16,tiers={"targets":[1,2,3,4]}),{"coinsHours":4}),
  ("high","Vườn trên trời cao","Thu hoạch ở tầng thứ 5 trở lên.",dict(trigger="harvest",filter={"floorMin":4},minLevel=19,tiers={"base":40,"growth":2.5,"rewardGrowth":1.0}),{"coinsHours":2}),
+ # Chỉ thị 11 § C2: một hành trình cho mỗi vùng trời cao (tầng 6–10, 11–15, 16–20), thưởng chỉ có xu.
+ ("zone-gold","Trời Vàng Kim","Thu hoạch ở tầng thứ 6 trở lên (Trời Vàng Kim).",dict(trigger="harvest",filter={"floorMin":5},minLevel=22,tiers={"base":40,"growth":2.5,"rewardGrowth":1.0}),{"coinsHours":2}),
+ ("zone-dusk","Hoàng Hôn Tím","Thu hoạch ở tầng thứ 11 trở lên (Hoàng Hôn Tím).",dict(trigger="harvest",filter={"floorMin":10},minLevel=37,tiers={"base":40,"growth":2.5,"rewardGrowth":1.0}),{"coinsHours":3}),
+ ("zone-night","Thiên Giới Đêm","Thu hoạch ở tầng thứ 16 trở lên (Thiên Giới Đêm).",dict(trigger="harvest",filter={"floorMin":15},minLevel=52,tiers={"base":40,"growth":2.5,"rewardGrowth":1.0}),{"coinsHours":4}),
  ("strawberry","Dâu mây ngọt lịm","Thu hoạch Dâu Tây Mây.",dict(trigger="harvest",filter={"cropId":S},tiers={"base":20,"growth":2.5,"rewardGrowth":1.05}),{"coinsHours":2,"gems":1}),
 ]
 for id,name,desc,kw,rew in jr:

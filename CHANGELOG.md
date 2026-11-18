@@ -29,6 +29,15 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Chỉ thị 11 TỔNG N2 (phần 2) — Cảnh trời theo vùng, cây leo mọc khi mở tầng, hành trình vùng trời (tag `m-11-n2b`)
+- Loại: Thêm
+- Mô tả:
+  - **Cảnh trời theo vùng** (vẽ bằng code, chuyển mượt theo tầng máy quay đang xem): trời thấp có đàn chim nhỏ bay qua (khoảng 40 giây một lần); tia nắng mạnh nhất ở trời vàng, nhạt ở hoàng hôn, tắt ở đêm; mây trôi đổi màu theo vùng (vàng ấm / hồng tím / xanh tím); vùng đêm có sao nhấp nháy và dải cực quang trôi chậm, phấn hoa mờ đi.
+  - **Cây leo mọc khi mở tầng:** thân cây vươn lên tầng mới cùng lúc máy quay bay lên, kèm đốm sáng xanh ngọc dọc ngọn.
+  - **Hành trình vùng trời** (mục tiêu cho người chơi cấp cao): Trời Vàng Kim (thu hoạch tầng 6+, từ cấp 22), Hoàng Hôn Tím (tầng 11+, cấp 37), Thiên Giới Đêm (tầng 16+, cấp 52). Thưởng chỉ có xu. Tổng 88 nhiệm vụ.
+- File/Module: ambience.ts (zoneWeights, đàn chim, sao, cực quang, tia nắng/mây theo vùng), scene.ts (growVine, buildTrunk giữ mặt nạ đang chạy), tools/make-quests.py + quests.json.
+- Ảnh hưởng save: Không.
+
 ### [2026-11-18] Chỉ thị 11 TỔNG N3 (phần 1) — Cảnh Làng Phú Bà dưới tầng 1 (tag `m-11-n3a`)
 - Loại: Thêm
 - Mô tả:
