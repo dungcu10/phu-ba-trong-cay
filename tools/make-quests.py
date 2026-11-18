@@ -62,8 +62,8 @@ wk=[
  ("fish","Câu cá trên mây",dict(trigger="catchFish",target=8),{"coinsHours":2,"gems":1},14),
  ("hunt","Săn hàng ở Chợ Mây",dict(trigger="huntBazaar",target=5),{"coinsHours":2,"gems":1},6),
  ("cast","Đúc chậu ở Lò Gốm",dict(trigger="castPot",target=1),{"coinsHours":2,"gems":1},12),
- ("errands","Sai thú cưng đi việc vặt",dict(trigger="petErrand",target=6),{"coinsHours":2,"gems":1},4),
- ("petfood","Cho thú cưng ăn",dict(trigger="feedPet",target=10),{"coinsHours":2,"items":{CLAY:2}},4),
+ ("errands","Sai thú cưng đi việc vặt",dict(trigger="petErrand",target=6),{"coinsHours":2},4),
+ ("petfood","Cho thú cưng ăn",dict(trigger="feedPet",target=10),{"coinsHours":2},4),
 ]
 for row in wk:
     id,name,kw,rew=row[:4]; lv=row[4] if len(row)>4 else 1
@@ -95,12 +95,12 @@ jr=[
  ("gerbera","Vườn hoa vàng","Thu hoạch Hoa Đồng Tiền Vàng.",dict(trigger="harvest",filter={"cropId":G},tiers={"base":20,"growth":2.5,"rewardGrowth":1.05}),{"coinsHours":2,"gems":1}),
  ("seamaps","Dọn sạch Biển Mây","Dọn hết mây trên một bản đồ Biển Mây.",dict(trigger="clearSea",minLevel=8,tiers={"base":2,"growth":2,"rewardGrowth":1.0}),{"coinsHours":3,"gems":2}),
  # Chỉ thị 11: mục tiêu cho cấp cao (làng, thú cưng, độ cao).
- ("houses","Làng ngày càng đẹp","Tổng số lần nâng nhà trong làng.",dict(measure="houseUpgrades",minLevel=5,tiers={"base":2,"step":3,"rewardGrowth":1.0}),{"coinsHours":2,"gems":1}),
- ("pets","Gia đình thú cưng","Số thú cưng đang nuôi.",dict(measure="pets",minLevel=4,tiers={"targets":[1,2,3,4]}),{"coinsHours":2,"gems":2}),
- ("petlevels","Thú cưng lớn khôn","Tổng cấp của các thú cưng.",dict(measure="petLevels",minLevel=4,tiers={"base":10,"step":10,"rewardGrowth":1.0}),{"coinsHours":2,"gems":1}),
- ("petstars","Thú cưng lấp lánh","Tổng số sao của các thú cưng.",dict(measure="petStars",minLevel=6,tiers={"targets":[3,5,7,9,12,15,18,20]}),{"coinsHours":3,"gems":2}),
- ("medals","Huy Chương Độ Cao","Số Huy Chương Độ Cao (mở tầng 5, 10, 15, 20).",dict(measure="medals",minLevel=16,tiers={"targets":[1,2,3,4]}),{"coinsHours":4,"gems":3}),
- ("high","Vườn trên trời cao","Thu hoạch ở tầng thứ 5 trở lên.",dict(trigger="harvest",filter={"floorMin":4},minLevel=19,tiers={"base":40,"growth":2.5,"rewardGrowth":1.0}),{"coinsHours":2,"gems":1}),
+ ("houses","Làng ngày càng đẹp","Tổng số lần nâng nhà trong làng.",dict(measure="houseUpgrades",minLevel=5,tiers={"base":2,"step":3,"rewardGrowth":1.0}),{"coinsHours":2}),
+ ("pets","Gia đình thú cưng","Số thú cưng đang nuôi.",dict(measure="pets",minLevel=4,tiers={"targets":[1,2,3,4]}),{"coinsHours":2}),
+ ("petlevels","Thú cưng lớn khôn","Tổng cấp của các thú cưng.",dict(measure="petLevels",minLevel=4,tiers={"base":10,"step":10,"rewardGrowth":1.0}),{"coinsHours":2}),
+ ("petstars","Thú cưng lấp lánh","Tổng số sao của các thú cưng.",dict(measure="petStars",minLevel=6,tiers={"targets":[3,5,7,9,12,15,18,20]}),{"coinsHours":3}),
+ ("medals","Huy Chương Độ Cao","Số Huy Chương Độ Cao (mở tầng 5, 10, 15, 20).",dict(measure="medals",minLevel=16,tiers={"targets":[1,2,3,4]}),{"coinsHours":4}),
+ ("high","Vườn trên trời cao","Thu hoạch ở tầng thứ 5 trở lên.",dict(trigger="harvest",filter={"floorMin":4},minLevel=19,tiers={"base":40,"growth":2.5,"rewardGrowth":1.0}),{"coinsHours":2}),
  ("strawberry","Dâu mây ngọt lịm","Thu hoạch Dâu Tây Mây.",dict(trigger="harvest",filter={"cropId":S},tiers={"base":20,"growth":2.5,"rewardGrowth":1.05}),{"coinsHours":2,"gems":1}),
 ]
 for id,name,desc,kw,rew in jr:
