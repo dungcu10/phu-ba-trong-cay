@@ -29,6 +29,19 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Chỉ thị 11 TỔNG N3 (phần 1) — Cảnh Làng Phú Bà dưới tầng 1 (tag `m-11-n3a`)
+- Loại: Thêm
+- Mô tả:
+  - **Làng ở mặt đất (0 m):** kéo máy quay xuống dưới tầng 1 (hoặc chạm nút nhà trên thước đo độ cao) là tới làng. Ảnh mặt đất làng (N1) mờ dần vào bầu trời ở phía trên. 8 nhà đứng trên 8 ô đất, ô 9 là biển gỗ "Dinh Phú Bà — sắp xây", cần câu ở cầu gỗ là Bến Câu Cá.
+  - Nhà chưa mở: mờ, có "🔒 Mở ở cấp X". Nhà đã mở có nhãn "Cấp N". **Bong bóng báo trên mái** (theo `houseAlerts` chung với bảng Làng), nảy nhẹ mỗi 2 giây; thêm bong bóng Nhà Thú Cưng: "Bé đi việc vặt đã về" / "Thú cưng đói".
+  - **Chạm vào nhà** mở thẳng chức năng (nhà chưa mở thì báo cấp mở); không bật hộp thoại chặn. Nút trên thanh công cụ và nút nhà ở HUD vẫn như cũ.
+  - Thú cưng không được dắt (hoặc đang đi việc vặt) chơi trong làng.
+  - Thước đo độ cao: ở làng ghi "Làng Phú Bà · 0 m", nút nhà sáng.
+  - Đi thăm vườn hàng xóm thì không có làng (máy quay dừng ở tầng 1 như trước).
+- File/Module: src/render/villageScene.ts (mới), scene.ts (làng, `focusVillage`, giới hạn máy quay dưới tầng 1, chạm nhà), villageAlerts.ts (bong bóng Nhà Thú Cưng), controller.ts (`tapHouse`), altitude.ts, styles.css.
+- Ảnh hưởng save: Không.
+- Quyết định tự chọn: (1) vị trí 9 ô đất đo từ ảnh nền làng; Đình ở ô giữa phía trước, Cổng Biển Mây ở ô giữa phía sau; (2) làng dịch sang phải 110 điểm để nhà ở ô bên trái không bị gốc cây leo che; (3) Xu Xu đi dạo, BOT ghé Chợ, hoạt ảnh riêng từng nhà (lửa lò, khinh khí cầu bay đi/về…) và màn mở nhà: phần 2.
+
 ### [2026-11-18] Chỉ thị 11 TỔNG N2 (phần 1) — Trời nhiều lớp, 20 tầng theo vùng trời, thước đo độ cao (tag `m-11-n2a`)
 - Loại: Thêm / Thay đổi
 - Mô tả:
