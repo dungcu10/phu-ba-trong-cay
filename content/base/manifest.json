@@ -27,6 +27,7 @@
     "fishing": "fishing.json",
     "decor": "decor.json",
     "xuxu": "xuxu.json",
-    "village": "village.json"
+    "village": "village.json",
+    "pets": "pets.json"
   }
 }

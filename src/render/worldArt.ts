@@ -105,10 +105,29 @@ export class PetActor {
   }
 
   static create(art: Art, species: PetSpecies, seed: number, minX: number, maxX: number): PetActor | null {
-    const f = (name: PetMode) => `world/pet/${species}/${name}`;
-    if (!art.has(f('idle'))) return null;
-    const get = (m: PetMode) => (art.has(f(m)) ? art.get(f(m)) : art.get(f('idle')));
-    return new PetActor({ idle: get('idle'), run: get('run'), sleep: get('sleep'), happy: get('happy') }, seed, minX, maxX);
+    return PetActor.fromFrames(art, `world/pet/${species}`, { stand: 'idle', run: 'run', sleep: 'sleep', happy: 'happy' }, seed, minX, maxX);
+  }
+
+  /** Chỉ thị 11: a pet from its frame prefix and pose names (stand, run, sleep, happy). */
+  static fromFrames(art: Art, prefix: string, poses: Record<'stand' | 'run' | 'sleep' | 'happy', string>, seed: number, minX: number, maxX: number, asleep = false): PetActor | null {
+    const f = (name: string) => `${prefix}/${name}`;
+    if (!art.has(f(poses.stand))) return null;
+    const get = (pose: string) => (art.has(f(pose)) ? art.get(f(pose)) : art.get(f(poses.stand)));
+    const actor = new PetActor({ idle: get(poses.stand), run: get(poses.run), sleep: get(poses.sleep), happy: get(poses.happy) }, seed, minX, maxX);
+    if (asleep) actor.sleepOnly();
+    return actor;
+  }
+
+  private asleep = false;
+  /** Size of the picture (new pet art is larger than the old). */
+  baseScale = 1;
+  /** The run picture looks right (new pet art) rather than left (Mèo Mây). */
+  facesRight = false;
+
+  /** A hungry or resting pet just sleeps where it is (chỉ thị 11 § E5). */
+  sleepOnly(): void {
+    this.asleep = true;
+    this.set('sleep');
   }
 
   private set(mode: PetMode): void {
@@ -122,10 +141,15 @@ export class PetActor {
   update(dtMs: number, visible: boolean): void {
     if (!visible) return;
     this.t += dtMs / 1000;
-    const flip = this.mode === 'run' && this.dir > 0 ? -1 : 1;
+    if (this.asleep) {
+      const k = 0.025 * Math.sin(this.t * 1.6);
+      this.sprite.scale.set(this.baseScale * (1 - k * 0.5), this.baseScale * (1 + k));
+      return;
+    }
+    const flip = this.mode === 'run' && this.dir > 0 !== this.facesRight ? -1 : 1;
     // Breathing (and a bounce while running), done by squash and stretch on the single picture.
     const k = this.mode === 'sleep' ? 0.025 * Math.sin(this.t * 1.6) : this.mode === 'run' ? 0 : 0.018 * Math.sin(this.t * 2.6);
-    this.sprite.scale.set(flip * (1 - k * 0.5), 1 + k);
+    this.sprite.scale.set(this.baseScale * flip * (1 - k * 0.5), this.baseScale * (1 + k));
     if (this.mode === 'run') {
       this.sprite.pivot.y = Math.abs(Math.sin(this.t * 9)) * 6;
       const step = (dtMs / 1000) * 90;

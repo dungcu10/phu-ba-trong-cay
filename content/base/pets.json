@@ -1,0 +1,55 @@
+{
+  "_note": "Chỉ thị 11 TỔNG § E. 4 thú cưng. Kỹ năng: value = lo + (hi − lo) × (sao − 1) / 4, rồi × (1 + levelBoost × (cấp − 1)). Kỹ năng 2 mở ở cấp thú cưng 10, kỹ năng 3 ở cấp 20. Thú cưng được dắt (activeSlots: 1, thêm khi Nhà Thú Cưng cấp 3 và cấp 5) và trông một tầng; kỹ năng vườn chỉ chạy trên tầng nó trông, kỹ năng Sạp của Mèo áp dụng cho cả vườn. Đói (no = 0) thì ngủ, kỹ năng thụ động nghỉ; Thân Thiết không bao giờ giảm. Số liệu khởi điểm, CTO chỉnh qua mô phỏng.",
+  "unlockLevel": 4,
+  "maxLevel": 30,
+  "levelBoost": 0.01,
+  "xpPerLevel": [20, 1.18],
+  "activeSlots": { "base": 1, "houseLevels": [3, 5] },
+  "food": { "max": 100, "perHour": 4, "perFeed": 40, "likedTimes": 3 },
+  "bond": { "max": 100, "perFeed": 2, "feedsPerDay": 5, "perPat": 1, "patsPerHour": 3, "milestones": [25, 50, 75, 100], "badgeAt": [25, 75] },
+  "xp": { "perFeed": 3, "perSkill": 1, "perPat": 1 },
+  "stars": [
+    { "minLevel": 5, "badges": 2, "bugRarity": "good", "bugs": 3, "coins": 2000 },
+    { "minLevel": 12, "badges": 4, "bugRarity": "good", "bugs": 6, "coins": 6000 },
+    { "minLevel": 20, "badges": 7, "bugRarity": "rare", "bugs": 4, "coins": 15000 },
+    { "minLevel": 28, "badges": 12, "bugRarity": "epic", "bugs": 2, "coins": 40000 }
+  ],
+  "species": [
+    {
+      "id": "pet.cloud-kitten", "name": { "vi": "Mèo Mây Con" }, "title": { "vi": "Bà Chủ Sạp" }, "art": "world/pet/cloud-cat", "poses": { "stand": "idle", "run": "run", "sleep": "sleep", "happy": "happy" },
+      "unlockLevel": 4, "price": { "free": true }, "badge": "base:mat.badge-kitten", "likes": { "kinds": ["flower"], "items": ["base:good.jam.cloud-strawberry", "base:good.jam.sky-apple", "base:good.jam.heaven-peach"] },
+      "skills": [
+        { "id": "callCustomers", "name": { "vi": "Gọi Khách" }, "desc": { "vi": "Hàng xóm ghé mua hàng trên Sạp nhanh hơn {v}. Chạy cả khi tắt game." }, "lo": 0.1, "hi": 0.3, "unit": "percent" },
+        { "id": "restock", "name": { "vi": "Tự Bày Hàng" }, "desc": { "vi": "Món trên Sạp bán hết thì Mèo tự bày lại từ kho, cùng giá. Tối đa {v} lần mỗi ngày." }, "lo": 5, "hi": 15, "unit": "count" },
+        { "id": "vipCustomer", "name": { "vi": "Khách Quý" }, "desc": { "vi": "Mỗi ngày 1 khách quý mua một món với giá cao hơn {v}." }, "lo": 0.2, "hi": 0.4, "unit": "percent" }
+      ]
+    },
+    {
+      "id": "pet.fire-fox", "name": { "vi": "Cáo Lửa Con" }, "title": { "vi": "Thợ Săn Bọ" }, "art": "pet/fire-fox", "poses": { "stand": "stand", "run": "run", "sleep": "sleep", "happy": "happy" },
+      "unlockLevel": 6, "price": { "coins": 2500 }, "badge": "base:mat.badge-fox", "likes": { "kinds": ["fruit"], "items": [] },
+      "skills": [
+        { "id": "pounce", "name": { "vi": "Vồ Bọ" }, "desc": { "vi": "Trên tầng Cáo trông, cứ {v} phút bắt 1 con bọ (tính bù khi tắt game tối đa 8 giờ)." }, "lo": 10, "hi": 5, "unit": "minutes", "offlineHours": 8 },
+        { "id": "sniff", "name": { "vi": "Đánh Hơi" }, "desc": { "vi": "Trên Biển Mây đánh dấu sẵn {v} ô rương mỗi bản đồ." }, "lo": 1, "hi": 2, "unit": "count" },
+        { "id": "warmFire", "name": { "vi": "Lửa Ấm" }, "desc": { "vi": "Cây trên tầng của Cáo lâu khát hơn {v}." }, "lo": 0.2, "hi": 0.5, "unit": "percent" }
+      ]
+    },
+    {
+      "id": "pet.sprout-sparrow", "name": { "vi": "Sẻ Mầm" }, "title": { "vi": "Thợ Làm Vườn" }, "art": "pet/sprout-sparrow", "poses": { "stand": "stand", "run": "run", "sleep": "sleep", "happy": "happy" },
+      "unlockLevel": 9, "price": { "gems": 40 }, "badge": "base:mat.badge-sparrow", "likes": { "kinds": ["herb"], "items": ["base:mat.cloud-millet"] },
+      "skills": [
+        { "id": "pickSeeds", "name": { "vi": "Nhặt Hạt" }, "desc": { "vi": "Gieo trên tầng của Sẻ có {v} cơ hội được hoàn tiền hạt." }, "lo": 0.05, "hi": 0.15, "unit": "percent" },
+        { "id": "replant", "name": { "vi": "Gieo Lại Như Cũ" }, "desc": { "vi": "Chậu vừa thu hoạch xong trên tầng của Sẻ tự gieo lại đúng giống cũ. Tối đa {v} chậu mỗi ngày." }, "lo": 20, "hi": 60, "unit": "count" },
+        { "id": "harvestHelp", "name": { "vi": "Thu Hoạch Hộ" }, "desc": { "vi": "Cứ {v} giờ tự thu hoạch cây chín trên tầng của Sẻ (EXP bằng nửa). Kho đầy thì dừng." }, "lo": 4, "hi": 2, "unit": "hours" }
+      ]
+    },
+    {
+      "id": "pet.jade-dragon", "name": { "vi": "Rồng Ngọc Con" }, "title": { "vi": "Thần Mưa" }, "art": "pet/jade-dragon", "poses": { "stand": "stand", "run": "run", "sleep": "sleep", "happy": "happy" },
+      "unlockLevel": 12, "price": { "gems": 80, "shards": { "item": "base:mat.dragon-egg-shard", "qty": 10 } }, "badge": "base:mat.badge-dragon", "likes": { "kinds": [], "items": ["base:good.juice.cloud-bokchoy", "base:good.juice.sky-carrot"] },
+      "skills": [
+        { "id": "jadeRain", "name": { "vi": "Mưa Ngọc" }, "desc": { "vi": "Bấm để tưới cả tầng và rút ngắn {v} thời gian lớn còn lại. Hồi lại sau 8 → 4 giờ theo sao." }, "lo": 0.05, "hi": 0.15, "unit": "percent", "cooldownHours": [8, 4] },
+        { "id": "dragonBreath", "name": { "vi": "Long Khí" }, "desc": { "vi": "Cây trên tầng của Rồng có tỉ lệ Biến Dị tăng thêm {v}." }, "lo": 0.1, "hi": 0.3, "unit": "percent" },
+        { "id": "blessing", "name": { "vi": "Rồng Ban Lộc" }, "desc": { "vi": "Mỗi ngày 1 lần, lần thu hoạch tiếp theo trên tầng của Rồng được nhân đôi sản lượng." }, "lo": 1, "hi": 1, "unit": "count" }
+      ]
+    }
+  ]
+}

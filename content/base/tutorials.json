@@ -80,6 +80,16 @@
     "target": "open-sea"
   },
   {
+    "id": "tut.pets",
+    "title": {
+      "vi": "Mở khóa: Nhà Thú Cưng"
+    },
+    "text": {
+      "vi": "Mèo Mây Con về ở với bạn. Dắt bé đi rồi chọn tầng cho bé trông. Cho bé ăn món thích để thêm Thân Thiết. Bé đói thì chỉ ngủ, không bao giờ bỏ đi."
+    },
+    "target": "open-village"
+  },
+  {
     "id": "tut.decor",
     "title": {
       "vi": "Mở khóa: Trang trí tầng"

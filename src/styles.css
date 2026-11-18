@@ -913,3 +913,30 @@ html, body {
 .sign-text{position:absolute;top:34%;left:50%;transform:translateX(-50%);font-weight:800;color:#4a2f1a;font-size:15px;white-space:nowrap}
 @keyframes bubble-bob{0%,80%,100%{transform:translateY(0)}90%{transform:translateY(-6px)}}
 .up-btn{display:inline-flex;flex-direction:column;align-items:center;gap:2px;line-height:1.2}.up-cost{display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap;justify-content:center;font-size:13px}
+
+/* Chỉ thị 11 § E: Nhà Thú Cưng. */
+.pet-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.pet-tab{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 12px;border-radius:14px;border:2px solid transparent;background:rgba(255,255,255,.05);color:inherit;font:inherit;cursor:pointer;min-width:120px}
+.pet-tab.on{border-color:var(--color-brand-gold,#F3D27E);background:rgba(243,210,126,.12)}
+.pet-unowned{filter:grayscale(.8) opacity(.6)}
+.pet-detail{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
+.pet-big{display:flex;flex-direction:column;align-items:center;gap:6px;border:0;background:radial-gradient(rgba(255,255,255,.12),transparent 70%);color:inherit;font:inherit;padding:10px;border-radius:20px;cursor:pointer;min-width:240px}
+.pet-big:active>:first-child{transform:scale(1.05)}
+.pet-aura-3,.pet-aura-4{filter:drop-shadow(0 0 10px rgba(255,240,180,.7))}
+.pet-aura-5{filter:drop-shadow(0 0 16px rgba(243,210,126,.95))}
+.pet-info{flex:1;min-width:320px;display:flex;flex-direction:column;gap:8px}
+.pet-info h3{margin:0}
+.pet-stars i{font-style:normal;color:rgba(255,255,255,.25)}
+.pet-stars i.on{color:var(--color-brand-gold,#F3D27E)}
+.pet-bar{display:grid;grid-template-columns:230px 1fr;align-items:center;gap:8px}
+.pet-bar.bond .luck-fill{background:linear-gradient(90deg,#f6a5c0,#f27aa0)}
+.pet-bar.food .luck-fill{background:linear-gradient(90deg,#a6e3a1,#5fbf6a)}
+.pet-skill{display:flex;flex-direction:column;padding:8px 10px;border-radius:12px;background:rgba(255,255,255,.05)}
+.pet-skill.locked{opacity:.55}
+.pet-skill .next{opacity:.7;font-size:13px}
+.pet-actions{justify-content:flex-start}
+.pet-floor{font:inherit;padding:6px 8px;border-radius:10px}
+.pet-foods{display:flex;flex-wrap:wrap;gap:6px}
+.food-btn{position:relative;display:flex;flex-direction:column;align-items:center;padding:4px 6px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.04);color:inherit;font:inherit;cursor:pointer}
+.food-btn.liked{border-color:#f27aa0}
+.food-btn .heart{position:absolute;top:-4px;right:-2px;color:#f27aa0}

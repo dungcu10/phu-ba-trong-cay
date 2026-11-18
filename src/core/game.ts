@@ -25,6 +25,7 @@ import { combineShards, obtainPot as obtainPotFrom, starUpPot } from '../systems
 import { castLine, claimFishBook, claimFreeBait, craftBait, exchangeFish, reelFish } from '../systems/fishing.ts';
 import { buyDecor, placeDecor } from '../systems/decor.ts';
 import { tapXuxu } from '../systems/xuxu.ts';
+import { activeSkill, advancePets, feedPet, giftKitten, guardFloor, jadeRainCooldownMs, obtainPet, patPet, starUpPet, walkPet } from '../systems/pets.ts';
 import { awardMedals, claimCheckIn, houseBonus, potBuyPrice, settleBuildings, upgradeHouse } from '../systems/village.ts';
 import { allMissionsClaimed, ensureMissions, localDay, missionDef, recordMissions } from '../systems/missions.ts';
 import { ensureQuestPeriods, questActive, questClaims, questReward, questView, recordQuests } from '../systems/quests.ts';
@@ -99,6 +100,13 @@ export type Command =
   | { type: 'tapXuxu' }
   | { type: 'upgradeHouse'; house: string }
   | { type: 'claimCheckIn' }
+  | { type: 'obtainPet'; species: string; pay: 'coins' | 'gems' | 'shards' }
+  | { type: 'feedPet'; species: string; itemId: string }
+  | { type: 'patPet'; species: string }
+  | { type: 'walkPet'; species: string; active: boolean }
+  | { type: 'guardFloor'; species: string; floor: number }
+  | { type: 'starUpPet'; species: string }
+  | { type: 'jadeRain' }
   | { type: 'starUpPot'; potInstanceId: string }
   | { type: 'combineShards'; potId: string }
   | { type: 'claimFreeBait' }
@@ -129,6 +137,15 @@ export type GameEvent =
   | { type: 'potCast'; potInstanceId: string; potId: string; perfect: boolean }
   | { type: 'bazaarRerolled'; coins: number; best: BazaarSlot['rarity']; sure: BazaarSlot['rarity'] | null }
   | { type: 'bazaarRefreshed' }
+  | { type: 'petObtained'; species: string; gift: boolean }
+  | { type: 'petFed'; species: string; liked: boolean; bond: number; levelUps: number[]; milestones: number[] }
+  | { type: 'petPatted'; species: string; bond: number; milestones: number[] }
+  | { type: 'petWalked'; species: string; active: boolean }
+  | { type: 'petGuards'; species: string; floor: number }
+  | { type: 'petStarred'; species: string; stars: number }
+  | { type: 'petCaught'; species: string; itemId: string; floor: number }
+  | { type: 'jadeRained'; floor: number; pots: number; savedMs: number }
+  | { type: 'seedRefunded'; slot: SlotRef; coins: number }
   | { type: 'houseUpgradeStarted'; house: string; level: number; endsAt: number; coins: number }
   | { type: 'houseUpgraded'; house: string; level: number }
   | { type: 'medalAwarded'; floor: number; potInstanceId?: string }
@@ -223,6 +240,18 @@ export type ErrorCode =
   | 'no_bait'
   | 'casts_used'
   | 'unknown_house'
+  | 'unknown_pet'
+  | 'have_it'
+  | 'no_pet'
+  | 'cannot_eat'
+  | 'pet_full'
+  | 'no_walk_slot'
+  | 'bad_floor'
+  | 'pet_max_stars'
+  | 'pet_level_low'
+  | 'cooldown'
+  | 'pet_away'
+  | 'pet_asleep'
   | 'house_max_level'
   | 'busy'
   | 'no_build_slot'
@@ -270,6 +299,7 @@ export function updateWorld(content: ContentPack, state: GameState, now: number)
   settleEnergy(content, state, now);
   for (const d of settleBuildings(content, state, now)) events.push({ type: 'houseUpgraded', ...d });
   for (const m of awardMedals(content, state, now)) events.push({ type: 'medalAwarded', ...m });
+  if (giftKitten(content, state, now)) events.push({ type: 'petObtained', species: state.pets.at(-1)!.species, gift: true });
   events.push(...simulateNeighbors(content, state, now));
   return events;
 }
@@ -279,7 +309,7 @@ export function dispatch(content: ContentPack, state: GameState, cmd: Command, r
   ensureMissions(content, state, now);
   ensureQuestPeriods(content, state, now);
   // Birds work in time order up to now, before the player acts, with the player's own catchBug.
-  const birdEvents = [...runBirds(content, state, now), ...collectWorkshop(content, state, now)];
+  const birdEvents = [...runBirds(content, state, now), ...runPets(content, state, now), ...collectWorkshop(content, state, now)];
   const ran = run(content, state, cmd, now);
   // Bird catches count for missions even when the player's command itself fails.
   const result: Result = ran.ok ? { ok: true, events: [...birdEvents, ...ran.events] } : { ok: true, events: birdEvents };
@@ -296,6 +326,20 @@ export function dispatch(content: ContentPack, state: GameState, cmd: Command, r
     }
   }
   return ran.ok ? result : ran;
+}
+
+/** Chỉ thị 11 § E: pets work in time order up to now with the player's own catchBug. */
+function runPets(content: ContentPack, state: GameState, now: number): GameEvent[] {
+  if (!content.pets || state.pets.length === 0) return [];
+  const extra: GameEvent[] = [];
+  const out = advancePets(content, state, now, (floor, slot, at) => {
+    const r = catchBug(content, state, { floor, slot }, at);
+    if (!r.ok) return { ok: false };
+    for (const e of r.events) if (e.type === 'newBug') extra.push(e);
+    const caught = r.events.find((e) => e.type === 'bugCaught');
+    return { ok: true, itemId: caught?.type === 'bugCaught' ? caught.itemId : undefined };
+  });
+  return [...(out as GameEvent[]), ...extra];
 }
 
 function runBirds(content: ContentPack, state: GameState, now: number): GameEvent[] {
@@ -374,6 +418,32 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
       return harvest(content, state, cmd, now);
     case 'sell':
       return sell(content, state, cmd.itemId, cmd.qty, now);
+    case 'obtainPet': {
+      const r = obtainPet(content, state, cmd.species, cmd.pay, now);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'petObtained', species: cmd.species, gift: false }] };
+    }
+    case 'feedPet': {
+      const r = feedPet(content, state, cmd.species, cmd.itemId, now);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'petFed', species: cmd.species, ...r }] };
+    }
+    case 'patPet': {
+      const r = patPet(content, state, cmd.species, now);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'petPatted', species: cmd.species, ...r }] };
+    }
+    case 'walkPet': {
+      const r = walkPet(content, state, cmd.species, cmd.active, now);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'petWalked', species: cmd.species, active: r.active }] };
+    }
+    case 'guardFloor': {
+      const r = guardFloor(state, cmd.species, cmd.floor, now);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'petGuards', species: cmd.species, floor: r.floor }] };
+    }
+    case 'starUpPet': {
+      const r = starUpPet(content, state, cmd.species);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'petStarred', species: cmd.species, stars: r.stars }] };
+    }
+    case 'jadeRain':
+      return jadeRain(content, state, now);
     case 'upgradeHouse': {
       const r = upgradeHouse(content, state, cmd.house, now);
       return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'houseUpgradeStarted', house: cmd.house, ...r }] };
@@ -627,6 +697,10 @@ function plant(content: ContentPack, state: GameState, ref: SlotRef, cropId: str
   if (crop.unlockLevel > state.player.level) return fail('locked');
   if (state.player.coins < crop.seedPrice) return fail('not_enough_coins');
   state.player.coins -= crop.seedPrice;
+  // Chỉ thị 11 § E1: Sẻ Mầm Nhặt Hạt on its floor — a chance to get the seed money back.
+  const pick = activeSkill(content, state, 'pickSeeds', now, ref.floor);
+  const refunded = !!pick && crop.seedPrice > 0 && randomFor(state.seed, 'pickSeeds', state.nextId) < pick.value;
+  if (refunded) state.player.coins += crop.seedPrice;
   slot.planting = {
     id: state.nextId++,
     cropId,
@@ -638,7 +712,9 @@ function plant(content: ContentPack, state: GameState, ref: SlotRef, cropId: str
     caughtBugs: {},
     bugLevel: state.player.level,
   };
-  return { ok: true, events: [{ type: 'planted', slot: ref, cropId, cost: crop.seedPrice }] };
+  const events: GameEvent[] = [{ type: 'planted', slot: ref, cropId, cost: crop.seedPrice }];
+  if (refunded) events.push({ type: 'seedRefunded', slot: ref, coins: crop.seedPrice });
+  return { ok: true, events };
 }
 
 function water(content: ContentPack, state: GameState, ref: SlotRef, now: number): Result {
@@ -653,6 +729,30 @@ function water(content: ContentPack, state: GameState, ref: SlotRef, now: number
   slot.planting.bonusMs += savedMs;
   slot.planting.wateredStages.push(status.stage);
   return { ok: true, events: [{ type: 'watered', slot: ref, savedMs }] };
+}
+
+/** Rồng Mưa Ngọc (chỉ thị 11 § E1): waters the dragon's whole floor with the player's own water, then
+ *  takes (5 → 15)% off every pot's remaining growing time. Cooldown 8 → 4 hours by stars. */
+function jadeRain(content: ContentPack, state: GameState, now: number): Result {
+  const sk = activeSkill(content, state, 'jadeRain', now);
+  if (!sk) return fail(state.pets.some((p) => p.species === 'pet.jade-dragon') ? 'pet_asleep' : 'no_pet');
+  if ((sk.pet.skillAt.jadeRain ?? 0) > now) return fail('cooldown');
+  const floor = state.floors[sk.pet.floor];
+  if (!floor) return fail('bad_floor');
+  let pots = 0;
+  let savedMs = 0;
+  floor.slots.forEach((slot, i) => {
+    if (!slot.planting) return;
+    water(content, state, { floor: sk.pet.floor, slot: i }, now);
+    const st = cropStatus(content, state, slot, now);
+    if (!st || st.ripe || !slot.planting) return;
+    const cut = st.remainingMs * sk.value;
+    slot.planting.bonusMs += cut;
+    savedMs += cut;
+    pots += 1;
+  });
+  sk.pet.skillAt.jadeRain = now + jadeRainCooldownMs(content, sk.pet);
+  return { ok: true, events: [{ type: 'jadeRained', floor: sk.pet.floor, pots, savedMs }] };
 }
 
 function catchBug(content: ContentPack, state: GameState, ref: SlotRef, now: number): Result {
@@ -684,7 +784,9 @@ function harvest(content: ContentPack, state: GameState, ref: SlotRef, now: numb
   const crop = status.crop;
   const luck = slotBonus(content, state, slot, crop, 'luck');
   const potInst = state.pots[slot.potInstanceId]!;
-  const mutation = rollMutation(content, state, planting, luck, mutationMultiplier(content, potInst));
+  // Chỉ thị 11 § E1: Rồng Long Khí on its floor raises the mutation chance.
+  const breath = activeSkill(content, state, 'dragonBreath', now, ref.floor)?.value ?? 0;
+  const mutation = rollMutation(content, state, planting, luck, mutationMultiplier(content, potInst) * (1 + breath));
   const itemId = mutation ? `${crop.produce.id}~${mutation}` : crop.produce.id;
   const cycleSeconds = planting.harvestsDone === 0 || crop.regrowSeconds === null ? crop.growSeconds : crop.regrowSeconds;
   const gift = rollGift(content, state, planting, cycleSeconds, luck);

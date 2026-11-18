@@ -339,6 +339,30 @@ function reconcileV13(state: GameState, content: ContentPack): void {
   const nums = (x: unknown) => (Array.isArray(x) ? [...new Set(x.filter((n) => Number.isInteger(n) && n >= 0))] : []);
   const ci = obj(v.checkIn) && Number.isInteger(v.checkIn.day) && Number.isInteger(v.checkIn.count) && v.checkIn.count >= 0 ? v.checkIn : d.village.checkIn;
   state.village = { seenZones: nums(v.seenZones), medals: nums(v.medals), checkIn: { day: ci.day, count: ci.count } };
+  // Pets: known species once each; numbers clamped; a floor the player no longer has falls back to floor 1.
+  const species = new Set((content.pets?.species ?? []).map((x) => x.id));
+  const seen = new Set<string>();
+  const at = state.maxSeenAt || state.createdAt || 0;
+  const num = (x: unknown, lo: number, hi: number, f: number) => (typeof x === 'number' && Number.isFinite(x) ? Math.min(hi, Math.max(lo, x)) : f);
+  state.pets = (Array.isArray(state.pets) ? state.pets : [])
+    .filter((p) => obj(p) && species.has(p.species) && !seen.has(p.species) && seen.add(p.species))
+    .map((p) => ({
+      species: p.species,
+      level: Math.round(num(p.level, 1, content.pets?.maxLevel ?? 30, 1)),
+      xp: num(p.xp, 0, 1e9, 0),
+      stars: Math.round(num(p.stars, 1, 5, 1)),
+      bond: num(p.bond, 0, content.pets?.bond.max ?? 100, 0),
+      food: num(p.food, 0, content.pets?.food.max ?? 100, 0),
+      fedAt: num(p.fedAt, 0, Infinity, at),
+      active: p.active === true,
+      floor: Math.round(num(p.floor, 0, Math.max(0, state.floors.length - 1), 0)),
+      awayUntil: typeof p.awayUntil === 'number' && Number.isFinite(p.awayUntil) ? p.awayUntil : null,
+      simulatedTo: num(p.simulatedTo, 0, Infinity, at),
+      skillAt: obj(p.skillAt) ? Object.fromEntries(Object.entries(p.skillAt).filter(([, n]) => typeof n === 'number' && Number.isFinite(n))) : {},
+      bondDay: obj(p.bondDay) && Number.isInteger(p.bondDay.day) && Number.isInteger(p.bondDay.feeds) ? { day: p.bondDay.day, feeds: p.bondDay.feeds } : { day: -1, feeds: 0 },
+      patHour: obj(p.patHour) && Number.isInteger(p.patHour.hour) && Number.isInteger(p.patHour.n) ? { hour: p.patHour.hour, n: p.patHour.n } : { hour: -1, n: 0 },
+      milestones: nums(p.milestones),
+    }));
 }
 
 /**

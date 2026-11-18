@@ -19,7 +19,10 @@ import { Ambience } from './ambience.ts';
 import { homeGarden, type GardenFloor, type GardenModel } from './garden.ts';
 import { SLOT_GEOM, SlotView } from './slotView.ts';
 import { ease, Tweens } from './tween.ts';
-import { PET_SPECIES, PetActor } from './worldArt.ts';
+import { PetActor } from './worldArt.ts';
+
+/** New pet pictures are 150 pt wide; drawn at about 0.6 × a pot (§ E5). */
+const PET_SCALE = 0.62;
 import { BirdActor } from './birdActors.ts';
 import { foodAt } from '../systems/birds.ts';
 import { isNight } from '../systems/growth.ts';
@@ -274,7 +277,7 @@ export class GameView {
   }
 
   private floorKey(f: GardenFloor): string {
-    return `${this.model.mode}|${f.def.id}|${f.pots.length}|${f.expandCost !== null}`;
+    return `${this.model.mode}|${f.def.id}|${f.pots.length}|${f.expandCost !== null}|${f.pets.map((p) => `${p.species}${p.asleep ? 'z' : ''}`).join(',')}`;
   }
 
   /** Rebuilds floors whose structure changed (unlocked, expanded, new garden), and the vine. */
@@ -427,14 +430,15 @@ export class GameView {
     const backViews = new Container();
     container.addChild(backViews, pedLayer, potLayer);
     const pets: PetActor[] = [];
-    if (fi < PET_SPECIES.length) {
-      // One pet per floor for the first floors, wandering on the lawn in front of the pots.
-      const pet = PetActor.create(this.art, PET_SPECIES[fi]!, 77 + fi * 31, -WORLD.potRowSpan / 2 - 90, WORLD.potRowSpan / 2);
+    // Chỉ thị 11 § E5: the pets looking after this floor wander on the lawn in front of the pots, ~0.6 × a pot.
+    f.pets.forEach((gp, k) => {
+      const pet = PetActor.fromFrames(this.art, gp.art, gp.poses, 77 + fi * 31 + k * 13, -WORLD.potRowSpan / 2 - 90, WORLD.potRowSpan / 2, gp.asleep);
       if (pet) {
-        pet.sprite.position.set(-WORLD.potRowSpan / 2 - 60 + ((fi * 263) % 700), 30);
+        pet.sprite.position.set(-WORLD.potRowSpan / 2 - 60 + ((fi * 263 + k * 340) % 700), 30);
+        if (gp.art.startsWith('pet/')) ((pet.baseScale = PET_SCALE), (pet.facesRight = true));
         pets.push(pet);
       }
-    }
+    });
     f.pots.forEach((_, i) => {
       const view = new SlotView(fi, i, this.art, this.tweens, this.dot, this.glow);
       const pl = place(i);

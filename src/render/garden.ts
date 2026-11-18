@@ -17,6 +17,7 @@ export function potFx(pot: PotDef, level: number, stars = 0): { tier: 0 | 1 | 2;
   return { tier: Math.max(fx.tier, starTier) as 0 | 1 | 2, step: fx.step };
 }
 import { botGarden } from '../systems/visit.ts';
+import { petWorking, speciesDef } from '../systems/pets.ts';
 
 export interface GardenPot {
   pot: PotDef;
@@ -35,6 +36,24 @@ export interface GardenFloor {
   expandCost: number | null;
   /** Name of the best completed set on this floor, for the floor sign. */
   setName: string | null;
+  /** Chỉ thị 11 § E: pets looking after this floor (frame prefix + pose names; asleep when not working). */
+  pets: GardenPet[];
+}
+
+export interface GardenPet {
+  species: string;
+  art: string;
+  poses: Record<'stand' | 'run' | 'sleep' | 'happy', string>;
+  asleep: boolean;
+}
+
+function floorPets(content: ContentPack, state: GameState, fi: number, now: number): GardenPet[] {
+  return state.pets
+    .filter((p) => p.active && p.floor === fi && (p.awayUntil === null || p.awayUntil <= now))
+    .map((p) => {
+      const sp = speciesDef(content, p.species)!;
+      return { species: p.species, art: sp.art, poses: sp.poses, asleep: !petWorking(content, p, now) };
+    });
 }
 
 export interface GardenModel {
@@ -45,7 +64,7 @@ export interface GardenModel {
 }
 
 export function homeGarden(content: ContentPack, state: GameState, now: number): GardenModel {
-  const floors = state.floors.map((floor) => {
+  const floors = state.floors.map((floor, fi) => {
     const def = content.floors.get(floor.floorId)!;
     const best = floorSets(content, state, floor).find((a) => a.tier >= 0);
     return {
@@ -53,6 +72,7 @@ export function homeGarden(content: ContentPack, state: GameState, now: number):
       stars: floor.stars,
       expandCost: expandCost(def, floor, content, state.player.level),
       setName: best ? best.set.name.vi : null,
+      pets: floorPets(content, state, fi, now),
       pots: floor.slots.map((slot) => {
         const inst = state.pots[slot.potInstanceId]!;
         const pot = content.pots.get(inst.potId)!;
@@ -65,11 +85,14 @@ export function homeGarden(content: ContentPack, state: GameState, now: number):
 
 export function visitGarden(content: ContentPack, state: GameState, botId: string, now: number): GardenModel {
   const bug = content.bugList[0]!;
-  const floors = botGarden(content, state, botId, now).map((f) => ({
+  // A neighbour's pets: one per lower floor, in species order (BOT pets with their own state come later).
+  const species = content.pets?.species ?? [];
+  const floors = botGarden(content, state, botId, now).map((f, fi) => ({
     def: f.def,
     stars: f.stars,
     expandCost: null,
     setName: null,
+    pets: fi < species.length ? [{ species: species[fi]!.id, art: species[fi]!.art, poses: species[fi]!.poses, asleep: false }] : [],
     pots: f.pots.map((p) => {
       const cycleMs = p.crop.growSeconds * 1000;
       const status: CropStatus = {

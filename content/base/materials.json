@@ -145,7 +145,7 @@
       "vi": "Mồi Thường"
     },
     "desc": {
-      "vi": "Mồi câu cá mây. Chế từ 2 Rau Thảo."
+      "vi": "Mồi câu cá mây. Chế từ Lá Bạc Hà Mây."
     },
     "icon": "art:icon/bait"
   },
@@ -175,8 +175,58 @@
       "vi": "Pha Lê Mây"
     },
     "desc": {
-      "vi": "Đặt vào khe trang trí của tầng: +2% xu khi thu hoạch trên tầng đó."
+      "vi": "Đặt vào khe trang trí của tầng: +2% sản lượng khi thu hoạch trên tầng đó."
     },
     "icon": "art:icon/crystal"
+  },
+  {
+    "id": "base:mat.dragon-egg-shard",
+    "name": {
+      "vi": "Mảnh Trứng Rồng"
+    },
+    "desc": {
+      "vi": "Rơi từ Biển Mây, câu cá và việc vặt. Gom 10 mảnh để ấp Rồng Ngọc Con."
+    },
+    "icon": "art:icon/dragon-egg-shard"
+  },
+  {
+    "id": "base:mat.badge-kitten",
+    "name": {
+      "vi": "Huy Hiệu Mèo"
+    },
+    "desc": {
+      "vi": "Nâng sao Mèo Mây Con, nâng Nhà Thú Cưng."
+    },
+    "icon": "art:icon/badge-kitten"
+  },
+  {
+    "id": "base:mat.badge-fox",
+    "name": {
+      "vi": "Huy Hiệu Cáo"
+    },
+    "desc": {
+      "vi": "Nâng sao Cáo Lửa Con, nâng Nhà Thú Cưng."
+    },
+    "icon": "art:icon/badge-fox"
+  },
+  {
+    "id": "base:mat.badge-sparrow",
+    "name": {
+      "vi": "Huy Hiệu Sẻ Mầm"
+    },
+    "desc": {
+      "vi": "Nâng sao Sẻ Mầm, nâng Nhà Thú Cưng."
+    },
+    "icon": "art:icon/badge-sparrow"
+  },
+  {
+    "id": "base:mat.badge-dragon",
+    "name": {
+      "vi": "Huy Hiệu Rồng"
+    },
+    "desc": {
+      "vi": "Nâng sao Rồng Ngọc Con, nâng Nhà Thú Cưng."
+    },
+    "icon": "art:icon/badge-dragon"
   }
 ]

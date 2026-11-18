@@ -124,6 +124,7 @@ export const MIGRATIONS: Record<number, Migration> = {
   12: (data) => {
     data.buildings = {};
     data.village = { seenZones: [], medals: [], checkIn: { day: -1, count: 0 } };
+    data.pets = [];
     return data;
   },
 };
