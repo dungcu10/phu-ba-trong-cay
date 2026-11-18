@@ -12,7 +12,7 @@
     { "id": "storageSpendShare", "label": "Phần xu tiêu vào nâng kho (cần chỗ tiêu vui hơn)", "min": 0, "max": 0.4, "block": false },
     { "id": "commonBugsPerPot", "label": "Bọ Thường mỗi chậu mỗi ngày (TB ngày 7–30)", "min": 1, "max": 2, "block": true },
     { "id": "bugStockDays", "label": "Bọ tồn trong túi ngày 30 (số ngày bắt)", "min": 0, "max": 5, "block": true },
-    { "id": "epicBugsPerDay", "label": "Bọ Rất hiếm mỗi ngày (1 con / 3–5 ngày)", "min": 0.2, "max": 0.34, "block": true },
+    { "id": "epicBugsPerDay", "label": "Bọ Rất hiếm mỗi ngày (1 con / 3–5 ngày, TB 4 seed)", "min": 0.2, "max": 0.34, "block": true },
     { "id": "signaturePots30", "label": "Chậu chữ ký sở hữu ngày 30", "min": 10, "max": 15, "block": true },
     { "id": "storageFullShare", "label": "Thời gian kho đầy", "min": 0, "max": 0.2, "block": true },
     { "id": "ordersPerDay", "label": "Đơn giao mỗi ngày", "min": 10, "max": 20, "block": true }

@@ -29,6 +29,14 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] CTO — M7 câu cá: chặn lỗ in tiền, bot đi câu, đo Bọ Rất hiếm trên 4 seed
+- Lỗ: 1 Mồi Thường = 2 Bạc Hà Mây (~14 xu) mà 1 lần câu trả TB ~197 xu (gấp 14 lần), kèm bọ Hiếm/Rất hiếm không giới hạn. `fishing.json`: Mồi Thường 6 Bạc Hà Mây; xu đổi cá 20 / 50 / 130 / 400 / 1.300 (trước 60 / 150 / 400 / 1.200 / 4.000). TB ~65 xu cho mồi ~42 xu.
+- Bot mô phỏng câu tối đa 10 mồi/ngày (mồi miễn phí + chế), 70% kéo được; cá Thường đổi xu, cá hiếm hơn lấy lựa chọn cuối; nhận quà Sổ Cá.
+- Chỉ số "Bọ Rất hiếm mỗi ngày" lấy trung bình 4 seed (42, 7, 99, 1234): 1 seed chỉ thấy vài con nên dao động 0,13–0,38 với cùng số liệu. Ve Ngọc ×1,2. Đo được 0,23.
+- Cổng XANH (14/14 chỉ số chặn đạt; Sạp 34% nay cũng đạt), typecheck sạch, 223/223 test.
+- Còn: giá trang trí (`decor.json` 2.500 xu cố định) không tăng theo cấp; chưa có giới hạn số lần câu mỗi ngày.
+- Trạng thái nghiệm thu: Chờ
+
 ### [2026-11-18] Chỉ thị 10 M7 phần 3 — Câu cá, Trang trí tầng (tag `m-10-m7c`)
 - Loại: Thêm
 - Mô tả:

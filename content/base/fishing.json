@@ -7,7 +7,7 @@
       "item": "base:mat.bait",
       "recipes": [
         {
-          "base:item.cloud-mint": 2
+          "base:item.cloud-mint": 6
         }
       ],
       "weights": [
@@ -54,7 +54,7 @@
       "pull": 0.8,
       "exchange": [
         {
-          "coins": 60
+          "coins": 20
         },
         {
           "items": {
@@ -76,7 +76,7 @@
       "pull": 1,
       "exchange": [
         {
-          "coins": 150
+          "coins": 50
         },
         {
           "items": {
@@ -98,7 +98,7 @@
       "pull": 1.25,
       "exchange": [
         {
-          "coins": 400
+          "coins": 130
         },
         {
           "items": {
@@ -123,7 +123,7 @@
       "pull": 1.5,
       "exchange": [
         {
-          "coins": 1200
+          "coins": 400
         },
         {
           "items": {
@@ -149,7 +149,7 @@
       "pull": 1.8,
       "exchange": [
         {
-          "coins": 4000
+          "coins": 1300
         },
         {
           "items": {

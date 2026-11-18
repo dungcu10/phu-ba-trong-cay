@@ -16,7 +16,9 @@ import { canDeliver } from '../src/systems/orders.ts';
 import { expandCost } from '../src/systems/floors.ts';
 import { floorUnlockCost } from '../src/systems/coinSinks.ts';
 import { castablePots, castRecipe } from '../src/systems/casting.ts';
+import { randomFor } from '../src/core/rng.ts';
 import { seaOpen } from '../src/systems/sea.ts';
+import { fishingOpen } from '../src/systems/fishing.ts';
 import { bazaarOpen, rerollCost, wantedItems } from '../src/systems/bazaar.ts';
 import { canAfford, nextUpgradeCost } from '../src/systems/pots.ts';
 import { claimableMilestones, visibleEvents } from '../src/systems/events.ts';
@@ -61,6 +63,7 @@ const T0 = Date.parse('2026-11-17T08:00:00+07:00');
 const RESERVE = 300;
 const BUG_RESERVE = 40;
 const BAZAAR_REROLLS = 2;
+const FISH_PER_DAY = 10;
 
 /** The crop whose produce is this item, if any. */
 function cropOf(content: ContentPack, itemId: string): CropDef | undefined {
@@ -220,6 +223,24 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
         if (cast) run({ type: 'castPot', potId: cast.id }, t);
         for (const d of content.potList) if (d.group === 'crafted' && !owned.has(d.id)) run({ type: 'combineShards', potId: d.id }, t);
         for (const id of Object.keys(s.pots)) while (run({ type: 'starUpPot', potInstanceId: id }, t).ok);
+      }
+      // Câu cá (M7): the free bait plus a few crafted ones each day; 70% of pulls hold the line. Common
+      // fish go for coins, rarer ones for their last (best) option; the Sổ Cá rewards are claimed.
+      if (m === 0 && fishingOpen(content, s)) {
+        run({ type: 'claimFreeBait' }, t);
+        for (let k = 0; k < FISH_PER_DAY; k++) {
+          const bait = content.fishing!.baits.map((b) => b.item).find((id) => (s.inventory[id] ?? 0) > 0 || run({ type: 'craftBait', bait: id }, t).ok);
+          if (!bait) break;
+          const cast = run({ type: 'castLine', bait }, t);
+          if (!cast.ok) break;
+          const reel = run({ type: 'reelFish', success: randomFor(s.seed, 'simFish', day, k) < 0.7 }, t);
+          const ev = reel.ok ? reel.events.find((e) => e.type === 'fishReeled') : undefined;
+          if (ev && ev.type === 'fishReeled' && ev.landed) {
+            const f = content.fishing!.fish.find((x) => x.id === ev.fishId)!;
+            run({ type: 'exchangeFish', fishId: f.id, option: f.rarity === 'common' ? 0 : f.exchange.length - 1 }, t);
+          }
+        }
+        while (run({ type: 'claimFishBook' }, t).ok);
       }
       // Biển Mây (M7): spend the Năng Lượng Gió on the next hidden clouds, row by row.
       if (seaOpen(content, s)) {
