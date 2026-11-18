@@ -9,6 +9,7 @@ import type { ContentPack, MachineDef, RecipeDef } from '../core/content.ts';
 import type { GameState, MachineState } from '../core/state.ts';
 import { addItem, removeItem, storageFree } from './economy.ts';
 import { levelCoins } from './coinSinks.ts';
+import { houseBonus } from './village.ts';
 
 const MIN = 60_000;
 
@@ -57,7 +58,7 @@ export function startJob(content: ContentPack, state: GameState, recipeId: strin
   const { machine, recipe } = hit;
   if (state.player.level < machine.unlockLevel) return 'locked';
   const m = machineState(content, state, machine.id);
-  if (m.queue.length >= m.slots) return 'queue_full';
+  if (m.queue.length >= queueSize(content, state, m)) return 'queue_full';
   const take = jobInputs(machine, recipe);
   for (const [id, q] of Object.entries(take)) if ((state.inventory[id] ?? 0) < q) return 'not_enough_items';
   for (const [id, q] of Object.entries(take)) removeItem(state, id, q);
@@ -129,4 +130,9 @@ export function buyMachineSlot(content: ContentPack, state: GameState, machineId
   state.player.coins -= cost;
   m.slots += 1;
   return { type: 'machineSlot', machine: machineId, slots: m.slots };
+}
+
+/** Queue size of a machine: its slots plus the Xưởng Bọ house (chỉ thị 11 § D2). */
+export function queueSize(content: ContentPack, state: GameState, m: MachineState): number {
+  return m.slots + houseBonus(content, state, 'workshop', 'workshopQueue');
 }

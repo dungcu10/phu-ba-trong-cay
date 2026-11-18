@@ -4,6 +4,7 @@ import type { ContentPack, MissionDef, MissionKind } from '../core/content.ts';
 import type { GameState } from '../core/state.ts';
 import type { GameEvent } from '../core/game.ts';
 import { randomFor } from '../core/rng.ts';
+import { houseBonus } from './village.ts';
 
 const DAY_MS = 86_400_000;
 
@@ -26,7 +27,7 @@ export function ensureMissions(content: ContentPack, state: GameState, now: numb
   const picked = pool
     .map((m) => ({ m, k: randomFor(state.seed, 'mission', day, m.id) }))
     .sort((a, b) => a.k - b.k)
-    .slice(0, content.missions.perDay)
+    .slice(0, content.missions.perDay + houseBonus(content, state, 'hall', 'missionsPerDay'))
     .map(({ m }) => ({ id: m.id, progress: 0, claimed: false }));
   state.missions = { day, list: picked, bonusClaimed: false };
   return true;

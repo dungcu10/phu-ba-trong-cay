@@ -119,6 +119,13 @@ export const MIGRATIONS: Record<number, Migration> = {
     data.collections = { bugs: {}, fish: {}, claimed: [] };
     return data;
   },
+  // 12 -> 13 (chỉ thị 11): the village. Every house starts at level 1; a Huy Chương Độ Cao for a floor
+  // the player already has is awarded (with its reward) on the first tick; the check-in starts fresh.
+  12: (data) => {
+    data.buildings = {};
+    data.village = { seenZones: [], medals: [], checkIn: { day: -1, count: 0 } };
+    return data;
+  },
 };
 
 export function migrate(

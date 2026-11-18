@@ -4,7 +4,7 @@ import type { ContentPack, FloorDef } from './content.ts';
 import { newSeed } from './rng.ts';
 import { emptyQuestState, type QuestState } from '../systems/quests.ts';
 
-export const SAVE_VERSION = 12;
+export const SAVE_VERSION = 13;
 
 export interface Planting {
   /** Unique per planting, used as a key for deterministic randomness. */
@@ -234,6 +234,10 @@ export interface GameState {
   tutorials: string[];
   /** Chợ Mây (save 11): purchases from neighbours on local day `day`. */
   market: { day: number; buys: number };
+  /** Chỉ thị 11 § D (save 13): house levels and upgrades in progress. */
+  buildings: Record<string, { level: number; upgradeEndsAt: number | null }>;
+  /** Chỉ thị 11 § C3/D3 (save 13): sky zones already greeted, Huy Chương Độ Cao, 7-day check-in. */
+  village: { seenZones: number[]; medals: number[]; checkIn: { day: number; count: number } };
   /** Chỉ thị 10 § 3.11: when Xu Xu last gave its small gift. */
   xuxu?: { giftAt: number; taps: number };
   /** Chỉ thị 12 B2: the Sạp Săn Hàng board (optional; rolled when first opened). */
@@ -261,6 +265,11 @@ export interface GameState {
   };
   /** Chỉ thị 10 (save 12): Sổ Sâu Bọ / Sổ Cá — first catch time and count per id, rewards claimed. */
   collections: { bugs: Record<string, { firstAt: number; count: number }>; fish: Record<string, { firstAt: number; count: number }>; claimed: string[] };
+}
+
+/** Save 13 defaults for the chỉ thị 11 parts (new games and old saves alike). */
+export function emptyV13Parts(): Pick<GameState, 'buildings' | 'village'> {
+  return { buildings: {}, village: { seenZones: [], medals: [], checkIn: { day: -1, count: 0 } } };
 }
 
 /** Save 12 defaults for the chỉ thị 10 parts (new games and old saves alike). */
@@ -323,6 +332,7 @@ export function createNewGame(content: ContentPack, now: number, entropy = now):
     market: { day: -1, buys: 0 },
     ranks: { day: -1, prev: {} },
     ...emptyV12Parts(now),
+    ...emptyV13Parts(),
   };
 }
 

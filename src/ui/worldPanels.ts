@@ -20,6 +20,7 @@ import { masteryStars, nextMastery } from '../systems/cropExtras.ts';
 import { bazaarOpen, bazaarRules, luckBars, nextFreeRefreshAt, rerollCost, wantedItems } from '../systems/bazaar.ts';
 import { potIcon, rarityChip } from './potPanels.ts';
 import { RARITY_TEXT } from './text.ts';
+import { houseBonus } from '../systems/village.ts';
 
 export interface WorldActions {
   deliverOrder(slot: number, birdId?: string): void;
@@ -325,7 +326,8 @@ export class StallPanel extends Panel {
     const { content, state } = this.session;
     const cfg = content.neighbors;
     const shelf = h('div', { class: 'stall-shelf' });
-    for (let i = 0; i < cfg.stallSlots; i++) {
+    const stallSlots = cfg.stallSlots + houseBonus(content, state, 'market', 'stallSlots');
+    for (let i = 0; i < stallSlots; i++) {
       const l = state.stall[i];
       if (!l) {
         shelf.append(h('div', { class: 'stall-slot empty' }, h('span', { class: 'pack-info' }, 'Chỗ trống')));
@@ -345,7 +347,7 @@ export class StallPanel extends Panel {
     this.body.append(h('p', { class: 'lead' }, 'Hàng xóm ghé qua sẽ mua món có giá hời. Giá càng thấp, bán càng nhanh.'), shelf);
 
     const sellable = Object.entries(state.inventory).filter(([id, q]) => q > 0 && content.items.get(id)?.sellPrice != null);
-    if (state.stall.length >= cfg.stallSlots) {
+    if (state.stall.length >= stallSlots) {
       this.body.append(h('p', { class: 'note' }, 'Sạp đã kín chỗ.'));
       return;
     }

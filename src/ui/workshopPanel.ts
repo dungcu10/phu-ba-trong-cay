@@ -4,7 +4,7 @@
 // (chỉ thị 11: the village house will call the same function).
 
 import type { GameSession } from '../app/session.ts';
-import { jobInputs, machineState, nextSlotCost, nextStarCost, jobMs } from '../systems/workshop.ts';
+import { jobInputs, machineState, nextSlotCost, nextStarCost, jobMs, queueSize } from '../systems/workshop.ts';
 import { itemIcon } from './icons.ts';
 import { clear, h } from './dom.ts';
 import { Panel } from './panel.ts';
@@ -48,7 +48,7 @@ export class WorkshopPanel extends Panel {
       for (const r of machine.recipes) {
         const take = jobInputs(machine, r);
         const enough = Object.entries(take).every(([id, q]) => (state.inventory[id] ?? 0) >= q);
-        const ok = enough && m.queue.length < m.slots;
+        const ok = enough && m.queue.length < queueSize(content, state, m);
         const btn = h('button', { class: `candy ${ok ? 'primary' : 'blocked'} small`, 'data-test': `start-${r.id}`, onclick: () => (ok ? this.actions.startJob(r.id) : shake(btn)) }, 'Làm');
         recipes.append(
           h(
@@ -62,7 +62,7 @@ export class WorkshopPanel extends Panel {
         );
       }
       const queue = h('div', { class: 'bird-floors' });
-      for (let i = 0; i < m.slots; i++) {
+      for (let i = 0; i < queueSize(content, state, m); i++) {
         const job = m.queue[i];
         if (!job) {
           queue.append(h('span', { class: 'chip' }, 'Trống'));
@@ -92,7 +92,7 @@ export class WorkshopPanel extends Panel {
           worker,
           h('strong', {}, `${machine.name.vi} ${'★'.repeat(m.stars)}${'☆'.repeat(5 - m.stars)}`),
           recipes,
-          h('span', { class: 'pack-info' }, `Hàng chờ ${m.queue.length}/${m.slots}`),
+          h('span', { class: 'pack-info' }, `Hàng chờ ${m.queue.length}/${queueSize(content, state, m)}`),
           queue,
           h('span', { class: 'note-actions' }, starBtn, slotBtn),
         ),

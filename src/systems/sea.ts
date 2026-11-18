@@ -11,6 +11,7 @@ import { randomFor } from '../core/rng.ts';
 import { localDay } from './missions.ts';
 import { addItem } from './economy.ts';
 import { obtainPot } from './potStars.ts';
+import { houseBonus } from './village.ts';
 
 export type SeaError = 'locked' | 'bad_cell' | 'already_open' | 'no_energy';
 
@@ -33,6 +34,11 @@ export function seaRules(content: ContentPack): SeaRules | null {
   return content.sea ?? null;
 }
 
+/** Năng Lượng Gió cap: sea.json plus the Cổng Biển Mây house (chỉ thị 11 § D2). */
+export function energyMax(content: ContentPack, state: GameState): number {
+  return (content.sea?.energy.max ?? 0) + houseBonus(content, state, 'gate', 'energyMax');
+}
+
 export function seaOpen(content: ContentPack, state: GameState): boolean {
   const r = seaRules(content);
   return !!r && state.player.level >= r.unlockLevel;
@@ -44,12 +50,12 @@ export function settleEnergy(content: ContentPack, state: GameState, now: number
   if (!r) return;
   const e = state.energy;
   const step = r.energy.regenMinutes * MIN;
-  if (e.value >= r.energy.max) e.at = Math.max(e.at, now);
+  if (e.value >= energyMax(content, state)) e.at = Math.max(e.at, now);
   else if (now > e.at) {
     const n = Math.floor((now - e.at) / step);
     if (n > 0) {
-      e.value = Math.min(r.energy.max, e.value + n);
-      e.at = e.value >= r.energy.max ? now : e.at + n * step;
+      e.value = Math.min(energyMax(content, state), e.value + n);
+      e.at = e.value >= energyMax(content, state) ? now : e.at + n * step;
     }
   }
   const day = localDay(content, now);
@@ -62,7 +68,7 @@ export function settleEnergy(content: ContentPack, state: GameState, now: number
 /** When the next energy point comes (null when full). */
 export function nextEnergyAt(content: ContentPack, state: GameState): number | null {
   const r = seaRules(content)!;
-  return state.energy.value >= r.energy.max ? null : state.energy.at + r.energy.regenMinutes * MIN;
+  return state.energy.value >= energyMax(content, state) ? null : state.energy.at + r.energy.regenMinutes * MIN;
 }
 
 function pick<T extends { weight: number }>(list: T[], roll: number): T {
@@ -151,7 +157,7 @@ export function blowCloud(content: ContentPack, state: GameState, cell: number, 
   const sm = state.seaMap;
   if (sm.open.includes(cell)) return 'already_open';
   if (state.energy.value < 1) return 'no_energy';
-  const wasFull = state.energy.value >= r.energy.max;
+  const wasFull = state.energy.value >= energyMax(content, state);
   state.energy.value -= 1;
   if (wasFull) state.energy.at = now;
   sm.open.push(cell);

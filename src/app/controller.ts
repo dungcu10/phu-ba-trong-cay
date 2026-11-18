@@ -17,6 +17,7 @@ import { FloorPanel, PotShopPanel, type PotShopActions } from '../ui/potPanels.t
 import { BirdsPanel, type BirdActions } from '../ui/birdPanels.ts';
 import { WorkshopPanel, type WorkshopActions } from '../ui/workshopPanel.ts';
 import { SeaPanel } from '../ui/seaPanel.ts';
+import { VillagePanel } from '../ui/villagePanel.ts';
 import { CastingPanel, type CastingActions } from '../ui/castingPanel.ts';
 import { rentEndsSoon } from '../systems/birds.ts';
 import { JournalPanel, LettersPanel, NeighborsPanel, OrdersPanel, StallPanel, type WorldActions } from '../ui/worldPanels.ts';
@@ -72,6 +73,7 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
       openWorkshop: () => this.openWorkshop(),
       openSea: () => this.openSea(),
       tapXuxu: () => this.tapXuxu(),
+      openVillage: () => this.openVillage(),
       openLetters: () => {
         this.open(new LettersPanel(this.session));
         this.run({ type: 'readNotices' }, true);
@@ -93,7 +95,7 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
       this.hud.update();
       // Countdowns on the order board move every second.
       if (this.panel instanceof OrdersPanel || this.panel instanceof MissionsPanel || this.panel instanceof QuestCenterPanel || this.panel instanceof BirdsPanel || this.panel instanceof WorkshopPanel) this.panel.render();
-      if (this.panel instanceof SeaPanel) this.panel.tick();
+      if (this.panel instanceof SeaPanel || this.panel instanceof VillagePanel) this.panel.tick();
       this.warnRent();
       this.visitBar?.update();
       // A feature that just opened is introduced once nothing else is on screen.
@@ -584,6 +586,27 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
     this.run({ type: 'combineShards', potId });
   }
 
+  // --- Làng Phú Bà (chỉ thị 11 § D) -------------------------------------------------------------
+
+  openVillage(): void {
+    this.open(new VillagePanel(this.session, this));
+  }
+
+  upgradeHouse(house: string): void {
+    this.run({ type: 'upgradeHouse', house });
+  }
+
+  claimCheckIn(): void {
+    this.run({ type: 'claimCheckIn' });
+  }
+
+  /** A house opens its feature (the toolbar buttons still work too). */
+  openHouse(feature: string): void {
+    if (feature === 'missions') return this.openQuests(TODAY);
+    if (feature === 'pets') return void this.toasts.show('Nhà Thú Cưng sắp mở cửa: thú cưng đang trên đường về làng!', 'success', 2400);
+    this.openFeature(feature);
+  }
+
   tapXuxu(): void {
     this.run({ type: 'tapXuxu' });
   }
@@ -692,6 +715,22 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
       case 'decorBought':
         this.sfx.play('coin');
         this.toasts.show(`Đã mua ${content.items.get(e.itemId)?.name.vi ?? ''}. Đặt vào khe trang trí của tầng.`, 'success', 2200);
+        break;
+      case 'houseUpgradeStarted':
+        this.sfx.play('tap');
+        this.toasts.show(`Xu Xu bắt đầu nâng ${content.village?.houses.find((x) => x.id === e.house)?.name.vi ?? 'nhà'} lên cấp ${e.level}. Nhà vẫn dùng được trong lúc nâng.`, 'success', 2600);
+        break;
+      case 'houseUpgraded':
+        this.sfx.play('upgrade');
+        this.toasts.show(`${content.village?.houses.find((x) => x.id === e.house)?.name.vi ?? 'Nhà'} đã lên cấp ${e.level}!`, 'level', 2600);
+        break;
+      case 'medalAwarded':
+        this.sfx.play('upgrade');
+        this.toasts.show(`${content.village?.medals.find((m) => m.floor === e.floor)?.name.vi ?? 'Huy Chương Độ Cao'}! Có quà lớn trong túi.`, 'level', 3200);
+        break;
+      case 'checkedIn':
+        this.sfx.play('coin');
+        this.toasts.show(`Điểm danh ngày ${e.day}: có quà!`, 'success', 2000);
         break;
       case 'xuxuTapped': {
         const gift = e.gift ? Object.entries(e.gift.items).map(([id, q]) => `${q} ${content.items.get(id)?.name.vi ?? ''}`).concat(e.gift.coins ? [`${formatNumber(e.gift.coins)} xu`] : []).join(', ') : '';
