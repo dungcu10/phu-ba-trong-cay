@@ -419,7 +419,7 @@ export interface EventDef {
 export interface ItemDef {
   id: string;
   name: LocalizedText;
-  kind: 'produce' | 'bug' | 'material' | 'good' | 'shard';
+  kind: 'produce' | 'bug' | 'material' | 'good' | 'shard' | 'fish';
   sellPrice: number | null;
   countsTowardStorage: boolean;
   /** For a pot shard (chỉ thị 12 B7): the pot it belongs to. */
@@ -503,6 +503,41 @@ export interface CastingRules {
   starStatBonus: number;
   tiers: Array<{ rarity: string; coins: number; items: Record<string, number> }>;
   sources: Record<string, string>;
+}
+
+/** Chỉ thị 10 § 3.9: fishing. */
+export interface FishExchange {
+  coins?: number;
+  items?: Record<string, number>;
+  /** A random bug of this rarity (qty, default 1). */
+  bug?: string;
+  qty?: number;
+}
+export interface FishDef {
+  id: string;
+  name: LocalizedText;
+  rarity: 'common' | 'good' | 'rare' | 'epic' | 'legendary';
+  icon: string;
+  points: number;
+  holdSeconds: number;
+  /** Width of the green zone (share of the tension bar) and how hard the fish pulls. */
+  zone: number;
+  pull: number;
+  exchange: FishExchange[];
+}
+export interface FishingRules {
+  unlockLevel: number;
+  freeBaitPerDay: number;
+  baits: Array<{ item: string; recipes: Array<Record<string, number>>; weights: number[] }>;
+  fish: FishDef[];
+  biteSeconds: [number, number];
+  book: Array<{ points: number; gems?: number; items?: Record<string, number> }>;
+}
+/** Chỉ thị 10 § 3.10: floor decorations. */
+export interface DecorRules {
+  slots: number;
+  floorCap: number;
+  items: Record<string, { stat: PotStatName; bonus: number; price: number; unlockLevel: number }>;
 }
 
 /** Chỉ thị 12 TỔNG B7.2: pot shards, combining, pot stars. */
@@ -622,6 +657,9 @@ export interface ContentPack {
   market?: MarketRules;
   sea?: SeaRules;
   potStars?: PotStarRules;
+  fishing?: FishingRules;
+  fish: Map<string, FishDef>;
+  decor?: DecorRules;
   missions: MissionsConfig;
   materials: Map<string, MaterialDef>;
   events: EventDef[];
@@ -658,6 +696,8 @@ export interface RawContent {
   market?: unknown;
   sea?: unknown;
   potStars?: unknown;
+  fishing?: unknown;
+  decor?: unknown;
 }
 
 export class ContentError extends Error {
@@ -673,7 +713,7 @@ type ReadJson = (relativePath: string) => Promise<unknown>;
 export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> {
   const manifest = (await readJson('manifest.json')) as {
     contentVersion: number;
-    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions' | 'materials' | 'events' | 'quests' | 'features' | 'tutorials', string> & Partial<Record<'birds' | 'workshop' | 'cropExtras' | 'casting' | 'market' | 'sea' | 'potStars', string>>;
+    files: Record<'config' | 'floors' | 'pots' | 'crops' | 'bugs' | 'orders' | 'surprises' | 'neighbors' | 'potsets' | 'missions' | 'materials' | 'events' | 'quests' | 'features' | 'tutorials', string> & Partial<Record<'birds' | 'workshop' | 'cropExtras' | 'casting' | 'market' | 'sea' | 'potStars' | 'fishing' | 'decor', string>>;
   };
   const raw: RawContent = {
     contentVersion: manifest.contentVersion,
@@ -699,6 +739,8 @@ export async function loadContentPack(readJson: ReadJson): Promise<ContentPack> 
     market: manifest.files.market ? await readJson(manifest.files.market) : undefined,
     sea: manifest.files.sea ? await readJson(manifest.files.sea) : undefined,
     potStars: manifest.files.potStars ? await readJson(manifest.files.potStars) : undefined,
+    fishing: manifest.files.fishing ? await readJson(manifest.files.fishing) : undefined,
+    decor: manifest.files.decor ? await readJson(manifest.files.decor) : undefined,
   };
   return buildContentPack(raw);
 }
@@ -1052,6 +1094,35 @@ export function buildContentPack(raw: RawContent): ContentPack {
     for (const p of pots.values()) addUnique(items, { id: shardId(p.id), name: { vi: `Mảnh ${p.name.vi}` }, kind: 'shard', sellPrice: null, countsTowardStorage: false, potId: p.id }, `potStars.${p.id}`, problems);
   }
 
+  let fishing: FishingRules | undefined;
+  const fish = new Map<string, FishDef>();
+  if (isObj(raw.fishing)) {
+    fishing = raw.fishing as unknown as FishingRules;
+    const fr = fishing;
+    for (const [i, f] of (Array.isArray(fr.fish) ? fr.fish : []).entries()) {
+      if (!f.id || !f.name?.vi || !['common', 'good', 'rare', 'epic', 'legendary'].includes(f.rarity) || !(f.holdSeconds > 0) || !(f.zone > 0 && f.zone < 1) || !(f.points >= 0)) problems.push(`fishing.fish[${i}]: id, name, rarity, holdSeconds > 0, zone 0–1, points`);
+      fish.set(f.id, f);
+      addUnique(items, { id: f.id, name: f.name, kind: 'fish', sellPrice: null, countsTowardStorage: false }, `fishing.fish[${i}]`, problems);
+    }
+    if (fish.size !== 5) problems.push('fishing.fish: cần đúng 5 loại cá (5 độ hiếm)');
+    for (const [i, b] of (Array.isArray(fr.baits) ? fr.baits : []).entries()) {
+      if (!items.has(b.item)) problems.push(`fishing.baits[${i}]: mồi "${b.item}" không tồn tại`);
+      if (!Array.isArray(b.weights) || b.weights.length !== fish.size) problems.push(`fishing.baits[${i}].weights: mỗi loại cá một trọng số`);
+      for (const r of b.recipes ?? []) for (const id of Object.keys(r)) if (!items.has(id)) problems.push(`fishing.baits[${i}]: nguyên liệu "${id}" không tồn tại`);
+    }
+    for (const f of fish.values()) for (const ex of f.exchange ?? []) for (const id of Object.keys(ex.items ?? {})) if (!items.has(id)) problems.push(`fishing ${f.id}: món đổi "${id}" không tồn tại`);
+    for (const m of fr.book ?? []) for (const id of Object.keys(m.items ?? {})) if (!items.has(id)) problems.push(`fishing.book: món "${id}" không tồn tại`);
+  }
+  let decor: DecorRules | undefined;
+  if (isObj(raw.decor)) {
+    decor = raw.decor as unknown as DecorRules;
+    if (!(decor.slots >= 1) || !(decor.floorCap > 0)) problems.push('decor: slots ≥ 1, floorCap > 0');
+    for (const [id, d] of Object.entries(decor.items ?? {})) {
+      if (!items.has(id)) problems.push(`decor: món "${id}" không tồn tại`);
+      if (!['speed', 'yield', 'xp', 'luck', 'attract', 'care'].includes(d.stat) || !(d.bonus > 0) || !(d.price >= 0)) problems.push(`decor.${id}: stat, bonus > 0, price ≥ 0`);
+    }
+  }
+
   let market: MarketRules | undefined;
   if (isObj(raw.market)) {
     market = raw.market as unknown as MarketRules;
@@ -1131,6 +1202,9 @@ export function buildContentPack(raw: RawContent): ContentPack {
     market,
     sea,
     potStars,
+    fishing,
+    fish,
+    decor,
     potSets,
     missions,
     materials,

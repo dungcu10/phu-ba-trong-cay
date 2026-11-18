@@ -23,6 +23,8 @@
     "casting": "casting.json",
     "market": "market.json",
     "sea": "sea.json",
-    "potStars": "pot-stars.json"
+    "potStars": "pot-stars.json",
+    "fishing": "fishing.json",
+    "decor": "decor.json"
   }
 }

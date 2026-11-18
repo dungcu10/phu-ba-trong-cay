@@ -126,6 +126,8 @@ features=[
  # Chỉ thị 10 § 3.5 + chỉ thị 11 G: Xưởng Bọ mở ở cấp 6 (Máy Sấy Hoa).
  {"id":"workshop","name":{"vi":"Xưởng Bọ"},"level":6,"tutorial":"tut.workshop"},
  {"id":"sea","name":{"vi":"Biển Mây Bí Ẩn"},"level":8,"tutorial":"tut.sea"},
+ {"id":"decor","name":{"vi":"Trang trí tầng"},"level":9,"tutorial":"tut.decor"},
+ {"id":"fishing","name":{"vi":"Câu cá trên mây"},"level":14,"tutorial":"tut.fishing"},
 ]
 json.dump(features,open('content/base/features.json','w'),ensure_ascii=False,indent=2)
 tut=[
@@ -137,6 +139,8 @@ tut=[
  {"id":"tut.birds","title":{"vi":"Mở khóa: Chim Bắt Sâu"},"text":{"vi":"Thuê Sẻ Mây đậu ở mép tầng: chim tự bắt bọ trên cây Hoa, cả khi bạn tắt game. Nhớ cho chim ăn Hạt Kê Mây, chim đói thì ngủ."},"target":"open-birds"},
  {"id":"tut.workshop","title":{"vi":"Mở khóa: Xưởng Bọ"},"text":{"vi":"Bọ thợ chế biến nông sản thành hàng giá cao: 3 hoa thành Hoa Sấy, quả thành Hũ Mứt. Máy chạy cả khi bạn tắt game."},"target":"open-workshop"},
  {"id":"tut.sea","title":{"vi":"Mở khóa: Biển Mây Bí Ẩn"},"text":{"vi":"Xu Xu thổi tan từng cụm mây để tìm khoáng, Sợi Mây, Giọt Sương, bọ hiếm và rương. Mỗi lần thổi tốn 1 Năng Lượng Gió; gió tự hồi cả khi bạn tắt game."},"target":"open-sea"},
+ {"id":"tut.decor","title":{"vi":"Mở khóa: Trang trí tầng"},"text":{"vi":"Chạm bảng gỗ của một tầng để treo Đèn Lồng (+2% kinh nghiệm) hoặc Pha Lê (+2% sản lượng) vào 2 khe trang trí. Mua ngay trong bảng tầng."}},
+ {"id":"tut.fishing","title":{"vi":"Mở khóa: Câu cá trên mây"},"text":{"vi":"Mở Biển Mây, chọn tab Câu cá. Mỗi ngày có 1 mồi miễn phí; chờ phao rung thì chạm ngay, rồi giữ để căng dây trong vùng xanh. Cá đổi được xu, Giọt Sương, bọ Hiếm và điểm Sổ Cá."},"target":"open-sea"},
  {"id":"tut.stall","title":{"vi":"Mở khóa: Sạp Phú Bà"},"text":{"vi":"Bày nông sản lên sạp với giá bạn chọn. Hàng xóm ghé mua theo sở thích — giá càng hời bán càng nhanh."},"target":"open-stall"},
 ]
 json.dump(tut,open('content/base/tutorials.json','w'),ensure_ascii=False,indent=2)

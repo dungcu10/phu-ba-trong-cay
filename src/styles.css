@@ -840,3 +840,37 @@ html, body {
 .pot-stars{display:inline-flex;gap:2px;margin-left:6px}
 .pot-stars i{font-style:normal;color:rgba(255,255,255,.25);font-size:20px}
 .pot-stars i.on{color:var(--color-brand-gold,#F3D27E);text-shadow:0 0 6px rgba(243,210,126,.8)}
+
+/* Chỉ thị 10 § 3.9: câu cá (tab of the Biển Mây window). */
+.fish-layout{display:grid;grid-template-columns:minmax(220px,1fr) minmax(300px,1.3fr) minmax(240px,1.1fr);gap:14px;align-items:start}
+.fish-col{display:flex;flex-direction:column;gap:8px}
+.fish-col h3{margin:0}
+.bait-row,.fish-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 8px;border-radius:12px;background:rgba(255,255,255,.05)}
+.bait-main{display:flex;flex-direction:column;flex:1;min-width:110px}
+.fish-row.unseen{opacity:.7}
+.unknown-fish{filter:brightness(0) opacity(.45)}
+.fish-ex{display:flex;flex-wrap:wrap;gap:4px;width:100%}
+.fish-book-next{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.fish-stage{min-height:360px;border-radius:18px;background:linear-gradient(180deg,#b7d3f3 0%,#9fb9ea 45%,#7f97d8 100%);display:flex;align-items:center;justify-content:center;padding:14px;box-shadow:inset 0 0 30px rgba(255,255,255,.4);color:#22264a}
+.fish-stage .note{color:#2b3157}
+.fish-idle,.fish-result,.fish-water{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.fish-water.strike{border:0;background:rgba(255,255,255,.25);border-radius:20px;padding:24px 30px;cursor:pointer;font:inherit;color:inherit;animation:strike-pulse .4s ease-in-out infinite alternate}
+.float-bob{animation:float-bob 1.8s ease-in-out infinite}
+.float-shake{animation:float-shake .18s linear infinite}
+.reel-pad{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;user-select:none;-webkit-user-select:none;touch-action:none;cursor:pointer}
+.tension-bar{position:relative;width:100%;height:30px;border-radius:15px;background:rgba(255,255,255,.55);overflow:hidden}
+.tension-zone{position:absolute;top:0;bottom:0;background:linear-gradient(180deg,#8be08b,#4fb36a);border-radius:12px}
+.tension-mark{position:absolute;top:-3px;bottom:-3px;width:8px;margin-left:-4px;border-radius:4px;background:#d6604f;box-shadow:0 0 0 2px #fff}
+.tension-mark.in{background:#2f7a43}
+.catch-bar{width:100%;height:12px;border-radius:6px;background:rgba(0,0,0,.18);overflow:hidden}
+.catch-fill{display:block;height:100%;background:linear-gradient(90deg,#f3d27e,#f7a84f)}
+.fish-result.landed{animation:sea-pop .5s cubic-bezier(.3,1.6,.5,1)}
+@keyframes float-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+@keyframes float-shake{0%{transform:translate(0,0) rotate(-6deg)}50%{transform:translate(2px,6px) rotate(6deg)}100%{transform:translate(0,0) rotate(-6deg)}}
+@keyframes strike-pulse{from{box-shadow:0 0 0 0 rgba(255,255,255,.6)}to{box-shadow:0 0 0 12px rgba(255,255,255,0)}}
+@media (max-width:1000px){.fish-layout{grid-template-columns:1fr 1fr}.fish-stage{grid-column:1 / -1;order:-1}}
+
+/* Chỉ thị 10 § 3.10: trang trí tầng. */
+.decor-slots{display:flex;gap:10px;flex-wrap:wrap}
+.decor-slot{flex:1;min-width:150px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px;border-radius:14px;border:2px dashed rgba(255,255,255,.25)}
+.decor-slot.on{border-style:solid;border-color:var(--color-brand-gold,#F3D27E);box-shadow:0 0 12px rgba(243,210,126,.35)}

@@ -1,0 +1,196 @@
+{
+  "_note": "Chỉ thị 10 § 3.9 Câu cá trên mây (mở cấp 14; chỉ thị 11 sẽ chuyển chỗ câu sang Bến Câu Cá trong làng, cửa sổ vẫn là một). Mỗi ngày 1 Mồi Thường miễn phí; chế mồi từ nông sản/hàng chế biến. Thả câu thì cá cắn được định sẵn theo seed + số lần thả (tất định); trò chơi giữ vạch căng dây trong vùng xanh holdSeconds giây quyết định có kéo được không. Cá đổi được xu, Giọt Sương hoặc bọ Hiếm, và mỗi lần câu được cộng điểm Sổ Cá. Số liệu là số khởi điểm, CTO chỉnh.",
+  "unlockLevel": 14,
+  "freeBaitPerDay": 1,
+  "baits": [
+    {
+      "item": "base:mat.bait",
+      "recipes": [
+        {
+          "base:item.cloud-mint": 2
+        }
+      ],
+      "weights": [
+        55,
+        28,
+        12,
+        4.5,
+        0.5
+      ]
+    },
+    {
+      "item": "base:mat.sweet-bait",
+      "recipes": [
+        {
+          "base:good.jam.cloud-strawberry": 1
+        },
+        {
+          "base:good.jam.sky-apple": 1
+        },
+        {
+          "base:good.jam.heaven-peach": 1
+        }
+      ],
+      "weights": [
+        30,
+        32,
+        23,
+        12,
+        3
+      ]
+    }
+  ],
+  "fish": [
+    {
+      "id": "base:fish.pink",
+      "name": {
+        "vi": "Cá Mây Hồng"
+      },
+      "rarity": "common",
+      "icon": "art:icon/fish-pink",
+      "points": 1,
+      "holdSeconds": 3,
+      "zone": 0.42,
+      "pull": 0.8,
+      "exchange": [
+        {
+          "coins": 60
+        },
+        {
+          "items": {
+            "base:mat.cloud-millet": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "base:fish.cloud",
+      "name": {
+        "vi": "Cá Bông Mây"
+      },
+      "rarity": "good",
+      "icon": "art:icon/fish-cloud",
+      "points": 2,
+      "holdSeconds": 3.5,
+      "zone": 0.36,
+      "pull": 1,
+      "exchange": [
+        {
+          "coins": 150
+        },
+        {
+          "items": {
+            "base:mat.sky-dew": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "base:fish.moon",
+      "name": {
+        "vi": "Cá Trăng Bạc"
+      },
+      "rarity": "rare",
+      "icon": "art:icon/fish-moon",
+      "points": 5,
+      "holdSeconds": 4.5,
+      "zone": 0.3,
+      "pull": 1.25,
+      "exchange": [
+        {
+          "coins": 400
+        },
+        {
+          "items": {
+            "base:mat.sky-dew": 3
+          }
+        },
+        {
+          "bug": "rare"
+        }
+      ]
+    },
+    {
+      "id": "base:fish.gold",
+      "name": {
+        "vi": "Cá Kim Vân"
+      },
+      "rarity": "epic",
+      "icon": "art:icon/fish-gold",
+      "points": 15,
+      "holdSeconds": 5.5,
+      "zone": 0.25,
+      "pull": 1.5,
+      "exchange": [
+        {
+          "coins": 1200
+        },
+        {
+          "items": {
+            "base:mat.sky-dew": 6
+          }
+        },
+        {
+          "bug": "rare",
+          "qty": 3
+        }
+      ]
+    },
+    {
+      "id": "base:fish.dragon",
+      "name": {
+        "vi": "Cá Long Vân"
+      },
+      "rarity": "legendary",
+      "icon": "art:icon/fish-dragon",
+      "points": 50,
+      "holdSeconds": 6,
+      "zone": 0.2,
+      "pull": 1.8,
+      "exchange": [
+        {
+          "coins": 4000
+        },
+        {
+          "items": {
+            "base:mat.raw-jade": 3,
+            "base:mat.sky-dew": 6
+          }
+        },
+        {
+          "bug": "epic"
+        }
+      ]
+    }
+  ],
+  "biteSeconds": [
+    2,
+    6
+  ],
+  "book": [
+    {
+      "points": 10,
+      "gems": 1
+    },
+    {
+      "points": 40,
+      "items": {
+        "base:mat.sweet-bait": 3
+      }
+    },
+    {
+      "points": 120,
+      "gems": 3
+    },
+    {
+      "points": 300,
+      "items": {
+        "base:mat.raw-jade": 3
+      }
+    },
+    {
+      "points": 800,
+      "gems": 8
+    }
+  ]
+}

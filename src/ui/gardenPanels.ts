@@ -20,6 +20,8 @@ import { hotCrop } from '../systems/cropExtras.ts';
 export interface GardenActions {
   expandFloor(floor: number): void;
   upgradeFloorStar(floor: number): void;
+  buyDecor(itemId: string): void;
+  placeDecor(floor: number, slot: number, itemId: string | null): void;
   cloudRain(floor: number): void;
   claimMission(index: number): void;
   claimMissionBonus(): void;
@@ -112,7 +114,49 @@ export class FloorInfoPanel extends Panel {
         h('div', { class: 'candy-wrap' }, h('span', { class: `need${ok ? '' : ' short'}` }, gem(22), formatNumber(rain.gems)), btn, h('span', { class: 'reason' }, ok ? '' : `Thiếu ${formatNumber(rain.gems - p.gems)} Ngọc Mây`)),
       );
     }
-    this.body.append(h('div', { class: 'cards' }, exp, starCard), rainCard, setCard);
+    this.body.append(h('div', { class: 'cards' }, exp, starCard), rainCard);
+    const decorCard = this.decorCard();
+    if (decorCard) this.body.append(decorCard);
+    this.body.append(setCard);
+  }
+
+  /** Chỉ thị 10 § 3.10: the floor's decor slots — set a lantern or crystal, take it down, or buy one. */
+  private decorCard(): HTMLElement | null {
+    const { content, state } = this.session;
+    const d = content.decor;
+    if (!d) return null;
+    const kinds = Object.entries(d.items);
+    const open = kinds.filter(([, it]) => state.player.level >= it.unlockLevel);
+    const card = h('section', { class: 'card decor-card' }, h('h3', {}, 'Trang trí tầng'));
+    if (open.length === 0) {
+      card.append(h('p', { class: 'note' }, `Mở ở cấp ${Math.min(...kinds.map(([, it]) => it.unlockLevel))}: đèn lồng và pha lê cộng thêm khi thu hoạch trên tầng.`));
+      return card;
+    }
+    const floor = state.floors[this.floor]!;
+    card.append(h('p', { class: 'note' }, `${kinds.map(([id, it]) => `${content.items.get(id)?.name.vi}: +${formatPercent(it.bonus)} ${STAT_TEXT[it.stat] ?? it.stat}`).join(' · ')}. Mỗi tầng cộng tối đa ${formatPercent(d.floorCap)} mỗi loại.`));
+    const slots = h('div', { class: 'decor-slots' });
+    for (let i = 0; i < d.slots; i++) {
+      const id = floor.decor?.[i] ?? null;
+      const slot = h('div', { class: `decor-slot${id ? ' on' : ''}`, 'data-test': `decor-slot-${i}` });
+      if (id) slot.append(itemIcon(content, id, 56), h('span', { class: 'note' }, content.items.get(id)?.name.vi ?? ''), h('button', { class: 'candy small plain', 'data-test': `decor-off-${i}`, onclick: () => this.actions.placeDecor(this.floor, i, null) }, 'Gỡ xuống'));
+      else {
+        slot.append(h('span', { class: 'note' }, 'Khe trống'));
+        for (const [did] of open) {
+          const have = state.inventory[did] ?? 0;
+          if (have > 0) slot.append(h('button', { class: 'candy small gold', 'data-test': `decor-put-${i}-${did}`, onclick: () => this.actions.placeDecor(this.floor, i, did) }, itemIcon(content, did, 22), ` Đặt (${have})`));
+        }
+      }
+      slots.append(slot);
+    }
+    card.append(slots);
+    const shop = h('div', { class: 'candy-wrap' });
+    for (const [did, it] of open) {
+      const ok = state.player.coins >= it.price;
+      const btn = h('button', { class: `candy small ${ok ? 'primary' : 'blocked'}`, 'data-test': `decor-buy-${did}`, onclick: () => (ok ? this.actions.buyDecor(did) : shake(btn)) }, 'Mua ', itemIcon(content, did, 22), ' · ', coin(16), formatNumber(it.price));
+      shop.append(btn);
+    }
+    card.append(shop);
+    return card;
   }
 }
 

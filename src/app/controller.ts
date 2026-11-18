@@ -143,6 +143,8 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
       birds: () => this.open(new BirdsPanel(this.session, this)),
       workshop: () => this.openWorkshop(),
       sea: () => this.openSea(),
+      fishing: () => this.openFishing(),
+      decor: () => this.openFloorInfo(0),
     };
     setTimeout(() => go[feature]?.(), 250);
   }
@@ -228,6 +230,43 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
 
   blowCloud(cell: number): void {
     this.run({ type: 'blowCloud', cell });
+  }
+
+  // Câu cá (chỉ thị 10 § 3.9): a tab of the Biển Mây window; chỉ thị 11's Bến Câu Cá opens it too.
+  openFishing(): void {
+    this.open(new SeaPanel(this.session, this, 'fish'));
+  }
+
+  claimFreeBait(): void {
+    this.run({ type: 'claimFreeBait' });
+  }
+
+  craftBait(bait: string): void {
+    this.run({ type: 'craftBait', bait });
+  }
+
+  castLine(bait: string): void {
+    this.run({ type: 'castLine', bait });
+  }
+
+  reelFish(success: boolean): void {
+    this.run({ type: 'reelFish', success });
+  }
+
+  exchangeFish(fishId: string, option: number): void {
+    this.run({ type: 'exchangeFish', fishId, option });
+  }
+
+  claimFishBook(): void {
+    this.run({ type: 'claimFishBook' });
+  }
+
+  buyDecor(itemId: string): void {
+    this.run({ type: 'buyDecor', itemId });
+  }
+
+  placeDecor(floor: number, slot: number, itemId: string | null): void {
+    this.run({ type: 'placeDecor', floor, slot, itemId });
   }
 
   // --- Xưởng Bọ (chỉ thị 10 § 3.5) ------------------------------------------------------------
@@ -625,6 +664,30 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
         this.toasts.show(e.perfect ? `Đúc thành công ${name} Hoàn Mỹ ★! Chậu đã vào kho chậu.` : `Đúc thành công ${name}! Chậu đã vào kho chậu.`, 'level', 3000);
         break;
       }
+      case 'fishReeled':
+        if (e.landed) {
+          this.sfx.play('upgrade');
+          this.toasts.show(`${e.first ? 'Cá mới! ' : ''}Câu được ${content.fish.get(e.fishId)?.name.vi ?? 'cá'}`, e.first ? 'level' : 'success', 2400);
+        }
+        break;
+      case 'baitGot':
+        this.sfx.play('coin');
+        this.toasts.show(`+${e.qty} ${content.items.get(e.itemId)?.name.vi ?? ''}`, 'success', 1600);
+        break;
+      case 'fishExchanged': {
+        this.sfx.play('coin');
+        const got = [e.coins ? `${formatNumber(e.coins)} xu` : '', ...Object.entries(e.items).map(([id, q]) => `${q} ${content.items.get(id)?.name.vi ?? ''}`)].filter(Boolean).join(', ');
+        this.toasts.show(`Đổi cá được ${got}`, 'success', 2000);
+        break;
+      }
+      case 'fishBookClaimed':
+        this.sfx.play('upgrade');
+        this.toasts.show('Nhận thưởng Sổ Cá!', 'level', 2000);
+        break;
+      case 'decorBought':
+        this.sfx.play('coin');
+        this.toasts.show(`Đã mua ${content.items.get(e.itemId)?.name.vi ?? ''}. Đặt vào khe trang trí của tầng.`, 'success', 2200);
+        break;
       case 'potStarred':
         this.sfx.play('upgrade');
         this.toasts.show(`Chậu lên ★${e.stars}! Chỉ số chính tăng thêm.`, 'level', 2400);

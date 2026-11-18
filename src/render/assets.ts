@@ -216,6 +216,12 @@ export class Art {
       if (content.materials.has(id)) continue;
       // Chỉ thị 12 B7: a pot shard is drawn from its pot's own picture (checked with the pots).
       if (content.items.get(id)?.potId) continue;
+      // Chỉ thị 10 § 3.9: fish use approved icons ("art:<frame>").
+      const fish = content.fish.get(id);
+      if (fish) {
+        need.push(fish.icon.startsWith('art:') ? fish.icon.slice(4) : fish.icon);
+        continue;
+      }
       // Chỉ thị 10 § 3.5: processed goods use an approved icon ("art:<frame>").
       const good = content.goods?.get(id);
       if (good) need.push(good.icon.startsWith('art:') ? good.icon.slice(4) : good.icon);

@@ -22,6 +22,8 @@ import { buyBazaar, ensureBazaar, rerollBazaar } from '../systems/bazaar.ts';
 import { blowCloud, settleEnergy } from '../systems/sea.ts';
 import { quickSellPlan } from '../systems/storage.ts';
 import { combineShards, obtainPot as obtainPotFrom, starUpPot } from '../systems/potStars.ts';
+import { castLine, claimFishBook, claimFreeBait, craftBait, exchangeFish, reelFish } from '../systems/fishing.ts';
+import { buyDecor, placeDecor } from '../systems/decor.ts';
 import { allMissionsClaimed, ensureMissions, localDay, missionDef, recordMissions } from '../systems/missions.ts';
 import { ensureQuestPeriods, questActive, questClaims, questReward, questView, recordQuests } from '../systems/quests.ts';
 import { botGarden, helpReward, helpsLeft, helpToday, type HelpKind } from '../systems/visit.ts';
@@ -93,7 +95,15 @@ export type Command =
   | { type: 'blowCloud'; cell: number }
   | { type: 'quickSell' }
   | { type: 'starUpPot'; potInstanceId: string }
-  | { type: 'combineShards'; potId: string };
+  | { type: 'combineShards'; potId: string }
+  | { type: 'claimFreeBait' }
+  | { type: 'craftBait'; bait: string }
+  | { type: 'castLine'; bait: string }
+  | { type: 'reelFish'; success: boolean }
+  | { type: 'exchangeFish'; fishId: string; option: number }
+  | { type: 'claimFishBook' }
+  | { type: 'buyDecor'; itemId: string }
+  | { type: 'placeDecor'; floor: number; slot: number; itemId: string | null };
 
 export type GameEvent =
   | { type: 'planted'; slot: SlotRef; cropId: string; cost: number }
@@ -114,6 +124,13 @@ export type GameEvent =
   | { type: 'potCast'; potInstanceId: string; potId: string; perfect: boolean }
   | { type: 'bazaarRerolled'; coins: number; best: BazaarSlot['rarity']; sure: BazaarSlot['rarity'] | null }
   | { type: 'bazaarRefreshed' }
+  | { type: 'baitGot'; itemId: string; qty: number; free: boolean }
+  | { type: 'lineCast'; fishId: string; bait: string }
+  | { type: 'fishReeled'; fishId: string; landed: boolean; first: boolean }
+  | { type: 'fishExchanged'; fishId: string; coins: number; items: Record<string, number> }
+  | { type: 'fishBookClaimed'; index: number; gems: number; items: Record<string, number> }
+  | { type: 'decorBought'; itemId: string; coins: number }
+  | { type: 'decorPlaced'; floor: number; slot: number; itemId: string | null; removed: string | null }
   | { type: 'potStarred'; potInstanceId: string; stars: number; shards: number }
   | { type: 'potCombined'; potInstanceId: string; potId: string }
   | { type: 'potToShards'; potId: string; itemId: string; qty: number }
@@ -193,6 +210,12 @@ export type ErrorCode =
   | 'already_bought'
   | 'nothing_to_sell'
   | 'pot_max_stars'
+  | 'no_bait'
+  | 'line_busy'
+  | 'nothing_hooked'
+  | 'bad_option'
+  | 'unknown_floor'
+  | 'unknown_item'
   | 'bad_cell'
   | 'already_open'
   | 'no_energy'
@@ -334,6 +357,38 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
       return harvest(content, state, cmd, now);
     case 'sell':
       return sell(content, state, cmd.itemId, cmd.qty, now);
+    case 'claimFreeBait': {
+      const r = claimFreeBait(content, state, now);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'baitGot', ...r, free: true }] };
+    }
+    case 'craftBait': {
+      const r = craftBait(content, state, cmd.bait);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'baitGot', itemId: r.itemId, qty: 1, free: false }] };
+    }
+    case 'castLine': {
+      const r = castLine(content, state, cmd.bait);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'lineCast', fishId: r.fish.id, bait: cmd.bait }] };
+    }
+    case 'reelFish': {
+      const r = reelFish(content, state, cmd.success, now);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'fishReeled', ...r }] };
+    }
+    case 'exchangeFish': {
+      const r = exchangeFish(content, state, cmd.fishId, cmd.option);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'fishExchanged', fishId: cmd.fishId, ...r }] };
+    }
+    case 'claimFishBook': {
+      const r = claimFishBook(content, state);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'fishBookClaimed', ...r }] };
+    }
+    case 'buyDecor': {
+      const r = buyDecor(content, state, cmd.itemId);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'decorBought', itemId: cmd.itemId, coins: r.coins }] };
+    }
+    case 'placeDecor': {
+      const r = placeDecor(content, state, cmd.floor, cmd.slot, cmd.itemId);
+      return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'decorPlaced', floor: cmd.floor, slot: cmd.slot, itemId: cmd.itemId, removed: r.removed }] };
+    }
     case 'starUpPot': {
       const r = starUpPot(content, state, cmd.potInstanceId);
       return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'potStarred', potInstanceId: cmd.potInstanceId, ...r }] };
