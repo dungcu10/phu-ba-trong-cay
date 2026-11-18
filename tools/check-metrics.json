@@ -5,7 +5,7 @@
     { "id": "level1", "label": "Cấp ngày 1", "min": 5, "max": 6, "block": true },
     { "id": "level7", "label": "Cấp ngày 7", "min": 13, "max": 15, "block": true },
     { "id": "level30", "label": "Cấp ngày 30", "min": 25, "max": 28, "block": true },
-    { "id": "milestonesPerDay", "label": "Mốc tiến bộ mỗi ngày (ngày 10–30)", "min": 2, "max": 1000, "block": false },
+    { "id": "milestonesPerDay", "label": "Mốc tiến bộ mỗi ngày (ngày 10–30)", "min": 2, "max": 1000, "block": true },
     { "id": "coinsDaysIncome", "label": "Xu đang giữ / thu nhập 1 ngày (ngày 3–30)", "min": 0, "max": 5, "block": true },
     { "id": "giftsPerDay", "label": "Quà bất ngờ mỗi ngày (TB ngày 7–30)", "min": 10, "max": 15, "block": true },
     { "id": "bazaarSpendShare", "label": "Phần xu tiêu ở Sạp Săn Hàng (đặt lại + mua)", "min": 0.2, "max": 0.35, "block": false },

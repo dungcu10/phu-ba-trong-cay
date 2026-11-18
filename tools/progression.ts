@@ -123,7 +123,7 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
         if (e.type === 'floorUnlocked' || e.type === 'floorExpanded' || e.type === 'floorStarred') milestones++;
         if (e.type === 'potBought' || (e.type === 'potUpgraded' && e.milestone) || e.type === 'storageUpgraded') milestones++;
         // Also progress a player sees: a level (often a new crop), a crafted pot, a machine star, a Sổ Tay reward.
-        if (e.type === 'levelUp' || e.type === 'potObtained' || e.type === 'machineStar' || e.type === 'journalClaimed' || e.type === 'houseUpgraded' || e.type === 'medalAwarded' || e.type === 'petObtained' || (e.type === 'petFed' && e.levelUps.length > 0)) milestones++;
+        if (e.type === 'levelUp' || e.type === 'potObtained' || e.type === 'machineStar' || e.type === 'journalClaimed' || e.type === 'houseUpgraded' || e.type === 'medalAwarded' || e.type === 'petObtained' || e.type === 'errandClaimed' || (e.type === 'petFed' && e.levelUps.length > 0)) milestones++;
         if (e.type === 'questClaimed') {
           questsClaimed++;
           gemSources[`quest:${e.questId}`] = (gemSources[`quest:${e.questId}`] ?? 0) + e.gems;
@@ -213,6 +213,14 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
           if (p.active) run({ type: 'guardFloor', species: p.species, floor: Math.max(0, s.floors.length - 1 - i) }, t);
           if (m === 0) while (run({ type: 'starUpPet', species: p.species }, t).ok);
         });
+        // Việc vặt (§ E3): claim what is back, then send the pets not walking, best fit first.
+        s.errands.list.forEach((_, i) => run({ type: 'claimErrand', index: i }, t));
+        for (const p of s.pets) {
+          if (p.active || s.errands.list.some((e) => e.pet === p.species && !e.done)) continue;
+          const open = s.errands.list.map((e, i) => ({ e, i })).filter(({ e }) => !e.pet && !e.done);
+          const fit = open.find(({ e }) => content.pets!.errands?.list.find((d) => d.id === e.errand)?.fit?.includes(p.species)) ?? open[0];
+          if (fit) run({ type: 'sendErrand', index: fit.i, species: p.species }, t);
+        }
       }
       for (const [id, q] of Object.entries(s.inventory)) {
         if (!content.items.get(id)?.countsTowardStorage) continue;

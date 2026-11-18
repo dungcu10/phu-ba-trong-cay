@@ -42,6 +42,11 @@ Phân loại:
 - File/Module: game.ts (harvest có hệ số EXP, Ban Lộc, Lửa Ấm trong `water`, `runHarvestHelp`, `replantAfter`, lệnh `toggleReplant`, sự kiện petHarvested/petReplanted/blessed/replantToggled), neighbors.ts (Tự Bày Hàng, Khách Quý, sự kiện stallRestocked), pets.ts (dailyLeft, replantOn, sniffedChests), state.ts (`Listing.qty0` tùy chọn), seaPanel.ts, petPanel.ts, worldArt.ts (PetActor.avoid/goTo), scene.ts (petGoTo), slotView.ts, controller.ts, styles.css, tests/petSkills11.test.ts (7 test).
 - Ảnh hưởng save: Không đổi đời (bộ đếm mỗi ngày nằm trong `skillAt` có sẵn; `qty0` tùy chọn).
 - Quyết định tự chọn: (1) "Lửa Ấm — cây lâu khát hơn": trong game này cây khát theo từng giai đoạn, nên làm thành "nước giữ lâu hơn" = mỗi lần tưới rút ngắn thêm; phần "ban đêm bắt được bọ hiếm hơn một bậc" chưa làm vì cần thêm số và đụng chỉ số Bọ Rất hiếm — chờ CTO; (2) Đánh Hơi phần "chỉ ra vườn hàng xóm nhiều bọ, +50% thưởng" để sau cùng B5 giúp vườn (chỉ thị 12); (3) Tự Bày Hàng bày lại đúng số lượng lúc đầu (chưa có ô "mức tồn tối thiểu"); (4) Ban Lộc dùng tầng Rồng đang trông (người chơi chọn tầng trông); (5) Vòng Mèo Bày Hàng ↔ Sẻ Gieo Lại ↔ Thu Hoạch Hộ không tạo xu vô hạn: Bày Hàng chỉ bán hàng có sẵn trong kho theo giá người chơi đặt, Gieo Lại trả tiền hạt, Thu Hoạch Hộ chỉ thu cây đã chín, cả ba có giới hạn mỗi ngày hoặc theo thời gian lớn.
+### [2026-11-18] CTO — 11 TỔNG N5 phần 2a: bot làm việc vặt thú cưng; bật chặn mốc tiến bộ
+- Bot mô phỏng: mỗi lần ghé nhận việc vặt đã xong, gửi thú cưng không đi dắt vào việc hợp nghề trước. Việc vặt trả ~44 nghìn xu / 30 ngày.
+- Mốc tiến bộ đếm thêm việc vặt hoàn thành. Ngày 10–30: 2–15 mốc/ngày (trước có ngày 0). Bật chặn chỉ số này (tối thiểu 2).
+- Số trong `pets.json` giữ nguyên. Cổng XANH, typecheck sạch, 250/250 test.
+- Trạng thái nghiệm thu: Chờ
 
 ### [2026-11-18] Chỉ thị 11 TỔNG N5 (phần 2a) — Việc vặt thú cưng + mục tiêu cho cấp 19–27 (tag `m-11-n5b`)
 - Loại: Thêm / Thay đổi
