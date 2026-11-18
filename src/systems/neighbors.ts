@@ -199,10 +199,23 @@ function marketPool(content: ContentPack, bot: BotDef, s: BotState): Array<{ id:
       }
     }
   }
+  const wares = m.wares;
   for (const id of Object.keys(m.values)) {
     if (!content.items.has(id)) continue;
+    // Chỉ thị 10 § 3.13: newer wares from their level, with their own weight. Never birds, never Rất hiếm bugs.
+    const from = wares?.minLevel[id];
+    if (from !== undefined) {
+      if (s.level >= from && wares!.weight > 0 && content.bugs.get(id)?.rarity !== 'epic') pool.push({ id, w: wares!.weight, max: 3 });
+      continue;
+    }
     const seal = id.includes('merit');
     pool.push({ id, w: seal ? 0.15 * bot.traits.collector : 0.8, max: seal ? 1 : 4 });
+  }
+  // Workshop goods, once the neighbour's level opens the machine that makes them.
+  if (wares && wares.goodsWeight > 0) {
+    for (const g of content.goods?.values() ?? []) {
+      if ((content.machines?.get(g.machine)?.unlockLevel ?? Infinity) <= s.level) pool.push({ id: g.id, w: wares.goodsWeight, max: 3 });
+    }
   }
   return pool;
 }

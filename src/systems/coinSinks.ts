@@ -5,13 +5,13 @@
 import type { ContentPack, FloorDef, LevelPricing } from '../core/content.ts';
 import { tidy } from '../core/income.ts';
 
-type Key = Exclude<keyof LevelPricing, 'castingU'>;
+type Key = Exclude<keyof LevelPricing, 'castingU' | 'decorU'> | 'decorU';
 
 /** Extra coins for one sink at this player level. */
 export function levelCoins(content: ContentPack, key: Key | { casting: string }, level: number): number {
   const lp = content.market?.levelPricing;
   if (!lp) return 0;
-  const f = typeof key === 'string' ? lp[key] : (lp.castingU?.[key.casting] ?? 0);
+  const f = typeof key === 'string' ? (lp[key] ?? 0) : (lp.castingU?.[key.casting] ?? 0);
   return f > 0 ? tidy(f * content.income.unit(level)) : 0;
 }
 

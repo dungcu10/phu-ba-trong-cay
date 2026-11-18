@@ -24,6 +24,7 @@ import { quickSellPlan } from '../systems/storage.ts';
 import { combineShards, obtainPot as obtainPotFrom, starUpPot } from '../systems/potStars.ts';
 import { castLine, claimFishBook, claimFreeBait, craftBait, exchangeFish, reelFish } from '../systems/fishing.ts';
 import { buyDecor, placeDecor } from '../systems/decor.ts';
+import { tapXuxu } from '../systems/xuxu.ts';
 import { allMissionsClaimed, ensureMissions, localDay, missionDef, recordMissions } from '../systems/missions.ts';
 import { ensureQuestPeriods, questActive, questClaims, questReward, questView, recordQuests } from '../systems/quests.ts';
 import { botGarden, helpReward, helpsLeft, helpToday, type HelpKind } from '../systems/visit.ts';
@@ -94,6 +95,7 @@ export type Command =
   | { type: 'buyBazaar'; slot: number }
   | { type: 'blowCloud'; cell: number }
   | { type: 'quickSell' }
+  | { type: 'tapXuxu' }
   | { type: 'starUpPot'; potInstanceId: string }
   | { type: 'combineShards'; potId: string }
   | { type: 'claimFreeBait' }
@@ -124,6 +126,7 @@ export type GameEvent =
   | { type: 'potCast'; potInstanceId: string; potId: string; perfect: boolean }
   | { type: 'bazaarRerolled'; coins: number; best: BazaarSlot['rarity']; sure: BazaarSlot['rarity'] | null }
   | { type: 'bazaarRefreshed' }
+  | { type: 'xuxuTapped'; line: string; gift: { coins: number; items: Record<string, number> } | null }
   | { type: 'baitGot'; itemId: string; qty: number; free: boolean }
   | { type: 'lineCast'; fishId: string; bait: string }
   | { type: 'fishReeled'; fishId: string; landed: boolean; first: boolean }
@@ -211,6 +214,7 @@ export type ErrorCode =
   | 'nothing_to_sell'
   | 'pot_max_stars'
   | 'no_bait'
+  | 'casts_used'
   | 'line_busy'
   | 'nothing_hooked'
   | 'bad_option'
@@ -357,6 +361,10 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
       return harvest(content, state, cmd, now);
     case 'sell':
       return sell(content, state, cmd.itemId, cmd.qty, now);
+    case 'tapXuxu': {
+      const r = tapXuxu(content, state, now);
+      return { ok: true, events: [{ type: 'xuxuTapped', ...r }] };
+    }
     case 'claimFreeBait': {
       const r = claimFreeBait(content, state, now);
       return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'baitGot', ...r, free: true }] };
@@ -366,7 +374,7 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
       return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'baitGot', itemId: r.itemId, qty: 1, free: false }] };
     }
     case 'castLine': {
-      const r = castLine(content, state, cmd.bait);
+      const r = castLine(content, state, cmd.bait, now);
       return typeof r === 'string' ? fail(r) : { ok: true, events: [{ type: 'lineCast', fishId: r.fish.id, bait: cmd.bait }] };
     }
     case 'reelFish': {

@@ -16,6 +16,7 @@ import { potIcon, shake } from './potPanels.ts';
 import { FAMILY_TEXT, formatClock, formatNumber, formatPercent, STAT_TEXT } from './text.ts';
 import { coin, gem } from './worldPanels.ts';
 import { hotCrop } from '../systems/cropExtras.ts';
+import { decorPrice } from '../systems/decor.ts';
 
 export interface GardenActions {
   expandFloor(floor: number): void;
@@ -150,9 +151,10 @@ export class FloorInfoPanel extends Panel {
     }
     card.append(slots);
     const shop = h('div', { class: 'candy-wrap' });
-    for (const [did, it] of open) {
-      const ok = state.player.coins >= it.price;
-      const btn = h('button', { class: `candy small ${ok ? 'primary' : 'blocked'}`, 'data-test': `decor-buy-${did}`, onclick: () => (ok ? this.actions.buyDecor(did) : shake(btn)) }, 'Mua ', itemIcon(content, did, 22), ' · ', coin(16), formatNumber(it.price));
+    for (const [did] of open) {
+      const price = decorPrice(content, state, did) ?? 0;
+      const ok = state.player.coins >= price;
+      const btn = h('button', { class: `candy small ${ok ? 'primary' : 'blocked'}`, 'data-test': `decor-buy-${did}`, onclick: () => (ok ? this.actions.buyDecor(did) : shake(btn)) }, 'Mua ', itemIcon(content, did, 22), ' · ', coin(16), formatNumber(price));
       shop.append(btn);
     }
     card.append(shop);

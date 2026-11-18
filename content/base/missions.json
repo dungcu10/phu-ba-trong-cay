@@ -131,6 +131,62 @@
         "xp": 8,
         "gems": 0
       }
+    },
+    {
+      "id": "feed-bird",
+      "kind": "feedBird",
+      "target": 2,
+      "name": {
+        "vi": "Cho chim ăn 2 lần"
+      },
+      "minLevel": 3,
+      "reward": {
+        "coins": 40,
+        "xp": 10,
+        "gems": 0
+      }
+    },
+    {
+      "id": "make-goods",
+      "kind": "makeGoods",
+      "target": 3,
+      "name": {
+        "vi": "Làm 3 món ở Xưởng Bọ"
+      },
+      "minLevel": 6,
+      "reward": {
+        "coins": 60,
+        "xp": 15,
+        "gems": 0
+      }
+    },
+    {
+      "id": "blow-cloud",
+      "kind": "blowCloud",
+      "target": 10,
+      "name": {
+        "vi": "Thổi tan 10 cụm mây ở Biển Mây"
+      },
+      "minLevel": 8,
+      "reward": {
+        "coins": 50,
+        "xp": 12,
+        "gems": 0
+      }
+    },
+    {
+      "id": "catch-fish",
+      "kind": "catchFish",
+      "target": 1,
+      "name": {
+        "vi": "Câu được 1 con cá"
+      },
+      "minLevel": 14,
+      "reward": {
+        "coins": 60,
+        "xp": 15,
+        "gems": 0
+      }
     }
   ]
 }

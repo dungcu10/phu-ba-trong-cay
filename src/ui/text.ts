@@ -56,6 +56,7 @@ export const ERROR_TEXT: Record<ErrorCode, string> = {
   not_castable: 'Chậu này không đúc được.',
   already_bought: 'Ô này đã có người mua rồi.',
   pot_max_stars: 'Chậu này đã đủ sao.',
+  casts_used: 'Hôm nay đã thả câu đủ lượt rồi, mai câu tiếp nhé.',
   no_bait: 'Hết mồi rồi. Nhận mồi miễn phí hôm nay hoặc chế thêm mồi nhé.',
   line_busy: 'Cá đang cắn câu kìa!',
   nothing_hooked: 'Chưa có cá nào cắn câu.',

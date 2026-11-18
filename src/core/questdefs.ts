@@ -28,6 +28,16 @@ export const QUEST_TRIGGERS = [
   'cloudRain',
   'upgradeStorage',
   'levelUp',
+  // Chỉ thị 10 M8: the new systems.
+  'feedBird',
+  'makeGoods',
+  'blowCloud',
+  'openSeaChest',
+  'clearSea',
+  'catchFish',
+  'castPot',
+  'starPot',
+  'huntBazaar',
 ] as const;
 export type QuestTrigger = (typeof QUEST_TRIGGERS)[number];
 

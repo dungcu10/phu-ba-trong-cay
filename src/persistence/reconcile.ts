@@ -206,6 +206,11 @@ function reconcileWorld(state: GameState, content: ContentPack, c: Checker): voi
   }
   state.neighbors = neighbors;
   if (!state.market || typeof state.market.day !== 'number' || typeof state.market.buys !== 'number') state.market = { day: -1, buys: 0 };
+  // Chỉ thị 10 § 3.11: Xu Xu's gift clock.
+  if (state.xuxu !== undefined) {
+    const x = state.xuxu as Partial<NonNullable<GameState['xuxu']>> | null;
+    if (!x || typeof x !== 'object' || !Number.isFinite(x.giftAt) || !Number.isInteger(x.taps) || x.taps! < 0) delete state.xuxu;
+  }
   // Chỉ thị 12 B2: the Sạp Săn Hàng board. A broken board is dropped (a new one is laid on next look);
   // slots of things no longer in the content are dropped, and Vận May counters kept when they are sane.
   if (state.bazaar !== undefined) {

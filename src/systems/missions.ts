@@ -52,6 +52,15 @@ function amountFor(e: GameEvent): [MissionKind, number] | null {
       return ['sell', e.qty];
     case 'neighborHelped':
       return ['helpNeighbor', 1];
+    // Chỉ thị 10 M8: the new systems.
+    case 'birdFed':
+      return ['feedBird', 1];
+    case 'goodsMade':
+      return ['makeGoods', e.qty];
+    case 'cloudBlown':
+      return ['blowCloud', 1];
+    case 'fishReeled':
+      return e.landed ? ['catchFish', 1] : null;
     default:
       return null;
   }

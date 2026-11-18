@@ -71,6 +71,7 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
       openBirds: () => this.open(new BirdsPanel(this.session, this)),
       openWorkshop: () => this.openWorkshop(),
       openSea: () => this.openSea(),
+      tapXuxu: () => this.tapXuxu(),
       openLetters: () => {
         this.open(new LettersPanel(this.session));
         this.run({ type: 'readNotices' }, true);
@@ -583,6 +584,10 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
     this.run({ type: 'combineShards', potId });
   }
 
+  tapXuxu(): void {
+    this.run({ type: 'tapXuxu' });
+  }
+
   quickSell(): void {
     this.run({ type: 'quickSell' });
   }
@@ -688,6 +693,12 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
         this.sfx.play('coin');
         this.toasts.show(`Đã mua ${content.items.get(e.itemId)?.name.vi ?? ''}. Đặt vào khe trang trí của tầng.`, 'success', 2200);
         break;
+      case 'xuxuTapped': {
+        const gift = e.gift ? Object.entries(e.gift.items).map(([id, q]) => `${q} ${content.items.get(id)?.name.vi ?? ''}`).concat(e.gift.coins ? [`${formatNumber(e.gift.coins)} xu`] : []).join(', ') : '';
+        this.hud.say(gift ? `Quà nhỏ cho chủ vườn: ${gift}!` : e.line, gift ? 'happy' : 'wave');
+        this.sfx.play(gift ? 'coin' : 'tap');
+        break;
+      }
       case 'potStarred':
         this.sfx.play('upgrade');
         this.toasts.show(`Chậu lên ★${e.stars}! Chỉ số chính tăng thêm.`, 'level', 2400);
