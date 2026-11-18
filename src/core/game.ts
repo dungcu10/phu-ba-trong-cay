@@ -20,6 +20,7 @@ import { expandCost, expandItems, nextStar } from '../systems/floors.ts';
 import { floorUnlockCost } from '../systems/coinSinks.ts';
 import { buyBazaar, ensureBazaar, rerollBazaar } from '../systems/bazaar.ts';
 import { blowCloud, settleEnergy } from '../systems/sea.ts';
+import { quickSellPlan } from '../systems/storage.ts';
 import { allMissionsClaimed, ensureMissions, localDay, missionDef, recordMissions } from '../systems/missions.ts';
 import { ensureQuestPeriods, questActive, questClaims, questReward, questView, recordQuests } from '../systems/quests.ts';
 import { botGarden, helpReward, helpsLeft, helpToday, type HelpKind } from '../systems/visit.ts';
@@ -88,7 +89,8 @@ export type Command =
   | { type: 'castPot'; potId: string }
   | { type: 'rerollBazaar' }
   | { type: 'buyBazaar'; slot: number }
-  | { type: 'blowCloud'; cell: number };
+  | { type: 'blowCloud'; cell: number }
+  | { type: 'quickSell' };
 
 export type GameEvent =
   | { type: 'planted'; slot: SlotRef; cropId: string; cost: number }
@@ -109,6 +111,7 @@ export type GameEvent =
   | { type: 'potCast'; potInstanceId: string; potId: string; perfect: boolean }
   | { type: 'bazaarRerolled'; coins: number; best: BazaarSlot['rarity']; sure: BazaarSlot['rarity'] | null }
   | { type: 'bazaarRefreshed' }
+  | { type: 'quickSold'; items: Array<{ itemId: string; qty: number }>; coins: number }
   | { type: 'cloudBlown'; cell: number; finds: Array<{ itemId: string; qty: number }>; chest?: number; potInstanceId?: string; cleared?: { gems: number } }
   | { type: 'bazaarBought'; slot: number; rarity: BazaarSlot['rarity']; kind: 'item' | 'pot'; itemId: string; qty: number; currency: 'coins' | 'gems'; price: number; potInstanceId?: string }
   | { type: 'neighborsChipped'; slot: number; help: Array<{ botId: string; itemId: string; qty: number }> }
@@ -182,6 +185,7 @@ export type ErrorCode =
   | 'help_used'
   | 'not_castable'
   | 'already_bought'
+  | 'nothing_to_sell'
   | 'bad_cell'
   | 'already_open'
   | 'no_energy'
@@ -321,6 +325,19 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
       return harvest(content, state, cmd, now);
     case 'sell':
       return sell(content, state, cmd.itemId, cmd.qty, now);
+    case 'quickSell': {
+      // Chỉ thị 12 A2: sell all of the Kho Nông Sản beyond what the open orders still need.
+      const plan = quickSellPlan(content, state, now);
+      if (plan.length === 0) return fail('nothing_to_sell');
+      let coins = 0;
+      for (const p of plan) {
+        removeItem(state, p.itemId, p.qty);
+        coins += p.coins;
+      }
+      state.player.coins += coins;
+      state.stats.coinsEarned += coins;
+      return { ok: true, events: [{ type: 'quickSold', items: plan.map((p) => ({ itemId: p.itemId, qty: p.qty })), coins }] };
+    }
     case 'upgradePot':
       return upgradePot(content, state, cmd.potInstanceId);
     case 'unlockFloor':

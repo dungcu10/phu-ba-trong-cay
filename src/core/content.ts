@@ -330,6 +330,8 @@ export interface SurprisesConfig {
   /** Chance of a gift per 10 minutes of (unmodified) growing time, like Bọ Mây (R2). */
   giftChancePer10Min: number;
   giftChanceMax: number;
+  /** Floor on the per-harvest gift chance, so the short crops of days 1–6 still find gifts (default 0). */
+  giftChanceMin?: number;
   /** Gems surprise gifts may give per local day; past it a gem gift becomes a coin gift (plan C: gift budget). */
   giftGemsPerDay: number;
   gifts: Array<{ kind: 'coins' | 'gems' | 'bug' | 'item'; weight: number; perLevel?: number; min?: number; max?: number; items?: string[] }>;
@@ -844,6 +846,7 @@ export function buildContentPack(raw: RawContent): ContentPack {
   checkFields('orders', orders, ['slots', 'refillSeconds', 'skipSeconds', 'skipNowGems', 'maxLines', 'xpPerCoin', 'rareChance', 'rareMultiplier', 'rareGems'], [], problems);
   const surprises = raw.surprises as SurprisesConfig;
   checkFields('surprises', surprises, ['startingGems', 'giftChancePer10Min', 'giftChanceMax', 'giftGemsPerDay'], [], problems);
+  if (surprises.giftChanceMin !== undefined && !(surprises.giftChanceMin >= 0 && surprises.giftChanceMin <= 1)) problems.push('surprises.giftChanceMin: 0 – 1');
   for (const m of surprises?.mutations ?? []) {
     for (const crop of crops.values()) {
       addUnique(

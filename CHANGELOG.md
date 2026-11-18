@@ -29,6 +29,16 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Chỉ thị 12 TỔNG A2 — Tách 2 kho, Bán nhanh; surprises.giftChanceMin (tag `m-12-a2`)
+- Loại: Thêm
+- Mô tả:
+  - Rương Mây có 2 tab, mỗi tab đếm riêng: **Kho Nông Sản** (nông sản + hàng chế biến; có sức chứa, nâng bằng xu như cũ) và **Túi Nguyên Liệu** (sâu bọ, khoáng, Sợi Mây, Giọt Sương, Hạt Kê, mồi câu, vật liệu chậu, đồ trang trí; **không giới hạn**). Mọi loại món mới (cá, Huy Hiệu, Mảnh Trứng Rồng…) tự vào Túi trừ khi là nông sản/hàng chế biến.
+  - **Bán nhanh** ở tab Kho Nông Sản: bán mọi món thừa so với đơn hàng đang mở (giữ lại đúng phần đơn còn cần), hiện trước số xu nhận được. Khi kho đầy, khung báo đỏ "Kho Nông Sản đầy!". Lời báo kho đầy (lỗi và gợi ý) chỉ nói về Kho Nông Sản và chỉ tới nút Bán nhanh. Lệnh mới `quickSell`.
+  - `surprises.json` thêm `giftChanceMin` (mặc định 0): sàn tỉ lệ quà mỗi lần thu hoạch, để cây ngắn ngày 1–6 vẫn có quà. CTO chỉnh số.
+- File/Module: src/systems/storage.ts (mới), src/ui/panels.ts (StoragePanel 2 tab), game.ts (quickSell, quickSold, nothing_to_sell), controller.ts, hint.ts, text.ts, styles.css, surprises.ts, content.ts, content/base/surprises.json, tests/storage12.test.ts (3 test).
+- Ảnh hưởng save: **Không cần migration, SAVE_VERSION giữ 12.** Save vẫn giữ một bảng món; kho của mỗi món suy ra từ loại món (đã như vậy từ trước: bọ và vật liệu không tính chỗ kho). Vì không chuyển dữ liệu nên không thể mất hay đặt sai món nào, save cũ mở bình thường.
+- Quyết định tự chọn: (1) không tách thành 2 bảng trong save — tách theo loại món cho cùng kết quả mà không phải sửa hơn 60 chỗ đọc `inventory` (gồm file của CTO như tools/progression.ts) và không có rủi ro mất món khi nâng đời save; (2) "thừa" chỉ tính so với đơn khinh khí cầu đang mở, chưa giữ phần cho công thức Xưởng.
+
 ### [2026-11-18] CTO — A1 / B1.3: quà bất ngờ 10–15 lần mỗi ngày
 - `surprises.json`: giftChancePer10Min 0,04 → 0,015, giftChanceMax 0,25 → 0,08; trọng số quà xu 5 → 1, bọ 3 → 4, vật phẩm 3 → 4 (bớt gói xu lặt vặt). Quà/ngày: trước 2–84, nay TB 12,7 (ngày 7–30). Thêm chỉ số chặn "Quà bất ngờ mỗi ngày" 10–15. Ngày 1–6 còn ít quà (0–6) vì cây ngắn.
 - Chậu chữ ký Hiếm đổi 26 Đất Sét + 1 Ấn (trước 22): chậu ngày 30 về 14.
