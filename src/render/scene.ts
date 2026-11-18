@@ -655,6 +655,12 @@ export class GameView {
     return this.village.ready && this.model.mode === 'home' ? VILLAGE_SCROLL : 0;
   }
 
+  /** A short side-to-side shake of the garden (caught stealing). */
+  shake(ms = 300): void {
+    const x0 = this.world.x;
+    this.tweens.add(ms, (t: number) => t, (t) => (this.world.x = x0 + Math.sin(t * Math.PI * 8) * 10 * (1 - t)), () => (this.world.x = x0));
+  }
+
   /** Camera down to the village. */
   focusVillage(durationMs = 600): void {
     const from = this.scroll;

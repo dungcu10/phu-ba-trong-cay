@@ -737,8 +737,41 @@
     "coinsBase": 6,
     "coinsPerLevel": 1.5,
     "xp": 3,
-    "friendship": 1
+    "friendship": 1, "perDay": 10 },
+  "_social": "Chỉ thị 12 B4/B5: trộm vườn, giúp vườn, Kẻ Thù, BOT trộm khi người chơi tắt game. Số khởi điểm theo chỉ thị; CTO chỉnh qua mô phỏng.",
+  "steal": {
+    "turnsMax": 5,
+    "regenHours": 3,
+    "takeMin": 1,
+    "takeMax": 2,
+    "maxShare": 0.25,
+    "mutationChance": 0.08,
+    "jadeShare": 0.15,
+    "seedChance": 0.03,
+    "guardCatch": 0.2,
+    "strictCatch": 0.2,
+    "bothCatch": 0.35,
+    "strictDiligence": 0.75,
+    "foxReduce": 0.1,
+    "enemyHours": 24,
+    "enemyMultiplier": 2,
+    "streak": 3
   },
+  "botSteal": {
+    "perDay": 3,
+    "share": 0.1,
+    "_chancePerHour": "Để 0 (tắt) cho trung tính: bật lên (chỉ thị gợi ý ~0,12) thì mô phỏng lệch chỉ số chậu chữ ký và Bọ Rất hiếm — CTO bật và chỉnh qua mô phỏng.",
+    "chancePerHour": 0,
+    "awayMinutes": 10,
+    "kittenReduce": 0.5,
+    "friendlyAt": 3,
+    "maxHours": 48
+  },
+  "friendMilestones": [
+    { "at": 3, "coinsU": 0.25 },
+    { "at": 6, "coinsU": 0.5 },
+    { "at": 10, "coinsU": 1 }
+  ],
   "market": {
     "perSession": 4,
     "markup": 1.25,

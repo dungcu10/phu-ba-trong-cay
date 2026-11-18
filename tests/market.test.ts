@@ -72,7 +72,9 @@ test('mua thành công: trừ xu đúng giá, hàng vào Rương, hàng xóm nh�
   const price = playerPrice(content, s, l);
   const r = dispatch(content, s, { type: 'buyFromNeighbor', botId: l.botId, itemId: l.itemId, qty: 1 }, T0 + DAY);
   assert.ok(r.ok, JSON.stringify(r));
-  assert.equal(s.player.coins, coins - price);
+  // Chỉ thị 12 B5: friendship marks reached on the way bring small gifts.
+  const gifts = r.events.reduce((a, e) => a + (e.type === 'friendGift' ? e.coins : 0), 0);
+  assert.equal(s.player.coins, coins - price + gifts);
   assert.equal(bot.coins, botCoins + price);
   assert.equal(bot.friendship, friend + content.neighbors.market.friendship);
   assert.equal(s.inventory[l.itemId], have + 1);

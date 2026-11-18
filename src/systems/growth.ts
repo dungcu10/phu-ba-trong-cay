@@ -26,6 +26,8 @@ export interface CropStatus {
   /** Bọ Mây currently on the plant (they stay until caught or harvested). */
   bug: { bug: BugDef; count: number } | null;
   isRegrow: boolean;
+  /** Chỉ thị 12 B4: a neighbour's pot the player already stole from today (footprints). */
+  stolen?: boolean;
 }
 
 export function cycleDurationMs(content: ContentPack, state: GameState, slot: SlotState, planting: Planting): number {

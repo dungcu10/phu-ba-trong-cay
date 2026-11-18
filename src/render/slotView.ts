@@ -53,7 +53,7 @@ export class SlotView extends Container {
   private bugKind = '';
   private bugFlies = false;
   private bugBase = 0.75;
-  private markerKind: 'none' | 'water' | 'ripe' = 'none';
+  private markerKind: 'none' | 'water' | 'ripe' | 'paw' = 'none';
   /** Ripe now (pets keep from standing in front of it). */
   get ripe(): boolean {
     return this.markerKind === 'ripe';
@@ -196,7 +196,7 @@ export class SlotView extends Container {
       this.sway = status && status.stage >= 2 ? 0.03 : 0.012;
     }
 
-    const kind = !status ? 'none' : status.ripe ? 'ripe' : status.thirsty ? 'water' : 'none';
+    const kind = !status ? 'none' : status.stolen ? 'paw' : status.ripe ? 'ripe' : status.thirsty ? 'water' : 'none';
     if (kind !== this.markerKind) {
       this.markerKind = kind;
       this.drawMarker(kind);
@@ -225,20 +225,25 @@ export class SlotView extends Container {
   }
 
   /** Thirst and ripeness markers, drawn by code (chờ đồ họa đợt 5). */
-  private drawMarker(kind: 'none' | 'water' | 'ripe'): void {
+  private drawMarker(kind: 'none' | 'water' | 'ripe' | 'paw'): void {
     const g = this.marker;
     g.clear();
     g.visible = kind !== 'none';
     if (kind === 'none') return;
     // Jelly bubble: wood rim, gold ring, paper face, glossy cap, little tail (matches the HUD buttons).
-    const ring = kind === 'ripe' ? C.brand.gold : C.brand.sky;
+    const ring = kind === 'ripe' ? C.brand.gold : kind === 'paw' ? C.ui.wood : C.brand.sky;
     g.ellipse(0, 30, 14, 4).fill({ color: hex(C.brand.shadow), alpha: 0.25 });
     g.poly([-8, 16, 8, 16, 0, 30]).fill(hex(C.ui.wood));
     g.circle(0, 0, 25).fill(hex(C.ui.wood));
     g.circle(0, 0, 22).fill(hex(ring));
     g.circle(0, 0, 18).fill(hex(C.ui.paper));
     g.poly([-5, 17, 5, 17, 0, 25]).fill(hex(C.ui.paper));
-    if (kind === 'water') {
+    if (kind === 'paw') {
+      // Chỉ thị 12 B4: footprints — this pot was stolen from today.
+      const ink = hex(C.ui.wood);
+      g.ellipse(0, 5, 7, 6).fill(ink);
+      for (const [x, y] of [[-8, -4], [-3, -9], [3, -9], [8, -4]] as const) g.ellipse(x, y, 2.6, 3.2).fill(ink);
+    } else if (kind === 'water') {
       g.circle(0, 5, 9).fill(hex(C.brand.sky));
       g.poly([-8, 1, 8, 1, 0, -13]).fill(hex(C.brand.sky));
       g.ellipse(-3, 3, 2.5, 4).fill({ color: 0xffffff, alpha: 0.8 });

@@ -105,7 +105,7 @@ test('migration 12 → 13: thêm làng, giữ nguyên phần còn lại; reconci
   delete raw.village;
   raw.saveVersion = 12;
   const out = migrate(raw, 12, MIGRATIONS, 13) as Record<string, unknown>;
-  assert.equal(SAVE_VERSION, 13);
+  assert.ok(SAVE_VERSION >= 13);
   assert.deepEqual(out.buildings, {});
   assert.deepEqual(out.village, { seenZones: [], medals: [], checkIn: { day: -1, count: 0 } });
   const dirty = structuredClone(s);

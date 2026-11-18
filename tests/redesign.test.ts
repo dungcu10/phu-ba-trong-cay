@@ -1,6 +1,7 @@
 // REDESIGN_V2: floor expansion and stars, pot sets, daily missions, helping in neighbours' gardens,
 // and the 6 -> 7 save migration.
 
+import { helpsLeftToday } from '../src/systems/social.ts';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { dispatch } from '../src/core/game.ts';
@@ -130,7 +131,7 @@ test('nhiệm vụ ngày: thưởng thêm chỉ khi nhận hết cả 3', () => 
   assert.deepEqual(dispatch(content, s, { type: 'claimMissionBonus' }, T0), { ok: false, error: 'already_claimed' });
 });
 
-test('thăm vườn hàng xóm: vườn ổn định khi đang xem, giúp đúng chậu cần giúp, tối đa 3 lần/ngày', () => {
+test('thăm vườn hàng xóm: vườn ổn định khi đang xem, giúp đúng chậu cần giúp, giới hạn lượt giúp mỗi ngày (chỉ thị 12 B5: chung mọi vườn)', () => {
   const s = newGame(content);
   const botId = [...content.bots.keys()].sort((a, b) => s.neighbors[b]!.level - s.neighbors[a]!.level)[0]!;
   const g1 = botGarden(content, s, botId, T0);
@@ -156,10 +157,12 @@ test('thăm vườn hàng xóm: vườn ổn định khi đang xem, giúp đúng
     assert.equal(botGarden(content, s, botId, t)[n.floor]!.pots[n.slot]!.need, null);
   }
   assert.ok(s.player.coins > coins);
-  assert.equal(helpsLeft(content, s.neighbors[botId]!, t), 0);
+  // Chỉ thị 12 B5: the allowance is per day over all gardens.
+  assert.equal(helpsLeftToday(content, s, t), content.neighbors.help.perDay! - 3);
+  s.social.help.used = content.neighbors.help.perDay!;
   const n = needs[3]!;
   assert.deepEqual(dispatch(content, s, { type: 'helpNeighbor', botId, floor: n.floor, slot: n.slot, kind: n.kind }, t), { ok: false, error: 'help_limit' });
-  assert.equal(helpsLeft(content, s.neighbors[botId]!, t + DAY), content.neighbors.help.perBotPerDay);
+  assert.equal(helpsLeftToday(content, s, t + DAY), content.neighbors.help.perDay);
 });
 
 test('save bản 6 lên bản 7: giữ nguyên 10 ô cũ, sao = 0, nhiệm vụ và lượt giúp trống', () => {

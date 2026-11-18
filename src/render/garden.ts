@@ -1,6 +1,7 @@
 // What the garden view draws, independent of whose garden it is: the player's own (from the
 // simulation) or a neighbour's while visiting (from systems/visit). Pure data, rebuilt cheaply.
 
+import { stolenToday, visitBug } from '../systems/social.ts';
 import type { ContentPack, FloorDef, PotDef } from '../core/content.ts';
 import type { GameState } from '../core/state.ts';
 import { nextFloor } from '../core/game.ts';
@@ -88,6 +89,7 @@ export function visitGarden(content: ContentPack, state: GameState, botId: strin
   // A neighbour's own pets (chỉ thị 11 § I), the ones at home, one per lower floor; asleep when hungry.
   const own = (state.neighbors[botId]?.pets ?? []).filter((p) => (p.awayUntil ?? 0) <= now);
   const species = own.map((p) => ({ def: speciesDef(content, p.species)!, asleep: !petWorking(content, { ...p, active: true }, now) })).filter((x) => x.def);
+  const stolen = stolenToday(content, state, botId, now);
   const floors = botGarden(content, state, botId, now).map((f, fi) => ({
     def: f.def,
     stars: f.stars,
@@ -105,8 +107,9 @@ export function visitGarden(content: ContentPack, state: GameState, botId: strin
         remainingMs: p.remainingMs,
         readyAt: now + p.remainingMs,
         thirsty: p.need === 'water',
-        bug: p.need === 'bug' ? { bug, count: 1 } : null,
+        bug: p.need === 'bug' ? { bug: content.bugs.get(visitBug(content, state, botId, p, now)) ?? bug, count: 1 } : null,
         isRegrow: false,
+        ...(stolen.has(p.key) ? { stolen: true } : {}),
       };
       return { pot: p.pot, level: p.level, ...potFx(p.pot, p.level), status };
     }),

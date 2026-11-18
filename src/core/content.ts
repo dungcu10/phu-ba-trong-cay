@@ -361,10 +361,45 @@ export interface NeighborsConfig {
   visitFriendship: number;
   orderFriendship: number;
   /** Helping in a neighbour's garden (water, catch a bug) while visiting. */
-  help: { perBotPerDay: number; coinsBase: number; coinsPerLevel: number; xp: number; friendship: number };
+  help: { perBotPerDay: number; coinsBase: number; coinsPerLevel: number; xp: number; friendship: number; /** Chỉ thị 12 B5: helps per day over all gardens. */ perDay?: number };
+  /** Chỉ thị 12 B4: stealing ripe crops in a neighbour's garden. */
+  steal?: StealRules;
+  /** Chỉ thị 12 B4.2.3: neighbours steal from the player while the game is closed. */
+  botSteal?: BotStealRules;
+  /** Chỉ thị 12 B5: gifts when friendship with a neighbour reaches these marks. */
+  friendMilestones?: Array<{ at: number; coinsU: number; items?: Record<string, number> }>;
   /** Chợ Mây (chỉ thị 07): neighbours' own stalls the player can buy from. */
   market: MarketConfig;
   bots: BotDef[];
+}
+
+export interface StealRules {
+  turnsMax: number;
+  regenHours: number;
+  takeMin: number;
+  takeMax: number;
+  maxShare: number;
+  mutationChance: number;
+  jadeShare: number;
+  seedChance: number;
+  guardCatch: number;
+  strictCatch: number;
+  bothCatch: number;
+  strictDiligence: number;
+  foxReduce: number;
+  enemyHours: number;
+  enemyMultiplier: number;
+  streak: number;
+}
+
+export interface BotStealRules {
+  perDay: number;
+  share: number;
+  chancePerHour: number;
+  awayMinutes: number;
+  kittenReduce: number;
+  friendlyAt: number;
+  maxHours: number;
 }
 
 export interface MarketConfig {
@@ -1042,6 +1077,12 @@ export function buildContentPack(raw: RawContent): ContentPack {
   checkFields('neighbors', neighbors, ['stallSlots', 'maxListingQty', 'sessionMinutes', 'catchUpDays', 'giftChance'], [], problems);
   checkFields('neighbors.market', neighbors?.market, ['perSession', 'markup', 'lockedMarkup', 'buysPerDay', 'maxQty', 'friendship', 'restockChance'], [], problems);
   if (neighbors?.market && neighbors.market.markup < 1.25) problems.push('neighbors.market.markup phải ≥ 1,25 (không cho mua về bán lại có lãi)');
+  // Chỉ thị 12 B4/B5: steal, BOT steal and friendship gifts.
+  if (neighbors?.steal) checkFields('neighbors.steal', neighbors.steal, ['turnsMax', 'regenHours', 'takeMin', 'takeMax', 'maxShare', 'mutationChance', 'jadeShare', 'seedChance', 'guardCatch', 'strictCatch', 'bothCatch', 'strictDiligence', 'foxReduce', 'enemyHours', 'enemyMultiplier', 'streak'], [], problems);
+  if (neighbors?.botSteal) checkFields('neighbors.botSteal', neighbors.botSteal, ['perDay', 'share', 'chancePerHour', 'awayMinutes', 'kittenReduce', 'friendlyAt', 'maxHours'], [], problems);
+  if (neighbors?.steal && neighbors.steal.maxShare > 0.25) problems.push('neighbors.steal.maxShare ≤ 0,25 (chỉ thị 12 B4.1)');
+  if (neighbors?.botSteal && neighbors.botSteal.share > 0.1) problems.push('neighbors.botSteal.share ≤ 0,1 (chỉ thị 12 B4.2.3)');
+  for (const m of neighbors?.friendMilestones ?? []) for (const id of Object.keys(m.items ?? {})) if (!items.has(id)) problems.push(`neighbors.friendMilestones: món "${id}" không tồn tại`);
   const bots = new Map<string, BotDef>();
   asArray('neighbors.bots', neighbors?.bots, problems).forEach((b, i) => {
     if (checkFields(`neighbors.bots[${i}]`, b, ['startLevel', 'startCoins'], ['id', 'portrait', 'likes'], problems)) addUnique(bots, b as unknown as BotDef, `neighbors.bots[${i}]`, problems);
