@@ -29,6 +29,17 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Chỉ thị 11 TỔNG N3 (phần 2) — Làng có người qua lại, nhà có chuyển động, màn mở nhà (tag `m-11-n3b`)
+- Loại: Thêm
+- Mô tả:
+  - **Xu Xu đi dạo** trên đường đất trong làng (nảy theo bước, quay mặt theo hướng đi); ban đêm Xu Xu ngủ.
+  - **Hàng xóm ghé Chợ:** 1–2 Phú Bà (hình đại diện chung `avatar.ts`) đi từ cầu gỗ tới trước Chợ Mây, đứng một lúc rồi về; đổi người mỗi 3 giờ. Chỉ khi Chợ đã mở.
+  - **Chuyển động khi đứng yên (vẽ bằng code):** Lò Gốm có lửa bập bùng và khói bay; Tháp Chim có chim nhỏ bay vòng; Cổng Biển Mây có quầng sáng xoáy; đèn lồng Chợ sáng nhẹ (sáng hơn ban đêm); nước sông lấp lánh.
+  - **Màn mở nhà:** nhà vừa mở (khi lên cấp) trồi lên có nảy rồi hết mờ.
+- File/Module: src/render/villageScene.ts, scene.ts (truyền ảnh hạt sáng cho làng).
+- Ảnh hưởng save: Không.
+- Quyết định tự chọn: khinh khí cầu bay lên/hạ xuống theo đơn cần cắt riêng quả khinh khí cầu khỏi hình nhà — ghi vào CẦN HÌNH, chưa làm.
+
 ### [2026-11-18] Chỉ thị 11 TỔNG N2 (phần 2) — Cảnh trời theo vùng, cây leo mọc khi mở tầng, hành trình vùng trời (tag `m-11-n2b`)
 - Loại: Thêm
 - Mô tả:
