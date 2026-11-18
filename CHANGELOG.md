@@ -29,6 +29,14 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] CTO — M8: bật giới hạn câu cá và giá trang trí theo cấp
+- `fishing.json › castsPerDay` 0 → 15. `market.json › levelPricing.decorU` 0 → 0,5 (trang trí là cộng thưởng vĩnh viễn nên đắt hơn đề xuất 0,2).
+- Bot mô phỏng mua và đặt Đèn Lồng / Pha Lê vào khe trống khi có gấp 3 giá.
+- Kiểm M8 (nhiệm vụ mới, hàng Chợ Mây, Xu Xu): cổng vẫn XANH; nhiệm vụ trả ~1,67 triệu xu / 30 ngày.
+- Test giả định số 0 trong nội dung gốc: `tests/fishing10.test.ts` (đặt lại số lần câu trong vòng 400 lần), `tests/m8.test.ts` (so giá cũ bằng bản decorU = 0).
+- Cổng XANH, typecheck sạch, 228/228 test.
+- Trạng thái nghiệm thu: Chờ
+
 ### [2026-11-18] Chỉ thị 10 M8 — Xu Xu, nhiệm vụ cho hệ mới, hàng mới ở Chợ Mây; castsPerDay, decorU (tag `m-10-m8`)
 - Loại: Thêm
 - Mô tả:

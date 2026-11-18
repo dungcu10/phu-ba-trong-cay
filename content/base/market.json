@@ -56,7 +56,7 @@
     "machineStarU": 0.3,
     "machineSlotU": 0.2,
     "castingU": { "rare": 0.3, "epic": 0.8, "legendary": 2 },
-    "decorU": 0,
+    "decorU": 0.5,
     "_proposed": { "floorUnlockU": 0.5, "floorExpandU": 0.1, "machineStarU": 0.3, "machineSlotU": 0.2, "castingU": { "rare": 0.3, "epic": 0.8, "legendary": 2 }, "decorU": 0.2 }
   }
 }
