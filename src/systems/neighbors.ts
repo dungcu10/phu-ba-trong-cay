@@ -13,6 +13,7 @@ import { randomFor } from '../core/rng.ts';
 import { removeItem, xpToNextLevel } from './economy.ts';
 import { advanceBotBirds, botCatchBugs, botKeepBirds } from './botBirds.ts';
 import { activeSkill, comboValue, dailyLeft } from './pets.ts';
+import { botBuild, botKeepPets } from './botVillage.ts';
 
 export type NeighborEvent =
   | { type: 'stallSold'; botId: string; itemId: string; qty: number; coins: number; vip?: boolean }
@@ -56,6 +57,8 @@ function session(content: ContentPack, state: GameState, bot: BotDef, s: BotStat
 
   // Chỉ thị 11 D1: an active neighbour looks after its birds (same rules as the player).
   botKeepBirds(content, state, bot, s, at);
+  // Chỉ thị 11 § I: and its pets (shared pets.ts rules), every two hours of game time (keeps 40 BOT fast).
+  if (at % (2 * 3_600_000) < content.neighbors.sessionMinutes * 60_000) botKeepPets(content, state, bot, s, at);
 
   // Score each option from personality and the current world.
   const options: Array<{ kind: string; score: number; run: () => string }> = [];
@@ -117,9 +120,11 @@ function session(content: ContentPack, state: GameState, bot: BotDef, s: BotStat
       score: t.collector * 0.8 + r('invest') * 0.3,
       run: () => {
         const spent = Math.round(s.coins * 0.4);
-        s.coins -= spent;
+        // Chỉ thị 11 § I: part of it may go into the next house (shared upgradeHouse).
+        const house = botBuild(content, state, s, spent, at);
+        s.coins -= spent - house;
         s.gardenValue += spent;
-        return `Đầu tư ${spent} xu vào vườn vì đang dư tiền`;
+        return house > 0 ? `Nâng nhà trong làng (${house} xu) và đầu tư vào vườn` : `Đầu tư ${spent} xu vào vườn vì đang dư tiền`;
       },
     });
   }

@@ -29,6 +29,18 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Chỉ thị 11 TỔNG N7 (BOT) — Hàng xóm có làng và thú cưng, dùng chung luật (tag `m-11-n7`)
+- Loại: Thêm
+- Mô tả:
+  - **BOT nâng nhà:** khi đầu tư vào vườn, BOT chọn nhà cấp thấp nhất đang mở (theo thứ tự ô) và nâng bằng `upgradeHouse` chung (cùng giá, cùng thời gian xây, cùng ô xây). Vật liệu lấy từ hệ khác thì BOT mua theo giá thị trường. Tiền nâng nhà lấy từ phần "đầu tư" sẵn có nên tiền BOT mua ở Sạp người chơi không đổi.
+  - **BOT nuôi thú cưng** (mỗi 2 giờ trong game, phiên BOT hoạt động): nhận Mèo bằng `giftKitten`, mua Cáo bằng `obtainPet` khi có gấp 3 giá; Sẻ và Rồng (giá ngọc, BOT không có ngọc) nở ở cấp mở + 3. Cho ăn bằng `feedPet` (nông sản bé thích, lấy từ vườn BOT) khi no < 60. **Việc vặt** bằng `ensureErrands` / `sendErrand` / `claimErrand`: nhận túi đã về, sai bé không được dắt đi việc hợp nghề trước.
+  - **Ghé vườn hàng xóm** giờ thấy thú cưng thật của BOT (đang ở nhà; đói thì ngủ) thay cho bộ thú cưng mẫu.
+  - Save: BotState có thêm `buildings`, `pets`, `errands` (tùy chọn, save cũ không có thì BOT bắt đầu từ đầu); reconcile bỏ nhà/thú cưng/việc không còn trong nội dung.
+  - Hiệu năng: 40 BOT × 7 ngày ~130 ms trên máy này (trước ~110–130 ms), ngưỡng test vẫn 200 ms.
+- File/Module: src/systems/botVillage.ts (mới), neighbors.ts, state.ts, reconcile.ts, render/garden.ts, tests/botVillage11.test.ts (2 test: 40 BOT × 7 ngày có nhà/thú cưng/việc vặt; chia thời gian thế nào kết quả cũng như nhau).
+- Ảnh hưởng save: Không đổi đời (trường tùy chọn trong BOT).
+- Quyết định tự chọn: (1) BOT không có ngọc nên Sẻ và Rồng "nở" ở cấp mở + 3; (2) vật liệu nhà của BOT mua theo `marketValue`.
+
 ### [2026-11-18] Chỉ thị 11 TỔNG N3 (phần 2) — Làng có người qua lại, nhà có chuyển động, màn mở nhà (tag `m-11-n3b`)
 - Loại: Thêm
 - Mô tả:
