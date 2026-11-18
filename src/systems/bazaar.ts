@@ -128,7 +128,7 @@ function makeSlot(content: ContentPack, state: GameState, rarity: BazaarRarity, 
     const rarDef = b.rarities.find((x) => x.id === rar);
     const gems = e.currency === 'gems';
     const price = gems ? e.gems! : Math.max(1, tidy(content.income.unit(level) * (rarDef?.priceU ?? 0) * (e.priceFactor ?? 1)), resaleFloor(content, pickC.kind, pickC.id, qty));
-    const bots = [...content.bots.keys()].sort();
+    const bots = [...content.bots.keys()].filter((id) => !id.startsWith('gen:')).sort();
     const seller = bots.length ? bots[Math.floor(r('seller') * bots.length)]! : '';
     taken.add(pickC.id);
     return { rarity: rar, kind: pickC.kind, id: pickC.id, qty, currency: gems ? 'gems' : 'coins', price, seller };

@@ -157,7 +157,7 @@ test('hàng xóm mua hàng rẻ ở Sạp: người chơi nhận xu thật, hàn
 });
 
 test('cùng một hàng xóm, tình huống khác thì quyết định khác (có / không có hàng rẻ ở Sạp), luôn ghi lý do', () => {
-  const trader = [...content.bots.values()].sort((a, b) => b.traits.trader - a.traits.trader)[0]!;
+  const trader = [...content.bots.values()].filter((b) => !b.id.startsWith('gen:')).sort((a, b) => b.traits.trader - a.traits.trader)[0]!;
   const kinds = (withListing: boolean) => {
     const s = newGame(content, {}, 21);
     s.neighbors = { [trader.id]: s.neighbors[trader.id]! }; // only this neighbour, so nobody else buys first
@@ -211,7 +211,8 @@ test('save bản 5 lên bản 6: có bảng đơn, hàng xóm, Sổ Tay sau khi 
   assert.equal(m.saveVersion, SAVE_VERSION);
   const { state } = reconcile(m as any, content, 'local');
   assert.equal(state.orders.slots.length, content.orders.slots);
-  assert.equal(Object.keys(state.neighbors).length, content.bots.size);
+  // Named neighbours (generated ones of chỉ thị 12 B3 move in on the first update).
+  assert.equal(Object.keys(state.neighbors).length, [...content.bots.keys()].filter((id) => !id.startsWith('gen:')).length);
   const ev: GameEvent[] = [];
   const r = dispatch(content, state, { type: 'tick' }, T0);
   if (r.ok) ev.push(...r.events);

@@ -738,6 +738,36 @@
     "coinsPerLevel": 1.5,
     "xp": 3,
     "friendship": 1, "perDay": 10 },
+  "_town": "Chỉ thị 12 B3: khoảng 60 Phú Bà quanh người chơi. 8 Phú Bà có tên tuổi (famous) không bao giờ chuyển nhà; người khác không giao lưu gì với người chơi thì có thể chuyển nhà và người mới dọn đến. Cấp theo người chơi: −4…+6, 3 đại gia +8…+12.",
+  "town": {
+    "target": 60,
+    "famous": ["base:bot.ba-tam", "base:bot.be-bap", "base:bot.co-ngoc", "base:bot.ong-sau", "base:bot.be-na", "base:bot.chu-loc", "base:bot.chi-thu", "base:bot.di-hoa"],
+    "band": [-4, 6],
+    "tycoons": 3,
+    "tycoonBand": [8, 12],
+    "moveOutDays": 7,
+    "moveOutPerDay": 2,
+    "forms": ["Bà", "Cô", "Dì", "Chị", "Bé", "Ông", "Chú", "Thím", "Mợ"],
+    "names": ["Sáu", "Ba", "Tư", "Hai", "Út", "Bảy", "Chín", "Mai", "Lan", "Cúc", "Huệ", "Thu", "Hồng", "Ngọc", "Đào", "Liên", "Tuyết", "Nga", "Phượng", "Hạnh"],
+    "nicknames": ["Hạt Điều", "Trà Sen", "Chè Thái", "Bánh Bèo", "Nón Lá", "Mứt Gừng", "Sen Hồ", "Dừa Xiêm", "Cau Trầu", "Bưởi Năm Roi", "Cốm Vòng", "Ốc Gạo", "Chuối Ngự", "Mắm Ruốc", "Bánh Cốm", "Hồng Treo", "Vải Thiều", "Xoài Cát", "Măng Cụt", "Sầu Riêng"],
+    "titles": ["Phú Bà Mới Nổi", "Vua Hạt Giống", "Bà Hoàng Chậu Cảnh", "Nữ Hoàng Sâu Bọ", "Tay Buôn Chợ Mây", "Người Mê Hoa", "Nông Dân Chăm Chỉ", "Thợ Săn Đồ Hiếm", "Đại Gia Trái Cây", "Bà Chủ Vườn Thảo"]
+  },
+  "_league": "Chỉ thị 12 B3: Giải Phú Bà theo tuần, nhóm 30 người, 5 hạng. Điểm = xu kiếm được / U(cấp) × perU + đơn × order + giúp × help + trộm × steal. Điểm BOT = medianPerDay của hạng × nhịp (pace) × ngày. Thưởng theo hạng và chỗ (top 5 / giữa / 5 cuối). Số trung tính, CTO chỉnh qua mô phỏng.",
+  "league": {
+    "unlockLevel": 6,
+    "groupSize": 30,
+    "promote": 5,
+    "demote": 5,
+    "points": { "perU": 1, "order": 2, "help": 1, "steal": 1 },
+    "pace": [0.55, 1.45],
+    "tiers": [
+      { "id": "dong", "name": { "vi": "Đồng" }, "medianPerDay": 22, "top": { "coinsU": 2, "gems": 2 }, "middle": { "coinsU": 1 }, "bottom": { "coinsU": 0.5 } },
+      { "id": "bac", "name": { "vi": "Bạc" }, "medianPerDay": 32, "top": { "coinsU": 3, "gems": 3 }, "middle": { "coinsU": 1.5, "gems": 1 }, "bottom": { "coinsU": 0.5 } },
+      { "id": "vang", "name": { "vi": "Vàng" }, "medianPerDay": 45, "top": { "coinsU": 4, "gems": 4 }, "middle": { "coinsU": 2, "gems": 1 }, "bottom": { "coinsU": 1 } },
+      { "id": "ngoc", "name": { "vi": "Ngọc" }, "medianPerDay": 60, "top": { "coinsU": 5, "gems": 5 }, "middle": { "coinsU": 2.5, "gems": 2 }, "bottom": { "coinsU": 1 } },
+      { "id": "huyen-thoai", "name": { "vi": "Phú Bà Huyền Thoại" }, "medianPerDay": 80, "top": { "coinsU": 6, "gems": 6 }, "middle": { "coinsU": 3, "gems": 2 }, "bottom": { "coinsU": 1.5 } }
+    ]
+  },
   "_social": "Chỉ thị 12 B4/B5: trộm vườn, giúp vườn, Kẻ Thù, BOT trộm khi người chơi tắt game. Số khởi điểm theo chỉ thị; CTO chỉnh qua mô phỏng.",
   "steal": {
     "turnsMax": 5,

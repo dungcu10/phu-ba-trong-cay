@@ -366,11 +366,46 @@ export interface NeighborsConfig {
   steal?: StealRules;
   /** Chỉ thị 12 B4.2.3: neighbours steal from the player while the game is closed. */
   botSteal?: BotStealRules;
+  /** Chỉ thị 12 B3: about 60 neighbours, generated ones, levels following the player. */
+  town?: TownRules;
+  /** Chỉ thị 12 B3: the weekly Giải Phú Bà. */
+  league?: LeagueRules;
   /** Chỉ thị 12 B5: gifts when friendship with a neighbour reaches these marks. */
   friendMilestones?: Array<{ at: number; coinsU: number; items?: Record<string, number> }>;
   /** Chợ Mây (chỉ thị 07): neighbours' own stalls the player can buy from. */
   market: MarketConfig;
   bots: BotDef[];
+}
+
+export interface TownRules {
+  target: number;
+  famous: string[];
+  band: [number, number];
+  tycoons: number;
+  tycoonBand: [number, number];
+  moveOutDays: number;
+  moveOutPerDay: number;
+  forms: string[];
+  names: string[];
+  nicknames: string[];
+  titles: string[];
+}
+
+export interface LeagueReward {
+  coinsU?: number;
+  gems?: number;
+  items?: Record<string, number>;
+  pot?: string;
+}
+
+export interface LeagueRules {
+  unlockLevel: number;
+  groupSize: number;
+  promote: number;
+  demote: number;
+  points: { perU: number; order: number; help: number; steal: number };
+  pace: [number, number];
+  tiers: Array<{ id: string; name: LocalizedText; medianPerDay: number; top: LeagueReward; middle: LeagueReward; bottom: LeagueReward }>;
 }
 
 export interface StealRules {

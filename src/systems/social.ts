@@ -26,6 +26,7 @@ import { localDay } from './missions.ts';
 import { botGarden, type VisitPot } from './visit.ts';
 import { activeSkill, petOf, petWorking } from './pets.ts';
 import { cropStatus, isNight } from './growth.ts';
+import { townBots } from './town.ts';
 import { addItem, storageFree } from './economy.ts';
 
 const HOUR = 3_600_000;
@@ -207,7 +208,7 @@ export function stealWhileAway(content: ContentPack, state: GameState, from: num
   const sr = content.neighbors.steal;
   if (!r || !sr || to - from < r.awayMinutes * 60_000) return [];
   const start = Math.max(from + r.awayMinutes * 60_000, to - r.maxHours * HOUR);
-  const thieves = [...content.bots.values()].filter((b) => (state.neighbors[b.id]?.friendship ?? 0) < r.friendlyAt && (state.neighbors[b.id]?.level ?? 0) >= 4);
+  const thieves = townBots(content, state).filter((b) => (state.neighbors[b.id]?.friendship ?? 0) < r.friendlyAt && (state.neighbors[b.id]?.level ?? 0) >= 4);
   if (thieves.length === 0) return [];
   const out: Array<{ botId: string; itemId: string; qty: number; at: number }> = [];
   const tk = state.social.taken;

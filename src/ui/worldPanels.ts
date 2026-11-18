@@ -1,6 +1,7 @@
 // Windows for orders, the stall, neighbours, the plant journal and letters (DESIGN_SYSTEM 6).
 // They only read state and send commands through the actions interface.
 
+import { leagueTable, weekStart } from '../systems/league.ts';
 import { isEnemy } from '../systems/social.ts';
 import { itemIcon } from './icons.ts';
 import { svgIcon } from './icons.ts';
@@ -16,7 +17,9 @@ import { clear, h, icon } from './dom.ts';
 import { Panel } from './panel.ts';
 import { helpsLeft } from '../systems/visit.ts';
 import { shake } from './potPanels.ts';
-import { formatDuration, formatNumber, FAMILY_TEXT } from './text.ts';
+import { formatDuration, formatNumber, formatTimeLeft, FAMILY_TEXT } from './text.ts';
+import type { ContentPack, LeagueReward } from '../core/content.ts';
+import type { GameState } from '../core/state.ts';
 import { masteryStars, nextMastery } from '../systems/cropExtras.ts';
 import { bazaarOpen, bazaarRules, luckBars, nextFreeRefreshAt, rerollCost, wantedItems } from '../systems/bazaar.ts';
 import { potIcon, rarityChip } from './potPanels.ts';
@@ -405,7 +408,7 @@ export class StallPanel extends Panel {
   }
 }
 
-type BoardTab = 'all' | 'near' | 'friends';
+type BoardTab = 'all' | 'near' | 'friends' | 'league' | 'enemies';
 
 /** "Bảng Phú Bà" (chỉ thị 07): 40 neighbours + you; whole region, around me, close friends. */
 export class NeighborsPanel extends Panel {
@@ -420,6 +423,10 @@ export class NeighborsPanel extends Panel {
     this.render();
   }
 
+  private renderLeague(now: number): HTMLElement {
+    return leagueBody(this.session, now, (id) => this.visit(id));
+  }
+
   render(): void {
     clear(this.body);
     const { content, state } = this.session;
@@ -427,15 +434,22 @@ export class NeighborsPanel extends Panel {
     const order = rankings(content, state);
     const myRank = order.findIndex((r) => r.id === '') + 1;
     const tabs = h('div', { class: 'tabs', role: 'tablist' });
+    const enemies = Object.entries(state.social.enemies).filter(([id, until]) => until > now && state.neighbors[id]);
     const names: Array<[BoardTab, string]> = [
       ['all', `Toàn vùng · ${order.length}`],
       ['near', 'Quanh tôi'],
       ['friends', 'Bạn thân'],
+      ...(content.neighbors.league && state.player.level >= content.neighbors.league.unlockLevel ? [['league', 'Giải tuần'] as [BoardTab, string]] : []),
+      ['enemies', enemies.length ? `Kẻ thù · ${enemies.length}` : 'Kẻ thù'],
     ];
     for (const [id, name] of names) {
       tabs.append(
         h('button', { class: `tab${this.tab === id ? ' on' : ''}`, role: 'tab', 'aria-selected': this.tab === id ? 'true' : 'false', 'data-test': `board-tab-${id}`, onclick: () => ((this.tab = id), this.render()) }, name),
       );
+    }
+    if (this.tab === 'league') {
+      this.body.append(h('div', { class: 'filters' }, tabs), this.renderLeague(now));
+      return;
     }
     this.body.append(
       h('div', { class: 'filters' }, tabs),
@@ -443,6 +457,10 @@ export class NeighborsPanel extends Panel {
     );
     let rows = order.map((r, i) => ({ ...r, rank: i + 1 }));
     if (this.tab === 'near') rows = rows.filter((r) => Math.abs(r.rank - myRank) <= 5);
+    if (this.tab === 'enemies') {
+      const ids = new Set(enemies.map(([id]) => id));
+      rows = rows.filter((r) => ids.has(r.id));
+    }
     if (this.tab === 'friends') {
       rows = rows
         .filter((r) => r.id === '' || (state.neighbors[r.id]?.friendship ?? 0) >= 4)
@@ -480,9 +498,55 @@ export class NeighborsPanel extends Panel {
         ),
       );
     }
+    if (this.tab === 'enemies' && rows.length === 0) list.append(h('p', { class: 'note' }, 'Chưa ai trộm vườn bạn. Ai trộm của bạn sẽ hiện ở đây 24 giờ: ghé trả đũa thì không tốn lượt, không bị bắt và được gấp đôi.'));
     if (this.tab === 'friends' && rows.length <= 1) list.append(h('p', { class: 'note' }, 'Chưa có bạn thân. Giao đơn, mua bán và ghé vườn để thân hơn nhé.'));
     this.body.append(list);
   }
+}
+
+/** Chỉ thị 12 B3: the weekly league table (inside the Phú Bà board). */
+function leagueBody(session: GameSession, now: number, visit: (botId: string) => void): HTMLElement {
+  const { content, state } = session;
+  const L = content.neighbors.league!;
+  const g = state.league;
+  const box = h('div', { class: 'league' });
+  const tier = L.tiers[g.tier]!;
+  const left = weekStart(content, g.week + 1) - now;
+  const table = g.group.length ? leagueTable(content, state, now) : [];
+  const me = table.find((r) => r.id === '');
+  box.append(
+    h('div', { class: 'league-head' }, h('span', { class: `league-badge t${g.tier}` }, tier.name.vi), h('strong', {}, me ? `Hạng ${me.rank}/${table.length} · ${formatNumber(me.points)} điểm` : 'Giải bắt đầu từ thứ Hai'), h('span', { class: 'note' }, `Còn ${formatTimeLeft(left)}`)),
+    h('p', { class: 'note' }, `Điểm tuần: xu kiếm được, đơn đã giao, vườn đã giúp và đã trộm. Cuối tuần ${L.promote} người đầu lên hạng, ${L.demote} người cuối xuống hạng. Thưởng: top ${L.promote} ${rewardText(content, state, tier.top)} · giữa ${rewardText(content, state, tier.middle)}.`),
+  );
+  if (g.last) {
+    const was = L.tiers[g.last.tier]?.name.vi ?? '';
+    const now2 = L.tiers[g.last.newTier]?.name.vi ?? '';
+    box.append(h('p', { class: 'league-last' }, `Tuần trước: hạng ${g.last.rank} giải ${was} (${formatNumber(g.last.points)} điểm)${g.last.newTier > g.last.tier ? ` → lên ${now2}!` : g.last.newTier < g.last.tier ? ` → xuống ${now2}` : ''}`));
+  }
+  const list = h('div', { class: 'rank-list' });
+  for (const r of table) {
+    const you = r.id === '';
+    const bot = content.bots.get(r.id);
+    const zone = r.rank <= L.promote ? ' up' : r.rank > table.length - L.demote ? ' down' : '';
+    list.append(
+      h(
+        'div',
+        { class: `rank-row${you ? ' you' : ''}${zone}`, 'data-test': `league-${r.id || 'me'}` },
+        h('span', { class: `medal m${Math.min(r.rank, 4)}` }, String(r.rank)),
+        you || !bot ? h('span', { class: 'avatar me' }, 'Bạn') : botAvatar(r.id, 36),
+        h('span', { class: 'rank-main' }, h('strong', {}, you || !bot ? 'Bạn' : bot.name.vi)),
+        h('span', { class: 'tag' }, `${formatNumber(r.points)} điểm`),
+        !you && bot && h('button', { class: 'candy small', onclick: () => visit(r.id) }, 'Ghé vườn'),
+      ),
+    );
+  }
+  box.append(list);
+  return box;
+}
+
+function rewardText(content: ContentPack, state: GameState, r: LeagueReward): string {
+  const parts = [r.coinsU ? `${formatNumber(Math.round(r.coinsU * content.income.unit(state.player.level)))} xu` : '', r.gems ? `${r.gems} ngọc` : '', ...Object.entries(r.items ?? {}).map(([id, q]) => `${q} ${content.items.get(id)?.name.vi ?? ''}`), r.pot ? content.pots.get(r.pot)?.name.vi ?? '' : ''].filter(Boolean);
+  return parts.join(', ') || '—';
 }
 
 /** "Sổ Tay Thực Vật": every crop, harvest count, rare variants found, milestone rewards. */

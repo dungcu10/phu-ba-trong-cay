@@ -11,7 +11,8 @@ import { adoptQuestsForOldSave, emptyQuestState } from '../systems/quests.ts';
 import type { ContentPack } from '../core/content.ts';
 import { genFloorNumber } from '../core/floorgen.ts';
 import { orderSlotsFor } from '../systems/orders.ts';
-import { emptySocial, emptyV12Parts, emptyV13Parts, newNeighbors, type GameState, type Planting, type SlotState } from '../core/state.ts';
+import { isGenerated, registerTown } from '../systems/town.ts';
+import { emptyLeague, emptySocial, emptyV12Parts, emptyV13Parts, newNeighbors, type GameState, type Planting, type SlotState } from '../core/state.ts';
 import { SaveFormatError } from './serializer.ts';
 
 export type ReconcileMode = 'import' | 'local';
@@ -82,6 +83,7 @@ export function reconcile(input: GameState, content: ContentPack, mode: Reconcil
   reconcileV12(state, content, c);
   reconcileV13(state, content);
   reconcileV14(state, content);
+  reconcileV15(state, content);
 
   // nextId must stay above every planting id so new plantings never reuse random keys.
   for (const f of state.floors) for (const s of f.slots) if (s.planting) state.nextId = Math.max(state.nextId, s.planting.id + 1);
@@ -199,7 +201,11 @@ function reconcileWorld(state: GameState, content: ContentPack, c: Checker): voi
 
   const fresh = newNeighbors(content, now);
   const neighbors: GameState['neighbors'] = {};
-  for (const id of content.bots.keys()) {
+  // Chỉ thị 12 B3: the named neighbours (not those who moved out) and this save's generated ones.
+  const movedOut = new Set(Array.isArray(state.town?.movedOut) ? state.town.movedOut : []);
+  if (state.neighbors && typeof state.neighbors === 'object') registerTown(content, state);
+  const ids = [...content.bots.keys()].filter((id) => (isGenerated(id) ? !!state.neighbors?.[id] : !movedOut.has(id)));
+  for (const id of ids) {
     const bot = state.neighbors?.[id] ?? fresh[id]!;
     if (!bot.help || typeof bot.help.day !== 'number' || !Array.isArray(bot.help.pots)) bot.help = { day: -1, pots: [] };
     bot.stall = (Array.isArray(bot.stall) ? bot.stall : [])
@@ -480,5 +486,30 @@ function reconcileV14(state: GameState, content: ContentPack): void {
     enemies,
     taken: { day: num(tk.day, -1), count: Math.max(0, num(tk.count, 0)), log: (Array.isArray(tk.log) ? tk.log : []).filter((e) => obj(e) && content.bots.has(e.botId) && content.items.has(e.itemId)).slice(-20) },
     trialSeeds: seeds,
+  };
+}
+
+/** Save 15 (chỉ thị 12 B3): town counter and moved-out list; league tier 0–4, group of present neighbours. */
+function reconcileV15(state: GameState, content: ContentPack): void {
+  const t = obj(state.town) ? state.town : { next: 0, movedOut: [], day: -1 };
+  const genMax = Object.keys(state.neighbors)
+    .filter(isGenerated)
+    .reduce((m, id) => Math.max(m, Number(id.slice(id.lastIndexOf(':') + 1)) + 1), 0);
+  state.town = {
+    next: Math.max(genMax, Number.isInteger(t.next) && t.next >= 0 ? t.next : 0),
+    movedOut: (Array.isArray(t.movedOut) ? t.movedOut : []).filter((id) => typeof id === 'string' && content.bots.has(id) && !state.neighbors[id]),
+    day: Number.isInteger(t.day) ? t.day : -1,
+  };
+  const d = emptyLeague();
+  const g = obj(state.league) ? state.league : d;
+  const tiers = content.neighbors.league?.tiers.length ?? 5;
+  state.league = {
+    week: Number.isInteger(g.week) ? g.week : -1,
+    tier: Number.isInteger(g.tier) ? Math.min(tiers - 1, Math.max(0, g.tier)) : 0,
+    group: (Array.isArray(g.group) ? g.group : []).filter((id) => typeof id === 'string' && !!state.neighbors[id]),
+    base: obj(g.base) && Number.isFinite(g.base.coins) && Number.isFinite(g.base.orders) ? { coins: g.base.coins, orders: g.base.orders } : { coins: state.stats.coinsEarned, orders: state.stats.ordersDone },
+    helps: Number.isInteger(g.helps) && g.helps >= 0 ? g.helps : 0,
+    steals: Number.isInteger(g.steals) && g.steals >= 0 ? g.steals : 0,
+    last: obj(g.last) ? g.last : null,
   };
 }

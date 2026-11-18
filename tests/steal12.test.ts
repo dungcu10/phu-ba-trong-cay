@@ -21,7 +21,7 @@ const R = content.neighbors.steal!;
 
 /** A ripe pot (floor, slot) in some neighbour's garden at some time, with a calm garden when asked. */
 function findRipe(s: GameState, opts: { calm?: boolean; strict?: boolean; not?: string[] } = {}): { botId: string; floor: number; slot: number; t: number } {
-  const bots = [...content.bots.values()].filter((b) => !(opts.not ?? []).includes(b.id) && s.neighbors[b.id]!.level >= 3);
+  const bots = [...content.bots.values()].filter((b) => !!s.neighbors[b.id] && !(opts.not ?? []).includes(b.id) && s.neighbors[b.id]!.level >= 3);
   for (let t = T0; t < T0 + 2 * DAY; t += 20 * MIN)
     for (const b of bots) {
       const cc = catchChance(content, s, b.id, t);
