@@ -7,6 +7,8 @@ import type { BazaarSlot, GameState, SlotState } from './state.ts';
 import { adjustedOffset, gameTime } from './clock.ts';
 import { stochasticRound } from './rng.ts';
 import { cropStatus, cycleDurationMs } from '../systems/growth.ts';
+import { townDaily } from '../systems/town.ts';
+import { settleLeague } from '../systems/league.ts';
 import { friendGifts, helpsLeftToday, isEnemy, steal, stealWhileAway, useHelp, visitBug } from '../systems/social.ts';
 import { addItem, addXp, removeItem, sellPrice, storageCapacity, storageFree, storageUpgradeCost } from '../systems/economy.ts';
 import { canAfford, doubleYieldChance, grantPot, isMilestone, mutationMultiplier, nextUpgradeCost, noteInBook, upgradeBlock } from '../systems/pots.ts';
@@ -201,6 +203,8 @@ export type GameEvent =
   | { type: 'stealCaught'; botId: string; floor: number; slot: number }
   | { type: 'takenWhileAway'; list: Array<{ botId: string; itemId: string; qty: number; at: number }> }
   | { type: 'friendGift'; botId: string; at: number; coins: number; items: Record<string, number> }
+  | { type: 'townChanged'; left: string[]; came: string[] }
+  | { type: 'leagueSettled'; week: number; points: number; tier: number; rank: number; newTier: number; coins: number; gems: number; items: Record<string, number>; pot: string | null }
   | { type: 'materialFound'; slot: SlotRef; itemId: string; qty: number }
   | { type: 'potObtained'; potInstanceId: string; potId: string; source: 'exchange' | 'event' }
   | { type: 'eventPoints'; eventId: string; points: number; total: number }
@@ -322,12 +326,21 @@ export function updateWorld(content: ContentPack, state: GameState, now: number)
   const arrived = refillOrders(content, state, now, back);
   events.push(...(back as GameEvent[]));
   if (arrived.length > 0) events.push({ type: 'ordersArrived', slots: arrived });
+  // Chỉ thị 12 B3: neighbours follow the player's level, move house now and then (before the ranks snapshot).
+  const town = townDaily(content, state, now);
+  if (town.left.length || town.came.length) events.push({ type: 'townChanged', ...town });
   snapshotRanks(content, state, localDay(content, now));
   if (ensureBazaar(content, state, now)) events.push({ type: 'bazaarRefreshed' });
   settleEnergy(content, state, now);
   for (const d of settleBuildings(content, state, now)) events.push({ type: 'houseUpgraded', ...d });
   for (const m of awardMedals(content, state, now)) events.push({ type: 'medalAwarded', ...m });
   ensureErrands(content, state, now);
+  // Chỉ thị 12 B3: the weekly league.
+  const league = settleLeague(content, state, now, (potId) => {
+    const got = obtainPotFrom(content, state, potId, 'event', now);
+    events.push('potInstanceId' in got ? { type: 'potObtained', potInstanceId: got.potInstanceId, potId, source: 'event' } : { type: 'potToShards', potId, ...got.shards });
+  });
+  if (league) events.push({ type: 'leagueSettled', ...league });
   if (giftKitten(content, state, now)) events.push({ type: 'petObtained', species: state.pets.at(-1)!.species, gift: true });
   events.push(...simulateNeighbors(content, state, now));
   return events;
@@ -664,6 +677,7 @@ function run(content: ContentPack, state: GameState, cmd: Command, now: number):
       const r = steal(content, state, cmd.botId, cmd.floor, cmd.slot, now);
       if (typeof r === 'string') return fail(r as ErrorCode);
       if (r.caught) return { ok: true, events: [{ type: 'stealCaught', botId: cmd.botId, floor: cmd.floor, slot: cmd.slot }] };
+      state.league.steals += 1;
       return { ok: true, events: [{ type: 'cropStolen', botId: cmd.botId, floor: cmd.floor, slot: cmd.slot, itemId: r.itemId!, qty: r.qty, mutation: r.mutation, seed: r.seed, enemy: r.enemy, double: r.double }] };
     }
     case 'obtainPot':
@@ -804,6 +818,7 @@ function helpNeighbor(content: ContentPack, state: GameState, cmd: { botId: stri
   const day = localDay(content, now);
   bot.help = { day, pots: [...helpToday(content, bot, now).filter(() => bot.help.day === day), pot.key] };
   if (global) useHelp(content, state, now);
+  state.league.helps += 1;
   bot.friendship += content.neighbors.help.friendship;
   const r = helpReward(content, bot);
   // B5: the bug caught in a neighbour's garden goes to the player's own bag.

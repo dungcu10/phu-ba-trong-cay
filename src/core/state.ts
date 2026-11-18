@@ -4,7 +4,7 @@ import type { ContentPack, FloorDef } from './content.ts';
 import { newSeed } from './rng.ts';
 import { emptyQuestState, type QuestState } from '../systems/quests.ts';
 
-export const SAVE_VERSION = 14;
+export const SAVE_VERSION = 15;
 
 export interface Planting {
   /** Unique per planting, used as a key for deterministic randomness. */
@@ -254,6 +254,10 @@ export interface GameState {
   errands: { day: number; rerolls: number; list: ErrandSlot[] };
   /** Chỉ thị 12 B4/B5 (save 14): stealing, helping, enemies, trial seeds. */
   social: SocialState;
+  /** Chỉ thị 12 B3 (save 15): generated neighbours (counter), who moved out, last daily check. */
+  town: { next: number; movedOut: string[]; day: number };
+  /** Chỉ thị 12 B3 (save 15): the weekly Giải Phú Bà. */
+  league: LeagueState;
   /** Chỉ thị 10 § 3.11: when Xu Xu last gave its small gift. */
   xuxu?: { giftAt: number; taps: number };
   /** Chỉ thị 12 B2: the Sạp Săn Hàng board (optional; rolled when first opened). */
@@ -294,6 +298,24 @@ export interface SocialState {
   taken: { day: number; count: number; log: Array<{ botId: string; itemId: string; qty: number; at: number }> };
   /** Seeds of crops above the player's level, found while stealing (one planting each). */
   trialSeeds: Record<string, number>;
+}
+
+export interface LeagueState {
+  /** Week number (Monday start), −1 before the first. */
+  week: number;
+  /** 0 Đồng … 4 Phú Bà Huyền Thoại. */
+  tier: number;
+  /** The 29 neighbours of this week's group. */
+  group: string[];
+  /** Counters at the start of the week. */
+  base: { coins: number; orders: number };
+  helps: number;
+  steals: number;
+  last: { week: number; points: number; tier: number; rank: number; newTier: number; coins: number; gems: number; items: Record<string, number>; pot: string | null } | null;
+}
+
+export function emptyLeague(): LeagueState {
+  return { week: -1, tier: 0, group: [], base: { coins: 0, orders: 0 }, helps: 0, steals: 0, last: null };
 }
 
 export function emptySocial(now: number, turns: number): SocialState {
@@ -366,12 +388,16 @@ export function createNewGame(content: ContentPack, now: number, entropy = now):
     ...emptyV12Parts(now),
     ...emptyV13Parts(),
     social: emptySocial(now, content.neighbors.steal?.turnsMax ?? 0),
+    town: { next: 0, movedOut: [], day: -1 },
+    league: emptyLeague(),
   };
 }
 
 export function newNeighbors(content: ContentPack, now: number): Record<string, BotState> {
   const out: Record<string, BotState> = {};
   for (const b of content.bots.values()) {
+    // Generated neighbours (chỉ thị 12 B3) belong to one save: they are added by town.ts, not here.
+    if (b.id.startsWith('gen:')) continue;
     out[b.id] = { level: b.startLevel, xp: 0, coins: b.startCoins, gardenValue: b.startCoins, friendship: 0, simulatedTo: now, lastAction: null, help: { day: -1, pots: [] }, stall: [], birds: [], bugs: {} };
   }
   return out;

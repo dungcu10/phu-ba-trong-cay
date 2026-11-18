@@ -1158,6 +1158,17 @@ export class Controller implements CastingActions, WorkshopActions, BirdActions,
         for (const [id, what] of byBot) this.toasts.show(`${content.bots.get(id)?.name.vi ?? 'Hàng xóm'} đã trộm ${what.join(', ')} của bạn. Ghé trả đũa trong 24 giờ: gấp đôi, không tốn lượt!`, 'info', 4200);
         break;
       }
+      case 'leagueSettled': {
+        const L = content.neighbors.league;
+        const was = L?.tiers[e.tier]?.name.vi ?? '';
+        const nowT = L?.tiers[e.newTier]?.name.vi ?? '';
+        this.sfx.play(e.newTier > e.tier ? 'levelUp' : 'coin');
+        this.toasts.show(`Giải tuần: hạng ${e.rank} giải ${was}${e.newTier > e.tier ? `, lên ${nowT}!` : e.newTier < e.tier ? `, xuống ${nowT}` : ''} · thưởng ${formatNumber(e.coins)} xu${e.gems ? `, ${e.gems} ngọc` : ''}`, 'level', 4200);
+        break;
+      }
+      case 'townChanged':
+        if (e.came.length) this.toasts.show(`${e.came.length === 1 ? content.bots.get(e.came[0]!)?.name.vi ?? 'Phú Bà mới' : `${e.came.length} Phú Bà mới`} vừa dọn đến làng mây!`, 'info', 2600);
+        break;
       case 'friendGift':
         this.sfx.play('levelUp');
         this.toasts.show(`${content.bots.get(e.botId)?.name.vi ?? 'Hàng xóm'} quý bạn (thân thiết ${e.at}): tặng ${formatNumber(e.coins)} xu${Object.keys(e.items).length ? ' và quà' : ''}!`, 'level', 3000);

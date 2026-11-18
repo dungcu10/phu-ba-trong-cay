@@ -133,7 +133,7 @@ test('nhiệm vụ ngày: thưởng thêm chỉ khi nhận hết cả 3', () => 
 
 test('thăm vườn hàng xóm: vườn ổn định khi đang xem, giúp đúng chậu cần giúp, giới hạn lượt giúp mỗi ngày (chỉ thị 12 B5: chung mọi vườn)', () => {
   const s = newGame(content);
-  const botId = [...content.bots.keys()].sort((a, b) => s.neighbors[b]!.level - s.neighbors[a]!.level)[0]!;
+  const botId = Object.keys(s.neighbors).sort((a, b) => s.neighbors[b]!.level - s.neighbors[a]!.level)[0]!;
   const g1 = botGarden(content, s, botId, T0);
   const g2 = botGarden(content, s, botId, T0);
   assert.deepEqual(JSON.stringify(g1), JSON.stringify(g2));

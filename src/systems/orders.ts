@@ -67,7 +67,8 @@ export function generateOrder(content: ContentPack, state: GameState): Order {
   const rare = level >= 3 && r('rare') < cfg.rareChance + houseBonus(content, state, 'balloon', 'rareShare');
   const [lo, hi] = cfg.rewardMultiplier;
   const mult = (lo + (hi - lo) * r('mult')) * (rare ? cfg.rareMultiplier : 1);
-  const bots = [...content.bots.keys()];
+  // Named neighbours only (generated ones belong to one save; chỉ thị 12 B3).
+  const bots = [...content.bots.keys()].filter((id) => !id.startsWith('gen:'));
   const extras = cfg.rareItems ?? [];
   return {
     id,

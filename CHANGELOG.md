@@ -29,6 +29,21 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] Chỉ thị 12 TỔNG B3 — Phú Bà động (60 người) và Giải Phú Bà theo tuần (tag `m-12-b3`)
+- Loại: Thêm / Thay đổi
+- Mô tả:
+  - **60 Phú Bà:** giữ 40 Phú Bà có sẵn, 8 người có tên tuổi (Bà Tám, Bé Bắp, Cô Ngọc, Ông Sáu, Bé Na, Chú Lộc, Chị Thư, Dì Hoa) không bao giờ chuyển nhà; thêm Phú Bà **sinh ngẫu nhiên** từ seed của save cho đủ 60: tên ghép danh xưng + tên + biệt danh ("Bà Sáu Hạt Điều", "Cô Ba Trà Sen"…), danh hiệu, tính cách, cây ưa trồng ngẫu nhiên, hình đại diện từ `avatar.ts`.
+  - **Chuyển nhà:** người không giao lưu gì với mình (thân thiết 0, không là kẻ thù, không trong nhóm giải tuần, không bày sạp) thỉnh thoảng dọn đi (tối đa 2 người/ngày), người mới dọn đến; có thông báo.
+  - **Lớn theo người chơi:** mỗi Phú Bà có chỗ riêng trong khoảng cấp người chơi −4…+6 (3 đại gia +8…+12), mỗi ngày đuổi kịp 1/3 khoảng cách (ít nhất 1 cấp), giá trị vườn theo; ai vượt xa khoảng thì lùi dần (cấp và tài sản) để bảng luôn sát nút.
+  - **Giải Phú Bà theo tuần** (từ cấp 6, tuần bắt đầu thứ Hai): nhóm 30 người; điểm = xu kiếm được / U(cấp) + đơn × 2 + giúp vườn + trộm vườn; cuối tuần 5 người đầu lên hạng, 5 người cuối xuống; 5 hạng Đồng → Bạc → Vàng → Ngọc → Phú Bà Huyền Thoại; thưởng theo hạng và chỗ (top 5 / giữa / 5 cuối). Điểm Phú Bà trong nhóm theo nhịp quanh mức trung vị của hạng, có nhiễu từng ngày.
+  - **Bảng Phú Bà:** thêm tab "Giải tuần" (hạng, điểm, còn bao lâu, kết quả tuần trước, vùng lên/xuống hạng, nút ghé vườn) và "Kẻ thù".
+  - 60 Phú Bà mà Sạp vẫn bán như cũ: mỗi Phú Bà ghé Sạp và ghé vườn tặng quà với xác suất × (40 / số Phú Bà), để không đổi cân bằng CTO đã chỉnh.
+- Số liệu: `neighbors.json` thêm `town` (target 60, famous, band, tycoons, tên ghép) và `league` (trung vị điểm/ngày 22 / 32 / 45 / 60 / 80, thưởng). Đo bằng `progression.ts`: chơi vừa (2 giờ/lần) lên hạng Vàng (2) sau 30 ngày, chơi nhiều (30 phút/lần) lên Phú Bà Huyền Thoại (4), chơi nhẹ ở Đồng — đúng mục B8.5. Ngọc thưởng tuần để thấp (2–6) vì test ngọc/ngày của CTO.
+- File/Module: src/systems/town.ts, src/systems/league.ts (mới); game.ts (townDaily trước ảnh hạng hôm qua, settleLeague, đếm giúp/trộm), neighbors.ts (thứ tự Phú Bà cố định, `crowdShare`), orders.ts và bazaar.ts (chỉ Phú Bà có tên), social.ts, state.ts (`town`, `league`, SAVE_VERSION 15), migrations.ts (14 → 15), reconcile.ts (Phú Bà sinh ngẫu nhiên, người đã dọn đi, giải tuần), content.ts (kiểu), worldPanels.ts (tab Giải tuần, Kẻ thù), controller.ts, styles.css; tests/town12.test.ts (6 test) + sửa test cũ theo số Phú Bà mới (market, world, redesign, botBirds11 đặt người chơi đúng tầm cấp).
+- Ảnh hưởng save: **Có — SAVE_VERSION 14 → 15** (thêm `town`, `league`; giữ nguyên mọi Phú Bà và thân thiết; người mới dọn đến ở lần cập nhật đầu).
+- Hiệu năng: 60 Phú Bà × 7 ngày ~220 ms (máy dev, đã nóng).
+- Quyết định tự chọn: (1) giữ cả 40 Phú Bà có sẵn (không xoá ai, B9), 8 người không bao giờ dọn đi; (2) chậu Sử Thi ở hạng cao chưa đưa vào thưởng (trường `pot` đã có) — CTO thêm khi chỉnh số chậu; (3) Phú Bà mới "đã sống" từ đầu save hoặc đầu ngày dọn đến, nên mở game lúc nào kết quả cũng như nhau.
+
 ### [2026-11-18] Chỉ thị 12 TỔNG B4 + B5 — Trộm vườn, giúp vườn, Kẻ Thù (tag `m-12-b4b5`)
 - Loại: Thêm / Thay đổi
 - Mô tả:

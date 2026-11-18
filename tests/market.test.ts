@@ -24,7 +24,7 @@ function marketGame(entropy = 7): GameState {
 }
 
 test('có 40 Phú Bà, id và tên không trùng, mỗi người có biệt danh; có vài đại gia cấp cao', () => {
-  const bots = [...content.bots.values()];
+  const bots = [...content.bots.values()].filter((b) => !b.id.startsWith('gen:'));
   assert.equal(bots.length, 40);
   assert.equal(new Set(bots.map((b) => b.name.vi)).size, 40);
   for (const b of bots) assert.ok(b.title?.vi, `${b.id} thiếu biệt danh`);
@@ -153,12 +153,13 @@ test('save cũ (bản 10, 8 hàng xóm) lên bản 11: giữ tình thân, thêm 
   assert.deepEqual(s.market, { day: -1, buys: 0 });
 });
 
-test('bảng Phú Bà: đủ 41 người (40 + bạn), xếp theo tài sản; ảnh hạng hôm qua để hiện mũi tên', () => {
+test('bảng Phú Bà: đủ người (khoảng 60 Phú Bà + bạn, chỉ thị 12 B3), xếp theo tài sản; ảnh hạng hôm qua để hiện mũi tên', () => {
   const s = newGame(content, { level: 5 }, 4);
   dispatch(content, s, { type: 'tick' }, T0);
   const r = rankings(content, s);
-  assert.equal(r.length, 41);
+  const n = (content.neighbors.town?.target ?? 40) + 1;
+  assert.equal(r.length, n);
   for (let i = 1; i < r.length; i++) assert.ok(r[i - 1]!.wealth >= r[i]!.wealth);
-  assert.equal(Object.keys(s.ranks.prev).length, 41);
+  assert.equal(Object.keys(s.ranks.prev).length, n);
   assert.equal(s.ranks.day, localDay(content, T0));
 });

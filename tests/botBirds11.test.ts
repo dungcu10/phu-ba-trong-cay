@@ -34,7 +34,8 @@ test('số bọ BOT có mỗi ngày trong khoảng ±20% người chơi vừa c�
   const player = late.reduce((a, d) => a + Object.values(d.bugsByRarity).reduce((x, q) => x + q, 0), 0) / late.length;
   const lo = Math.min(...late.map((d) => d.level));
   const hi = Math.max(...late.map((d) => d.level));
-  const s = newGame(content, { level: 20 }, 42);
+  // Chỉ thị 12 B3: neighbours follow the player's level, so the player is put at those levels.
+  const s = newGame(content, { level: Math.round((lo + hi) / 2) }, 42);
   simulateNeighbors(content, s, T0 + 7 * DAY);
   const peers = Object.values(s.neighbors).filter((b) => b.level >= lo && b.level <= hi);
   assert.ok(peers.length >= 5, `chỉ ${peers.length} BOT cấp ${lo}–${hi}`);

@@ -978,3 +978,10 @@ html, body {
 .visit-chip{padding:3px 10px;border-radius:999px;background:rgba(255,255,255,.12);font-size:13px;font-weight:600;white-space:nowrap}
 .visit-chip.enemy{background:rgba(230,90,70,.85);color:#fff}
 .visit-chip.warn{background:rgba(255,190,90,.25)}
+/* Chỉ thị 12 B3: weekly league */
+.league-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.league-badge{padding:4px 12px;border-radius:999px;font-weight:800;color:#2b2620}
+.league-badge.t0{background:#d9a273}.league-badge.t1{background:#d8dde4}.league-badge.t2{background:#f2cf63}.league-badge.t3{background:#8fe3c8}.league-badge.t4{background:linear-gradient(90deg,#f6c7ff,#ffe48a);}
+.league-last{font-weight:600;margin:4px 0 8px}
+.rank-row.up{box-shadow:inset 4px 0 0 #5fc77a}
+.rank-row.down{box-shadow:inset 4px 0 0 #e0705a}

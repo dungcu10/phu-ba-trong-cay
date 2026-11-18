@@ -135,6 +135,13 @@ export const MIGRATIONS: Record<number, Migration> = {
     data.social = { steal: { tokens: -1, at, day: -1, pots: {}, streak: [], double: false }, help: { day: -1, used: 0 }, enemies: {}, taken: { day: -1, count: 0, log: [] }, trialSeeds: {} };
     return data;
   },
+  // 14 -> 15 (chỉ thị 12 B3): Phú Bà động and the weekly league. Every neighbour and its friendship is
+  // kept; new ones move in on the first update (up to about 60); the league starts at Đồng.
+  14: (data) => {
+    data.town = { next: 0, movedOut: [], day: -1 };
+    data.league = { week: -1, tier: 0, group: [], base: { coins: 0, orders: 0 }, helps: 0, steals: 0, last: null };
+    return data;
+  },
 };
 
 export function migrate(
