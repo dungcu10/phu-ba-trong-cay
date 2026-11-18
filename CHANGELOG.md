@@ -29,6 +29,13 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] CTO — N6: kiểm kết hợp thú cưng, túi quà của Sẻ
+- `pets.json › sparrowGift`: 0,3U + 2 Hạt Kê Mây + 1 Sợi Mây mỗi túi (trước 0,5U, không có vật phẩm: túi quà chỉ có xu thì nhạt).
+- Kết hợp thú cưng giữ số đề xuất. Mô phỏng: ngày 15 dắt 2 bé (Thương Đoàn chạy), ngày 30 dắt 3 bé (Vườn Nhà chạy). Cổng không lệch.
+- `tests/petCombos11.test.ts`: 2 túi = 2 × 1 túi cho lệch 1 xu do làm tròn coinsU × U.
+- Cổng XANH, typecheck sạch, 262/262 test.
+- Trạng thái nghiệm thu: Chờ
+
 ### [2026-11-18] Chỉ thị 11 TỔNG N6 — Kết hợp thú cưng, túi quà mỗi ngày của Sẻ (tag `m-11-n6`)
 - Loại: Thêm
 - Mô tả:
