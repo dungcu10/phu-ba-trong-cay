@@ -72,6 +72,8 @@ export class VillagePanel extends Panel {
         h('div', { class: 'village-level' }, h('strong', {}, `Cấp Làng ${vl}`), h('span', { class: 'note' }, next ? `Cấp Làng ${next.level}: ${perk(next)}` : 'Đã đủ mọi mốc Cấp Làng')),
         medals,
       ),
+      // Chỉ thị 12 A7 G1: the boards that are not a house.
+      h('div', { class: 'village-links' }, h('button', { class: 'candy small', 'data-test': 'village-neighbors', onclick: () => this.actions.openHouse('neighbors') }, 'Bảng Phú Bà'), h('button', { class: 'candy small', 'data-test': 'village-journal', onclick: () => this.actions.openHouse('journal') }, 'Sổ Tay Thực Vật')),
       h('div', { class: 'checkin' }, strip, h('button', { class: `candy small ${ready ? 'gold' : 'blocked'}`, disabled: ready ? undefined : true, 'data-test': 'check-in', onclick: () => this.actions.claimCheckIn() }, ready ? 'Điểm danh' : 'Mai quay lại nhé')),
     );
     // Houses.

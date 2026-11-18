@@ -3,6 +3,7 @@
 // (top-right), main buttons in a thumb arc (bottom-right). Under 15% of the screen.
 
 import { luckReady } from '../systems/sessionLuck.ts';
+import { houseOpen } from '../systems/village.ts';
 import { svgIcon } from './icons.ts';
 import { lineIcon } from './lineIcons.ts';
 import type { GameSession } from '../app/session.ts';
@@ -36,6 +37,8 @@ export interface HudActions {
   openLetters(): void;
   /** Chỉ thị 12 B1: Hẹn giờ and Lộc Phiên. */
   openTimers(): void;
+  /** Chỉ thị 12 A7 G1: camera down to the village. */
+  goVillage(): void;
   claimLuck(): void;
   openMissions(): void;
   openEvent(): void;
@@ -131,7 +134,18 @@ export class Hud {
       side('Chim', 'open-birds', icon('bird/sky-sparrow/perch', 30), null, () => actions.openBirds(), 'birds'),
       side('Xưởng', 'open-workshop', icon('bug/ladybird', 30), null, () => actions.openWorkshop(), 'workshop'),
       side('Biển Mây', 'open-sea', icon('icon/wind-energy', 30), null, () => actions.openSea(), 'sea'),
+      (this.villageBtn = h('button', { class: 'side-btn moved', 'aria-label': 'Về Làng', 'data-test': 'go-village', onclick: () => actions.goVillage() }, lineIcon('house', 26), h('span', { class: 'side-label' }, 'Về Làng'))),
     );
+    // Chỉ thị 12 A7 G1: which side buttons move into the village (their house), from toolbarFromLevel.
+    this.movable = [
+      { el: services.querySelector('[data-test=open-orders]') as HTMLElement, house: 'balloon' },
+      { el: services.querySelector('[data-test=open-stall]') as HTMLElement, house: 'market' },
+      { el: services.querySelector('[data-test=open-neighbors]') as HTMLElement, house: null },
+      { el: services.querySelector('[data-test=open-journal]') as HTMLElement, house: null },
+      { el: services.querySelector('[data-test=open-birds]') as HTMLElement, house: 'birds' },
+      { el: services.querySelector('[data-test=open-workshop]') as HTMLElement, house: 'workshop' },
+      { el: services.querySelector('[data-test=open-sea]') as HTMLElement, house: 'gate' },
+    ];
     this.gated.push({ feature: 'shop', el: shop });
     // Quest tracker (đợt 2): the quest to do next, its progress, and a claim button when ready.
     this.trackerClaim = h('button', { class: 'candy small gold', 'data-test': 'tracker-claim', onclick: (e: Event) => (e.stopPropagation(), this.trackedId && actions.claimQuest(this.trackedId)) }, 'Nhận') as HTMLButtonElement;
@@ -165,6 +179,8 @@ export class Hud {
   private readonly xuxuPic: HTMLElement;
   private readonly villageBadge: HTMLElement;
   private readonly luckBtn: HTMLElement;
+  private villageBtn!: HTMLElement;
+  private movable: Array<{ el: HTMLElement; house: string | null }> = [];
   private readonly xuxuBubble: HTMLElement;
   private readonly xuxuGift: HTMLElement;
   private readonly xuxuBtn: HTMLElement;
@@ -214,6 +230,10 @@ export class Hud {
     this.xuxuGift.classList.toggle('hidden', !xuxuGiftReady(content, state, this.session.now()));
     this.villageBadge.classList.toggle('hidden', houseAlerts(content, state, this.session.now()).length === 0);
     this.luckBtn.classList.toggle('hidden', !luckReady(content, state, this.session.now()));
+    // Chỉ thị 12 A7 G1: a calm side bar once the village carries the features.
+    const slim = content.village?.toolbarFromLevel !== undefined && p.level >= content.village.toolbarFromLevel;
+    this.villageBtn.classList.toggle('moved', !slim);
+    for (const m of this.movable) m.el?.classList.toggle('moved', slim && (m.house === null || houseOpen(content, state, m.house)));
     const need = xpToNextLevel(content, p.level);
     this.level.textContent = String(p.level);
     this.vineFill.style.width = `${Math.min(100, (p.xp / need) * 100)}%`;

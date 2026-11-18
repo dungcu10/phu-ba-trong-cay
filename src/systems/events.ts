@@ -14,6 +14,17 @@ const SOURCE: Partial<Record<GameEvent['type'], EventPointSource>> = {
   orderDelivered: 'deliverOrder',
   missionClaimed: 'missionClaimed',
   neighborHelped: 'neighborHelped',
+  // Chỉ thị 12 A5: points for the rotating events.
+  bugCaught: 'catchBug',
+  birdCaught: 'catchBug',
+  petCaught: 'catchBug',
+  fishReeled: 'catchFish',
+  stallSold: 'stallSold',
+  bazaarBought: 'bazaarBuy',
+  jobStarted: 'makeGoods',
+  cropStolen: 'steal',
+  luckClaimed: 'luck',
+  friendGift: 'friend',
 };
 
 export function eventPointsFor(ev: EventDef, events: GameEvent[]): number {

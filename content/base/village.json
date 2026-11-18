@@ -91,6 +91,8 @@
     { "items": { "base:mat.cloud-thread": 1 } },
     { "gems": 2 }
   ],
+  "_toolbar": "Chỉ thị 12 A7 G1: từ cấp này, thanh bên trái chỉ còn Nhiệm vụ và Về Làng; các chức năng khác vào bằng nhà trong làng (nhà đã mở), Bảng Phú Bà ở biển Dinh Phú Bà, Sổ Tay ở bảng Làng.",
+  "toolbarFromLevel": 10,
   "_sessionLuck": "Chỉ thị 12 B1.1: Lộc Phiên ở Đình — mỗi ngày tối đa 3 lần, cách nhau ít nhất 2 giờ; quà tăng dần: lần 1 xu, lần 2 một lượt đặt lại Sạp Săn Hàng miễn phí, lần 3 một lượt trộm thêm (đầy lượt thì 1 ngọc). Số trung tính, CTO chỉnh.",
   "sessionLuck": {
     "perDay": 3,

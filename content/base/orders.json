@@ -19,5 +19,10 @@
   "escortLevel": 11,
   "helpLevel": 13,
   "helpChance": 0.5,
-  "helpFriendshipBonus": 0.02
+  "helpFriendshipBonus": 0.02,
+  "_a4": "Chỉ thị 12 A4 (luồng tính năng, chỉ thêm trường): recentWeight (đề xuất 2: cây mở gần đây nặng hơn), daisyFadeFrom (đề xuất 10: Cúc Bông Gòn giảm dần từ cấp 10), regularFriendship / regularChance / regularBonus (đề xuất 3 / 0.25 / 0.2: Phú Bà thân thiết đặt đơn khách quen, có câu thoại, thưởng thêm 20%). Để trung tính (tắt), CTO bật qua mô phỏng.",
+  "recentWeight": 0,
+  "regularChance": 0,
+  "regularFriendship": 3,
+  "regularBonus": 0
 }

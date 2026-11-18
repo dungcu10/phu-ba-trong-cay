@@ -1,0 +1,69 @@
+{
+  "_note": "Chỉ thị 12 A5: lịch sự kiện xoay vòng 7–10 ngày sau Lễ Hội Trăng Mây, mỗi sự kiện đẩy một hệ. Sinh từ seed cố định theo ngày thật (mọi người chơi cùng lịch, chạy được khi offline). Điểm theo việc làm; mốc thưởng nhỏ (CTO chỉnh qua mô phỏng). Nguồn điểm: harvest, deliverOrder, missionClaimed, neighborHelped, catchBug (tay, chim, Cáo), catchFish, stallSold, bazaarBuy, makeGoods, steal, luck, friend.",
+  "from": "2026-12-14T00:00:00+07:00",
+  "count": 104,
+  "days": [7, 10],
+  "seed": 2026,
+  "templates": [
+    {
+      "id": "bug-season",
+      "name": { "vi": "Mùa Săn Bọ" },
+      "desc": { "vi": "Bọ Mây kéo về khắp tầng mây! Bắt bọ bằng tay, nhờ chim và Cáo bắt giúp để tích điểm." },
+      "points": { "catchBug": 2, "harvest": 1 },
+      "milestones": [
+        { "points": 20, "reward": { "coins": 300 } },
+        { "points": 50, "reward": { "items": { "base:mat.cloud-clay": 2 } } },
+        { "points": 100, "reward": { "gems": 2 } },
+        { "points": 180, "reward": { "items": { "base:mat.moon-seed": 4 } } }
+      ]
+    },
+    {
+      "id": "fishing-fair",
+      "name": { "vi": "Hội Câu Cá" },
+      "desc": { "vi": "Bến Câu Cá mở hội: câu cá, giao đơn và thu hoạch để tích điểm." },
+      "points": { "catchFish": 4, "deliverOrder": 2, "harvest": 1 },
+      "milestones": [
+        { "points": 20, "reward": { "coins": 300 } },
+        { "points": 50, "reward": { "items": { "base:mat.cloud-clay": 2 } } },
+        { "points": 100, "reward": { "gems": 2 } },
+        { "points": 180, "reward": { "items": { "base:mat.moon-seed": 4 } } }
+      ]
+    },
+    {
+      "id": "market-day",
+      "name": { "vi": "Chợ Phiên Mây" },
+      "desc": { "vi": "Chợ phiên họp lớn: bán ở Sạp, săn đồ ở Sạp Săn Hàng, chế biến ở Xưởng để tích điểm." },
+      "points": { "stallSold": 2, "bazaarBuy": 3, "makeGoods": 2, "deliverOrder": 2 },
+      "milestones": [
+        { "points": 20, "reward": { "coins": 300 } },
+        { "points": 50, "reward": { "items": { "base:mat.cloud-clay": 2 } } },
+        { "points": 100, "reward": { "gems": 2 } },
+        { "points": 180, "reward": { "items": { "base:mat.moon-seed": 4 } } }
+      ]
+    },
+    {
+      "id": "moon-night",
+      "name": { "vi": "Lễ Hội Trăng" },
+      "desc": { "vi": "Trăng sáng trên Vườn Trăng: thu hoạch, bắt Đom Đóm Sao và làm nhiệm vụ để tích điểm." },
+      "points": { "harvest": 1, "catchBug": 1, "missionClaimed": 4 },
+      "milestones": [
+        { "points": 20, "reward": { "coins": 300 } },
+        { "points": 50, "reward": { "items": { "base:mat.moon-seed": 3 } } },
+        { "points": 100, "reward": { "gems": 2 } },
+        { "points": 180, "reward": { "items": { "base:mat.cloud-clay": 3 } } }
+      ]
+    },
+    {
+      "id": "tet-phu-ba",
+      "name": { "vi": "Tết Phú Bà" },
+      "desc": { "vi": "Tết đến làng mây: nhận Lộc Phiên, ghé vườn hàng xóm, giao đơn để tích điểm Tết." },
+      "points": { "luck": 3, "neighborHelped": 2, "steal": 2, "friend": 4, "deliverOrder": 2 },
+      "milestones": [
+        { "points": 20, "reward": { "coins": 300 } },
+        { "points": 50, "reward": { "items": { "base:mat.moon-seed": 3 } } },
+        { "points": 100, "reward": { "gems": 2 } },
+        { "points": 180, "reward": { "items": { "base:mat.cloud-clay": 3 } } }
+      ]
+    }
+  ]
+}
