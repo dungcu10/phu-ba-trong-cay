@@ -2,7 +2,7 @@
   "_note": "Chỉ thị 10 § 3.9 Câu cá trên mây (mở cấp 14; chỉ thị 11 sẽ chuyển chỗ câu sang Bến Câu Cá trong làng, cửa sổ vẫn là một). Mỗi ngày 1 Mồi Thường miễn phí; chế mồi từ nông sản/hàng chế biến. Thả câu thì cá cắn được định sẵn theo seed + số lần thả (tất định); trò chơi giữ vạch căng dây trong vùng xanh holdSeconds giây quyết định có kéo được không. Cá đổi được xu, Giọt Sương hoặc bọ Hiếm, và mỗi lần câu được cộng điểm Sổ Cá. Số liệu là số khởi điểm, CTO chỉnh. castsPerDay: số lần thả câu tối đa mỗi ngày (0 = không giới hạn).",
   "unlockLevel": 14,
   "freeBaitPerDay": 1,
-  "castsPerDay": 0,
+  "castsPerDay": 15,
   "baits": [
     {
       "item": "base:mat.bait",

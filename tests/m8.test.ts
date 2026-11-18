@@ -75,7 +75,8 @@ test('castsPerDay giới hạn lượt thả câu mỗi ngày (0 = không giới
 test('giá trang trí cộng decorU × U(cấp); 0 thì giữ giá cũ', async () => {
   const id = Object.keys(content.decor!.items)[0]!;
   const s = newGame(content, { level: 20 });
-  assert.equal(decorPrice(content, s, id), content.decor!.items[id]!.price);
+  const flat = await patched('market.json', (raw) => (raw.levelPricing.decorU = 0)); // base carries the CTO's number
+  assert.equal(decorPrice(flat, s, id), flat.decor!.items[id]!.price);
   const c = await patched('market.json', (raw) => (raw.levelPricing.decorU = 0.5));
   assert.equal(decorPrice(c, s, id), c.decor!.items[id]!.price + tidy(0.5 * c.income.unit(20)));
 });

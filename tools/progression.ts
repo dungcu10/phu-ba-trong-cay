@@ -19,6 +19,7 @@ import { castablePots, castRecipe } from '../src/systems/casting.ts';
 import { randomFor } from '../src/core/rng.ts';
 import { seaOpen } from '../src/systems/sea.ts';
 import { fishingOpen } from '../src/systems/fishing.ts';
+import { decorPrice } from '../src/systems/decor.ts';
 import { bazaarOpen, rerollCost, wantedItems } from '../src/systems/bazaar.ts';
 import { canAfford, nextUpgradeCost } from '../src/systems/pots.ts';
 import { claimableMilestones, visibleEvents } from '../src/systems/events.ts';
@@ -310,6 +311,13 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
           shop();
         }
       }
+      // Trang trí (M7): fill empty decor slots, lantern then crystal, when 3× the price is in hand.
+      if (content.decor) s.floors.forEach((f, fi) => f.decor.forEach((d, si) => {
+        if (d) return;
+        const id = si === 0 ? 'base:decor.lantern' : 'base:decor.crystal';
+        const price = decorPrice(content, s, id);
+        if (price !== null && s.player.coins - RESERVE > 3 * price && run({ type: 'buyDecor', itemId: id }, t).ok) run({ type: 'placeDecor', floor: fi, slot: si, itemId: id }, t);
+      }));
       if (s.player.coins - RESERVE > 2 * storageUpgradeCost(content, s)) run({ type: 'upgradeStorage' }, t);
       // Mưa Mây on the first visit of the day when it costs at most half the gems held.
       if (m === 0) {

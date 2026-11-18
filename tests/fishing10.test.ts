@@ -40,6 +40,8 @@ test('cá cắn câu tất định theo seed; tỉ lệ theo mồi; kéo đượ
     count[x.fish.rarity] = (count[x.fish.rarity] ?? 0) + 1;
     a.fishing.hooked = null;
     b.fishing.hooked = null;
+    a.fishing.castsToday = 0; // castsPerDay (CTO tunes it) is not what this test measures
+    b.fishing.castsToday = 0;
   }
   assert.ok((count.common ?? 0) > (count.rare ?? 0) && (count.rare ?? 0) > 0);
   const s = newGame(content, { level: 20 });
