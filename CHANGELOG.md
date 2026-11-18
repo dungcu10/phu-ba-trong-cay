@@ -29,6 +29,12 @@ Phân loại:
 
 ## [Chưa phát hành]
 
+### [2026-11-18] CTO — 11 TỔNG N5 phần 1: bot nuôi thú cưng, kiểm số
+- Bot mô phỏng: nhận thú cưng khi có gấp 3 giá xu / còn 20 ngọc / đủ mảnh; mỗi lần ghé cho ăn khi no < 60 (món thích trước), vuốt 1 lần, dắt theo số khe, trông tầng cao nhất; lên sao mỗi ngày. Mốc tiến bộ đếm thêm nhận thú cưng và thú cưng lên cấp.
+- Kết quả ngày 30: cả 4 bé (Mèo, Cáo, Sẻ cấp 10, Rồng cấp 6), 2 sao, Thân Thiết 100. Ngọc giữ 29–82, không phình. Kinh tế không lệch: cổng XANH, không phải đổi số trong `pets.json`.
+- Typecheck sạch, 245/245 test.
+- Trạng thái nghiệm thu: Chờ
+
 ### [2026-11-18] Chỉ thị 11 TỔNG N5 (phần 1) — Thú cưng: 4 bé, cho ăn, Thân Thiết, cấp, sao, dắt và trông tầng, 6 kỹ năng đầu (tag `m-11-n5a`)
 - Loại: Thêm
 - Mô tả:

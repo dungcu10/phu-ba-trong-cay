@@ -21,6 +21,7 @@ import { seaOpen } from '../src/systems/sea.ts';
 import { fishingOpen } from '../src/systems/fishing.ts';
 import { decorPrice } from '../src/systems/decor.ts';
 import { nextHouseCost } from '../src/systems/village.ts';
+import { foodAt, foodKind, petOf, walkSlots } from '../src/systems/pets.ts';
 import { bazaarOpen, rerollCost, wantedItems } from '../src/systems/bazaar.ts';
 import { canAfford, nextUpgradeCost } from '../src/systems/pots.ts';
 import { claimableMilestones, visibleEvents } from '../src/systems/events.ts';
@@ -122,7 +123,7 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
         if (e.type === 'floorUnlocked' || e.type === 'floorExpanded' || e.type === 'floorStarred') milestones++;
         if (e.type === 'potBought' || (e.type === 'potUpgraded' && e.milestone) || e.type === 'storageUpgraded') milestones++;
         // Also progress a player sees: a level (often a new crop), a crafted pot, a machine star, a Sổ Tay reward.
-        if (e.type === 'levelUp' || e.type === 'potObtained' || e.type === 'machineStar' || e.type === 'journalClaimed' || e.type === 'houseUpgraded' || e.type === 'medalAwarded') milestones++;
+        if (e.type === 'levelUp' || e.type === 'potObtained' || e.type === 'machineStar' || e.type === 'journalClaimed' || e.type === 'houseUpgraded' || e.type === 'medalAwarded' || e.type === 'petObtained' || (e.type === 'petFed' && e.levelUps.length > 0)) milestones++;
         if (e.type === 'questClaimed') {
           questsClaimed++;
           gemSources[`quest:${e.questId}`] = (gemSources[`quest:${e.questId}`] ?? 0) + e.gems;
@@ -188,6 +189,30 @@ export function simulateProgression(content: ContentPack, visitMinutes: number, 
           .filter(({ machine }) => machine.unlockLevel <= s.player.level)
           .sort((a, b) => Number(wanted.has(b.recipe.output)) - Number(wanted.has(a.recipe.output)) || (content.items.get(b.recipe.output)?.sellPrice ?? 0) - (content.items.get(a.recipe.output)?.sellPrice ?? 0));
         for (const { recipe } of recipes) for (let k = 0; k < 4; k++) if (!run({ type: 'startJob', recipeId: recipe.id }, t).ok) break;
+      }
+      // Thú cưng (11 TỔNG N5): adopt what the purse allows (coins at 3× the price, gems keeping 20),
+      // keep everyone fed above 60 (liked food first), one pat a visit, walk as many as allowed and
+      // have them guard the top floors; stars once a day.
+      if (content.pets) {
+        for (const sp of content.pets.species) {
+          if (petOf(s, sp.id) || sp.unlockLevel > s.player.level) continue;
+          const pr = sp.price as { coins?: number; gems?: number; shards?: unknown };
+          if (pr.coins && s.player.coins - RESERVE > 3 * pr.coins) run({ type: 'obtainPet', species: sp.id, pay: 'coins' }, t);
+          else if (pr.gems && s.player.gems - pr.gems >= 20) run({ type: 'obtainPet', species: sp.id, pay: 'gems' }, t);
+          else if (pr.shards) run({ type: 'obtainPet', species: sp.id, pay: 'shards' }, t);
+        }
+        const slots = walkSlots(content, s);
+        s.pets.forEach((p, i) => {
+          for (let k = 0; k < 3 && foodAt(content, p, t) < 60; k++) {
+            const food = Object.keys(s.inventory).filter((id) => (s.inventory[id] ?? 0) > 0 && foodKind(content, p.species, id))
+              .sort((a, b) => Number(foodKind(content, p.species, b) === 'liked') - Number(foodKind(content, p.species, a) === 'liked') || (s.inventory[b] ?? 0) - (s.inventory[a] ?? 0))[0];
+            if (!food || !run({ type: 'feedPet', species: p.species, itemId: food }, t).ok) break;
+          }
+          run({ type: 'patPet', species: p.species }, t);
+          if (i < slots && !p.active) run({ type: 'walkPet', species: p.species, active: true }, t);
+          if (p.active) run({ type: 'guardFloor', species: p.species, floor: Math.max(0, s.floors.length - 1 - i) }, t);
+          if (m === 0) while (run({ type: 'starUpPet', species: p.species }, t).ok);
+        });
       }
       for (const [id, q] of Object.entries(s.inventory)) {
         if (!content.items.get(id)?.countsTowardStorage) continue;
