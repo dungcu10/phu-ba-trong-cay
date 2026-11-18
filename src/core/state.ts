@@ -171,6 +171,10 @@ export interface BotState {
   /** Chỉ thị 11 D1: the neighbour's birds (same rules as the player's) and the bugs they caught. */
   birds: BirdState[];
   bugs: Record<string, number>;
+  /** Chỉ thị 11 § I: the neighbour's village houses and pets (same rules as the player's; absent in older saves). */
+  buildings?: GameState['buildings'];
+  pets?: PetState[];
+  errands?: GameState['errands'];
 }
 
 export interface BotListing {

@@ -204,6 +204,17 @@ function reconcileWorld(state: GameState, content: ContentPack, c: Checker): voi
     bot.stall = (Array.isArray(bot.stall) ? bot.stall : [])
       .filter((l) => l && content.items.has(l.itemId) && Number.isInteger(l.qty) && l.qty > 0 && Number.isFinite(l.price) && l.price > 0)
       .slice(0, content.neighbors.market.perSession);
+    // Chỉ thị 11 § I: a neighbour's houses, pets and errands (optional; unknown ones dropped).
+    if (bot.buildings !== undefined) {
+      const houses = new Set((content.village?.houses ?? []).map((h) => h.id));
+      bot.buildings = Object.fromEntries(Object.entries(obj(bot.buildings) ? bot.buildings : {}).filter(([k, v]) => houses.has(k) && obj(v) && Number.isInteger(v.level)));
+    }
+    if (bot.pets !== undefined) bot.pets = (Array.isArray(bot.pets) ? bot.pets : []).filter((p) => obj(p) && !!content.pets?.species.some((sp) => sp.id === p.species));
+    if (bot.errands !== undefined) {
+      const known = new Set((content.pets?.errands?.list ?? []).map((e) => e.id));
+      const e = obj(bot.errands) ? bot.errands : { day: -1, rerolls: 0, list: [] };
+      bot.errands = { day: typeof e.day === 'number' ? e.day : -1, rerolls: typeof e.rerolls === 'number' ? e.rerolls : 0, list: (Array.isArray(e.list) ? e.list : []).filter((x) => obj(x) && known.has(x.errand)) };
+    }
     neighbors[id] = bot;
   }
   state.neighbors = neighbors;

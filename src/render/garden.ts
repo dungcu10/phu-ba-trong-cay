@@ -85,14 +85,15 @@ export function homeGarden(content: ContentPack, state: GameState, now: number):
 
 export function visitGarden(content: ContentPack, state: GameState, botId: string, now: number): GardenModel {
   const bug = content.bugList[0]!;
-  // A neighbour's pets: one per lower floor, in species order (BOT pets with their own state come later).
-  const species = content.pets?.species ?? [];
+  // A neighbour's own pets (chỉ thị 11 § I), the ones at home, one per lower floor; asleep when hungry.
+  const own = (state.neighbors[botId]?.pets ?? []).filter((p) => (p.awayUntil ?? 0) <= now);
+  const species = own.map((p) => ({ def: speciesDef(content, p.species)!, asleep: !petWorking(content, { ...p, active: true }, now) })).filter((x) => x.def);
   const floors = botGarden(content, state, botId, now).map((f, fi) => ({
     def: f.def,
     stars: f.stars,
     expandCost: null,
     setName: null,
-    pets: fi < species.length ? [{ species: species[fi]!.id, art: species[fi]!.art, poses: species[fi]!.poses, asleep: false }] : [],
+    pets: fi < species.length ? [{ species: species[fi]!.def.id, art: species[fi]!.def.art, poses: species[fi]!.def.poses, asleep: species[fi]!.asleep }] : [],
     pots: f.pots.map((p) => {
       const cycleMs = p.crop.growSeconds * 1000;
       const status: CropStatus = {
